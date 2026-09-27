@@ -1,0 +1,2502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ellipsis — human-made music, verified</title>
+<meta name="description" content="Collaborative music creation: record, mix, settle splits, publish to five tag charts.">
+<meta name="theme-color" content="#F2F5F8">
+<meta name="color-scheme" content="light">
+<meta property="og:title" content="Ellipsis — human-made music, verified">
+<meta property="og:description" content="Record, mix, settle splits, publish.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="icons/play-512.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/ios-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ellipsis">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('ellipsis.theme.v2') || 'light'); }
+    catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+  </script>
+  <style>
+    :root{
+      --bg:#07090C; --panel:#0E1216; --panel2:#131A20; --line:rgba(255,255,255,0.09);
+      --line2:rgba(255,255,255,0.16); --ink:#F2F5F7; --dim:#9DACB8; --soft:rgba(255,255,255,0.045);
+      --mint:#00E5AD; --mint-ink:#00E5AD; --mint-soft:rgba(0,229,173,0.14); --on-mint:#04140F;
+      --coral:#FF6B57; --coral-ink:#FFB3A6; --coral-soft:rgba(255,107,87,0.12); --coral-btn:#A8321F;
+      --violet:#B07CFF; --blue:#5B8CFF; --amber:#FFC24B;
+      --shadow:0 24px 54px rgba(0,0,0,0.55);
+    }
+    [data-theme="light"]{
+      --bg:#F2F5F8; --panel:#FFFFFF; --panel2:#F7F9FB; --line:rgba(12,22,32,0.11);
+      --line2:rgba(12,22,32,0.2); --ink:#0C1218; --dim:#54646F; --soft:rgba(12,22,32,0.035);
+      --mint:#00E5AD; --mint-ink:#00705A; --mint-soft:rgba(0,167,131,0.14); --on-mint:#04140F;
+      --coral:#FF6B57; --coral-ink:#A8321F; --coral-soft:rgba(255,107,87,0.12); --coral-btn:#A8321F;
+      --violet:#6B3FC4; --blue:#2B54B8; --amber:#8A5E05;
+      --shadow:0 22px 48px rgba(16,32,46,0.16);
+    }
+    html,body{margin:0;padding:0;height:100%;background:var(--bg);overflow:hidden}
+    *{box-sizing:border-box}
+    a{color:var(--mint-ink);text-decoration:none}
+    a:hover{opacity:.8}
+    input,button,textarea{font-family:inherit}
+    button{color:inherit}
+    ::-webkit-scrollbar{width:9px;height:9px}
+    ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px;border:2px solid transparent;background-clip:content-box}
+    ::-webkit-scrollbar-track{background:transparent}
+    @keyframes elIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    @keyframes elPulse{0%,100%{opacity:1}50%{opacity:.28}}
+    @keyframes elBeat{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.55)}}
+    @keyframes elSlide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes elPop{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+
+<div data-theme="{{ theme }}" style="height:100vh;display:grid;grid-template-rows:minmax(0,1fr) 94px;background:var(--bg);color:var(--ink);font-family:Manrope,-apple-system,system-ui,sans-serif">
+
+  <div style="display:grid;grid-template-columns:{{ shellCols }};min-height:0">
+
+    <aside style="border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:5px;padding:16px 10px;min-height:0;background:var(--panel)">
+      <div style="width:40px;height:40px;border-radius:13px;background:var(--mint);color:var(--on-mint);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;letter-spacing:-1.5px;margin-bottom:12px">···</div>
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+        <button onClick="{{ n.go }}" title="{{ n.title }}" style="position:relative;width:46px;height:46px;border-radius:14px;border:0;background:{{ n.bg }};color:{{ n.fg }};font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s" style-hover="background:var(--soft)">
+          {{ n.icon }}
+          <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;top:5px;right:4px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--coral-btn);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ n.badge }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+      <div style="flex:1;min-height:8px"></div>
+      <button onClick="{{ liveClick }}" title="{{ liveTitle }}" style="width:46px;height:30px;border-radius:10px;border:1px solid var(--line);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center"><span style="width:9px;height:9px;border-radius:50%;background:{{ liveDot }}"></span></button>
+      <button onClick="{{ openKeys }}" title="Keyboard shortcuts — press ?" style="width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:15px;font-weight:800;cursor:pointer">?</button>
+      <button onClick="{{ toggleTheme }}" title="{{ themeTitle }}" style="width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:16px;cursor:pointer" style-hover="border-color:var(--mint)">{{ themeIcon }}</button>
+      <button onClick="{{ openPalette }}" title="Command palette — press K" style="width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:13px;font-weight:700;cursor:pointer">⌘K</button>
+      <button onClick="{{ goYou }}" title="Your profile" style="width:44px;height:44px;border-radius:50%;border:2px solid {{ youRing }};background:linear-gradient(140deg,#00E5AD,#0A6E58);color:#04140F;font-size:14px;font-weight:800;cursor:pointer;margin-top:6px">MK</button>
+    </aside>
+
+    <main style="min-width:0;min-height:0;display:flex;flex-direction:column">
+
+      <div style="flex:none;display:flex;align-items:center;gap:12px;padding:10px 30px 0;overflow:hidden">
+        <span style="flex:none;display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:8px;background:var(--mint-soft);color:var(--mint-ink);font-size:10.5px;font-weight:800;letter-spacing:0.09em">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--mint);animation:elPulse 1.5s ease-in-out infinite"></span>LIVE
+        </span>
+        <div style="flex:1;min-width:0;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)">
+          <div style="display:inline-flex;gap:0;animation:elSlide 54s linear infinite;will-change:transform">
+            <span style="flex:none;padding-right:40px;font-size:12.5px;font-weight:600;color:var(--dim)">{{ ticker }}</span>
+            <span aria-hidden="true" style="flex:none;padding-right:40px;font-size:12.5px;font-weight:600;color:var(--dim)">{{ ticker }}</span>
+          </div>
+        </div>
+        <span style="flex:none;font-size:12px;font-weight:700;color:var(--dim)">{{ globalLine }}</span>
+      </div>
+
+      <header style="flex:none;display:flex;align-items:center;gap:14px;padding:12px 30px 14px">
+        <div style="flex:1 1 auto;min-width:0">
+          <div style="font-family:'Space Grotesk',Manrope,sans-serif;font-size:27px;font-weight:700;letter-spacing:-1.1px;line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ pageTitle }}</div>
+          <div style="font-size:13.5px;color:var(--dim);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ pageSub }}</div>
+        </div>
+        <button onClick="{{ openPalette }}" style="flex:1 1 220px;min-width:0;max-width:300px;height:46px;display:flex;align-items:center;gap:10px;padding:0 15px;border:1px solid var(--line);border-radius:13px;background:var(--soft);color:var(--dim);font-size:14px;cursor:pointer;white-space:nowrap" style-hover="border-color:var(--mint)">
+          <span style="flex:none;font-size:14px">⌕</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left">Search people, tracks, tags…</span><span style="flex:none;font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;background:var(--soft)">K</span>
+        </button>
+        <button onClick="{{ startTrack }}" style="flex:none;height:46px;display:flex;align-items:center;gap:9px;padding:0 20px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap" style-hover="filter:brightness(1.08)">
+          <span style="font-size:15px">+</span>Start a track
+        </button>
+      </header>
+
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:4px 30px 34px">
+
+        <sc-if value="{{ isStream }}" hint-placeholder-val="{{ true }}">
+          <div style="animation:elIn .3s ease both">
+
+            <div style="margin-bottom:24px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <span style="width:8px;height:8px;border-radius:50%;background:var(--coral);animation:elPulse 1.6s ease-in-out infinite"></span>
+                <span style="font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--ink)">IN SESSION NOW</span>
+                <span style="font-size:12.5px;color:var(--dim)">· {{ liveCount }} rooms across {{ liveCountries }} countries</span>
+              </div>
+              <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">
+                <sc-for list="{{ live }}" as="l" hint-placeholder-count="5">
+                  <button onClick="{{ l.enter }}" style="flex:none;width:252px;padding:15px;border:1px solid {{ l.border }};border-radius:17px;background:{{ l.bg }};cursor:pointer;text-align:left" style-hover="border-color:var(--mint)">
+                    <span style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+                      <span style="width:7px;height:7px;border-radius:50%;background:{{ l.dot }};animation:elPulse 1.4s ease-in-out infinite"></span>
+                      <span style="font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:{{ l.stateFg }}">{{ l.state }}</span>
+                      <span style="flex:1"></span>
+                      <span style="font-size:11.5px;font-weight:700;color:var(--dim)">{{ l.elapsed }}</span>
+                    </span>
+                    <span style="display:block;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;letter-spacing:-0.4px;color:var(--ink);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.title }}</span>
+                    <span style="display:block;font-size:11.5px;color:var(--dim);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.places }}</span>
+                    <span style="display:flex;align-items:center">
+                      <sc-for list="{{ l.members }}" as="m" hint-placeholder-count="3">
+                        <span title="{{ m.who }}" style="width:27px;height:27px;margin-right:-7px;border-radius:50%;border:2px solid var(--panel);background:{{ m.bg }};color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ m.initials }}</span>
+                      </sc-for>
+                      <span style="margin-left:15px;font-size:12.5px;font-weight:700;color:{{ l.needFg }}">{{ l.need }}</span>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+              <sc-for list="{{ streamFilters }}" as="f" hint-placeholder-count="5">
+                <button onClick="{{ f.go }}" style="padding:9px 16px;border:1px solid {{ f.border }};border-radius:999px;background:{{ f.bg }};color:{{ f.fg }};font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">{{ f.label }}</button>
+              </sc-for>
+              <div style="flex:1"></div>
+              <span style="font-size:12.5px;color:var(--dim);font-weight:600">{{ streamCount }}</span>
+            </div>
+
+            <sc-if value="{{ showAd }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:15px 19px;border:1px solid var(--line);border-radius:17px;background:var(--panel2);margin-bottom:14px">
+                <span style="padding:4px 9px;border-radius:6px;border:1px solid var(--line2);font-size:10.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim)">AD</span>
+                <span style="flex:1;min-width:220px;font-size:14px;line-height:1.5;color:var(--ink)">{{ adCopy }}</span>
+                <span style="font-size:12px;font-weight:700;color:var(--mint-ink)">{{ adPayout }}</span>
+                <button onClick="{{ openPremium }}" style="padding:10px 19px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">Go Premium</button>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ stream }}" as="t" hint-placeholder-count="5">
+                <article style="border:1px solid {{ t.cardBorder }};border-radius:20px;background:var(--panel);overflow:hidden;transition:border-color .18s,transform .18s" style-hover="transform:translateY(-2px)">
+                  <div style="display:flex;align-items:center;gap:12px;padding:16px 20px 12px">
+                    <button onClick="{{ t.openArtist }}" style="display:flex;align-items:center;gap:11px;padding:0;border:0;background:transparent;cursor:pointer;min-width:0">
+                      <span style="position:relative;flex:none;width:38px;height:38px;border-radius:50%;background:{{ t.avatarBg }};color:#fff;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center">
+                        {{ t.initials }}
+                        <sc-if value="{{ t.online }}" hint-placeholder-val="{{ false }}">
+                          <span style="position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:var(--mint);border:2px solid var(--panel)"></span>
+                        </sc-if>
+                      </span>
+                      <span style="min-width:0;text-align:left">
+                        <span style="display:block;font-size:14.5px;font-weight:700;color:var(--ink)">{{ t.artist }}</span>
+                        <span style="display:block;font-size:12.5px;color:var(--dim)">{{ t.place }} · {{ t.localTime }} · {{ t.when }}</span>
+                      </span>
+                    </button>
+                    <div style="flex:1"></div>
+                    <sc-if value="{{ t.hasReason }}" hint-placeholder-val="{{ false }}">
+                      <span style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;background:var(--soft);color:var(--ink);font-size:11.5px;font-weight:700;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis"><span style="color:var(--mint-ink)">✦</span>{{ t.reason }}</span>
+                    </sc-if>
+                    <span style="padding:6px 12px;border-radius:8px;background:{{ t.stateBg }};color:{{ t.stateFg }};font-size:11px;font-weight:800;letter-spacing:0.07em;white-space:nowrap">{{ t.stateLabel }}</span>
+                    <button onClick="{{ t.report }}" title="Report or block" style="width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:13px;cursor:pointer">⋯</button>
+                  </div>
+
+                  <div style="display:flex;gap:16px;align-items:center;padding:0 20px 13px">
+                    <button onClick="{{ t.play }}" style="flex:none;width:60px;height:60px;border-radius:18px;border:0;background:{{ t.art }};color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="filter:brightness(1.12)">{{ t.playIcon }}</button>
+                    <div style="flex:1;min-width:0">
+                      <button onClick="{{ t.openTrack }}" style="display:block;border:0;background:transparent;padding:0;cursor:pointer;text-align:left;max-width:100%">
+                        <span style="display:block;font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;letter-spacing:-0.6px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.title }}</span>
+                      </button>
+                      <div style="display:flex;align-items:flex-end;gap:2px;height:34px;margin-top:8px">
+                        <sc-for list="{{ t.wave }}" as="w" hint-placeholder-count="54">
+                          <div style="flex:1;border-radius:2px;height:{{ w.h }};background:{{ w.c }};animation:{{ w.anim }}"></div>
+                        </sc-for>
+                      </div>
+                    </div>
+                    <div style="flex:none;display:flex;align-items:center">
+                      <sc-for list="{{ t.crew }}" as="c" hint-placeholder-count="3">
+                        <span title="{{ c.who }}" style="width:28px;height:28px;margin-right:-8px;border-radius:50%;border:2px solid var(--panel);background:{{ c.bg }};color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ c.initials }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+
+                  <sc-if value="{{ t.isOpen }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin:0 20px 13px;padding:13px 16px;border:1px solid var(--coral);border-radius:14px;background:var(--coral-soft)">
+                      <span style="font-size:10.5px;font-weight:800;letter-spacing:0.09em;color:var(--coral-ink)">LOOKING FOR</span>
+                      <div style="display:flex;gap:7px;flex-wrap:wrap;flex:1;min-width:150px">
+                        <sc-for list="{{ t.needs }}" as="n" hint-placeholder-count="2">
+                          <span style="padding:6px 12px;border-radius:999px;background:var(--soft);color:var(--ink);font-size:12.5px;font-weight:700;white-space:nowrap">{{ n.name }}</span>
+                        </sc-for>
+                      </div>
+                      <span style="font-size:12.5px;font-weight:800;color:var(--ink);white-space:nowrap">{{ t.offer }}% split offered</span>
+                      <button onClick="{{ t.join }}" style="padding:10px 20px;border:0;border-radius:11px;background:var(--coral-btn);color:#fff;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">{{ t.joinLabel }}</button>
+                    </div>
+                  </sc-if>
+
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 20px;border-top:1px solid var(--line)">
+                    <button onClick="{{ t.spike }}" style="display:flex;align-items:center;gap:7px;padding:8px 14px;border:1px solid {{ t.spikeBorder }};border-radius:11px;background:{{ t.spikeBg }};color:{{ t.spikeFg }};font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">⚡ {{ t.spikes }}</button>
+                    <sc-for list="{{ t.tags }}" as="g" hint-placeholder-count="5">
+                      <button onClick="{{ g.go }}" title="{{ g.kind }} tag" style="display:flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--dim);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap" style-hover="border-color:var(--mint);color:var(--mint-ink)">
+                        <span style="color:{{ g.dot }};font-size:12px">●</span>{{ g.label }}
+                      </button>
+                    </sc-for>
+                    <div style="flex:1"></div>
+                    <span title="Human-verified sessions" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:9px;background:var(--mint-soft);color:var(--mint-ink);font-size:11.5px;font-weight:800;white-space:nowrap">✓ HUMAN</span>
+                    <span style="font-size:12.5px;color:var(--dim);font-weight:600;white-space:nowrap">{{ t.plays }} plays</span>
+                  </div>
+                </article>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isClips }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:26px;align-items:flex-start;justify-content:center;flex-wrap:wrap;animation:elIn .3s ease both">
+            <div style="position:relative;flex:none;height:clamp(580px,calc(100vh - 230px),700px);width:auto;aspect-ratio:9/16;max-width:86vw;border-radius:26px;overflow:hidden;background:{{ clipArt }};box-shadow:var(--shadow)">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0) 30%,rgba(0,0,0,0) 45%,rgba(0,0,0,0.78) 100%)"></div>
+              <div style="position:absolute;left:14px;right:14px;top:14px;display:flex;gap:4px">
+                <div style="flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.3);overflow:hidden"><div style="height:100%;width:{{ clipProgW }};background:#fff"></div></div>
+              </div>
+              <div style="position:absolute;left:16px;right:16px;top:28px;display:flex;align-items:center;gap:8px">
+                <span style="padding:5px 10px;border-radius:8px;background:rgba(0,0,0,0.45);color:#fff;font-size:11.5px;font-weight:700;max-width:78%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">✦ {{ clipReason }}</span>
+                <span style="flex:1"></span>
+                <span style="padding:5px 9px;border-radius:8px;background:rgba(0,0,0,0.45);color:#fff;font-size:11px;font-weight:800">{{ clipIndex }}</span>
+              </div>
+              <button onClick="{{ clipToggle }}" title="Play or pause the clip" style="position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;border:0;background:rgba(0,0,0,0.42);backdrop-filter:blur(6px);color:#fff;font-size:24px;cursor:pointer">{{ clipPlayIcon }}</button>
+              <div style="position:absolute;left:18px;right:18px;bottom:18px;color:#fff">
+                <div style="display:flex;align-items:flex-end;gap:2px;height:30px;margin-bottom:14px">
+                  <sc-for list="{{ clipWave }}" as="w" hint-placeholder-count="40">
+                    <div style="flex:1;border-radius:1px;height:{{ w.h }};background:{{ w.c }};animation:{{ w.anim }}"></div>
+                  </sc-for>
+                </div>
+                <button onClick="{{ clipProfile }}" style="display:flex;align-items:center;gap:9px;padding:0;border:0;background:transparent;color:#fff;cursor:pointer;margin-bottom:8px">
+                  <span style="width:30px;height:30px;border-radius:50%;background:{{ clipAvatar }};border:2px solid #fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ clipInitials }}</span>
+                  <span style="text-align:left"><span style="display:block;font-size:13.5px;font-weight:800">{{ clipArtist }}</span><span style="display:block;font-size:11.5px;opacity:.88;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px">{{ clipPlace }}</span></span>
+                </button>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:700;letter-spacing:-0.8px;line-height:1.1;margin-bottom:5px">{{ clipTitle }}</div>
+                <div style="font-size:12.5px;opacity:.9;margin-bottom:12px">{{ clipMeta }}</div>
+                <sc-if value="{{ clipOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:12px">
+                    <span style="font-size:10.5px;font-weight:800;letter-spacing:0.09em;color:#FFD2C9">LOOKING FOR</span>
+                    <sc-for list="{{ clipNeeds }}" as="n" hint-placeholder-count="2">
+                      <span style="padding:5px 10px;border-radius:999px;background:rgba(255,255,255,0.2);font-size:12px;font-weight:700">{{ n.name }}</span>
+                    </sc-for>
+                    <span style="font-size:12px;font-weight:700">· {{ clipOffer }} offered</span>
+                  </div>
+                </sc-if>
+                <button onClick="{{ clipJoin }}" style="width:100%;padding:13px;border:0;border-radius:13px;background:#FFFFFF;color:#0C1218;font-size:14.5px;font-weight:800;cursor:pointer">{{ clipJoinLabel }}</button>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px;padding-top:40px">
+              <button onClick="{{ clipPrev }}" title="Previous clip (↑)" style="width:52px;height:52px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:17px;cursor:pointer">↑</button>
+              <button onClick="{{ clipSpike }}" title="Spike" style="width:52px;padding:10px 0;border-radius:16px;border:1px solid var(--line);background:{{ clipSpikeBg }};color:{{ clipSpikeFg }};font-size:12px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px"><span style="font-size:17px">⚡</span>{{ clipSpikes }}</button>
+              <button onClick="{{ clipShare }}" title="Share clip" style="width:52px;height:52px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:16px;cursor:pointer">↗</button>
+              <button onClick="{{ clipNext }}" title="Next clip (↓)" style="width:52px;height:52px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:17px;cursor:pointer">↓</button>
+            </div>
+
+            <div style="flex:1;min-width:250px;max-width:340px;padding-top:40px">
+              <div style="font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:12px">UP NEXT FOR YOU</div>
+              <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:18px">
+                <sc-for list="{{ clipUpNext }}" as="u" hint-placeholder-count="4">
+                  <button onClick="{{ u.go }}" style="display:flex;align-items:center;gap:11px;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);cursor:pointer;text-align:left" style-hover="border-color:var(--mint)">
+                    <span style="flex:none;width:40px;height:56px;border-radius:9px;background:{{ u.art }}"></span>
+                    <span style="flex:1;min-width:0">
+                      <span style="display:block;font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ u.title }}</span>
+                      <span style="display:block;font-size:12px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ u.artist }}</span>
+                      <span style="display:block;font-size:11.5px;color:var(--mint-ink);font-weight:700;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">✦ {{ u.why }}</span>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+              <div style="font-size:12.5px;line-height:1.55;color:var(--dim)">Clips are cut automatically at each track's hook. Anyone who shares one brings a Join link with it — that's how most people find their first collaboration.</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isDiscover }}" hint-placeholder-val="{{ false }}">
+          <div style="animation:elIn .3s ease both">
+
+            <div style="padding:20px 22px;border:1px solid var(--mint);border-radius:20px;background:var(--panel);margin-bottom:18px">
+              <div style="font-size:11px;font-weight:800;letter-spacing:0.11em;color:var(--mint-ink);margin-bottom:8px">SOUNDS LIKE</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;letter-spacing:-0.7px;margin-bottom:6px">{{ soundsHead }}</div>
+              <p style="margin:0 0 15px;font-size:13.5px;line-height:1.55;color:var(--dim);max-width:640px">Creators set a Sounds Like reference at publish; listeners confirm it. Pick one and every chart below rebuilds around it.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <sc-for list="{{ soundsLike }}" as="a" hint-placeholder-count="8">
+                  <button onClick="{{ a.go }}" style="display:flex;align-items:center;gap:9px;padding:8px 14px;border:1px solid {{ a.border }};border-radius:999px;background:{{ a.bg }};color:{{ a.fg }};font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
+                    <span style="width:20px;height:20px;border-radius:50%;background:{{ a.art }}"></span>{{ a.name }}
+                    <span style="font-size:11.5px;font-weight:700;opacity:.7">{{ a.count }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+              <div style="display:flex;gap:5px;padding:4px;border-radius:12px;background:var(--soft)">
+                <sc-for list="{{ periods }}" as="p" hint-placeholder-count="3">
+                  <button onClick="{{ p.go }}" style="padding:9px 17px;border:0;border-radius:9px;background:{{ p.bg }};color:{{ p.fg }};font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">{{ p.label }}</button>
+                </sc-for>
+              </div>
+              <div style="flex:1"></div>
+              <button onClick="{{ playChart }}" style="display:flex;align-items:center;gap:9px;padding:11px 19px;border:1px solid var(--mint);border-radius:12px;background:var(--mint-soft);color:var(--mint-ink);font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap">▶ Play this chart</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:{{ chartCols }};gap:16px;margin-bottom:24px">
+              <sc-for list="{{ charts }}" as="c" hint-placeholder-count="2">
+                <section style="border:1px solid var(--line);border-radius:19px;background:var(--panel);overflow:hidden">
+                  <header style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 19px;border-bottom:1px solid var(--line)">
+                    <span style="font-family:'Space Grotesk',sans-serif;font-size:16.5px;font-weight:600;letter-spacing:-0.3px">{{ c.title }}</span>
+                    <span style="font-size:11.5px;font-weight:700;color:var(--dim);text-align:right">{{ c.meta }}</span>
+                  </header>
+                  <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding:28px 20px;text-align:center">
+                      <div style="font-size:13.5px;font-weight:700;margin-bottom:5px">Nothing here yet for {{ likeRef }}</div>
+                      <div style="font-size:12.5px;line-height:1.5;color:var(--dim)">Be the first — publish with this Sounds Like tag and you start the chart.</div>
+                    </div>
+                  </sc-if>
+                  <sc-for list="{{ c.rows }}" as="r" hint-placeholder-count="5">
+                    <div style="display:flex;align-items:center;gap:12px;padding:11px 19px;border-bottom:1px solid var(--line)">
+                      <span style="flex:none;width:20px;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:{{ r.rankColor }}">{{ r.rank }}</span>
+                      <button onClick="{{ r.play }}" style="flex:none;width:38px;height:38px;border-radius:11px;border:0;background:{{ r.art }};color:#fff;font-size:12px;cursor:pointer">{{ r.icon }}</button>
+                      <span style="flex:1;min-width:0">
+                        <span style="display:block;font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.title }}</span>
+                        <span style="display:block;font-size:12px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.artist }} · {{ r.place }}</span>
+                      </span>
+                      <span style="flex:none;font-size:12.5px;font-weight:800;color:{{ r.moveColor }};min-width:34px;text-align:right">{{ r.move }}</span>
+                      <button onClick="{{ r.spike }}" title="Spike" style="flex:none;display:flex;align-items:center;gap:6px;padding:7px 11px;border:1px solid {{ r.spikeBorder }};border-radius:10px;background:{{ r.spikeBg }};color:{{ r.spikeFg }};font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">⚡ {{ r.spikes }}</button>
+                    </div>
+                  </sc-for>
+                </section>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px;flex-wrap:wrap">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;letter-spacing:-0.5px">Let's collaborate</span>
+              <span style="font-size:13px;color:var(--dim)">{{ callCount }} open calls · {{ callCountries }} countries · avg {{ callAvg }}% offered</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:14px">
+              <sc-for list="{{ calls }}" as="c" hint-placeholder-count="6">
+                <article style="border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:16px;transition:transform .18s" style-hover="transform:translateY(-2px)">
+                  <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px">
+                    <button onClick="{{ c.play }}" style="flex:none;width:44px;height:44px;border-radius:13px;border:0;background:{{ c.art }};color:#fff;font-size:14px;cursor:pointer">▶</button>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.title }}</div>
+                      <div style="font-size:12.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.artist }} · {{ c.place }}</div>
+                    </div>
+                  </div>
+                  <div style="font-size:10.5px;font-weight:800;letter-spacing:0.09em;color:var(--coral-ink);margin-bottom:8px">LOOKING FOR</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+                    <sc-for list="{{ c.needs }}" as="n" hint-placeholder-count="2">
+                      <span style="padding:6px 11px;border-radius:999px;background:var(--soft);font-size:12px;font-weight:700;white-space:nowrap">{{ n.name }}</span>
+                    </sc-for>
+                  </div>
+                  <div style="font-size:12px;color:var(--dim);margin-bottom:12px">{{ c.bpm }} · {{ c.applicants }} offers so far</div>
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <span style="flex:1;font-size:12.5px;font-weight:800;color:var(--ink)">{{ c.offer }}% offered</span>
+                    <button onClick="{{ c.apply }}" style="padding:9px 16px;border:1px solid var(--mint);border-radius:10px;background:var(--mint-soft);color:var(--mint-ink);font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">{{ c.applyLabel }}</button>
+                  </div>
+                </article>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isCollab }}" hint-placeholder-val="{{ false }}">
+          <div style="animation:elIn .3s ease both">
+
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;border:1px solid var(--mint);border-radius:18px;background:var(--panel);margin-bottom:16px">
+              <span style="display:flex;align-items:center;gap:9px;white-space:nowrap">
+                <span style="width:9px;height:9px;border-radius:50%;background:var(--mint);animation:elPulse 1.4s ease-in-out infinite"></span>
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:var(--mint-ink)">LIVE · {{ sessionElapsed }}</span>
+              </span>
+              <span style="flex:1;min-width:180px;font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;letter-spacing:-0.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ sessionTitle }}</span>
+              <div style="display:flex;align-items:center">
+                <sc-for list="{{ presence }}" as="p" hint-placeholder-count="4">
+                  <span title="{{ p.status }}" style="position:relative;width:34px;height:34px;margin-right:-8px;border-radius:50%;border:2px solid {{ p.ring }};background:{{ p.bg }};color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ p.initials }}</span>
+                </sc-for>
+              </div>
+              <button onClick="{{ inviteToSession }}" style="padding:10px 17px;border:1px solid var(--line2);border-radius:11px;background:transparent;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">Invite</button>
+              <button onClick="{{ requestMic }}" style="padding:10px 18px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">{{ micLabel }}</button>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:13px 16px;border:1px solid var(--line);border-radius:16px;background:var(--panel);margin-bottom:16px">
+              <span style="font-size:10.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim)">VOICE</span>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <sc-for list="{{ voiceCrew }}" as="v" hint-placeholder-count="4">
+                  <div title="{{ v.name }} · {{ v.state }}" style="display:flex;align-items:center;gap:8px">
+                    <span style="width:30px;height:30px;border-radius:50%;border:2px solid {{ v.ring }};background:{{ v.bg }};color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;animation:{{ v.anim }}">{{ v.initials }}</span>
+                    <span style="display:flex;flex-direction:column">
+                      <span style="font-size:12px;font-weight:700">{{ v.name }}</span>
+                      <span style="font-size:11px;color:var(--dim)">{{ v.local }}</span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="flex:1"></div>
+              <span title="The window when the most of the room is awake" style="font-size:12px;font-weight:700;color:var(--dim);white-space:nowrap">◷ {{ overlapText }}</span>
+              <button onClick="{{ toggleTranslate }}" style="padding:8px 13px;border:1px solid var(--line);border-radius:10px;background:{{ translateBg }};color:{{ translateFg }};font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap">{{ translateLabel }}</button>
+              <button onClick="{{ toggleListen }}" style="padding:8px 13px;border:1px solid var(--line);border-radius:10px;background:{{ listenBg }};color:{{ listenFg }};font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap">{{ listenLabel }}</button>
+              <button onClick="{{ toggleVoice }}" style="padding:8px 15px;border:0;border-radius:10px;background:{{ voiceBg }};color:{{ voiceFg }};font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap">{{ voiceLabel }}</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:{{ collabCols }};gap:16px;align-items:start">
+
+              <div style="border:1px solid var(--line);border-radius:19px;background:var(--panel);padding:18px">
+                <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--line)">
+                  <button onClick="{{ togglePlay }}" style="flex:none;width:46px;height:46px;border-radius:50%;border:0;background:var(--mint);color:var(--on-mint);font-size:16px;font-weight:800;cursor:pointer">{{ playIcon }}</button>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;font-size:25px;font-weight:600;letter-spacing:-0.8px">{{ clock }}</div>
+                  <div style="display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:10.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim)">TEMPO / KEY</span>
+                    <span style="font-size:13.5px;font-weight:700">{{ sessionTempo }}</span>
+                  </div>
+                  <div style="flex:1"></div>
+                  <button onClick="{{ toggleClick }}" style="padding:10px 14px;border:1px solid var(--line);border-radius:11px;background:{{ clickBg }};color:{{ clickFg }};font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">Click</button>
+                  <button onClick="{{ armRecord }}" style="display:flex;align-items:center;gap:9px;padding:10px 18px;border:1px solid {{ recBorder }};border-radius:11px;background:{{ recBg }};color:{{ recFg }};font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">
+                    <span style="width:9px;height:9px;border-radius:50%;background:{{ recDot }};animation:{{ recAnim }}"></span>{{ recLabel }}
+                  </button>
+                </div>
+
+                <sc-if value="{{ counting }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:22px;margin-bottom:14px;border:1px solid var(--mint);border-radius:16px;background:var(--mint-soft)">
+                    <span style="font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;color:var(--mint-ink);animation:elPop .4s ease both">{{ countdown }}</span>
+                    <span style="font-size:14px;font-weight:700;color:var(--ink)">Recording starts on zero — the click is in your headphones</span>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ hasBranches }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+                    <sc-for list="{{ branches }}" as="b" hint-placeholder-count="1">
+                      <div style="display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px dashed var(--mint);border-radius:13px;background:var(--mint-soft)">
+                        <span style="font-size:15px;color:var(--mint-ink)">⑂</span>
+                        <span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:800">{{ b.name }}</span><span style="display:block;font-size:11.5px;color:var(--dim)">{{ b.meta }}</span></span>
+                        <button onClick="{{ b.drop }}" style="padding:7px 12px;border:1px solid var(--line2);border-radius:9px;background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer">Discard</button>
+                        <button onClick="{{ b.merge }}" style="padding:7px 13px;border:0;border-radius:9px;background:var(--mint);color:var(--on-mint);font-size:12px;font-weight:800;cursor:pointer">Merge</button>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ lanes }}" as="l" hint-placeholder-count="5">
+                    <div style="display:grid;grid-template-columns:{{ laneCols }};gap:13px;align-items:center;padding:11px 13px;border:1px solid {{ l.border }};border-radius:14px;background:{{ l.bg }}">
+                      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                        <span style="flex:none;width:8px;height:34px;border-radius:3px;background:{{ l.color }}"></span>
+                        <div style="min-width:0">
+                          <div style="font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.name }}</div>
+                          <div style="font-size:11.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.owner }}</div>
+                        </div>
+                      </div>
+                      <div style="position:relative;display:flex;align-items:center;gap:2px;height:40px;min-width:0;opacity:{{ l.dim }}">
+                        <sc-for list="{{ l.wave }}" as="w" hint-placeholder-count="48">
+                          <div style="flex:1;border-radius:1px;height:{{ w.h }};background:{{ w.c }};animation:{{ w.anim }}"></div>
+                        </sc-for>
+                        <div style="position:absolute;top:-4px;bottom:-4px;left:{{ l.playheadX }};width:2px;border-radius:1px;background:var(--ink);opacity:.55;pointer-events:none"></div>
+                        <sc-if value="{{ l.hasCursor }}" hint-placeholder-val="{{ false }}">
+                          <div style="position:absolute;top:-6px;bottom:-6px;left:{{ l.cursorX }};width:2px;background:{{ l.cursorColor }};transition:left .85s ease-in-out;pointer-events:none">
+                            <span style="position:absolute;top:-15px;left:2px;padding:2px 7px;border-radius:6px 6px 6px 0;background:{{ l.cursorColor }};color:#fff;font-size:10px;font-weight:800;white-space:nowrap">{{ l.cursorName }}</span>
+                          </div>
+                        </sc-if>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+                        <span style="font-size:10.5px;font-weight:800;color:var(--dim);white-space:nowrap">{{ l.version }}</span>
+                        <button onClick="{{ l.mute }}" title="Mute" style="width:29px;height:29px;border-radius:8px;border:1px solid var(--line);background:{{ l.muteBg }};color:{{ l.muteFg }};font-size:11px;font-weight:800;cursor:pointer">M</button>
+                        <button onClick="{{ l.solo }}" title="Solo" style="width:29px;height:29px;border-radius:8px;border:1px solid var(--line);background:{{ l.soloBg }};color:{{ l.soloFg }};font-size:11px;font-weight:800;cursor:pointer">S</button>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <sc-if value="{{ hasTakes }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:15px;padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--panel2)">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px">
+                      <span style="font-size:11px;font-weight:800;letter-spacing:0.09em;color:var(--dim)">TAKES · COMPARE BEFORE YOU KEEP</span>
+                      <button onClick="{{ clearTakes }}" style="border:0;background:transparent;color:var(--dim);font-size:12.5px;font-weight:700;cursor:pointer">Discard all</button>
+                    </div>
+                    <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px">
+                      <sc-for list="{{ takes }}" as="k" hint-placeholder-count="2">
+                        <div style="flex:none;width:188px;padding:13px;border:1px solid {{ k.border }};border-radius:13px;background:var(--panel)">
+                          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px">
+                            <span style="font-size:13.5px;font-weight:800">Take {{ k.n }}</span>
+                            <span style="font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;color:var(--dim)">{{ k.len }}</span>
+                          </div>
+                          <div style="display:flex;align-items:flex-end;gap:2px;height:30px;margin-bottom:11px">
+                            <sc-for list="{{ k.wave }}" as="w" hint-placeholder-count="22">
+                              <div style="flex:1;border-radius:1px;height:{{ w.h }};background:{{ w.c }}"></div>
+                            </sc-for>
+                          </div>
+                          <div style="display:flex;gap:6px">
+                            <button onClick="{{ k.play }}" style="flex:none;width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:11px;cursor:pointer">{{ k.icon }}</button>
+                            <button onClick="{{ k.keep }}" style="flex:1;height:32px;border:0;border-radius:9px;background:var(--mint);color:var(--on-mint);font-size:12.5px;font-weight:800;cursor:pointer">Keep</button>
+                            <button onClick="{{ k.drop }}" title="Discard" style="flex:none;width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--coral-ink);font-size:13px;cursor:pointer">×</button>
+                          </div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:15px">
+                  <button onClick="{{ addStem }}" style="padding:10px 16px;border:1px dashed var(--line2);border-radius:11px;background:transparent;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer" style-hover="border-color:var(--mint);color:var(--mint-ink)">+ Add stem</button>
+                  <button onClick="{{ addBranch }}" style="padding:10px 16px;border:1px solid var(--line);border-radius:11px;background:var(--soft);color:var(--ink);font-size:13px;font-weight:700;cursor:pointer">⑂ Branch</button>
+                  <button onClick="{{ bounce }}" style="padding:10px 16px;border:1px solid var(--line);border-radius:11px;background:var(--soft);color:var(--ink);font-size:13px;font-weight:700;cursor:pointer">Bounce master</button>
+                  <div style="flex:1"></div>
+                  <button onClick="{{ publish }}" disabled="{{ pubLocked }}" title="{{ pubHint }}" style="padding:10px 20px;border:0;border-radius:11px;background:{{ pubBg }};color:{{ pubFg }};font-size:13px;font-weight:800;cursor:{{ pubCursor }};white-space:nowrap">{{ pubLabel }}</button>
+                </div>
+              </div>
+
+              <div style="border:1px solid var(--line);border-radius:19px;background:var(--panel);display:flex;flex-direction:column;min-height:0;height:{{ panelHeight }}">
+                <div style="flex:none;display:flex;gap:4px;padding:10px;border-bottom:1px solid var(--line)">
+                  <sc-for list="{{ collabTabs }}" as="t" hint-placeholder-count="4">
+                    <button onClick="{{ t.go }}" style="flex:1;padding:9px 6px;border:0;border-radius:9px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">{{ t.label }}</button>
+                  </sc-for>
+                </div>
+
+                <sc-if value="{{ tabChat }}" hint-placeholder-val="{{ true }}">
+                  <div style="flex:1;min-height:0;overflow-y:auto;padding:15px 16px;display:flex;flex-direction:column;gap:11px">
+                    <sc-for list="{{ chat }}" as="m" hint-placeholder-count="6">
+                      <div style="display:flex;flex-direction:column;align-items:{{ m.align }}">
+                        <span style="font-size:11px;font-weight:700;color:var(--dim);margin-bottom:4px">{{ m.who }}</span>
+                        <span style="max-width:88%;padding:10px 13px;border-radius:{{ m.radius }};background:{{ m.bg }};color:{{ m.fg }};font-size:13.5px;line-height:1.45">{{ m.text }}</span>
+                        <sc-if value="{{ m.tr }}" hint-placeholder-val="{{ false }}">
+                          <button onClick="{{ m.toggleTr }}" style="margin-top:4px;padding:0;border:0;background:transparent;color:var(--dim);font-size:11px;font-weight:700;cursor:pointer">⇄ {{ m.tr }}</button>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="flex:none;display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)">
+                    <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onDraftKey }}" placeholder="Message the room" style="flex:1;min-width:0;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--soft);color:var(--ink);font-size:13.5px;outline:none" />
+                    <button onClick="{{ send }}" style="padding:11px 16px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13px;font-weight:800;cursor:pointer">Send</button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ tabSplits }}" hint-placeholder-val="{{ false }}">
+                  <div style="flex:1;min-height:0;overflow-y:auto;padding:16px">
+                    <p style="margin:0 0 14px;font-size:12.5px;line-height:1.55;color:var(--dim)">Splits must total 100% and every contributor must sign before the track can be published. Editing a signed sheet resets the signatures.</p>
+                    <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px">
+                      <sc-for list="{{ splits }}" as="s" hint-placeholder-count="4">
+                        <div style="display:flex;align-items:center;gap:9px">
+                          <span style="flex:none;width:28px;height:28px;border-radius:50%;background:{{ s.bg }};color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ s.initials }}</span>
+                          <span style="flex:1;min-width:0">
+                            <span style="display:block;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ s.name }}</span>
+                            <span style="display:block;font-size:11px;font-weight:700;color:{{ s.sigColor }}">{{ s.sig }}</span>
+                          </span>
+                          <button onClick="{{ s.dec }}" title="Decrease" style="flex:none;width:27px;height:27px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:14px;font-weight:800;cursor:pointer;line-height:1">−</button>
+                          <span style="flex:none;min-width:46px;text-align:center;font-variant-numeric:tabular-nums;font-size:14.5px;font-weight:800">{{ s.pct }}%</span>
+                          <button onClick="{{ s.inc }}" title="Increase" style="flex:none;width:27px;height:27px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:14px;font-weight:800;cursor:pointer;line-height:1">+</button>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="height:8px;border-radius:4px;background:var(--soft);overflow:hidden;display:flex;margin-bottom:9px">
+                      <sc-for list="{{ splits }}" as="s" hint-placeholder-count="4">
+                        <div style="width:{{ s.width }};background:{{ s.bg }}"></div>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
+                      <span style="font-size:12.5px;font-weight:800;color:{{ totalColor }}">{{ totalLabel }}</span>
+                      <button onClick="{{ splitEven }}" style="border:0;background:transparent;color:var(--dim);font-size:12px;font-weight:700;cursor:pointer">Split evenly</button>
+                    </div>
+                    <button onClick="{{ sendAgreement }}" disabled="{{ agreeLocked }}" title="{{ agreeHint }}" style="width:100%;padding:12px;border:1px solid {{ agreeBorder }};border-radius:11px;background:{{ agreeBg }};color:{{ agreeFg }};font-size:13.5px;font-weight:800;cursor:{{ agreeCursor }}">{{ agreeLabel }}</button>
+                    <div style="margin-top:14px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);font-size:12px;line-height:1.55;color:var(--dim)">Signed sheets are retained for seven years and travel with the recording. If a contributor leaves the project their share stays with them.</div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ tabOffers }}" hint-placeholder-val="{{ false }}">
+                  <div style="flex:1;min-height:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px">
+                    <p style="margin:0 0 2px;font-size:12.5px;line-height:1.55;color:var(--dim)">{{ offerIntro }}</p>
+                    <sc-for list="{{ offers }}" as="o" hint-placeholder-count="3">
+                      <div style="padding:13px;border:1px solid {{ o.border }};border-radius:13px;background:{{ o.bg }}">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+                          <span style="flex:none;width:30px;height:30px;border-radius:50%;background:{{ o.avatar }};color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ o.initials }}</span>
+                          <span style="flex:1;min-width:0">
+                            <span style="display:block;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.who }}</span>
+                            <span style="display:block;font-size:11.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.role }} · {{ o.place }}</span>
+                          </span>
+                          <span style="flex:none;font-size:11.5px;font-weight:800;color:var(--dim)">{{ o.when }}</span>
+                        </div>
+                        <div style="display:flex;align-items:flex-end;gap:2px;height:26px;margin-bottom:10px">
+                          <sc-for list="{{ o.wave }}" as="w" hint-placeholder-count="28">
+                            <div style="flex:1;border-radius:1px;height:{{ w.h }};background:{{ w.c }}"></div>
+                          </sc-for>
+                        </div>
+                        <div style="font-size:12.5px;line-height:1.5;color:var(--ink);margin-bottom:11px">{{ o.note }}</div>
+                        <div style="display:flex;gap:7px">
+                          <button onClick="{{ o.preview }}" style="flex:none;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer">Preview</button>
+                          <button onClick="{{ o.accept }}" style="flex:1;padding:8px;border:0;border-radius:9px;background:var(--mint);color:var(--on-mint);font-size:12px;font-weight:800;cursor:pointer">Accept · {{ o.ask }}%</button>
+                          <button onClick="{{ o.decline }}" style="flex:none;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--dim);font-size:12px;font-weight:700;cursor:pointer">Decline</button>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ tabVersions }}" hint-placeholder-val="{{ false }}">
+                  <div style="flex:1;min-height:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px">
+                    <sc-for list="{{ versions }}" as="v" hint-placeholder-count="5">
+                      <div style="display:flex;gap:12px;padding:12px;border:1px solid {{ v.border }};border-radius:13px;background:{{ v.bg }}">
+                        <span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ v.avatar }};color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ v.tag }}</span>
+                        <div style="flex:1;min-width:0">
+                          <div style="font-size:13px;font-weight:700;margin-bottom:2px">{{ v.title }}</div>
+                          <div style="font-size:11.5px;color:var(--dim);line-height:1.45">{{ v.who }} · {{ v.when }}</div>
+                        </div>
+                        <button onClick="{{ v.restore }}" style="flex:none;align-self:center;padding:7px 12px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--ink);font-size:12px;font-weight:700;cursor:pointer">{{ v.action }}</button>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isActivity }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1120px;animation:elIn .3s ease both">
+            <div style="display:grid;grid-template-columns:{{ activityCols }};gap:16px;align-items:start">
+              <section>
+                <div style="font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:13px">WAITING ON YOU</div>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:26px">
+                  <sc-for list="{{ waiting }}" as="a" hint-placeholder-count="3">
+                    <div style="display:flex;gap:14px;padding:17px;border:1px solid {{ a.border }};border-radius:17px;background:{{ a.bg }}">
+                      <span style="flex:none;width:38px;height:38px;border-radius:12px;background:{{ a.iconBg }};color:{{ a.iconFg }};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800">{{ a.icon }}</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:14.5px;font-weight:700;margin-bottom:5px">{{ a.title }}</div>
+                        <div style="font-size:13px;line-height:1.55;color:var(--dim);margin-bottom:12px">{{ a.body }}</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                          <sc-for list="{{ a.actions }}" as="x" hint-placeholder-count="2">
+                            <button onClick="{{ x.go }}" style="padding:9px 17px;border:1px solid {{ x.border }};border-radius:10px;background:{{ x.bg }};color:{{ x.fg }};font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">{{ x.label }}</button>
+                          </sc-for>
+                        </div>
+                      </div>
+                      <span style="flex:none;font-size:11.5px;font-weight:600;color:var(--dim)">{{ a.when }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:13px">EARLIER</div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ earlier }}" as="e" hint-placeholder-count="10">
+                    <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel)">
+                      <span style="flex:none;width:32px;height:32px;border-radius:10px;background:{{ e.iconBg }};color:{{ e.iconFg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800">{{ e.icon }}</span>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:13.5px;font-weight:700;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ e.title }}</div>
+                        <div style="font-size:12px;line-height:1.45;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ e.body }}</div>
+                      </div>
+                      <span style="flex:none;font-size:11.5px;font-weight:600;color:var(--dim)">{{ e.when }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+
+              <section>
+                <div style="font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:13px">YOUR WEEK</div>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+                  <sc-for list="{{ weekStats }}" as="w" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel)">
+                      <span style="font-size:12.5px;font-weight:600;color:var(--dim)">{{ w.label }}</span>
+                      <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;letter-spacing:-0.5px;color:{{ w.color }}">{{ w.value }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:13px">MOVING NOW</div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ moving }}" as="m" hint-placeholder-count="5">
+                    <button onClick="{{ m.play }}" style="display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--line);border-radius:13px;background:var(--panel);cursor:pointer;text-align:left" style-hover="border-color:var(--mint)">
+                      <span style="flex:none;width:36px;height:36px;border-radius:11px;background:{{ m.art }}"></span>
+                      <span style="flex:1;min-width:0">
+                        <span style="display:block;font-size:13px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ m.title }}</span>
+                        <span style="display:block;font-size:11.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ m.tag }}</span>
+                      </span>
+                      <span style="flex:none;font-size:12px;font-weight:800;color:var(--mint-ink)">{{ m.move }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </section>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isEarnings }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1120px;animation:elIn .3s ease both">
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:13px;margin-bottom:18px">
+              <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+                <div style="padding:17px 18px;border:1px solid {{ k.border }};border-radius:17px;background:{{ k.bg }}">
+                  <div style="font-size:11px;font-weight:800;letter-spacing:0.09em;color:var(--dim);margin-bottom:8px">{{ k.label }}</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:27px;font-weight:700;letter-spacing:-1px;color:{{ k.color }};margin-bottom:4px">{{ k.value }}</div>
+                  <div style="font-size:12px;color:var(--dim);line-height:1.4">{{ k.note }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:grid;grid-template-columns:{{ earnCols }};gap:16px;align-items:start">
+              <section style="border:1px solid var(--line);border-radius:19px;background:var(--panel);padding:19px">
+                <div style="font-size:11.5px;font-weight:800;letter-spacing:0.09em;color:var(--dim);margin-bottom:6px">REVENUE MODEL</div>
+                <p style="margin:0 0 16px;font-size:12.5px;line-height:1.55;color:var(--dim)">Move the levers and the whole model recalculates. Ellipsis keeps {{ takeRate }}% of net; the rest goes to the split sheet.</p>
+                <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:18px">
+                  <sc-for list="{{ levers }}" as="v" hint-placeholder-count="4">
+                    <div>
+                      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px">
+                        <span style="font-size:13px;font-weight:700">{{ v.label }}</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--mint-ink)">{{ v.display }}</span>
+                      </div>
+                      <input type="range" min="{{ v.min }}" max="{{ v.max }}" step="{{ v.step }}" value="{{ v.value }}" onChange="{{ v.set }}" style="width:100%;accent-color:#00E5AD;cursor:pointer" />
+                      <div style="font-size:11.5px;color:var(--dim);margin-top:5px">{{ v.hint }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ pnl }}" as="p" hint-placeholder-count="6">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:11px 13px;border-radius:11px;background:{{ p.bg }}">
+                      <span style="font-size:12.5px;font-weight:{{ p.weight }};color:{{ p.labelColor }}">{{ p.label }}</span>
+                      <span style="font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;color:{{ p.color }}">{{ p.value }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <section style="border:1px solid var(--line);border-radius:19px;background:var(--panel);padding:19px">
+                  <div style="font-size:11.5px;font-weight:800;letter-spacing:0.09em;color:var(--dim);margin-bottom:13px">YOUR PAYOUT THIS MONTH</div>
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <sc-for list="{{ myEarnings }}" as="e" hint-placeholder-count="4">
+                      <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--line);border-radius:13px">
+                        <span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ e.art }}"></span>
+                        <span style="flex:1;min-width:0">
+                          <span style="display:block;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ e.title }}</span>
+                          <span style="display:block;font-size:11.5px;color:var(--dim)">{{ e.plays }} plays · your {{ e.share }}%</span>
+                        </span>
+                        <span style="flex:none;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--mint-ink)">{{ e.payout }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+                    <span style="font-size:13px;font-weight:800">Total</span>
+                    <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.7px;color:var(--mint-ink)">{{ myTotal }}</span>
+                  </div>
+                </section>
+
+                <section style="border:1px solid var(--line);border-radius:19px;background:var(--panel);padding:19px">
+                  <div style="font-size:11.5px;font-weight:800;letter-spacing:0.09em;color:var(--dim);margin-bottom:6px">WHERE THE MONEY LANDS</div>
+                  <p style="margin:0 0 14px;font-size:12.5px;line-height:1.55;color:var(--dim)">Splits pay every contributor directly in their own currency — no label in the middle, no cross-border wait.</p>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <sc-for list="{{ corridors }}" as="c" hint-placeholder-count="6">
+                      <div>
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:5px">
+                          <span style="font-size:12.5px;font-weight:700">{{ c.country }}</span>
+                          <span style="font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:var(--dim)">{{ c.amount }} · {{ c.people }} creators</span>
+                        </div>
+                        <div style="height:7px;border-radius:4px;background:var(--soft);overflow:hidden">
+                          <div style="width:{{ c.width }};height:100%;background:{{ c.color }}"></div>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isEarnings }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1120px;margin-top:16px;border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:20px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+              <div>
+                <div style="font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:6px">YOUR PAYOUTS · THIS MONTH</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;letter-spacing:-1.2px">{{ ledgerTotal }}</div>
+                <div style="font-size:12.5px;color:var(--dim);margin-top:3px">{{ ledgerPerK }}</div>
+              </div>
+              <div style="display:flex;gap:4px;padding:4px;border-radius:11px;background:var(--soft);flex-wrap:wrap">
+                <sc-for list="{{ currencies }}" as="c" hint-placeholder-count="7">
+                  <button onClick="{{ c.go }}" style="padding:7px 11px;border:0;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }};font-size:12px;font-weight:800;cursor:pointer">{{ c.code }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+              <sc-for list="{{ ledger }}" as="r" hint-placeholder-count="6">
+                <div style="display:grid;grid-template-columns:36px minmax(0,1.3fr) 60px minmax(0,1fr) 110px;gap:12px;align-items:center;padding:9px 11px;border:1px solid var(--line);border-radius:12px">
+                  <span style="width:36px;height:36px;border-radius:10px;background:{{ r.art }}"></span>
+                  <span style="min-width:0"><span style="display:block;font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.title }}</span><span style="display:block;font-size:11.5px;color:var(--dim)">{{ r.plays }} plays</span></span>
+                  <span style="font-size:12.5px;font-weight:800;color:var(--dim)">{{ r.share }}</span>
+                  <span style="height:8px;border-radius:4px;background:var(--soft);overflow:hidden"><span style="display:block;height:100%;width:{{ r.width }};background:var(--mint)"></span></span>
+                  <span style="font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;text-align:right">{{ r.amount }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <button onClick="{{ cashOut }}" style="padding:13px 24px;border:0;border-radius:12px;background:{{ cashBg }};color:{{ cashFg }};font-size:14px;font-weight:800;cursor:pointer">{{ cashLabel }}</button>
+              <span style="flex:1;min-width:240px;font-size:12.5px;line-height:1.5;color:var(--dim)">{{ cashNote }}</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isYou }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1000px;animation:elIn .3s ease both">
+            <div style="border:1px solid var(--line);border-radius:22px;background:var(--panel);overflow:hidden;margin-bottom:16px">
+              <div style="height:124px;background:{{ profCover }}"></div>
+              <div style="padding:0 24px 24px">
+                <div style="display:flex;align-items:flex-end;gap:18px;margin-top:-40px;flex-wrap:wrap">
+                  <div style="flex:none;width:88px;height:88px;border-radius:50%;background:{{ profAvatar }};border:4px solid var(--panel);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800">{{ profInitials }}</div>
+                  <div style="flex:1;min-width:190px;padding-bottom:6px">
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:700;letter-spacing:-0.9px">{{ profName }}</div>
+                    <div style="font-size:14px;color:var(--dim)">{{ profMeta }}</div>
+                  </div>
+                  <div style="display:flex;gap:9px;padding-bottom:6px;flex-wrap:wrap">
+                    <button onClick="{{ profFollow }}" style="padding:11px 22px;border:1px solid var(--mint);border-radius:12px;background:{{ profFollowBg }};color:{{ profFollowFg }};font-size:14px;font-weight:800;cursor:pointer;min-width:112px;white-space:nowrap">{{ profFollowLabel }}</button>
+                    <button onClick="{{ profMessage }}" style="padding:11px 18px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap">Message</button>
+                    <button onClick="{{ profInvite }}" style="padding:11px 18px;border:0;border-radius:12px;background:var(--mint);color:var(--on-mint);font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap">Invite to a track</button>
+                  </div>
+                </div>
+
+                <p style="margin:16px 0 16px;font-size:14.5px;line-height:1.6;color:var(--dim);max-width:600px">{{ profBio }}</p>
+
+                <div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px">
+                  <div>
+                    <div style="font-size:10.5px;font-weight:800;letter-spacing:0.09em;color:var(--coral-ink);margin-bottom:8px">OPEN TO</div>
+                    <div style="display:flex;gap:7px;flex-wrap:wrap">
+                      <sc-for list="{{ profOpen }}" as="o" hint-placeholder-count="4">
+                        <span style="padding:7px 13px;border:1px solid var(--coral);border-radius:999px;background:var(--coral-soft);color:var(--coral-ink);font-size:12.5px;font-weight:700;white-space:nowrap">{{ o.name }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:10.5px;font-weight:800;letter-spacing:0.09em;color:var(--dim);margin-bottom:8px">WORKS IN</div>
+                    <div style="display:flex;gap:7px;flex-wrap:wrap">
+                      <sc-for list="{{ profLangs }}" as="l" hint-placeholder-count="3">
+                        <span style="padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--ink);font-size:12.5px;font-weight:700;white-space:nowrap">{{ l.name }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <sc-for list="{{ profStats }}" as="st" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:baseline;gap:8px;padding:12px 18px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)">
+                      <span style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;letter-spacing:-0.5px">{{ st.value }}</span>
+                      <span style="font-size:12.5px;font-weight:600;color:var(--dim)">{{ st.label }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(224px,1fr));gap:14px">
+              <sc-for list="{{ profReleases }}" as="r" hint-placeholder-count="6">
+                <button onClick="{{ r.play }}" style="text-align:left;padding:14px;border:1px solid var(--line);border-radius:17px;background:var(--panel);color:var(--ink);cursor:pointer" style-hover="border-color:var(--mint)">
+                  <span style="display:block;height:104px;border-radius:12px;background:{{ r.art }};margin-bottom:11px"></span>
+                  <span style="display:block;font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.title }}</span>
+                  <span style="display:flex;align-items:center;gap:8px;margin-top:5px;font-size:12px;color:var(--dim);font-weight:600">
+                    <span>{{ r.genre }}</span><span>·</span><span style="color:var(--mint-ink)">⚡ {{ r.spikes }}</span>
+                  </span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </main>
+
+    <sc-if value="{{ showContext }}" hint-placeholder-val="{{ true }}">
+      <aside style="border-left:1px solid var(--line);min-height:0;overflow-y:auto;padding:20px;background:var(--panel)">
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:12px">ONLINE NOW · {{ onlineCount }}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px">
+          <sc-for list="{{ onlinePeople }}" as="p" hint-placeholder-count="12">
+            <button onClick="{{ p.go }}" title="{{ p.who }}" style="position:relative;width:36px;height:36px;border-radius:50%;border:0;background:{{ p.bg }};color:#fff;font-size:11px;font-weight:800;cursor:pointer">
+              {{ p.initials }}
+              <span style="position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:var(--mint);border:2px solid var(--panel)"></span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:12px">NEEDS YOUR INSTRUMENT</div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:24px">
+          <sc-for list="{{ matched }}" as="m" hint-placeholder-count="3">
+            <div style="padding:13px;border:1px solid var(--coral);border-radius:13px;background:var(--coral-soft)">
+              <div style="font-size:13px;font-weight:800;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ m.title }}</div>
+              <div style="font-size:11.5px;color:var(--dim);margin-bottom:10px">{{ m.need }} · {{ m.offer }}% · {{ m.place }}</div>
+              <button onClick="{{ m.go }}" style="width:100%;padding:8px;border:0;border-radius:9px;background:var(--coral-btn);color:#fff;font-size:12px;font-weight:800;cursor:pointer">Offer a stem</button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:var(--dim);margin-bottom:12px">THE NETWORK</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ networkStats }}" as="n" hint-placeholder-count="4">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)">
+              <span style="font-size:12px;font-weight:600;color:var(--dim)">{{ n.label }}</span>
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;color:{{ n.color }}">{{ n.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </aside>
+    </sc-if>
+  </div>
+
+  <footer style="position:relative;display:grid;grid-template-columns:{{ playerCols }};align-items:center;gap:20px;padding:0 {{ playerPad }} 0 26px;border-top:1px solid var(--line);background:var(--panel);z-index:8">
+    <div style="display:flex;align-items:center;gap:13px;min-width:0">
+      <div style="flex:none;width:54px;height:54px;border-radius:14px;background:{{ nowArt }}"></div>
+      <div style="min-width:0">
+        <div style="font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nowTitle }}</div>
+        <div style="font-size:12.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nowArtist }}</div>
+      </div>
+      <button onClick="{{ spikeNow }}" title="Spike this track" style="flex:none;width:36px;height:36px;border-radius:11px;border:1px solid {{ nowSpikeBorder }};background:{{ nowSpikeBg }};color:{{ nowSpikeFg }};font-size:14px;cursor:pointer">⚡</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0">
+      <div style="display:flex;align-items:center;gap:18px">
+        <button onClick="{{ prev }}" style="border:0;background:transparent;color:var(--dim);font-size:15px;cursor:pointer">⏮</button>
+        <button onClick="{{ togglePlay }}" style="width:42px;height:42px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);font-size:15px;cursor:pointer">{{ playIcon }}</button>
+        <button onClick="{{ next }}" style="border:0;background:transparent;color:var(--dim);font-size:15px;cursor:pointer">⏭</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:11px;width:100%;max-width:540px">
+        <span style="font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:700;color:var(--dim);min-width:34px;text-align:right">{{ elapsed }}</span>
+        <div onClick="{{ scrub }}" title="Scrub" style="flex:1;min-width:0;display:flex;align-items:flex-end;gap:1px;height:26px;cursor:pointer">
+          <sc-for list="{{ playerWave }}" as="w" hint-placeholder-count="68">
+            <div style="flex:1;border-radius:1px;height:{{ w.h }};background:{{ w.c }}"></div>
+          </sc-for>
+        </div>
+        <span style="font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:700;color:var(--dim);min-width:34px">{{ duration }}</span>
+      </div>
+    </div>
+
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px">
+        <button onClick="{{ toggleQueue }}" style="padding:9px 15px;border:1px solid var(--line);border-radius:11px;background:{{ queueBg }};color:{{ queueFg }};font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">Up next · {{ queueCount }}</button>
+        <span style="font-size:12.5px;font-weight:700;color:var(--dim)">Vol</span>
+        <input type="range" min="0" max="100" value="{{ volume }}" onChange="{{ onVolume }}" style="width:92px;accent-color:#00E5AD;cursor:pointer" />
+      </div>
+    </sc-if>
+    <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ toggleQueue }}" title="Up next · {{ queueCount }}" style="position:absolute;right:20px;bottom:26px;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:{{ queueBg }};color:{{ queueFg }};font-size:15px;cursor:pointer">☰</button>
+    </sc-if>
+  </footer>
+
+  <sc-if value="{{ queueOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;right:26px;bottom:106px;width:340px;max-height:54vh;overflow-y:auto;z-index:30;border:1px solid var(--line2);border-radius:18px;background:var(--panel);box-shadow:var(--shadow);padding:14px;animation:elIn .2s ease both">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+        <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:var(--dim)">UP NEXT</span>
+        <button onClick="{{ toggleQueue }}" style="width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:13px;cursor:pointer">×</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <sc-for list="{{ queue }}" as="q" hint-placeholder-count="6">
+          <button onClick="{{ q.play }}" style="display:flex;align-items:center;gap:11px;padding:9px;border:1px solid {{ q.border }};border-radius:12px;background:{{ q.bg }};cursor:pointer;text-align:left">
+            <span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ q.art }}"></span>
+            <span style="flex:1;min-width:0">
+              <span style="display:block;font-size:13px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ q.title }}</span>
+              <span style="display:block;font-size:11.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ q.artist }}</span>
+            </span>
+            <span style="flex:none;font-size:11px;font-weight:700;color:var(--dim)">{{ q.badge }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ paletteOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePalette }}" style="position:fixed;inset:0;background:rgba(4,7,10,0.6);backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;padding:11vh 24px 24px;z-index:70;animation:elIn .16s ease both">
+      <div onClick="{{ stop }}" style="width:100%;max-width:640px;border:1px solid var(--line2);border-radius:20px;background:var(--panel);box-shadow:var(--shadow);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)">
+          <span style="color:var(--mint-ink);font-size:16px">⌕</span>
+          <input value="{{ pq }}" onChange="{{ onPq }}" placeholder="Search people, tracks, tags, or type a command" style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font-size:16px" />
+          <span style="font-size:11px;font-weight:700;color:var(--dim);padding:4px 8px;border-radius:6px;border:1px solid var(--line)">esc</span>
+        </div>
+        <div style="max-height:54vh;overflow-y:auto;padding:8px">
+          <sc-if value="{{ pNone }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:30px 18px;text-align:center">
+              <div style="font-size:14px;font-weight:700;margin-bottom:5px">Nothing matches “{{ pq }}”</div>
+              <div style="font-size:13px;line-height:1.55;color:var(--dim)">Try an instrument, a city, a mood, or an artist you want to sound like.</div>
+            </div>
+          </sc-if>
+          <sc-for list="{{ pGroups }}" as="g" hint-placeholder-count="3">
+            <div style="padding:6px 0">
+              <div style="padding:6px 11px;font-size:10.5px;font-weight:800;letter-spacing:0.1em;color:var(--dim)">{{ g.label }}</div>
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="4">
+                <button onClick="{{ it.go }}" style="display:flex;align-items:center;gap:12px;width:100%;padding:10px 11px;border:0;border-radius:11px;background:transparent;cursor:pointer;text-align:left" style-hover="background:var(--mint-soft)">
+                  <span style="flex:none;width:32px;height:32px;border-radius:{{ it.radius }};background:{{ it.art }};color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ it.badge }}</span>
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:14px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ it.title }}</span>
+                    <span style="display:block;font-size:12px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ it.sub }}</span>
+                  </span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ packOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePack }}" style="position:fixed;inset:0;z-index:75;background:rgba(6,10,14,0.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px;animation:elIn .16s ease both">
+      <div onClick="{{ stop }}" style="width:100%;max-width:760px;max-height:86vh;overflow-y:auto;border:1px solid var(--line);border-radius:22px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow);padding:24px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:6px">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.8px">Start a track</div>
+          <button onClick="{{ closePack }}" style="width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:15px;cursor:pointer">×</button>
+        </div>
+        <p style="margin:0 0 18px;font-size:14px;line-height:1.55;color:var(--dim)">Pick a starter and you're recording in ten seconds — tempo, key, four lanes and a click are set. Everything in a pack is original and cleared.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px">
+          <sc-for list="{{ packs }}" as="p" hint-placeholder-count="6">
+            <div style="border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel2)">
+              <div style="height:74px;background:{{ p.art }}"></div>
+              <div style="padding:13px">
+                <div style="font-size:15px;font-weight:800">{{ p.label }}</div>
+                <div style="font-size:12px;font-weight:700;color:var(--mint-ink);margin:2px 0 6px">{{ p.key }}</div>
+                <div style="font-size:12.5px;line-height:1.45;color:var(--dim);margin-bottom:12px">{{ p.desc }}</div>
+                <div style="display:flex;gap:7px">
+                  <button onClick="{{ p.preview }}" style="flex:none;padding:8px 12px;border:1px solid var(--line2);border-radius:9px;background:transparent;color:var(--ink);font-size:12.5px;font-weight:700;cursor:pointer">▶ Hear</button>
+                  <button onClick="{{ p.pick }}" style="flex:1;padding:8px;border:0;border-radius:9px;background:var(--mint);color:var(--on-mint);font-size:12.5px;font-weight:800;cursor:pointer">Use this</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ authOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeAuth }}" style="position:fixed;inset:0;z-index:77;background:rgba(6,10,14,0.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px;animation:elIn .16s ease both">
+      <div onClick="{{ stop }}" style="width:100%;max-width:420px;border:1px solid var(--line);border-radius:22px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow);padding:26px">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:23px;font-weight:700;letter-spacing:-0.7px;margin-bottom:6px">{{ authTitle }}</div>
+        <div style="font-size:13.5px;line-height:1.5;color:var(--dim);margin-bottom:18px">One account per person. Every account is verified as human before it can record, publish or get paid.</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-if value="{{ authIsReg }}" hint-placeholder-val="{{ true }}">
+            <input value="{{ authName }}" onChange="{{ onAuthName }}" placeholder="Your name" autocomplete="name" style="padding:12px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:14px;outline:none" />
+          </sc-if>
+          <input value="{{ authEmail }}" onChange="{{ onAuthEmail }}" placeholder="Email" type="email" autocomplete="email" style="padding:12px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:14px;outline:none" />
+          <input value="{{ authPass }}" onChange="{{ onAuthPass }}" onKeyDown="{{ onAuthKey }}" placeholder="Password (10+ characters)" type="password" autocomplete="current-password" style="padding:12px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:14px;outline:none" />
+          <sc-if value="{{ authIsReg }}" hint-placeholder-val="{{ true }}">
+            <input value="{{ authPlace }}" onChange="{{ onAuthPlace }}" placeholder="City (shown to collaborators)" style="padding:12px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:14px;outline:none" />
+            <button onClick="{{ toggleAuthAge }}" style="display:flex;gap:10px;align-items:flex-start;padding:4px 0;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left">
+              <span style="flex:none;width:20px;height:20px;border-radius:6px;border:2px solid var(--mint);background:{{ authAgeBg }};color:var(--on-mint);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ authAgeTick }}</span>
+              <span style="font-size:12.5px;line-height:1.5;color:var(--dim)">I'm 13 or older and accept the <a href="../legal/terms.html" target="_blank">Terms</a>, <a href="../legal/privacy.html" target="_blank">Privacy Policy</a> and <a href="../legal/dmca.html" target="_blank">Copyright Policy</a>.</span>
+            </button>
+          </sc-if>
+          <sc-if value="{{ authErr }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:10px 12px;border-radius:10px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;font-weight:700">{{ authErr }}</div>
+          </sc-if>
+          <button onClick="{{ submitAuth }}" style="padding:13px;border:0;border-radius:12px;background:var(--mint);color:var(--on-mint);font-size:14.5px;font-weight:800;cursor:pointer">{{ authCta }}</button>
+          <button onClick="{{ toggleAuthMode }}" style="padding:6px;border:0;background:transparent;color:var(--dim);font-size:13px;font-weight:700;cursor:pointer">{{ authSwitch }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ humanOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:78;background:rgba(6,10,14,0.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px;animation:elIn .16s ease both">
+      <div style="width:100%;max-width:400px;border:1px solid var(--mint);border-radius:22px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow);padding:26px;text-align:center">
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;color:var(--mint-ink);margin-bottom:8px">HUMAN CHECK · {{ humanBpm }}</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.6px;margin-bottom:8px">Tap four times with the pulse</div>
+        <div style="font-size:13px;line-height:1.55;color:var(--dim);margin-bottom:20px">{{ humanMsg }}</div>
+        <button onClick="{{ humanTap }}" style="width:140px;height:140px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:3px solid var(--mint);background:var(--mint-soft);color:var(--mint-ink);font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;cursor:pointer;animation:{{ humanPulse }}">{{ humanCount }}</button>
+        <button onClick="{{ closeHuman }}" style="padding:8px 16px;border:1px solid var(--line2);border-radius:10px;background:transparent;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer">Cancel</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ keysOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeKeys }}" style="position:fixed;inset:0;z-index:76;background:rgba(6,10,14,0.5);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:24px;animation:elIn .16s ease both">
+      <div onClick="{{ stop }}" style="width:100%;max-width:420px;border:1px solid var(--line);border-radius:20px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow);padding:22px">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.6px;margin-bottom:14px">Keyboard shortcuts</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ shortcuts }}" as="k" hint-placeholder-count="8">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+              <span style="font-size:13.5px;color:var(--ink)">{{ k.d }}</span>
+              <span style="min-width:34px;padding:4px 9px;border:1px solid var(--line2);border-radius:7px;font-size:12px;font-weight:800;text-align:center">{{ k.k }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:112px;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:11px;padding:13px 22px;border:1px solid var(--mint);border-radius:14px;background:var(--panel);color:var(--ink);font-size:14px;font-weight:700;box-shadow:var(--shadow);animation:elIn .2s ease both">
+      <span style="color:var(--mint-ink)">✓</span>{{ toast }}
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1520&quot;,&quot;height&quot;:&quot;940&quot;}}">
+const ART = [
+  'linear-gradient(140deg,#00E5AD,#0A6E58)', 'linear-gradient(140deg,#5B8CFF,#1B2E7A)',
+  'linear-gradient(140deg,#FF8A5C,#B3302E)', 'linear-gradient(140deg,#B07CFF,#4A2E8C)',
+  'linear-gradient(140deg,#2C3A44,#0E1216)', 'linear-gradient(140deg,#FFC24B,#A85B0F)',
+  'linear-gradient(140deg,#4BD6FF,#0B4E6E)', 'linear-gradient(140deg,#FF6FA5,#8C1E4B)'
+];
+// Every entry must clear 4.5:1 against white — avatar monograms are identifying text.
+const AVA = ['#0A6E58','#2C4A9E','#B3523E','#5B3E9E','#2F3E48','#7A5A10','#0B5E7A','#8C1E4B','#3E6B2F','#6B2F5E'];
+const KINDS = { genre:'var(--mint-ink)', mood:'var(--violet)', place:'var(--blue)', like:'var(--coral-ink)', tempo:'var(--amber)' };
+
+const FIRST = ['Ada','Jonathan','Sami','Rue','Ines','Tomas','Nia','Kwame','Lena','Marisol','Deniz','Otis','Yuki','Priya','Hugo','Clara','Bruno','Amara','Mateo','Sofia','Jonas','Keiko','Ravi','Noor','Elif','Thabo','Lucia','Pavel','Aisha','Dante','Freya','Samuel','Mina','Kofi','Rosa','Ilya','Juno','Tariq','Beatriz','Oscar','Nadia','Emeka','Hana','Luca','Zara','Bo','Greta','Idris','Camila','Anders'];
+const LAST = ['Oyelaran','Reid','Fehr','Okonkwo','Duarte','Vey','Bell','Boateng','Vogt','Rivas','Aksoy','Lang','Mori','Raman','Bettencourt','Nyström','Sotto','Diallo','Salas','Jansen','Haddad','Kowalski','Nakamura','Mbeki','Ferrari','Novak','Costa','Ahmed','Lindqvist','Moreau','Silva','Okafor','Tanaka','Weber','Petrov','Adeyemi','Rossi','Dubois','Mensah','Larsen'];
+const PLACES = [
+  ['Lagos','NG',1,'Yoruba'], ['Lisbon','PT',1,'Portuguese'], ['London','UK',1,'English'],
+  ['Berlin','DE',2,'German'], ['Houston','US',-5,'English'], ['São Paulo','BR',-3,'Portuguese'],
+  ['Nairobi','KE',3,'Swahili'], ['Seoul','KR',9,'Korean'], ['Mumbai','IN',5.5,'Hindi'],
+  ['Mexico City','MX',-6,'Spanish'], ['Istanbul','TR',3,'Turkish'], ['Accra','GH',0,'Twi'],
+  ['Osaka','JP',9,'Japanese'], ['Stockholm','SE',2,'Swedish'], ['Bogotá','CO',-5,'Spanish'],
+  ['Detroit','US',-4,'English'], ['Porto','PT',1,'Portuguese'], ['Prague','CZ',2,'Czech'],
+  ['Dakar','SN',0,'Wolof'], ['Manila','PH',8,'Tagalog'], ['Toronto','CA',-4,'English'],
+  ['Melbourne','AU',10,'English'], ['Cairo','EG',3,'Arabic'], ['Warsaw','PL',2,'Polish']
+];
+const ROLES = ['Vocalist','Producer','Drummer','Bassist','Keys','Guitar','Strings','Engineer','Writer','DJ','Percussion','Horns'];
+const GENRES = [
+  ['Lo-fi','lofi'], ['Afrobeats','afrobeats'], ['Neo-soul','neosoul'], ['Drill','drill'],
+  ['House','house'], ['Ambient','ambient'], ['R&B','neosoul'], ['Jazz-hop','lofi'],
+  ['Amapiano','afrobeats'], ['Hyperpop','house']
+];
+const MOODS = ['After hours','Warm','Rainy','Euphoric','Restless','Tender','Nocturnal','Sunlit','Hazy','Defiant'];
+const REFS = ['Sampha','Tems','Cleo Sol','Nujabes','Frank Ocean','Little Dragon','Burna Boy','Sault'];
+const WORDS_A = ['Home','Nightbus','Paper','Slow','Cold','Cassette','Rooftop','Blue','Second','Wet','Tram','Morning','Salt','Copper','Quiet','Amber','Half','Every','Glass','Low','Open','Static','River','Velvet','Midnight','Long','Soft','Iron','Gold','Little'];
+const WORDS_B = ['Is With You','','Radio','Ferry','Kitchen','Sunday','Static','Hour','Chorus','Pavement','at Six','Light','Water','Wire','Rooms','Weather','Measure','Other Tuesday','House','Ceiling','Window','Season','Bend','Tape','Call','Way Down','Landing','Lung','Teeth','Signal'];
+
+function rngFrom(seed) { let s = seed; return () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; }; }
+function bars(seed, n, lo, hi) {
+  const out = []; let s = seed;
+  for (let i = 0; i < n; i++) { s = (s * 9301 + 49297) % 233280; out.push(lo + (s / 233280) * (hi - lo)); }
+  return out;
+}
+const fmt = t => {
+  if (!isFinite(t) || t < 0) t = 0;
+  return Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0');
+};
+const money = n => n >= 1000000 ? '$' + (n / 1000000).toFixed(2) + 'M'
+  : n >= 1000 ? '$' + (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k'
+  : '$' + n.toFixed(0);
+const num = n => n >= 1000000 ? (n / 1000000).toFixed(1) + 'M' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(Math.round(n));
+
+class Component extends DCLogic {
+  buffers = {};
+
+  constructor(props) {
+    super(props);
+    const r = rngFrom(424242);
+    const pick = a => a[Math.floor(r() * a.length)];
+
+    // ── 200 people ──
+    const users = [];
+    const seen = {};
+    for (let i = 0; i < 200; i++) {
+      let name, guard = 0;
+      do { name = pick(FIRST) + ' ' + pick(LAST); guard++; } while (seen[name] && guard < 30);
+      seen[name] = 1;
+      const pl = PLACES[Math.floor(r() * PLACES.length)];
+      users.push({
+        id: 'u' + i, name,
+        initials: name.split(' ').map(x => x[0]).join(''),
+        place: pl[0], cc: pl[1], tz: pl[2], lang: pl[3],
+        role: pick(ROLES), role2: pick(ROLES),
+        avatar: AVA[i % AVA.length],
+        followers: Math.round(200 + r() * 42000),
+        spikes: Math.round(500 + r() * 60000),
+        online: r() < 0.31,
+        credits: Math.round(2 + r() * 70)
+      });
+    }
+    this.users = users;
+    this.me = { name: 'Mara Kessler', initials: 'MK', place: 'Lisbon', cc: 'PT', tz: 1, role: 'Producer', avatar: AVA[0] };
+
+    // ── 46 tracks ──
+    const tracks = [];
+    for (let i = 0; i < 46; i++) {
+      const owner = users[Math.floor(r() * users.length)];
+      const g = GENRES[Math.floor(r() * GENRES.length)];
+      const st = r();
+      const state = st < 0.24 ? 'open' : st < 0.36 ? 'seed' : st < 0.56 ? 'building' : 'released';
+      const crewN = 1 + Math.floor(r() * 3);
+      const crew = [];
+      for (let k = 0; k < crewN; k++) crew.push(users[Math.floor(r() * users.length)]);
+      const a = WORDS_A[Math.floor(r() * WORDS_A.length)], b = WORDS_B[Math.floor(r() * WORDS_B.length)];
+      tracks.push({
+        id: 't' + i,
+        title: (a + ' ' + b).trim(),
+        owner, crew, genre: g[0], file: g[1],
+        mood: pick(MOODS), like: REFS[i % REFS.length],
+        bpm: 74 + Math.round(r() * 66),
+        state,
+        spikes: Math.round(80 + r() * 4200),
+        plays: Math.round(900 + r() * 74000),
+        offer: 5 * (2 + Math.floor(r() * 5)),
+        needs: [pick(ROLES), pick(ROLES)].slice(0, 1 + Math.floor(r() * 2)),
+        applicants: Math.floor(r() * 14),
+        art: Math.floor(r() * ART.length),
+        mins: Math.round(4 + r() * 900),
+        seed: 40 + i * 7
+      });
+    }
+    this.tracks = tracks;
+
+    // ── live rooms ──
+    this.rooms = tracks.filter(t => t.state !== 'released').slice(0, 7).map((t, i) => ({
+      t, open: i % 2 === 0,
+      elapsed: (5 + i * 13) + 'm',
+      stage: ['OPEN TO DROP-IN', 'WRITING', 'TRACKING', 'MIXING'][i % 4]
+    }));
+
+    this.state = {
+      theme: 'light', view: 'stream', w: typeof window !== 'undefined' ? window.innerWidth : 1440,
+      playing: false, time: 0, dur: 0, volume: 78, trackIdx: 0, queueOpen: false,
+      spiked: {}, joined: {}, offered: {}, filter: 'For you', period: 'This week',
+      likeRef: 'Sampha', premium: false, paletteOpen: false, pq: '',
+      collabTab: 'chat', mic: false, click: true, recording: false, countdown: 0,
+      takes: [], takeSel: -1, splitPcts: [50, 25, 15, 10], splitSigned: false, splitSent: false,
+      offersLeft: { o1: 1, o2: 1, o3: 1 },
+      profileUser: null, following: {},
+      plays: 42, cpm: 14, premiumShare: 22,
+      draft: '', chat: [
+        { me: false, who: 'Rue Okonkwo · Houston', text: 'Pushed the vocal comp. Take 3 is the one — the tail on the last line stays.' },
+        { me: true, who: 'You · Lisbon', text: 'Agreed. Moving it 40ms late against the perc.' },
+        { me: false, who: 'Ada Oyelaran · Lagos', text: 'It is 3am here and this is worth it. Topline in an hour.' },
+        { me: false, who: 'Jonathan Reid · London', text: 'Bass is tracked and dry. Splits look fair to me — signing.' },
+        { me: false, who: 'Ada Oyelaran · Lagos', text: 'I can put a topline in by tonight — my evening, your afternoon.', orig: 'Mo lè fi orin sí i ní alẹ́ òní — alẹ́ mi, ọ̀sán yín.', lang: 'Yoruba' },
+        { me: false, who: 'Yuki Mori · Osaka', text: 'Left a note at 0:41 — the perc can drop out for two bars.', orig: '0:41にメモを残しました — パーカッションは2小節抜いてもいいかも。', lang: 'Japanese' }
+      ],
+      toast: '', pulse: 0, mp: 0,
+      laneMute: {}, laneSolo: -1, voice: false, listenAlong: false, translate: true,
+      branches: [], clipIdx: 0, packOpen: false, keysOpen: false, cashedOut: false, currency: 'EUR',
+      live: false, me: null, providers: {}, roomLive: null, liveEarn: null,
+      authOpen: false, authMode: 'register', authEmail: '', authPass: '', authName: '', authPlace: '', authAge: false, authErr: '', authBusy: false,
+      humanOpen: false, humanChal: null, humanTaps: [], humanMsg: '', humanBusy: false
+    };
+  }
+
+  componentDidMount() {
+    this.bootLive();
+    let t0 = 'light';
+    try { t0 = window.localStorage.getItem('ellipsis.theme.v2') || 'light'; } catch (e) {}
+    if (t0 !== this.state.theme) this.setState({ theme: t0 });
+    this.applyTheme(t0);
+    this._resize = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this._resize);
+    this._keys = e => {
+      const typing = /INPUT|TEXTAREA/.test((e.target || {}).tagName || '');
+      if (e.key === 'Escape') { this.setState({ paletteOpen: false, queueOpen: false, keysOpen: false, packOpen: false }); return; }
+      if (typing) return;
+      if (e.key === '?') { this.setState(p => ({ keysOpen: !p.keysOpen })); return; }
+      if (e.key === 'c' || e.key === 'C') { this.setState({ view: 'clips' }); return; }
+      if (e.key === 'n' || e.key === 'N') { this.setState({ packOpen: true }); return; }
+      if (this.state.view === 'clips' && (e.key === 'ArrowDown' || e.key === 'j')) { e.preventDefault(); this.stepClip(1); return; }
+      if (this.state.view === 'clips' && (e.key === 'ArrowUp' || e.key === 'k')) { e.preventDefault(); this.stepClip(-1); return; }
+      if (e.key === 'k' || e.key === 'K') { e.preventDefault(); this.setState({ paletteOpen: true, pq: '' }); return; }
+      if (e.key === 't' || e.key === 'T') { this.toggleTheme(); return; }
+      if (e.code === 'Space') { e.preventDefault(); this.togglePlay(); }
+    };
+    window.addEventListener('keydown', this._keys);
+
+    const a = new Audio();
+    a.src = this.srcFor(this.tracks[0]);
+    a.volume = this.state.volume / 100;
+    a.addEventListener('timeupdate', () => this.setState({ time: a.currentTime }));
+    const noteDur = () => {
+      const d = a.duration;
+      if (isFinite(d) && d > 0) { this.setState({ dur: d }); return; }
+      fetch(a.src).then(r => r.arrayBuffer()).then(buf => {
+        const C = window.AudioContext || window.webkitAudioContext;
+        if (!C) return;
+        const ctx = this._ctx || (this._ctx = new C());
+        return ctx.decodeAudioData(buf.slice(0)).then(dec => this.setState({ dur: dec.duration }));
+      }).catch(() => {});
+    };
+    a.addEventListener('loadedmetadata', noteDur);
+    a.addEventListener('durationchange', noteDur);
+    a.addEventListener('canplay', noteDur);
+    a.addEventListener('ended', () => this.next());
+    this.audio = a;
+
+    this._tick = setInterval(() => this.setState(s => ({ pulse: s.pulse + 1 })), 3200);
+    // multiplayer clock: collaborator cursors, speaking indicators, clip auto-advance
+    this._mp = setInterval(() => {
+      this.setState(s => ({ mp: s.mp + 1 }));
+      const st = this.state;
+      if (st.view === 'clips' && st.playing && st.time > 19) this.stepClip(1);
+    }, 900);
+  }
+
+  stepClip(d) {
+    const list = this._clipList || [];
+    if (!list.length) return;
+    const n = list.length;
+    const next = (((this.state.clipIdx + d) % n) + n) % n;
+    this.setState({ clipIdx: next });
+    if (this.state.playing) this.playClip(list[next]);
+  }
+
+  playClip(t) {
+    const i = this.tracks.indexOf(t);
+    if (i < 0) return;
+    this.load(i);
+    setTimeout(() => { if (this.audio) { try { this.audio.currentTime = 4; } catch (e) {} } }, 80);
+  }
+
+  pickPack(file, label) {
+    const i = this.tracks.findIndex(t => t.file === file);
+    if (i >= 0) this.load(i);
+    this.setState({ packOpen: false, view: 'collab', collabTab: 'chat', branches: [], laneMute: {}, laneSolo: -1 });
+    this.flash(label + ' starter loaded — 4 lanes, tempo and key set. Invite anyone.');
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._resize);
+    window.removeEventListener('keydown', this._keys);
+    clearInterval(this._tick);
+    clearInterval(this._mp);
+    clearInterval(this._poll);
+    clearInterval(this._count);
+    clearTimeout(this._toast);
+    if (this.audio) this.audio.pause();
+    if (this._takeAudio) this._takeAudio.pause();
+  }
+
+  srcFor(t) { return 'assets/audio/' + t.file + '.wav'; }
+
+  flash(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._toast);
+    this._toast = setTimeout(() => this.setState({ toast: '' }), 2500);
+  }
+
+  applyTheme(t) {
+    // mirror onto <html> so body/overscroll paint with the same tokens
+    try { document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  }
+
+  toggleTheme = () => {
+    const next = this.state.theme === 'dark' ? 'light' : 'dark';
+    this.setState({ theme: next });
+    this.applyTheme(next);
+    try { window.localStorage.setItem('ellipsis.theme.v2', next); } catch (e) {}
+  };
+
+  togglePlay = () => {
+    const a = this.audio; if (!a) return;
+    if (this.state.playing) { a.pause(); this.setState({ playing: false }); }
+    else a.play().then(() => this.setState({ playing: true })).catch(() => this.flash('Click once more to allow audio'));
+  };
+
+  load(i, play) {
+    const t0 = this.tracks[i];
+    // a play is a ledger event: it pays the split sheet (ad impression on free, pool share on premium)
+    if (t0 && t0.dbId && this.state.live && play !== false) this.api('POST', 'plays', { track_id: t0.dbId, ms: 0 }).catch(() => {});
+    const t = this.tracks[i], a = this.audio;
+    if (!t || !a) return;
+    const src = this.srcFor(t);
+    if (a.src.indexOf(src) < 0) { a.src = src; }
+    a.currentTime = 0;
+    this.setState({ trackIdx: i, time: 0 });
+    if (play !== false) a.play().then(() => this.setState({ playing: true })).catch(() => {});
+  }
+  next = () => this.load((this.state.trackIdx + 1) % this.tracks.length);
+  prev = () => this.load((this.state.trackIdx + this.tracks.length - 1) % this.tracks.length);
+
+  /* ───────── live backend (PHP API at /api). Absent → demo data, same UI. ───────── */
+  API = '../api/';
+  token() { try { return window.localStorage.getItem('ellipsis.token') || ''; } catch (e) { return ''; } }
+  setToken(t) { try { if (t) window.localStorage.setItem('ellipsis.token', t); else window.localStorage.removeItem('ellipsis.token'); } catch (e) {} }
+
+  async api(method, path, body) {
+    const h = { 'Accept': 'application/json' };
+    const t = this.token(); if (t) h.Authorization = 'Bearer ' + t;
+    const init = { method, headers: h };
+    if (body instanceof FormData) init.body = body;
+    else if (body !== undefined) { h['Content-Type'] = 'application/json'; init.body = JSON.stringify(body); }
+    const r = await fetch(this.API + path, init);
+    let j = {}; try { j = await r.json(); } catch (e) {}
+    if (r.status === 401) { this.setToken(''); this.setState({ me: null }); }
+    if (!r.ok || j.ok === false) { const err = new Error(j.error || ('Request failed · ' + r.status)); err.data = j; err.status = r.status; throw err; }
+    return j;
+  }
+
+  async bootLive() {
+    let h = null;
+    try {
+      const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timer = setTimeout(() => ctl && ctl.abort(), 2500);
+      const r = await fetch(this.API + 'health', { signal: ctl ? ctl.signal : undefined });
+      clearTimeout(timer);
+      if (r.ok && /json/.test(r.headers.get('content-type') || '')) h = await r.json();
+    } catch (e) { h = null; }
+    if (!h || !h.ok || !h.installed) { this.setState({ live: false }); return; }
+    this.setState({ live: true, providers: h.providers || {} });
+    if (this.token()) { try { const m = await this.api('GET', 'me'); this.setState({ me: m.user, premium: !!m.user.premium }); } catch (e) {} }
+    await this.refreshTracks();
+    this._poll = setInterval(() => this.pollRoom(), 2500);
+  }
+
+  async refreshTracks() {
+    try {
+      const j = await this.api('GET', 'tracks?limit=46');
+      if (j.tracks && j.tracks.length) {
+        this.tracks = j.tracks;
+        this.rooms = (this.rooms || []).map((rm, i) => Object.assign({}, rm, { t: this.tracks[i % this.tracks.length] }));
+        const sp = {}, jn = {};
+        j.tracks.forEach(t => { if (t.spiked) sp[t.id] = true; if (t.joined) jn[t.id] = true; });
+        this.setState({ spiked: sp, joined: jn, trackIdx: Math.min(this.state.trackIdx, this.tracks.length - 1) });
+      }
+    } catch (e) {}
+  }
+
+  async pollRoom() {
+    const s = this.state;
+    if (!s.live || !s.me || s.view !== 'collab') return;
+    const t = this.tracks[s.trackIdx]; if (!t || !t.dbId) return;
+    if (this._roomId !== t.dbId) { this._roomId = t.dbId; this._since = 0; this.setState({ chat: [], roomLive: null }); }
+    try {
+      const dur = s.dur || 0;
+      this.api('POST', 'rooms/' + t.dbId + '/presence', { lane: 3, pos: dur ? s.time / dur : 0, voice: s.voice, speaking: false }).catch(() => {});
+      const j = await this.api('GET', 'rooms/' + t.dbId + '?since=' + (this._since || 0));
+      if (j.messages && j.messages.length) {
+        this._since = j.messages[j.messages.length - 1].id;
+        this.setState(p => ({ chat: p.chat.concat(j.messages.map(m => ({ me: m.me, who: m.who, text: m.text, orig: m.orig || undefined, lang: m.lang }))) }));
+      }
+      const signedAll = (j.splits || []).filter(x => !x.removed).every(x => x.signed);
+      this.setState({ roomLive: { member: j.member, owner: j.isOwner, online: (j.presence || []).length, splits: j.splits || [] }, splitSigned: signedAll });
+    } catch (e) {}
+  }
+
+  // Returns true if the action was handled by the server (or needs sign-in first).
+  liveAct(method, path, body, ok) {
+    if (!this.state.live) return false;
+    if (!this.state.me) { this.openAuth('register'); return true; }
+    this.api(method, path, body).then(j => ok && ok(j)).catch(e => {
+      if (e.data && e.data.needHuman) this.flash('Human check expired — try again');
+      else this.flash(e.data && e.data.missing ? 'Still needed: ' + e.data.missing.join(', ') : e.message);
+    });
+    return true;
+  }
+
+  dbIdOf(id) { const t = this.tracks.find(x => x.id === id); return t && t.dbId ? t.dbId : 0; }
+
+  /* human check — server issues a tempo, grades the taps, returns a single-use token */
+  async needHuman(then, note) {
+    try {
+      const c = await this.api('POST', 'human/challenge', {});
+      this._humanThen = then;
+      this.setState({ humanOpen: true, humanChal: c, humanTaps: [], humanMsg: note || '', humanBusy: false });
+    } catch (e) { this.flash(e.message); }
+  }
+  humanTap = () => {
+    const s = this.state; if (!s.humanChal || s.humanBusy) return;
+    const taps = s.humanTaps.concat([performance.now()]);
+    this.setState({ humanTaps: taps });
+    if (taps.length < 4) return;
+    this.setState({ humanBusy: true });
+    this.api('POST', 'human/verify', { id: s.humanChal.id, taps: taps.map(x => Math.round(x - taps[0])) })
+      .then(j => { this.setState({ humanOpen: false, humanBusy: false }); const f = this._humanThen; this._humanThen = null; if (f) f(j.human_token); })
+      .catch(e => { this.flash(e.message); this.needHuman(this._humanThen, e.message); });
+  };
+
+  openAuth(mode) { this.setState({ authOpen: true, authMode: mode || 'register', authErr: '' }); }
+  submitAuth = () => {
+    const s = this.state;
+    const done = j => { this.setToken(j.token); this.setState({ me: j.user, authOpen: false, authBusy: false, authPass: '' }); this.flash('Signed in as ' + j.user.name); this.refreshTracks(); };
+    const bad = e => this.setState({ authErr: e.message, authBusy: false });
+    if (s.authMode === 'login') { this.setState({ authBusy: true }); this.api('POST', 'auth/login', { email: s.authEmail, password: s.authPass }).then(done).catch(bad); return; }
+    if (!s.authAge) { this.setState({ authErr: 'Confirm you are 13 or older and accept the terms' }); return; }
+    const tz = -Math.round(new Date().getTimezoneOffset() / 60);
+    this.setState({ authOpen: false });
+    this.needHuman(tok => {
+      this.setState({ authOpen: true, authBusy: true });
+      this.api('POST', 'auth/register', { email: s.authEmail, password: s.authPass, name: s.authName, place: s.authPlace, tz, lang: (navigator.language || 'en').slice(0, 2), roles: 'Producer', age_ok: true, human_token: tok }).then(done).catch(bad);
+    }, 'One account per person — tap four times with the pulse.');
+  };
+  signOut = () => { this.api('POST', 'auth/logout').catch(() => {}); this.setToken(''); this.setState({ me: null }); this.flash('Signed out'); };
+
+  toggleSpike(id, msg) {
+    const dbId = this.dbIdOf(id);
+    if (dbId && this.liveAct('POST', 'tracks/' + dbId + '/spike', {}, j => this.setState(p => ({ spiked: Object.assign({}, p.spiked, { [id]: j.spiked }) })))) return;
+    const on = !!this.state.spiked[id];
+    this.setState(s => ({ spiked: Object.assign({}, s.spiked, { [id]: !on }) }));
+    if (!on && msg) this.flash(msg);
+  }
+
+  localTime(tz) {
+    const d = new Date(Date.now() + tz * 3600000);
+    let h = d.getUTCHours(), m = d.getUTCMinutes();
+    const ap = h >= 12 ? 'pm' : 'am';
+    h = h % 12; if (h === 0) h = 12;
+    return h + ':' + String(m).padStart(2, '0') + ap;
+  }
+
+  bumpSplit(i, d) {
+    this.setState(s => {
+      const cur = s.splitPcts.slice();
+      const v = Math.max(0, Math.min(100, cur[i] + d));
+      if (v === cur[i]) return null;
+      cur[i] = v;
+      return { splitPcts: cur, splitSigned: false, splitSent: false };
+    });
+  }
+
+  async arm() {
+    if (this.state.recording) {
+      const rec = this._rec;
+      if (rec && rec.state === 'recording') {
+        const done = new Promise(res => { rec.onstop = () => res(new Blob(this._chunks, { type: rec.mimeType || 'audio/webm' })); });
+        rec.stop();
+        const blob = await done;
+        if (this._stream) this._stream.getTracks().forEach(t => t.stop());
+        const secs = this._recSecs || 6;
+        const url = URL.createObjectURL(blob);
+        this.setState(s => ({
+          recording: false,
+          takes: s.takes.concat([{ id: 'k' + Date.now(), n: s.takes.length + 1, secs, url, blob }])
+        }));
+        this.flash('Take captured — compare before you keep it');
+      } else this.setState({ recording: false });
+      clearInterval(this._recTimer);
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: false } });
+      await new Promise(res => {
+        let n = 3;
+        this.setState({ countdown: n });
+        this._count = setInterval(() => {
+          n -= 1;
+          if (n <= 0) { clearInterval(this._count); this.setState({ countdown: 0 }); res(); }
+          else this.setState({ countdown: n });
+        }, 750);
+      });
+      this._stream = stream;
+      this._chunks = [];
+      const rec = new MediaRecorder(stream);
+      rec.ondataavailable = e => { if (e.data.size) this._chunks.push(e.data); };
+      rec.start();
+      this._rec = rec;
+      this._recSecs = 0;
+      this._recTimer = setInterval(() => { this._recSecs = (this._recSecs || 0) + 1; this.forceUpdate(); }, 1000);
+      this.setState({ recording: true });
+    } catch (e) {
+      this.flash('Microphone unavailable — recording needs an https connection');
+    }
+  }
+
+  renderVals() {
+    const s = this.state, w = s.w, U = this.users, T = this.tracks;
+    const wide = w >= 1120;
+    const showContext = w >= 1500 && (s.view === 'stream' || s.view === 'discover');
+    const cur = T[s.trackIdx];
+    const dur = s.dur || 0;
+    const prog = dur ? s.time / dur : 0;
+    const spikeOf = t => t.spikes + (s.spiked[t.id] ? 1 : 0) + (s.pulse % 7 === 0 ? 0 : 0);
+
+    const openCalls = T.filter(t => t.state === 'open' || t.state === 'seed');
+    const online = U.filter(u => u.online);
+    const countries = {};
+    U.forEach(u => { countries[u.cc] = 1; });
+    const countryCount = Object.keys(countries).length;
+
+    const nav = [
+      ['stream', 'Stream', '≋', 0], ['clips', 'Clips', '▷', 0], ['discover', 'Discover', '◎', 0],
+      ['collab', 'Collaborate', '⦿', 0], ['activity', 'Activity', '◔', 3],
+      ['earnings', 'Earnings', '◈', 0], ['you', 'Profile', '☺', 0]
+    ].map(([id, label, icon, badge]) => ({
+      title: label, icon, badge: badge || null,
+      bg: s.view === id ? 'var(--mint-soft)' : 'transparent',
+      fg: s.view === id ? 'var(--mint-ink)' : 'var(--dim)',
+      go: () => this.setState({ view: id })
+    }));
+
+    const heads = {
+      stream: ['Stream', 'Tracks in progress from people you follow — and the gaps they need filled'],
+      clips: ['Clips', 'Fifteen-second hooks ranked for you — every one is a track you can join'],
+      discover: ['Discover', 'Spike charts by genre, mood, place, tempo and who it sounds like'],
+      collab: ['Collaborate', 'One room, four time zones, every contribution accounted for'],
+      activity: ['Activity', 'Everything waiting on you, and what your work did this week'],
+      earnings: ['Earnings', 'Ad revenue, subscriptions and where every split lands'],
+      you: ['Profile', 'Credits, instruments and what you are open to']
+    };
+    const head = heads[s.view] || heads.stream;
+
+    const mkTags = t => [
+      { kind: 'genre', label: t.genre },
+      { kind: 'mood', label: t.mood },
+      { kind: 'place', label: t.owner.place },
+      { kind: 'like', label: 'Sounds like ' + t.like },
+      { kind: 'tempo', label: t.bpm + ' BPM' }
+    ].map(g => ({
+      kind: g.kind, label: g.label, dot: KINDS[g.kind],
+      go: () => this.setState({ view: 'discover', likeRef: g.kind === 'like' ? t.like : s.likeRef })
+    }));
+
+    const STATES = {
+      seed: ['SEED', 'rgba(176,124,255,0.16)', 'var(--violet)'],
+      open: ['OPEN CALL', 'var(--coral-soft)', 'var(--coral-ink)'],
+      building: ['BUILDING', 'rgba(91,140,255,0.16)', 'var(--blue)'],
+      released: ['RELEASED', 'var(--mint-soft)', 'var(--mint-ink)']
+    };
+
+    // personal ranking: instrument match > follows > replayed genres > momentum
+    const MINE = ['Strings', 'Keys', 'Producer'], LIKES = ['Neo-soul', 'Lo-fi', 'R&B', 'Ambient'];
+    const forYou = t => {
+      let sc = t.spikes / 400, why = 'Rising on the ' + t.like + ' chart';
+      if (LIKES.indexOf(t.genre) >= 0) { sc += 2; why = 'You replay ' + t.genre.toLowerCase(); }
+      if (s.following && t.owner && s.following[t.owner.id]) { sc += 3; why = 'You follow ' + t.owner.name.split(' ')[0]; }
+      const need = (t.state === 'open' || t.state === 'seed') ? t.needs.find(n => MINE.indexOf(n) >= 0) : null;
+      if (need) { sc += 4; why = 'Needs ' + need.toLowerCase() + ' — that is you'; }
+      if (t.owner && t.owner.online) sc += 0.5;
+      return { sc, why };
+    };
+
+    const filtered = T.filter(t => {
+      if (s.filter === 'Open calls') return t.state === 'open' || t.state === 'seed';
+      if (s.filter === 'Released') return t.state === 'released';
+      if (s.filter === 'Needs my instrument') return (t.state === 'open' || t.state === 'seed') && t.needs.some(n => ['Producer', 'Strings', 'Keys'].indexOf(n) >= 0);
+      if (s.filter === 'Near me') return ['PT', 'UK', 'DE', 'SE'].indexOf(t.owner.cc) >= 0;
+      return true;
+    });
+    const ranked = s.filter === 'For you' ? filtered.slice().sort((a, b) => forYou(b).sc - forYou(a).sc) : filtered;
+    const streamList = ranked.slice(0, 9);
+
+    const stream = streamList.map(t => {
+      const idx = T.indexOf(t);
+      const on = s.trackIdx === idx && s.playing;
+      const sp = !!s.spiked[t.id];
+      const joined = !!s.joined[t.id];
+      const st = STATES[t.state];
+      const isOpen = t.state === 'open' || t.state === 'seed';
+      return {
+        hasReason: s.filter === 'For you', reason: forYou(t).why,
+        id: t.id, title: t.title, artist: t.owner.name, initials: t.owner.initials,
+        place: t.owner.place + ', ' + t.owner.cc, localTime: this.localTime(t.owner.tz),
+        when: t.mins < 60 ? t.mins + 'm' : Math.round(t.mins / 60) + 'h',
+        online: t.owner.online, avatarBg: t.owner.avatar, art: ART[t.art],
+        cardBorder: isOpen ? 'var(--coral)' : 'var(--line)',
+        stateLabel: st[0], stateBg: st[1], stateFg: st[2],
+        playIcon: on ? '❚❚' : '▶',
+        play: () => (s.trackIdx === idx ? this.togglePlay() : this.load(idx)),
+        openTrack: () => { this.load(idx, false); this.setState({ view: 'collab' }); },
+        openArtist: () => this.setState({ view: 'you', profileUser: t.owner }),
+        report: () => this.flash('Sent to moderation — a human reviews within 24 hours'),
+        wave: bars(t.seed, 54, 16, 100).map((h, j) => ({
+          h: Math.round(h) + '%',
+          c: on && j / 54 <= prog ? 'var(--mint)' : 'var(--line2)',
+          anim: on ? 'elBeat 1.05s ease-in-out ' + ((j % 9) * 0.07).toFixed(2) + 's infinite' : 'none'
+        })),
+        crew: t.crew.slice(0, 3).map(c => ({ initials: c.initials, bg: c.avatar, who: c.name + ' · ' + c.place })),
+        isOpen, needs: t.needs.map(n => ({ name: n })), offer: t.offer,
+        joinLabel: joined ? 'Joined ✓' : 'Join the track',
+        join: () => {
+          if (joined) { this.setState({ view: 'collab' }); return; }
+          if (t.dbId && this.liveAct('POST', 'tracks/' + t.dbId + '/join', {}, () => { this.setState(p => ({ joined: Object.assign({}, p.joined, { [t.id]: true }) })); this.flash('You joined ' + t.title + ' — signatures reset so the sheet can include you'); })) return;
+          this.setState(p => ({ joined: Object.assign({}, p.joined, { [t.id]: true }) }));
+          this.flash('You joined ' + t.title + ' — stems downloading from ' + t.owner.place);
+        },
+        spikes: num(spikeOf(t)),
+        spike: () => this.toggleSpike(t.id, 'Spiked — it moves the chart for 24 hours'),
+        spikeBg: sp ? 'var(--mint-soft)' : 'transparent',
+        spikeFg: sp ? 'var(--mint-ink)' : 'var(--ink)',
+        spikeBorder: sp ? 'var(--mint)' : 'var(--line)',
+        tags: mkTags(t), plays: num(t.plays)
+      };
+    });
+
+    const live = this.rooms.map(rm => {
+      const t = rm.t, idx = T.indexOf(t);
+      const members = [t.owner].concat(t.crew).slice(0, 4);
+      return {
+        title: t.title, state: rm.stage, elapsed: rm.elapsed,
+        dot: rm.open ? 'var(--mint)' : 'var(--blue)',
+        stateFg: rm.open ? 'var(--mint-ink)' : 'var(--blue)',
+        bg: rm.open ? 'var(--mint-soft)' : 'var(--panel)',
+        border: rm.open ? 'var(--mint)' : 'var(--line)',
+        places: members.map(m => m.place).join(' · '),
+        members: members.map(m => ({ initials: m.initials, bg: m.avatar, who: m.name + ' · ' + this.localTime(m.tz) })),
+        need: rm.open ? 'needs ' + t.needs[0].toLowerCase() : 'listen in',
+        needFg: rm.open ? 'var(--coral-ink)' : 'var(--dim)',
+        enter: () => { this.load(idx, false); this.setState({ view: 'collab' }); this.flash('Dropped into ' + t.title); }
+      };
+    });
+
+    // ── Sounds Like charts (really filtered) ──
+    const periodMul = s.period === 'This week' ? 1 : s.period === 'This year' ? 6.4 : 21;
+    const forRef = T.filter(t => t.like === s.likeRef);
+    const rank = (list, wantInstrumental) => list
+      .filter(t => wantInstrumental ? (t.genre === 'Ambient' || t.genre === 'Lo-fi' || t.genre === 'House' || t.genre === 'Jazz-hop') : true)
+      .filter(t => wantInstrumental ? true : (t.genre !== 'Ambient'))
+      .slice()
+      .sort((a, b) => spikeOf(b) - spikeOf(a))
+      .slice(0, 5)
+      .map((t, i) => {
+        const idx = T.indexOf(t);
+        const id = 'c' + t.id + s.period;
+        const sp = !!s.spiked[id];
+        const mv = (i + s.likeRef.length) % 3 - 1;
+        return {
+          rank: i + 1, title: t.title, artist: t.owner.name, place: t.owner.place,
+          art: ART[t.art], icon: s.trackIdx === idx && s.playing ? '❚❚' : '▶',
+          rankColor: i === 0 ? 'var(--mint-ink)' : 'var(--dim)',
+          move: mv > 0 ? '▲' + (mv + 1) : mv < 0 ? '▼1' : '—',
+          moveColor: mv > 0 ? 'var(--mint-ink)' : mv < 0 ? 'var(--coral-ink)' : 'var(--dim)',
+          spikes: num(Math.round(spikeOf(t) * periodMul) + (sp ? 1 : 0)),
+          spike: () => this.toggleSpike(id, 'Spiked'),
+          spikeBg: sp ? 'var(--mint-soft)' : 'transparent',
+          spikeFg: sp ? 'var(--mint-ink)' : 'var(--ink)',
+          spikeBorder: sp ? 'var(--mint)' : 'var(--line)',
+          play: () => this.load(idx)
+        };
+      });
+    const songRows = rank(forRef.filter(t => t.genre !== 'Ambient'), false);
+    const instRows = rank(forRef.filter(t => ['Ambient', 'Lo-fi', 'House', 'Jazz-hop'].indexOf(t.genre) >= 0), true);
+    const metaLine = 'sounds like ' + s.likeRef + ' · ' + s.period.toLowerCase();
+
+    const calls = openCalls.slice(0, 6).map(t => {
+      const idx = T.indexOf(t);
+      const done = !!s.offered[t.id];
+      return {
+        title: t.title, artist: t.owner.name, place: t.owner.place + ', ' + t.owner.cc,
+        art: ART[t.art], bpm: t.bpm + ' BPM · ' + t.genre,
+        needs: t.needs.map(n => ({ name: n })), offer: t.offer,
+        applicants: t.applicants,
+        applyLabel: done ? 'Offer sent ✓' : 'Offer a stem',
+        play: () => this.load(idx),
+        apply: () => {
+          if (done) return;
+          this.setState(p => ({ offered: Object.assign({}, p.offered, { [t.id]: true }) }));
+          this.flash('Offer sent to ' + t.owner.name + ' in ' + t.owner.place);
+        }
+      };
+    });
+
+    // ── collaboration room ──
+    const room = T[s.trackIdx];
+    const crew = [this.me, room.owner].concat(room.crew).slice(0, 4);
+    const pcts = s.splitPcts.slice(0, crew.length);
+    while (pcts.length < crew.length) pcts.push(0);
+    const total = pcts.reduce((a, b) => a + b, 0);
+    const splitOk = total === 100;
+
+    const laneDefs = [
+      ['Instrumental', room.owner.name + ' · ' + room.owner.place, 'var(--mint)', 11, 'v4'],
+      ['Lead vocal', crew[2] ? crew[2].name + ' · ' + crew[2].place : 'Ada Oyelaran · Lagos', '#FF8A5C', 27, 'v2'],
+      ['Keys', crew[3] ? crew[3].name + ' · ' + crew[3].place : 'Jonathan Reid · London', '#5B8CFF', 43, 'v1'],
+      ['Room perc', 'You · Lisbon · live', '#B07CFF', 61, 'v3']
+    ];
+    // remote collaborators each hold a cursor on the lane they are editing
+    const editors = [room.owner].concat(room.crew).slice(0, 3);
+    const lanes = laneDefs.map(([name, owner, color, seed, version], i) => {
+      const muted = !!s.laneMute[i];
+      const soloed = s.laneSolo === i;
+      const audible = !muted && (s.laneSolo < 0 || soloed);
+      const ed = i < 3 ? editors[i] : null;
+      const cx = ed ? (18 + 64 * (0.5 + 0.5 * Math.sin(s.mp * 0.45 + i * 1.9))) : 0;
+      return {
+        name, owner, color, version,
+        bg: soloed ? 'var(--mint-soft)' : i === 3 ? 'var(--mint-soft)' : 'var(--soft)',
+        border: soloed || i === 3 ? 'var(--mint)' : 'var(--line)',
+        dim: audible ? '1' : '0.35',
+        wave: bars(seed, 48, 14, 100).map((h, j) => ({
+          h: Math.round(h) + '%', c: audible ? color : 'var(--line2)',
+          anim: audible ? 'elBeat ' + (1.0 + i * 0.13).toFixed(2) + 's ease-in-out ' + ((j % 8) * 0.08).toFixed(2) + 's infinite' : 'none'
+        })),
+        hasCursor: !!ed,
+        cursorX: cx.toFixed(1) + '%',
+        cursorColor: ed ? ed.avatar : 'transparent',
+        cursorName: ed ? ed.name.split(' ')[0] + (s.mp % 5 === i ? ' · typing' : ' · editing') : '',
+        playheadX: (prog * 100).toFixed(2) + '%',
+        muteBg: muted ? 'var(--coral-btn)' : 'transparent', muteFg: muted ? '#fff' : 'var(--dim)',
+        soloBg: soloed ? 'var(--mint)' : 'transparent', soloFg: soloed ? 'var(--on-mint)' : 'var(--dim)',
+        mute: () => this.setState(p => ({ laneMute: Object.assign({}, p.laneMute, { [i]: !p.laneMute[i] }) })),
+        solo: () => this.setState(p => ({ laneSolo: p.laneSolo === i ? -1 : i }))
+      };
+    });
+
+    // voice room + the one window when everyone is awake
+    const voiceCrew = crew.map((u, i) => {
+      const speaking = s.voice && (s.mp % (crew.length + 1)) === i;
+      return {
+        initials: u.initials, bg: u.avatar, name: u.name.split(' ')[0],
+        local: this.localTime(u.tz || 0),
+        ring: speaking ? 'var(--mint)' : 'var(--line)',
+        anim: speaking ? 'elPulse .9s ease-in-out infinite' : 'none',
+        state: !s.voice ? 'not in voice' : speaking ? 'speaking' : 'listening'
+      };
+    });
+    const tzs = crew.map(u => u.tz || 0);
+    let bestH = 0, bestN = -1;
+    for (let h = 0; h < 24; h++) {
+      const n = tzs.filter(z => { const l = ((h + z) % 24 + 24) % 24; return l >= 9 && l <= 22; }).length;
+      if (n > bestN) { bestN = n; bestH = h; }
+    }
+    let span = 1;
+    while (span < 4 && tzs.filter(z => { const l = ((bestH + span + z) % 24 + 24) % 24; return l >= 9 && l <= 22; }).length === bestN) span++;
+    const hh = h => String(((h % 24) + 24) % 24).padStart(2, '0') + ':00';
+    const overlapText = hh(bestH) + '–' + hh(bestH + span) + ' UTC · ' + bestN + ' of ' + crew.length + ' awake';
+
+    const BRANCH_NAMES = ['Half-time bridge', 'Stripped second verse', 'Double-time outro', 'Key change at 1:20'];
+
+    // clips: the For-you ranking, cut to the hook
+    const clipList = T.slice().sort((a, b) => forYou(b).sc - forYou(a).sc).slice(0, 12);
+    this._clipList = clipList;
+    const ci = ((s.clipIdx % clipList.length) + clipList.length) % clipList.length;
+    const clip = clipList[ci];
+    const clipTi = T.indexOf(clip);
+    const clipOn = s.trackIdx === clipTi && s.playing;
+    const clipProg = clipOn ? Math.max(0, Math.min(1, (s.time - 4) / 15)) : 0;
+    const clipOpen = clip.state === 'open' || clip.state === 'seed';
+    const clipJoined = !!s.joined[clip.id];
+    const clipSpiked = !!s.spiked[clip.id];
+
+    // payouts ledger — creator pool is 70% of ad + subscription revenue, settled per play
+    const FX = { USD: [1, 'en-US'], EUR: [0.92, 'de-DE'], GBP: [0.79, 'en-GB'], NGN: [1580, 'en-NG'], BRL: [5.1, 'pt-BR'], JPY: [148, 'ja-JP'], INR: [83, 'en-IN'] };
+    const fx = FX[s.currency] || FX.USD;
+    const fmtCur = v => { try { return new Intl.NumberFormat(fx[1], { style: 'currency', currency: s.currency, maximumFractionDigits: s.currency === 'JPY' || s.currency === 'NGN' ? 0 : 2 }).format(v * fx[0]); } catch (e) { return s.currency + ' ' + (v * fx[0]).toFixed(2); } };
+    const perK = s.cpm * 0.62 * (1 - s.premiumShare / 100) + 11.4 * (s.premiumShare / 100) * 0.9;
+    const SHARES = [50, 25, 15, 20, 10, 33];
+    const ledgerRows = T.slice(0, 6).map((t, i) => {
+      const plays = t.spikes * 14 + t.art * 900 + 1200;
+      const pool = plays / 1000 * perK * 0.7;
+      const mine = pool * SHARES[i] / 100;
+      return { t, plays, mine, share: SHARES[i] };
+    });
+    const ledgerTotal = ledgerRows.reduce((a, r) => a + r.mine, 0);
+
+    const offerDefs = [
+      ['o1', U[7], 'Upright bass, dry, two passes', 10, '12m', 71],
+      ['o2', U[23], 'Yoruba topline over the second verse', 20, '1h', 93],
+      ['o3', U[58], 'Tape saturation pass on the master', 5, '3h', 117]
+    ];
+    const offers = offerDefs.filter(o => s.offersLeft[o[0]]).map(([id, u, note, ask, when, seed]) => ({
+      who: u.name, initials: u.initials, avatar: u.avatar,
+      role: u.role, place: u.place + ', ' + u.cc, note, ask, when,
+      bg: 'var(--panel2)', border: 'var(--line)',
+      wave: bars(seed, 28, 20, 100).map(h => ({ h: Math.round(h) + '%', c: 'var(--line2)' })),
+      preview: () => this.flash('Previewing ' + u.name + "'s stem"),
+      accept: () => {
+        this.setState(p => ({ offersLeft: Object.assign({}, p.offersLeft, { [id]: 0 }), splitSigned: false, splitSent: false }));
+        this.flash(u.name + ' added at ' + ask + '% — splits reset to unsigned');
+      },
+      decline: () => {
+        this.setState(p => ({ offersLeft: Object.assign({}, p.offersLeft, { [id]: 0 }) }));
+        this.flash('Declined — ' + u.name + ' has been told');
+      }
+    }));
+
+    const versions = [
+      ['v4', 'Instrumental re-bounced', room.owner.name, '8m ago', 'Current', 'var(--mint)'],
+      ['v3', 'Room perc added', 'You', '26m ago', 'Restore', 'var(--violet)'],
+      ['v2', 'Vocal comp — take 3', 'Ada Oyelaran', '1h ago', 'Restore', '#FF8A5C'],
+      ['v1', 'Keys tracked', 'Jonathan Reid', '3h ago', 'Restore', '#5B8CFF'],
+      ['v0', 'Session opened', room.owner.name, '4h ago', 'Restore', 'var(--dim)']
+    ].map(([tag, title, who, when, action, avatar], i) => ({
+      tag, title, who, when, action, avatar,
+      bg: i === 0 ? 'var(--mint-soft)' : 'transparent',
+      border: i === 0 ? 'var(--mint)' : 'var(--line)',
+      restore: () => this.flash(i === 0 ? 'Already on ' + tag : 'Restored ' + tag + ' — earlier versions are kept')
+    }));
+
+    const send = () => {
+      const d = s.draft.trim(); if (!d) return;
+      if (room.dbId && this.liveAct('POST', 'rooms/' + room.dbId + '/messages', { text: d, lang: (navigator.language || 'en').slice(0, 2) }, () => { this.setState({ draft: '' }); this.pollRoom(); })) return;
+      this.setState(p => ({ draft: '', chat: p.chat.concat([{ me: true, who: 'You · Lisbon', text: d }]) }));
+    };
+
+    // ── economics ──
+    const mau = s.plays * 100000;
+    const freeShare = (100 - s.premiumShare) / 100;
+    const listensPerUser = 160;
+    const adImpressions = mau * freeShare * listensPerUser * 0.22;
+    const adRev = adImpressions / 1000 * s.cpm;
+    const subRev = mau * (s.premiumShare / 100) * 5.99;
+    const gross = adRev + subRev;
+    const infra = gross * 0.09;
+    const net = gross - infra;
+    const takeRate = 30;
+    const creatorPool = net * (1 - takeRate / 100);
+    const platform = net - creatorPool;
+
+    const myTracks = T.slice(0, 4);
+    const myShare = [50, 25, 40, 15];
+    const rpm = gross / (mau * listensPerUser) * 1000;
+    const myEarnings = myTracks.map((t, i) => {
+      const pay = t.plays / 1000 * rpm * (1 - takeRate / 100) * (myShare[i] / 100) * 30;
+      return {
+        title: t.title, art: ART[t.art], plays: num(t.plays * 30), share: myShare[i],
+        payout: money(pay), raw: pay
+      };
+    });
+    const myTotal = myEarnings.reduce((a, b) => a + b.raw, 0);
+
+    const byCountry = {};
+    U.forEach(u => { byCountry[u.cc] = (byCountry[u.cc] || 0) + u.credits; });
+    const corridorList = Object.keys(byCountry).map(cc => ({ cc, n: byCountry[cc] })).sort((a, b) => b.n - a.n).slice(0, 6);
+    const maxC = corridorList[0] ? corridorList[0].n : 1;
+    const CC_NAME = {};
+    PLACES.forEach(p => { CC_NAME[p[1]] = p[0]; });
+    const corridors = corridorList.map((c, i) => ({
+      country: CC_NAME[c.cc] + ' · ' + c.cc,
+      amount: money(creatorPool * (c.n / (maxC * 7))),
+      people: U.filter(u => u.cc === c.cc).length,
+      width: Math.round(c.n / maxC * 100) + '%',
+      color: ['var(--mint)', 'var(--blue)', 'var(--violet)', 'var(--coral)', 'var(--amber)', 'var(--mint)'][i]
+    }));
+
+    // ── palette ──
+    const q = s.pq.trim().toLowerCase();
+    const commands = [
+      ['Toggle light mode', 'Switch the whole interface', () => { this.toggleTheme(); this.setState({ paletteOpen: false }); }],
+      ['Start a track', 'Opens a new session', () => { this.setState({ view: 'collab', paletteOpen: false }); this.flash('New session opened'); }],
+      ['Post an open call', 'Ask for the part you need', () => { this.setState({ view: 'stream', paletteOpen: false }); this.flash('Open call drafted'); }],
+      ['Play the chart', 'Listen top to bottom', () => { this.setState({ paletteOpen: false }); this.load(0); }],
+      ['Go Premium', 'No ads, 30 GB, lossless', () => { this.setState({ premium: true, paletteOpen: false }); this.flash('Premium active'); }]
+    ];
+    const pGroups = [];
+    if (q) {
+      const cm = commands.filter(c => c[0].toLowerCase().indexOf(q) >= 0);
+      if (cm.length) pGroups.push({ label: 'COMMANDS', items: cm.map(([title, sub, go]) => ({ title, sub, badge: '⌘', radius: '10px', art: 'var(--mint-soft)', go })) });
+      const tr = T.filter(t => (t.title + ' ' + t.owner.name + ' ' + t.genre).toLowerCase().indexOf(q) >= 0).slice(0, 5);
+      if (tr.length) pGroups.push({ label: 'TRACKS', items: tr.map(t => ({ title: t.title, sub: t.owner.name + ' · ' + t.genre, badge: '▶', radius: '10px', art: ART[t.art], go: () => { this.setState({ paletteOpen: false }); this.load(T.indexOf(t)); } })) });
+      const pp = U.filter(u => (u.name + ' ' + u.place + ' ' + u.role).toLowerCase().indexOf(q) >= 0).slice(0, 5);
+      if (pp.length) pGroups.push({ label: 'PEOPLE', items: pp.map(u => ({ title: u.name, sub: u.role + ' · ' + u.place, badge: u.initials, radius: '50%', art: u.avatar, go: () => this.setState({ view: 'you', profileUser: u, paletteOpen: false }) })) });
+      const rf = REFS.filter(r => r.toLowerCase().indexOf(q) >= 0);
+      if (rf.length) pGroups.push({ label: 'SOUNDS LIKE', items: rf.map((r, i) => ({ title: 'Sounds like ' + r, sub: T.filter(t => t.like === r).length + ' tracks', badge: '◎', radius: '10px', art: ART[i % ART.length], go: () => this.setState({ view: 'discover', likeRef: r, paletteOpen: false }) })) });
+    } else {
+      pGroups.push({ label: 'JUMP TO', items: [
+        { title: 'Stream', sub: 'Tracks in progress', badge: '≋', radius: '10px', art: 'var(--mint-soft)', go: () => this.setState({ view: 'stream', paletteOpen: false }) },
+        { title: 'Discover', sub: 'Spike charts and Sounds Like', badge: '◎', radius: '10px', art: 'rgba(91,140,255,0.22)', go: () => this.setState({ view: 'discover', paletteOpen: false }) },
+        { title: 'Collaborate', sub: 'The live room', badge: '⦿', radius: '10px', art: 'var(--coral-soft)', go: () => this.setState({ view: 'collab', paletteOpen: false }) },
+        { title: 'Earnings', sub: 'Ad revenue and payouts', badge: '◈', radius: '10px', art: 'rgba(176,124,255,0.22)', go: () => this.setState({ view: 'earnings', paletteOpen: false }) }
+      ] });
+      pGroups.push({ label: 'COMMANDS', items: commands.map(([title, sub, go]) => ({ title, sub, badge: '⌘', radius: '10px', art: 'var(--soft)', go })) });
+    }
+
+    // ── profile ──
+    const pu = s.profileUser;
+    const isMe = !pu;
+    const profFollowing = pu ? !!s.following[pu.id] : true;
+    const profTracks = pu ? T.filter(t => t.owner === pu) : T.slice(0, 6);
+    const profList = (profTracks.length ? profTracks : T.slice(0, 4)).slice(0, 6);
+
+    const tickerEvents = [
+      online[0] && online[0].name + ' in ' + online[0].place + ' joined ' + T[3].title,
+      T[5].title + ' entered the ' + T[5].like + ' chart at #4',
+      online[4] && online[4].name + ' offered a ' + online[4].role.toLowerCase() + ' stem in ' + online[4].place,
+      'Splits signed on ' + T[9].title + ' across 3 countries',
+      online[8] && online[8].name + ' started a session at ' + this.localTime(online[8].tz) + ' local'
+    ].filter(Boolean);
+
+    return {
+      theme: s.theme,
+      themeIcon: s.theme === 'dark' ? '☀' : '☾',
+      themeTitle: s.theme === 'dark' ? 'Switch to light — press T' : 'Switch to dark — press T',
+      toggleTheme: this.toggleTheme,
+
+      shellCols: '72px minmax(0,1fr)' + (showContext ? ' 310px' : ''),
+      playerCols: wide ? 'minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr)' : 'minmax(0,1fr) minmax(0,1.5fr)',
+      playerPad: wide ? '26px' : '74px',
+      chartCols: w >= 1180 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)',
+      collabCols: w >= 1180 ? 'minmax(0,1.65fr) minmax(0,1fr)' : 'minmax(0,1fr)',
+      laneCols: w >= 900 ? '170px minmax(0,1fr) 130px' : '120px minmax(0,1fr) 96px',
+      activityCols: w >= 1080 ? 'minmax(0,1.4fr) minmax(0,1fr)' : 'minmax(0,1fr)',
+      earnCols: w >= 1080 ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)',
+      panelHeight: w >= 1180 ? '560px' : '460px',
+      wide, narrow: !wide, showContext, nav,
+
+      ticker: tickerEvents.join('   ·   '),
+      globalLine: num(U.length) + ' creators · ' + countryCount + ' countries · ' + online.length + ' online',
+      youRing: s.view === 'you' ? 'var(--mint)' : 'var(--line2)',
+      goYou: () => this.setState({ view: 'you', profileUser: null }),
+      pageTitle: head[0], pageSub: head[1],
+      startTrack: () => this.setState({ packOpen: true }),
+      openPremium: () => { this.setState({ premium: true }); this.flash('Premium active — ads off, 30 GB, lossless'); },
+      showAd: !s.premium,
+      adCopy: 'One promoted slot per session on the free tier — and 70% of what it earns goes to the split sheet of the track you just heard.',
+      adPayout: money(adRev / 30 / 1000) + ' per 1k impressions',
+
+      isStream: s.view === 'stream', isDiscover: s.view === 'discover', isCollab: s.view === 'collab',
+      isActivity: s.view === 'activity', isEarnings: s.view === 'earnings', isYou: s.view === 'you',
+
+      liveCount: this.rooms.length,
+      liveCountries: 5,
+      live, stream,
+      streamCount: streamList.length + ' of ' + filtered.length + ' tracks',
+      streamFilters: ['For you', 'Everything', 'Open calls', 'Needs my instrument', 'Near me', 'Released'].map(label => ({
+        label,
+        bg: s.filter === label ? 'var(--mint)' : 'transparent',
+        fg: s.filter === label ? 'var(--on-mint)' : 'var(--ink)',
+        border: s.filter === label ? 'var(--mint)' : 'var(--line)',
+        go: () => this.setState({ filter: label })
+      })),
+
+      soundsHead: num(forRef.length) + ' tracks on Ellipsis sound like ' + s.likeRef,
+      likeRef: s.likeRef,
+      soundsLike: REFS.map((name, i) => {
+        const on = s.likeRef === name;
+        return {
+          name, art: ART[i % ART.length], count: T.filter(t => t.like === name).length,
+          bg: on ? 'var(--mint-soft)' : 'transparent',
+          fg: on ? 'var(--mint-ink)' : 'var(--ink)',
+          border: on ? 'var(--mint)' : 'var(--line)',
+          go: () => { this.setState({ likeRef: name }); this.flash('Charts rebuilt around ' + name); }
+        };
+      }),
+      periods: ['This week', 'This year', 'All time'].map(label => ({
+        label,
+        bg: s.period === label ? 'var(--ink)' : 'transparent',
+        fg: s.period === label ? 'var(--bg)' : 'var(--ink)',
+        go: () => this.setState({ period: label })
+      })),
+      playChart: () => {
+        const first = forRef[0];
+        if (!first) { this.flash('No tracks on this chart yet'); return; }
+        this.load(T.indexOf(first));
+        this.flash('Playing ' + s.period.toLowerCase() + ' · sounds like ' + s.likeRef);
+      },
+      charts: [
+        { title: 'Songs on the Spike', meta: metaLine, rows: songRows, empty: songRows.length === 0 },
+        { title: 'Instrumentals on the Spike', meta: metaLine, rows: instRows, empty: instRows.length === 0 }
+      ],
+      callCount: openCalls.length,
+      callCountries: 11,
+      callAvg: Math.round(openCalls.reduce((a, b) => a + b.offer, 0) / Math.max(1, openCalls.length)),
+      calls,
+
+      sessionTitle: room.title + ' · ' + room.genre,
+      sessionElapsed: '41m',
+      sessionTempo: room.bpm + ' BPM · F minor · 4/4',
+      presence: crew.map((c, i) => ({
+        initials: c.initials, bg: c.avatar,
+        ring: i < 2 ? 'var(--mint)' : 'var(--line2)',
+        status: c.name + ' · ' + c.place + ' · ' + this.localTime(c.tz == null ? 1 : c.tz)
+      })),
+      inviteToSession: () => this.flash('Invite link copied — they get the project, not a file'),
+      micLabel: s.mic ? 'Mic live' : 'Request the mic',
+      requestMic: () => { this.setState(p => ({ mic: !p.mic })); this.flash(s.mic ? 'Mic released' : 'Mic granted by the host'); },
+      clock: s.recording ? fmt(this._recSecs || 0) : fmt(s.time),
+      playIcon: s.playing ? '❚❚' : '▶',
+      togglePlay: this.togglePlay,
+      clickBg: s.click ? 'var(--mint-soft)' : 'transparent',
+      clickFg: s.click ? 'var(--mint-ink)' : 'var(--dim)',
+      toggleClick: () => this.setState(p => ({ click: !p.click })),
+      counting: s.countdown > 0, countdown: s.countdown,
+      recLabel: s.recording ? 'Stop · ' + fmt(this._recSecs || 0) : 'Arm & record',
+      recBg: s.recording ? 'var(--coral)' : 'transparent',
+      recFg: s.recording ? '#fff' : 'var(--ink)',
+      recBorder: s.recording ? 'var(--coral)' : 'var(--line2)',
+      recDot: s.recording ? '#fff' : 'var(--coral)',
+      recAnim: s.recording ? 'elPulse 1s ease-in-out infinite' : 'none',
+      armRecord: () => this.arm(),
+      lanes,
+      hasTakes: s.takes.length > 0,
+      clearTakes: () => { s.takes.forEach(t => URL.revokeObjectURL(t.url)); this.setState({ takes: [], takeSel: -1 }); },
+      takes: s.takes.map((t, i) => ({
+        n: t.n, len: fmt(t.secs),
+        border: s.takeSel === i ? 'var(--mint)' : 'var(--line)',
+        icon: s.takeSel === i ? '❚❚' : '▶',
+        wave: bars(t.n * 37 + 11, 22, 18, 100).map(h => ({ h: Math.round(h) + '%', c: s.takeSel === i ? 'var(--mint)' : 'var(--line2)' })),
+        play: () => {
+          if (this._takeAudio) this._takeAudio.pause();
+          if (s.takeSel === i) { this.setState({ takeSel: -1 }); return; }
+          const a = new Audio(t.url);
+          this._takeAudio = a;
+          this.setState({ takeSel: i });
+          a.play().catch(() => this.flash('Could not play that take'));
+        },
+        keep: () => {
+          URL.revokeObjectURL(t.url);
+          this.setState(p => ({ takes: p.takes.filter(x => x.id !== t.id), takeSel: -1 }));
+          this.flash('Take ' + t.n + ' added as a new lane');
+        },
+        drop: () => {
+          URL.revokeObjectURL(t.url);
+          this.setState(p => ({ takes: p.takes.filter(x => x.id !== t.id), takeSel: -1 }));
+        }
+      })),
+      addStem: () => this.flash('Drop an audio file, or arm a lane and record'),
+      bounce: () => this.flash('Bounced 24-bit master — Premium keeps it lossless'),
+      pubLocked: !(splitOk && s.splitSigned),
+      pubLabel: splitOk && s.splitSigned ? 'Publish…' : 'Publish locked',
+      pubHint: splitOk && s.splitSigned ? 'Five tags and a human check to go' : 'Splits must total 100% and be signed by everyone',
+      pubBg: splitOk && s.splitSigned ? 'var(--mint)' : 'var(--soft)',
+      pubFg: splitOk && s.splitSigned ? 'var(--on-mint)' : 'var(--dim)',
+      pubCursor: splitOk && s.splitSigned ? 'pointer' : 'not-allowed',
+      publish: () => {
+        if (!(splitOk && s.splitSigned)) return;
+        if (s.live && room.dbId) {
+          if (!s.me) { this.openAuth('login'); return; }
+          const tags = [room.genre, room.mood, room.like, (room.owner && room.owner.place) || 'global', room.bpm + ' BPM'];
+          this.needHuman(tok => this.liveAct('POST', 'tracks/' + room.dbId + '/publish', { human_token: tok, tags, declarations: [true, true, true, true] },
+            () => { this.flash(room.title + ' is live on 5 tag charts'); this.refreshTracks(); }),
+            'Verifying signs the four rights declarations: you made it, no AI generation, every contributor is named, samples are cleared.');
+          return;
+        }
+        this.flash('Publishing ' + room.title + ' to 5 tag charts');
+      },
+
+      collabTabs: [['chat', 'Chat'], ['splits', 'Splits'], ['offers', 'Offers · ' + offers.length], ['versions', 'Versions']].map(([id, label]) => ({
+        label,
+        bg: s.collabTab === id ? 'var(--mint-soft)' : 'transparent',
+        fg: s.collabTab === id ? 'var(--mint-ink)' : 'var(--dim)',
+        go: () => this.setState({ collabTab: id })
+      })),
+      tabChat: s.collabTab === 'chat', tabSplits: s.collabTab === 'splits',
+      tabOffers: s.collabTab === 'offers', tabVersions: s.collabTab === 'versions',
+      chat: s.chat.map(m => ({
+        who: m.who, text: m.orig && !s.translate ? m.orig : m.text,
+        tr: m.orig ? (s.translate ? 'Translated from ' + m.lang + ' · tap to see original' : 'Original ' + m.lang + ' · tap to translate') : '',
+        toggleTr: () => this.setState(p => ({ translate: !p.translate })),
+        align: m.me ? 'flex-end' : 'flex-start',
+        bg: m.me ? 'var(--mint)' : 'var(--soft)',
+        fg: m.me ? 'var(--on-mint)' : 'var(--ink)',
+        radius: m.me ? '13px 13px 4px 13px' : '13px 13px 13px 4px'
+      })),
+      draft: s.draft,
+      onDraft: e => this.setState({ draft: e.target.value }),
+      onDraftKey: e => { if (e.key === 'Enter') send(); },
+      send,
+
+      splits: crew.map((c, i) => ({
+        name: c.name + (i === 0 ? ' (you)' : ''), initials: c.initials, bg: c.avatar,
+        pct: pcts[i], width: (total ? pcts[i] / total * 100 : 0) + '%',
+        sig: s.splitSent ? 'awaiting signature' : s.splitSigned ? 'signed' : 'unsigned',
+        sigColor: s.splitSigned ? 'var(--mint-ink)' : s.splitSent ? 'var(--amber)' : 'var(--coral-ink)',
+        dec: () => this.bumpSplit(i, -5),
+        inc: () => this.bumpSplit(i, 5)
+      })),
+      totalLabel: splitOk ? 'Total 100% · balanced' : 'Total ' + total + '% · ' + (total > 100 ? (total - 100) + '% over' : (100 - total) + '% unassigned'),
+      totalColor: splitOk ? 'var(--mint-ink)' : 'var(--coral-ink)',
+      splitEven: () => {
+        const n = crew.length, base = Math.floor(100 / n / 5) * 5;
+        const arr = new Array(n).fill(base);
+        arr[0] += 100 - base * n;
+        this.setState({ splitPcts: arr, splitSigned: false, splitSent: false });
+      },
+      agreeLocked: !splitOk,
+      agreeLabel: s.splitSigned ? 'Signed by all ' + crew.length : s.splitSent ? 'Sent — awaiting signatures' : 'Send for agreement',
+      agreeHint: splitOk ? 'Sends the sheet to every contributor' : 'Splits must total exactly 100%',
+      agreeBg: splitOk ? 'var(--mint-soft)' : 'var(--soft)',
+      agreeFg: splitOk ? 'var(--mint-ink)' : 'var(--dim)',
+      agreeBorder: splitOk ? 'var(--mint)' : 'var(--line)',
+      agreeCursor: splitOk ? 'pointer' : 'not-allowed',
+      sendAgreement: () => {
+        if (!splitOk) return;
+        if (s.live && room.dbId) {
+          const rl = s.roomLive;
+          if (rl && rl.owner && !s.splitSent) {
+            const shares = rl.splits.filter(x => !x.removed).map((x, i) => ({ userId: x.userId, pct: pcts[i] != null ? pcts[i] : x.pct }));
+            this.liveAct('PUT', 'rooms/' + room.dbId + '/splits', { shares }, () => { this.setState({ splitSent: true }); this.flash('Sheet saved — every contributor must sign again'); });
+          } else {
+            this.liveAct('POST', 'rooms/' + room.dbId + '/splits/sign', {}, j => { this.setState({ splitSent: true, splitSigned: !!j.allSigned }); this.flash(j.allSigned ? 'Everyone has signed — publishing unlocked' : 'Signed — waiting on the others'); });
+          }
+          return;
+        }
+        if (s.splitSent && !s.splitSigned) {
+          this.setState({ splitSigned: true });
+          this.flash('All ' + crew.length + ' signed — publishing unlocked');
+          return;
+        }
+        this.setState({ splitSent: true });
+        this.flash('Sheet sent to ' + crew.length + ' contributors in ' + crew.length + ' cities');
+      },
+      offerIntro: offers.length ? offers.length + ' people offered a stem for this track. Accepting adds them to the split sheet.' : 'No offers open — every stem has been answered.',
+      offers, versions,
+
+      waiting: [
+        {
+          title: U[23].name + ' invited you to ' + T[11].title,
+          body: 'Wants a cello counter-line over the second verse. ' + T[11].offer + '% offered, splits unsigned. It is ' + this.localTime(U[23].tz) + ' where they are.',
+          when: '18m', icon: '+', iconBg: 'var(--mint-soft)', iconFg: 'var(--mint-ink)',
+          bg: 'var(--panel)', border: 'var(--mint)',
+          actions: [
+            { label: 'Join the track', kind: 1, go: () => { this.setState({ view: 'collab' }); this.flash('Joined — stems downloading'); } },
+            { label: 'Decline', kind: 0, go: () => this.flash('Declined — they have been told') }
+          ]
+        },
+        {
+          title: U[41].name + ' signed the split sheet',
+          body: T[5].title + ' is settled across ' + 3 + ' countries and fully signed. Publishing is unlocked.',
+          when: '4h', icon: '◫', iconBg: 'rgba(176,124,255,0.16)', iconFg: 'var(--violet)',
+          bg: 'var(--panel)', border: 'var(--mint)',
+          actions: [
+            { label: 'Publish', kind: 1, go: () => { this.setState({ view: 'collab', collabTab: 'splits' }); this.flash('Publish sheet opened'); } },
+            { label: 'Later', kind: 0, go: () => this.flash('Reminder set for tomorrow') }
+          ]
+        },
+        {
+          title: 'Fingerprint match held for review',
+          body: 'Four seconds of Room perc matches a reference recording. The release is paused until a moderator clears it.',
+          when: '9h', icon: '©', iconBg: 'var(--coral-soft)', iconFg: 'var(--coral-ink)',
+          bg: 'var(--panel)', border: 'var(--coral)',
+          actions: [
+            { label: 'Review', kind: 1, go: () => this.flash('Rights review opened') },
+            { label: 'Dispute', kind: 0, go: () => this.flash('Dispute filed — reviewed within 24 hours') }
+          ]
+        }
+      ].map(a => ({
+        ...a,
+        actions: a.actions.map(x => ({
+          label: x.label, go: x.go,
+          bg: x.kind ? 'var(--mint)' : 'transparent',
+          fg: x.kind ? 'var(--on-mint)' : 'var(--ink)',
+          border: x.kind ? 'var(--mint)' : 'var(--line)'
+        }))
+      })),
+      earlier: U.slice(30, 42).map((u, i) => {
+        const t = T[(i * 3 + 5) % T.length];
+        const kinds = [
+          ['⚡', u.name + ' spiked ' + t.title, 'It moved ' + (1 + i % 4) + ' places on the ' + t.like + ' chart', 'var(--mint-soft)', 'var(--mint-ink)'],
+          ['+', u.name + ' offered a ' + u.role.toLowerCase() + ' stem', t.title + ' · ' + u.place + ', ' + u.cc + ' · ' + this.localTime(u.tz) + ' local', 'var(--coral-soft)', 'var(--coral-ink)'],
+          ['◎', u.name + ' confirmed a Sounds Like tag', t.title + ' sounds like ' + t.like, 'rgba(91,140,255,0.14)', 'var(--blue)'],
+          ['✓', u.name + ' signed the split sheet on ' + t.title, 'Their ' + (10 + i) + '% is locked and payable', 'var(--soft)', 'var(--dim)']
+        ];
+        const k = kinds[i % 4];
+        return { icon: k[0], title: k[1], body: k[2], iconBg: k[3], iconFg: k[4], when: (i + 1) * 2 + 'h' };
+      }),
+      weekStats: [
+        { label: 'Spikes received', value: num(1204 + s.pulse), color: 'var(--mint-ink)' },
+        { label: 'Stems contributed', value: '7', color: 'var(--ink)' },
+        { label: 'Open calls answered', value: '3', color: 'var(--ink)' },
+        { label: 'Countries you worked with', value: '5', color: 'var(--ink)' }
+      ],
+      moving: T.slice(12, 17).map((t, i) => ({
+        title: t.title, tag: '#' + t.genre.toLowerCase().replace(/[^a-z]/g, '') + ' · ' + t.owner.place,
+        art: ART[t.art], move: '▲' + (5 - i),
+        play: () => this.load(T.indexOf(t))
+      })),
+
+      kpis: [
+        { label: 'MONTHLY GROSS', value: money(gross), note: num(mau) + ' monthly listeners', color: 'var(--ink)', bg: 'var(--panel)', border: 'var(--line)' },
+        { label: 'CREATOR POOL', value: money(creatorPool), note: (100 - takeRate) + '% of net, paid on the split sheet', color: 'var(--mint-ink)', bg: 'var(--mint-soft)', border: 'var(--mint)' },
+        { label: 'PLATFORM MARGIN', value: money(platform), note: Math.round(platform / gross * 100) + '% of gross after infrastructure', color: 'var(--ink)', bg: 'var(--panel)', border: 'var(--line)' },
+        { label: 'RPM', value: '$' + rpm.toFixed(2), note: 'revenue per 1,000 plays', color: 'var(--ink)', bg: 'var(--panel)', border: 'var(--line)' }
+      ],
+      takeRate,
+      levers: [
+        { label: 'Monthly listeners', value: s.plays, min: 5, max: 120, step: 1, display: num(mau), hint: 'Free and premium combined', set: e => this.setState({ plays: +e.target.value }) },
+        { label: 'Ad CPM', value: s.cpm, min: 4, max: 40, step: 1, display: '$' + s.cpm, hint: 'Audio + inline display, blended', set: e => this.setState({ cpm: +e.target.value }) },
+        { label: 'Premium share', value: s.premiumShare, min: 2, max: 60, step: 1, display: s.premiumShare + '%', hint: '$5.99 / month per subscriber', set: e => this.setState({ premiumShare: +e.target.value }) }
+      ],
+      pnl: [
+        { label: 'Advertising', value: money(adRev), color: 'var(--ink)', labelColor: 'var(--dim)', weight: '600', bg: 'transparent' },
+        { label: 'Subscriptions', value: money(subRev), color: 'var(--ink)', labelColor: 'var(--dim)', weight: '600', bg: 'transparent' },
+        { label: 'Gross revenue', value: money(gross), color: 'var(--ink)', labelColor: 'var(--ink)', weight: '800', bg: 'var(--soft)' },
+        { label: 'Infrastructure & delivery', value: '−' + money(infra), color: 'var(--coral-ink)', labelColor: 'var(--dim)', weight: '600', bg: 'transparent' },
+        { label: 'Paid to creators', value: '−' + money(creatorPool), color: 'var(--coral-ink)', labelColor: 'var(--dim)', weight: '600', bg: 'transparent' },
+        { label: 'Contribution margin', value: money(platform), color: 'var(--mint-ink)', labelColor: 'var(--ink)', weight: '800', bg: 'var(--mint-soft)' }
+      ],
+      myEarnings, myTotal: money(myTotal), corridors,
+
+      profName: isMe ? 'Mara Kessler' : pu.name,
+      profInitials: isMe ? 'MK' : pu.initials,
+      profMeta: isMe ? '@marakess · Lisbon, PT · ' + this.localTime(1) + ' local'
+        : '@' + pu.name.toLowerCase().replace(/[^a-z]/g, '') + ' · ' + pu.place + ', ' + pu.cc + ' · ' + this.localTime(pu.tz) + ' local',
+      profBio: isMe
+        ? 'Producer and cellist. I start most things at 2am with one loop and a bad idea. Open to co-writes — send stems, not prompts.'
+        : pu.role + ' and ' + pu.role2.toLowerCase() + '. Working out of ' + pu.place + '. I answer every open call I can actually play on.',
+      profAvatar: isMe ? 'linear-gradient(140deg,#00E5AD,#0A6E58)' : pu.avatar,
+      profCover: isMe ? 'linear-gradient(120deg,#0B211C,#123C4F)' : ART[(pu.name.length) % ART.length],
+      profOpen: (isMe ? ['Cello', 'Arrangement', 'Mixing', 'Co-writing'] : [pu.role, pu.role2, 'Co-writing']).map(name => ({ name })),
+      profLangs: (isMe ? ['Portuguese', 'English'] : [pu.lang, 'English']).map(name => ({ name })),
+      profFollowLabel: isMe ? 'Your profile' : profFollowing ? 'Following' : 'Follow',
+      profFollowBg: profFollowing ? 'var(--mint-soft)' : 'var(--mint)',
+      profFollowFg: profFollowing ? 'var(--mint-ink)' : 'var(--on-mint)',
+      profFollow: () => {
+        if (isMe) { this.flash('This is you'); return; }
+        this.setState(p => ({ following: Object.assign({}, p.following, { [pu.id]: !profFollowing }) }));
+        this.flash(profFollowing ? 'Unfollowed ' + pu.name : 'Following ' + pu.name);
+      },
+      profMessage: () => { this.setState({ view: 'collab', collabTab: 'chat' }); },
+      profInvite: () => this.flash('Invite sent' + (isMe ? '' : ' to ' + pu.name + ' in ' + pu.place)),
+      profStats: [
+        { value: num(isMe ? 8412 : pu.followers), label: 'followers' },
+        { value: isMe ? '214' : num(Math.round(pu.followers / 34)), label: 'following' },
+        { value: num(isMe ? 31900 : pu.spikes), label: 'spikes' },
+        { value: String(isMe ? 46 : pu.credits), label: 'credits' }
+      ],
+      profReleases: profList.map(t => ({
+        title: t.title, genre: t.genre, spikes: num(spikeOf(t)),
+        art: ART[t.art], play: () => this.load(T.indexOf(t))
+      })),
+
+      onlineCount: online.length,
+      onlinePeople: online.slice(0, 18).map(u => ({
+        initials: u.initials, bg: u.avatar,
+        who: u.name + ' · ' + u.role + ' · ' + u.place + ' · ' + this.localTime(u.tz),
+        go: () => this.setState({ view: 'you', profileUser: u })
+      })),
+      matched: openCalls.slice(0, 3).map(t => ({
+        title: t.title, need: t.needs[0], offer: t.offer, place: t.owner.place,
+        go: () => { this.setState({ view: 'discover' }); this.flash('Offer drafted for ' + t.title); }
+      })),
+      networkStats: [
+        { label: 'Creators', value: num(U.length), color: 'var(--ink)' },
+        { label: 'Countries', value: String(countryCount), color: 'var(--ink)' },
+        { label: 'Open calls', value: String(openCalls.length), color: 'var(--coral-ink)' },
+        { label: 'Paid out this month', value: money(creatorPool), color: 'var(--mint-ink)' }
+      ],
+
+      nowTitle: cur.title, nowArtist: cur.owner.name + ' · ' + cur.genre, nowArt: ART[cur.art],
+      elapsed: fmt(s.time), duration: fmt(dur),
+      playerWave: bars(53, 68, 18, 100).map((h, j) => ({
+        h: Math.round(h) + '%',
+        c: j / 68 <= prog ? 'var(--mint)' : 'var(--line2)'
+      })),
+      scrub: e => {
+        const r = e.currentTarget.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+        if (this.audio && dur) { this.audio.currentTime = ratio * dur; this.setState({ time: this.audio.currentTime }); }
+      },
+      volume: s.volume,
+      onVolume: e => { const v = +e.target.value; if (this.audio) this.audio.volume = v / 100; this.setState({ volume: v }); },
+      next: this.next, prev: this.prev,
+      spikeNow: () => this.toggleSpike('now' + cur.id, 'Spiked ' + cur.title),
+      nowSpikeBg: s.spiked['now' + cur.id] ? 'var(--mint-soft)' : 'transparent',
+      nowSpikeFg: s.spiked['now' + cur.id] ? 'var(--mint-ink)' : 'var(--dim)',
+      nowSpikeBorder: s.spiked['now' + cur.id] ? 'var(--mint)' : 'var(--line)',
+
+      queueOpen: s.queueOpen,
+      queueCount: 6,
+      queueBg: s.queueOpen ? 'var(--mint-soft)' : 'transparent',
+      queueFg: s.queueOpen ? 'var(--mint-ink)' : 'var(--ink)',
+      toggleQueue: () => this.setState(p => ({ queueOpen: !p.queueOpen })),
+      queue: T.slice(s.trackIdx, s.trackIdx + 6).map((t, i) => ({
+        title: t.title, artist: t.owner.name + ' · ' + t.genre, art: ART[t.art],
+        bg: i === 0 ? 'var(--mint-soft)' : 'transparent',
+        border: i === 0 ? 'var(--mint)' : 'var(--line)',
+        badge: i === 0 ? 'Now' : 'Next',
+        play: () => this.load(T.indexOf(t))
+      })),
+
+      paletteOpen: s.paletteOpen,
+      openPalette: () => this.setState({ paletteOpen: true, pq: '' }),
+      closePalette: () => this.setState({ paletteOpen: false }),
+      stop: e => e.stopPropagation(),
+      pq: s.pq,
+      onPq: e => this.setState({ pq: e.target.value }),
+      pNone: !!q && pGroups.length === 0,
+      pGroups,
+
+      /* ── clips ── */
+      isClips: s.view === 'clips',
+      clipTitle: clip.title, clipArtist: clip.owner.name, clipInitials: clip.owner.initials, clipAvatar: clip.owner.avatar,
+      clipPlace: clip.owner.place + ', ' + clip.owner.cc + ' · ' + this.localTime(clip.owner.tz) + ' local',
+      clipArt: ART[clip.art], clipReason: forYou(clip).why,
+      clipMeta: clip.genre + ' · ' + clip.bpm + ' BPM · sounds like ' + clip.like,
+      clipIndex: (ci + 1) + ' / ' + clipList.length,
+      clipOpen, clipNeeds: clip.needs.map(n => ({ name: n })), clipOffer: clip.offer,
+      clipProgW: (clipProg * 100).toFixed(1) + '%',
+      clipPlayIcon: clipOn ? '❚❚' : '▶',
+      clipToggle: () => { if (clipOn) this.togglePlay(); else this.playClip(clip); },
+      clipPrev: () => this.stepClip(-1), clipNext: () => this.stepClip(1),
+      clipWave: bars(clip.seed, 40, 20, 100).map((h, j) => ({
+        h: Math.round(h) + '%', c: j / 40 <= clipProg ? '#FFFFFF' : 'rgba(255,255,255,0.35)',
+        anim: clipOn ? 'elBeat 1s ease-in-out ' + ((j % 8) * 0.07).toFixed(2) + 's infinite' : 'none'
+      })),
+      clipSpikes: num(spikeOf(clip)),
+      clipSpike: () => this.toggleSpike(clip.id, 'Spiked from a clip'),
+      clipSpikeBg: clipSpiked ? 'var(--mint)' : 'var(--panel)',
+      clipSpikeFg: clipSpiked ? 'var(--on-mint)' : 'var(--ink)',
+      clipJoinLabel: clipJoined ? 'Joined ✓' : clipOpen ? 'Join the track' : 'Open the room',
+      clipJoin: () => {
+        if (!clipOpen || clipJoined) { this.load(clipTi, false); this.setState({ view: 'collab' }); return; }
+        this.setState(p => ({ joined: Object.assign({}, p.joined, { [clip.id]: true }) }));
+        this.flash('Joined ' + clip.title + ' from a clip — stems downloading');
+      },
+      clipShare: () => this.flash('Clip copied — 15s vertical, captions and a Join link burned in'),
+      clipProfile: () => this.setState({ view: 'you', profileUser: clip.owner }),
+      clipUpNext: [1, 2, 3, 4].map(k => {
+        const c = clipList[(ci + k) % clipList.length];
+        return { title: c.title, artist: c.owner.name, art: ART[c.art], why: forYou(c).why, go: () => this.stepClip(k) };
+      }),
+
+      /* ── voice, translation, time zones ── */
+      voiceCrew,
+      voiceLabel: s.voice ? 'Leave voice' : 'Join voice',
+      voiceBg: s.voice ? 'var(--coral-btn)' : 'var(--mint)',
+      voiceFg: s.voice ? '#fff' : 'var(--on-mint)',
+      toggleVoice: () => { this.setState(p => ({ voice: !p.voice })); this.flash(s.voice ? 'Left voice' : 'In voice — push-to-talk with the space bar held'); },
+      listenLabel: s.listenAlong ? 'Listening along ✓' : 'Listen along',
+      listenBg: s.listenAlong ? 'var(--mint-soft)' : 'transparent',
+      listenFg: s.listenAlong ? 'var(--mint-ink)' : 'var(--ink)',
+      toggleListen: () => { this.setState(p => ({ listenAlong: !p.listenAlong })); this.flash(s.listenAlong ? 'Playback unlinked' : 'Synced to the host playhead'); },
+      translateLabel: s.translate ? 'Auto-translate on' : 'Auto-translate off',
+      translateBg: s.translate ? 'var(--mint-soft)' : 'transparent',
+      translateFg: s.translate ? 'var(--mint-ink)' : 'var(--ink)',
+      toggleTranslate: () => this.setState(p => ({ translate: !p.translate })),
+      overlapText,
+
+      /* ── branches ── */
+      hasBranches: s.branches.length > 0,
+      branches: s.branches.map(b => ({
+        name: b.name, meta: 'from ' + b.from + ' · ' + b.by,
+        merge: () => { this.setState(p => ({ branches: p.branches.filter(x => x.id !== b.id) })); this.flash(b.name + ' merged into main — splits unchanged, new version v' + (5 + s.mp % 3)); },
+        drop: () => this.setState(p => ({ branches: p.branches.filter(x => x.id !== b.id) }))
+      })),
+      addBranch: () => {
+        const n = s.branches.length;
+        this.setState(p => ({ branches: p.branches.concat([{ id: 'b' + Date.now(), name: BRANCH_NAMES[n % BRANCH_NAMES.length], from: 'v4', by: 'you' }]) }));
+        this.flash('Branched from v4 — try it without touching main');
+      },
+
+      /* ── payouts ── */
+      ledger: ledgerRows.map(r => ({
+        title: r.t.title, art: ART[r.t.art], share: r.share + '%',
+        plays: num(r.plays), amount: fmtCur(r.mine),
+        width: Math.max(4, (r.mine / (ledgerRows[0].mine || 1)) * 60).toFixed(0) + '%'
+      })),
+      ledgerTotal: fmtCur(ledgerTotal),
+      ledgerPerK: fmtCur(perK * 0.7) + ' per 1,000 plays to the split sheet',
+      currencies: Object.keys(FX).map(c => ({
+        code: c,
+        bg: s.currency === c ? 'var(--ink)' : 'transparent',
+        fg: s.currency === c ? 'var(--bg)' : 'var(--ink)',
+        go: () => this.setState({ currency: c })
+      })),
+      cashLabel: s.cashedOut ? 'Paid ✓' : 'Cash out ' + fmtCur(ledgerTotal),
+      cashBg: s.cashedOut ? 'var(--mint-soft)' : 'var(--mint)',
+      cashFg: s.cashedOut ? 'var(--mint-ink)' : 'var(--on-mint)',
+      cashNote: s.cashedOut ? 'Sent to your account in Lisbon — arrived in 4 seconds. Next settlement runs tonight.' : 'Instant to 38 currencies · 0.4% FX fee · every collaborator is paid the same moment',
+      cashOut: () => {
+        if (s.cashedOut) return;
+        if (this.liveAct('POST', 'payouts', { currency: s.currency }, j => { this.setState({ cashedOut: true }); this.flash((j.status === 'paid' ? 'Paid ' : 'Queued ') + j.amount + ' ' + j.currency + ' · ref ' + j.ref); })) return;this.setState({ cashedOut: true }); this.flash('Paid out ' + fmtCur(ledgerTotal) + ' — your collaborators were paid at the same time'); },
+
+      /* ── backend status, auth, human check ── */
+      liveDot: s.live ? 'var(--mint)' : 'var(--line2)',
+      liveTitle: s.live ? (s.me ? 'Live · signed in as ' + s.me.name + ' — click to sign out' : 'Live · connected to Ellipsis servers — click to sign in') : 'Demo mode — no server connected (upload /api to go live)',
+      liveClick: () => { if (!s.live) { this.flash('Demo mode — deploy the /api folder and run setup to go live'); return; } if (s.me) this.signOut(); else this.openAuth('login'); },
+      authOpen: s.authOpen,
+      closeAuth: () => this.setState({ authOpen: false }),
+      authIsReg: s.authMode === 'register',
+      authTitle: s.authMode === 'register' ? 'Create your account' : 'Welcome back',
+      authCta: s.authBusy ? 'Working…' : s.authMode === 'register' ? 'Continue to the human check' : 'Sign in',
+      authSwitch: s.authMode === 'register' ? 'Have an account? Sign in' : 'New here? Create an account',
+      toggleAuthMode: () => this.setState(p => ({ authMode: p.authMode === 'register' ? 'login' : 'register', authErr: '' })),
+      authEmail: s.authEmail, authPass: s.authPass, authName: s.authName, authPlace: s.authPlace,
+      onAuthEmail: e => this.setState({ authEmail: e.target.value }),
+      onAuthPass: e => this.setState({ authPass: e.target.value }),
+      onAuthName: e => this.setState({ authName: e.target.value }),
+      onAuthPlace: e => this.setState({ authPlace: e.target.value }),
+      onAuthKey: e => { if (e.key === 'Enter') this.submitAuth(); },
+      authAgeTick: s.authAge ? '✓' : '',
+      authAgeBg: s.authAge ? 'var(--mint)' : 'transparent',
+      toggleAuthAge: () => this.setState(p => ({ authAge: !p.authAge })),
+      authErr: s.authErr,
+      submitAuth: this.submitAuth,
+      humanOpen: s.humanOpen,
+      closeHuman: () => { this._humanThen = null; this.setState({ humanOpen: false }); },
+      humanBpm: s.humanChal ? s.humanChal.bpm + ' BPM' : '',
+      humanPulse: s.humanChal ? 'elPulse ' + (60 / s.humanChal.bpm).toFixed(3) + 's ease-in-out infinite' : 'none',
+      humanCount: s.humanBusy ? '…' : String(s.humanTaps.length),
+      humanMsg: s.humanMsg,
+      humanTap: this.humanTap,
+
+      /* ── starter packs + shortcuts ── */
+      packOpen: s.packOpen,
+      closePack: () => this.setState({ packOpen: false }),
+      packs: [
+        ['lofi', 'Lo-fi', '82 BPM · F major', 'Dusty Rhodes, swung hats, tape wobble', ART[0]],
+        ['afrobeats', 'Afrobeats', '104 BPM · A minor', 'Log drum, shaker grid, call-and-response', ART[5]],
+        ['neosoul', 'Neo-soul', '88 BPM · E♭ major', 'Rhodes voicings, ghost-note snare', ART[3]],
+        ['drill', 'Drill', '142 BPM · C♯ minor', 'Gliding 808s, hat rolls, sparse keys', ART[2]],
+        ['house', 'House', '124 BPM · G minor', 'Four-on-the-floor, off-beat stabs', ART[1]],
+        ['ambient', 'Ambient', 'free time · D major', 'Plucks, long reverb, no drums', ART[4]]
+      ].map(([file, label, key, desc, art]) => ({
+        label, key, desc, art,
+        preview: () => { const i = T.findIndex(t => t.file === file); if (i >= 0) this.load(i); },
+        pick: () => this.pickPack(file, label)
+      })),
+      keysOpen: s.keysOpen,
+      openKeys: () => this.setState({ keysOpen: true }),
+      closeKeys: () => this.setState({ keysOpen: false }),
+      shortcuts: [
+        ['K', 'Search and commands'], ['Space', 'Play / pause'], ['C', 'Clips'],
+        ['↑  ↓', 'Previous / next clip'], ['N', 'New track from a starter'], ['T', 'Light / dark'],
+        ['?', 'This list'], ['Esc', 'Close anything']
+      ].map(([k, d]) => ({ k, d })),
+
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

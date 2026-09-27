@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ellipsis Console</title>
+<meta name="description" content="Internal administration console.">
+<meta name="theme-color" content="#0C1318">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="../icons/play-512.png" type="image/png">
+<link rel="apple-touch-icon" href="../icons/ios-180.png">
+<meta name="robots" content="noindex,nofollow">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    html,body{margin:0;padding:0;background:#EFF2F5;min-height:100%}
+    *{box-sizing:border-box}
+    a{color:#00806A;text-decoration:none}
+    a:hover{color:#00D9A6}
+    input,button{font-family:inherit}
+    ::-webkit-scrollbar{width:10px;height:10px}
+    ::-webkit-scrollbar-thumb{background:#CBD4DB;border-radius:8px;border:3px solid transparent;background-clip:content-box}
+    @keyframes elFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  </style>
+</helmet>
+
+<sc-if value="{{ locked }}" hint-placeholder-val="{{ true }}">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;background:radial-gradient(1200px 600px at 50% -10%,#12323A,#0A1014);font-family:Manrope,-apple-system,system-ui,sans-serif">
+    <div style="width:100%;max-width:394px;background:#0F1720;border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:32px;box-shadow:0 40px 90px rgba(0,0,0,0.45)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:26px">
+        <div style="display:flex;gap:4px">
+          <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+        </div>
+        <div style="font-size:14px;font-weight:800;color:#fff;letter-spacing:0.14em">ELLIPSIS</div>
+        <div style="font-size:9.5px;font-weight:800;color:#00D9A6;letter-spacing:0.08em;padding:3px 6px;border-radius:5px;background:rgba(0,217,166,0.14)">ADMIN</div>
+      </div>
+
+      <h1 style="margin:0 0 6px;font-size:23px;font-weight:800;color:#F4F7F9;letter-spacing:-0.6px">Sign in to the console</h1>
+      <p style="margin:0 0 22px;font-size:13.5px;line-height:1.5;color:#7E8C97">Revenue, subscribers and platform health. Access is logged.</p>
+
+      <label style="display:block;font-size:11px;font-weight:800;letter-spacing:0.1em;color:#5F6F7B;margin-bottom:6px">EMAIL</label>
+      <input type="email" value="{{ email }}" onChange="{{ onEmail }}" onKeyDown="{{ onKey }}" placeholder="you@ellipsis.app" style="width:100%;padding:12px 14px;margin-bottom:14px;border-radius:11px;border:1px solid rgba(255,255,255,0.12);background:#0A1116;color:#F4F7F9;font-size:14px;font-weight:600;outline:none" />
+
+      <label style="display:block;font-size:11px;font-weight:800;letter-spacing:0.1em;color:#5F6F7B;margin-bottom:6px">PASSCODE</label>
+      <input type="password" value="{{ pass }}" onChange="{{ onPass }}" onKeyDown="{{ onKey }}" placeholder="••••••••••" style="width:100%;padding:12px 14px;border-radius:11px;border:1px solid rgba(255,255,255,0.12);background:#0A1116;color:#F4F7F9;font-size:14px;font-weight:600;outline:none" />
+
+      <sc-if value="{{ loginError }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(179,82,62,0.16);border:1px solid rgba(179,82,62,0.5);color:#FFB3A3;font-size:12.5px;font-weight:700">{{ loginError }}</div>
+      </sc-if>
+
+      <button onClick="{{ signIn }}" style="width:100%;margin-top:18px;padding:13px;border:0;border-radius:11px;background:#00D9A6;color:#06231B;font-size:14.5px;font-weight:800;cursor:pointer">Sign in</button>
+
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);font-size:11.5px;line-height:1.6;color:#5F6F7B">
+        Demo passcode <span style="color:#9BA9B4;font-weight:800">ellipsis2026</span> — change <span style="color:#9BA9B4;font-weight:800">PASSCODE</span> at the top of this file, and password-protect <span style="color:#9BA9B4;font-weight:800">/admin</span> in cPanel before going live.
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ unlocked }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height:100vh;display:grid;grid-template-columns:{{ shellCols }};font-family:Manrope,-apple-system,system-ui,sans-serif;color:#1F2933;background:#EFF2F5">
+
+    <aside style="background:#0C1318;padding:20px 14px;display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 22px">
+        <div style="display:flex;gap:4px">
+          <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+        </div>
+        <div style="font-size:13.5px;font-weight:800;color:#fff;letter-spacing:0.14em">ELLIPSIS</div>
+        <div style="font-size:9.5px;font-weight:800;color:#00D9A6;letter-spacing:0.08em;padding:3px 6px;border-radius:5px;background:rgba(0,217,166,0.14)">ADMIN</div>
+      </div>
+
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+        <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border:0;border-radius:10px;background:{{ n.bg }};color:{{ n.fg }};font-size:13.5px;font-weight:700;cursor:pointer;text-align:left">
+          <span style="width:7px;height:7px;border-radius:2px;background:{{ n.dot }};flex:none"></span>{{ n.name }}
+        </button>
+      </sc-for>
+
+      <div style="flex:1;min-height:20px"></div>
+
+      <a href="moderation.html" style="display:block;padding:11px 12px;border-radius:10px;background:rgba(255,255,255,0.05);color:#9BA9B4;font-size:13px;font-weight:700">Moderation console →</a>
+      <button onClick="{{ signOut }}" style="margin-top:6px;width:100%;padding:11px 12px;border:1px solid rgba(255,255,255,0.12);border-radius:10px;background:transparent;color:#7E8C97;font-size:13px;font-weight:700;cursor:pointer;text-align:left">Sign out</button>
+    </aside>
+
+    <main style="min-width:0;padding:26px 30px 46px">
+      <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px">
+        <div>
+          <h1 style="margin:0 0 4px;font-size:27px;font-weight:800;letter-spacing:-1px">{{ sectionTitle }}</h1>
+          <p style="margin:0;font-size:14px;color:#5A6874">{{ sectionSub }}</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="display:flex;gap:2px;padding:3px;border-radius:11px;background:#E4E9ED">
+            <sc-for list="{{ ranges }}" as="r" hint-placeholder-count="4">
+              <button onClick="{{ r.go }}" style="padding:8px 13px;border:0;border-radius:9px;background:{{ r.bg }};color:{{ r.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ r.label }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ exportCsv }}" style="padding:10px 15px;border:1px solid #D7DEE3;border-radius:11px;background:#fff;color:#1F2933;font-size:13px;font-weight:700;cursor:pointer">Export CSV</button>
+        </div>
+      </header>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="animation:elFade .25s ease both;display:flex;flex-direction:column;gap:18px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:14px">
+            <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="6">
+              <div style="background:#fff;border:1px solid #E3E8EC;border-radius:16px;padding:18px">
+                <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:#7B8792">{{ k.label }}</div>
+                <div style="font-size:28px;font-weight:800;letter-spacing:-1.1px;margin:8px 0 4px">{{ k.value }}</div>
+                <div style="display:flex;align-items:center;gap:7px">
+                  <span style="font-size:12.5px;font-weight:800;color:{{ k.deltaColor }}">{{ k.delta }}</span>
+                  <span style="font-size:12px;color:#7B8792">{{ k.sub }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:{{ chartCols }};gap:16px">
+            <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px">
+                <div>
+                  <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px">Net revenue</div>
+                  <div style="font-size:12.5px;color:#7B8792;margin-top:2px">Subscriptions and advertising, after store and processor fees</div>
+                </div>
+                <div style="display:flex;gap:14px">
+                  <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#5A6874"><span style="width:10px;height:10px;border-radius:3px;background:#00806A"></span>Subscription</span>
+                  <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#5A6874"><span style="width:10px;height:10px;border-radius:3px;background:#9BE6D2"></span>Advertising</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-end;gap:{{ barGap }};height:210px">
+                <sc-for list="{{ revBars }}" as="b" hint-placeholder-count="12">
+                  <div title="{{ b.title }}" style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%">
+                    <div style="height:{{ b.adH }};background:#9BE6D2;border-radius:4px 4px 0 0"></div>
+                    <div style="height:{{ b.subH }};background:#00806A;border-radius:0 0 4px 4px"></div>
+                    <div style="text-align:center;font-size:9.5px;font-weight:700;color:#8B97A1;padding-top:5px">{{ b.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+
+            <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+              <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:4px">Revenue mix</div>
+              <div style="font-size:12.5px;color:#7B8792;margin-bottom:18px">Current month</div>
+              <sc-for list="{{ mix }}" as="m" hint-placeholder-count="4">
+                <div style="margin-bottom:15px">
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px">
+                    <span style="font-size:13.5px;font-weight:700">{{ m.label }}</span>
+                    <span style="font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums">{{ m.value }}</span>
+                  </div>
+                  <div style="height:8px;border-radius:4px;background:#EDF1F3;overflow:hidden">
+                    <div style="height:100%;width:{{ m.pct }};background:{{ m.color }};border-radius:4px"></div>
+                  </div>
+                  <div style="font-size:11.5px;color:#8B97A1;margin-top:5px">{{ m.note }}</div>
+                </div>
+              </sc-for>
+            </section>
+          </div>
+
+          <div style="display:grid;grid-template-columns:{{ chartCols }};gap:16px">
+            <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+              <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:14px">Users</div>
+              <div style="display:flex;align-items:flex-end;gap:{{ barGap }};height:170px">
+                <sc-for list="{{ userBars }}" as="b" hint-placeholder-count="12">
+                  <div title="{{ b.title }}" style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
+                    <div style="height:{{ b.h }};background:linear-gradient(180deg,#00D9A6,#0B7F68);border-radius:4px;position:relative">
+                      <div style="position:absolute;left:0;right:0;bottom:0;height:{{ b.paidH }};background:#0C1318;border-radius:0 0 4px 4px"></div>
+                    </div>
+                    <div style="text-align:center;font-size:9.5px;font-weight:700;color:#8B97A1;padding-top:5px">{{ b.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:16px;margin-top:12px">
+                <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#5A6874"><span style="width:10px;height:10px;border-radius:3px;background:#00D9A6"></span>Monthly actives</span>
+                <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#5A6874"><span style="width:10px;height:10px;border-radius:3px;background:#0C1318"></span>Paid subscribers</span>
+              </div>
+            </section>
+
+            <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+              <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:14px">Funnel · last 30 days</div>
+              <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:11px">
+                  <span style="width:128px;flex:none;font-size:13px;font-weight:700;color:#3C4A55">{{ f.label }}</span>
+                  <span style="flex:1;height:26px;border-radius:7px;background:#EDF1F3;overflow:hidden">
+                    <span style="display:block;height:100%;width:{{ f.pct }};background:{{ f.color }}"></span>
+                  </span>
+                  <span style="width:96px;flex:none;text-align:right;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums">{{ f.value }}</span>
+                </div>
+              </sc-for>
+            </section>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRevenue }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:elFade .25s ease both;display:flex;flex-direction:column;gap:18px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+            <sc-for list="{{ revKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background:#fff;border:1px solid #E3E8EC;border-radius:16px;padding:18px">
+                <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:#7B8792">{{ k.label }}</div>
+                <div style="font-size:26px;font-weight:800;letter-spacing:-1px;margin:8px 0 4px">{{ k.value }}</div>
+                <div style="font-size:12px;color:#7B8792">{{ k.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;overflow:hidden">
+            <div style="padding:18px 20px;border-bottom:1px solid #EEF2F4;font-size:16px;font-weight:800;letter-spacing:-0.4px">Monthly detail</div>
+            <div style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font-size:13px">
+                <thead>
+                  <tr style="background:#F7F9FA">
+                    <sc-for list="{{ tableHead }}" as="h" hint-placeholder-count="8">
+                      <th style="text-align:{{ h.align }};padding:11px 16px;font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:#7B8792;white-space:nowrap">{{ h.label }}</th>
+                    </sc-for>
+                  </tr>
+                </thead>
+                <tbody>
+                  <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="12">
+                    <tr style="border-top:1px solid #F1F4F6">
+                      <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="8">
+                        <td style="padding:11px 16px;text-align:{{ c.align }};font-weight:{{ c.weight }};font-variant-numeric:tabular-nums;white-space:nowrap;color:{{ c.color }}">{{ c.v }}</td>
+                      </sc-for>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+            <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:4px">Advertising</div>
+            <div style="font-size:12.5px;color:#7B8792;margin-bottom:16px">Free tier only. Audio spots between tracks plus display on the timeline.</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px">
+              <sc-for list="{{ adStats }}" as="a" hint-placeholder-count="5">
+                <div style="padding:14px;border-radius:13px;background:#F7F9FA;border:1px solid #EDF1F3">
+                  <div style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:#7B8792">{{ a.label }}</div>
+                  <div style="font-size:21px;font-weight:800;letter-spacing:-0.6px;margin-top:6px">{{ a.value }}</div>
+                  <div style="font-size:11.5px;color:#8B97A1;margin-top:3px">{{ a.sub }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isUsers }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:elFade .25s ease both;display:flex;flex-direction:column;gap:18px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+            <sc-for list="{{ userKpis }}" as="k" hint-placeholder-count="5">
+              <div style="background:#fff;border:1px solid #E3E8EC;border-radius:16px;padding:18px">
+                <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:#7B8792">{{ k.label }}</div>
+                <div style="font-size:26px;font-weight:800;letter-spacing:-1px;margin:8px 0 4px">{{ k.value }}</div>
+                <div style="font-size:12px;color:#7B8792">{{ k.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+            <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:4px">Cohort retention</div>
+            <div style="font-size:12.5px;color:#7B8792;margin-bottom:16px">Share of a signup cohort still active in month N.</div>
+            <div style="overflow-x:auto">
+              <div style="display:flex;flex-direction:column;gap:6px;min-width:560px">
+                <div style="display:grid;grid-template-columns:92px repeat(6,minmax(0,1fr));gap:6px">
+                  <span></span>
+                  <sc-for list="{{ cohortHead }}" as="h" hint-placeholder-count="6">
+                    <span style="text-align:center;font-size:10.5px;font-weight:800;color:#7B8792">{{ h.label }}</span>
+                  </sc-for>
+                </div>
+                <sc-for list="{{ cohorts }}" as="c" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:92px repeat(6,minmax(0,1fr));gap:6px">
+                    <span style="font-size:12px;font-weight:700;color:#3C4A55;align-self:center">{{ c.label }}</span>
+                    <sc-for list="{{ c.cells }}" as="x" hint-placeholder-count="6">
+                      <span style="text-align:center;padding:9px 0;border-radius:8px;background:{{ x.bg }};color:{{ x.fg }};font-size:12px;font-weight:800;font-variant-numeric:tabular-nums">{{ x.v }}</span>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+
+          <div style="display:grid;grid-template-columns:{{ chartCols }};gap:16px">
+            <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+              <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:16px">Top markets</div>
+              <sc-for list="{{ markets }}" as="m" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+                  <span style="width:118px;flex:none;font-size:13px;font-weight:700">{{ m.name }}</span>
+                  <span style="flex:1;height:9px;border-radius:5px;background:#EDF1F3;overflow:hidden">
+                    <span style="display:block;height:100%;width:{{ m.pct }};background:#00806A"></span>
+                  </span>
+                  <span style="width:74px;flex:none;text-align:right;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums">{{ m.mau }}</span>
+                  <span style="width:62px;flex:none;text-align:right;font-size:12px;color:#7B8792;font-variant-numeric:tabular-nums">{{ m.arpu }}</span>
+                </div>
+              </sc-for>
+            </section>
+
+            <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:20px">
+              <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:16px">Creation health</div>
+              <sc-for list="{{ health }}" as="h" hint-placeholder-count="5">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #F1F4F6">
+                  <span style="font-size:13.5px;font-weight:600;color:#3C4A55">{{ h.label }}</span>
+                  <span style="font-size:15px;font-weight:800;font-variant-numeric:tabular-nums">{{ h.value }}</span>
+                </div>
+              </sc-for>
+            </section>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPayouts }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:elFade .25s ease both;display:flex;flex-direction:column;gap:18px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+            <sc-for list="{{ payoutKpis }}" as="k" hint-placeholder-count="4">
+              <div style="background:#fff;border:1px solid #E3E8EC;border-radius:16px;padding:18px">
+                <div style="font-size:11px;font-weight:800;letter-spacing:0.1em;color:#7B8792">{{ k.label }}</div>
+                <div style="font-size:26px;font-weight:800;letter-spacing:-1px;margin:8px 0 4px">{{ k.value }}</div>
+                <div style="font-size:12px;color:#7B8792">{{ k.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;border-bottom:1px solid #EEF2F4">
+              <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px">Payout run · {{ payoutMonth }}</div>
+              <button onClick="{{ approveRun }}" style="padding:9px 16px;border:0;border-radius:10px;background:#00D9A6;color:#06231B;font-size:13px;font-weight:800;cursor:pointer">{{ approveLabel }}</button>
+            </div>
+            <div style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font-size:13px">
+                <thead>
+                  <tr style="background:#F7F9FA">
+                    <th style="text-align:left;padding:11px 18px;font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:#7B8792">RIGHTS HOLDER</th>
+                    <th style="text-align:left;padding:11px 18px;font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:#7B8792">SPLIT SOURCE</th>
+                    <th style="text-align:right;padding:11px 18px;font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:#7B8792">STREAMS</th>
+                    <th style="text-align:right;padding:11px 18px;font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:#7B8792">GROSS</th>
+                    <th style="text-align:right;padding:11px 18px;font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:#7B8792">PAYOUT</th>
+                    <th style="text-align:right;padding:11px 18px;font-size:10.5px;font-weight:800;letter-spacing:0.08em;color:#7B8792">STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <sc-for list="{{ payouts }}" as="p" hint-placeholder-count="7">
+                    <tr style="border-top:1px solid #F1F4F6">
+                      <td style="padding:12px 18px;font-weight:700">{{ p.name }}</td>
+                      <td style="padding:12px 18px;color:#5A6874">{{ p.source }}</td>
+                      <td style="padding:12px 18px;text-align:right;font-variant-numeric:tabular-nums">{{ p.streams }}</td>
+                      <td style="padding:12px 18px;text-align:right;font-variant-numeric:tabular-nums">{{ p.gross }}</td>
+                      <td style="padding:12px 18px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums">{{ p.net }}</td>
+                      <td style="padding:12px 18px;text-align:right"><span style="padding:4px 10px;border-radius:7px;background:{{ p.badgeBg }};color:{{ p.badgeFg }};font-size:11px;font-weight:800">{{ p.status }}</span></td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:elFade .25s ease both;display:grid;grid-template-columns:{{ chartCols }};gap:16px">
+          <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:22px">
+            <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:6px">Wiring this to live data</div>
+            <p style="margin:0 0 14px;font-size:13.5px;line-height:1.65;color:#5A6874">The console reads a single JSON payload. Point <span style="font-weight:800">METRICS_URL</span> at your analytics or billing export and the dashboards fill in; until then it renders the bundled sample month.</p>
+            <pre style="margin:0;padding:14px;border-radius:12px;background:#0C1318;color:#9BE6D2;font-size:12px;line-height:1.6;overflow-x:auto">{{ schema }}</pre>
+          </section>
+          <section style="background:#fff;border:1px solid #E3E8EC;border-radius:18px;padding:22px">
+            <div style="font-size:16px;font-weight:800;letter-spacing:-0.4px;margin-bottom:14px">Access</div>
+            <sc-for list="{{ settings }}" as="s" hint-placeholder-count="4">
+              <div style="padding:12px 0;border-bottom:1px solid #F1F4F6">
+                <div style="font-size:13.5px;font-weight:800;margin-bottom:3px">{{ s.label }}</div>
+                <div style="font-size:12.5px;line-height:1.6;color:#5A6874">{{ s.body }}</div>
+              </div>
+            </sc-for>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:10px;padding:13px 22px;border-radius:13px;background:#0C1318;color:#F4F7F9;font-size:14px;font-weight:700;box-shadow:0 18px 40px rgba(0,0,0,0.3)">
+          <span style="color:#00D9A6">✓</span>{{ toast }}
+        </div>
+      </sc-if>
+    </main>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440&quot;,&quot;height&quot;:&quot;940&quot;}}">
+/* Change this passcode, and password-protect /admin at the server too. */
+const PASSCODE = 'ellipsis2026';
+const METRICS_URL = '';            // e.g. '/api/metrics.json' — falls back to the sample below
+const MINT = '#00D9A6', DEEP = '#00806A';
+
+const MONTHS = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+
+function sample() {
+  const rows = [];
+  let mau = 168000, paid = 5400;
+  for (let i = 0; i < 12; i++) {
+    mau = Math.round(mau * (1.069 - i * 0.0012));
+    paid = Math.round(paid * (1.093 - i * 0.0015));
+    const free = mau - paid;
+    const subGross = paid * 5.99;
+    const subNet = subGross * 0.876;                 // card + store fees
+    const impressions = Math.round(free * 41.5);
+    const adNet = impressions / 1000 * 2.6;
+    rows.push({
+      month: MONTHS[i] + (i < 3 ? ' 25' : ' 26'),
+      mau, paid, free, subGross, subNet, impressions, adNet,
+      net: subNet + adNet,
+      payouts: (subNet + adNet) * 0.52,
+      churn: 5.9 - i * 0.14,
+      dau: Math.round(mau * (0.212 + i * 0.0022))
+    });
+  }
+  return rows;
+}
+
+const money = n => '$' + Math.round(n).toLocaleString();
+const money2 = n => '$' + n.toFixed(2);
+const short = n => n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'k' : String(Math.round(n));
+
+class Component extends DCLogic {
+  state = {
+    authed: false, email: '', pass: '', loginError: '',
+    section: 'Overview', range: '12m', rows: sample(), toast: '', approved: false,
+    w: typeof window !== 'undefined' ? window.innerWidth : 1440
+  };
+
+  componentDidMount() {
+    try { if (sessionStorage.getItem('ellipsis.admin') === 'ok') this.setState({ authed: true }); } catch (e) {}
+    this._r = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    if (METRICS_URL) {
+      fetch(METRICS_URL).then(r => r.json()).then(d => { if (d && d.rows && d.rows.length) this.setState({ rows: d.rows }); }).catch(() => {});
+    }
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); clearTimeout(this._t); }
+
+  flash(msg) { this.setState({ toast: msg }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 2400); }
+
+  signIn = () => {
+    if (this.state.pass !== PASSCODE) { this.setState({ loginError: 'That passcode is not recognised.' }); return; }
+    try { sessionStorage.setItem('ellipsis.admin', 'ok'); } catch (e) {}
+    this.setState({ authed: true, loginError: '', pass: '' });
+  };
+  signOut = () => { try { sessionStorage.removeItem('ellipsis.admin'); } catch (e) {} this.setState({ authed: false }); };
+
+  visible() {
+    const r = this.state.rows;
+    const n = this.state.range === '3m' ? 3 : this.state.range === '6m' ? 6 : this.state.range === '12m' ? 12 : 1;
+    return r.slice(Math.max(0, r.length - n));
+  }
+
+  exportCsv = () => {
+    const head = 'month,mau,paid_subscribers,free,subscription_net,ad_impressions,ad_net,total_net,artist_payouts,churn_pct,dau\n';
+    const body = this.state.rows.map(r => [r.month, r.mau, r.paid, r.free, r.subNet.toFixed(2), r.impressions, r.adNet.toFixed(2), r.net.toFixed(2), r.payouts.toFixed(2), r.churn.toFixed(2), r.dau].join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([head + body], { type: 'text/csv' }));
+    const a = document.createElement('a'); a.href = url; a.download = 'ellipsis-metrics.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    this.flash('Exported ' + this.state.rows.length + ' months · watermarked with your operator ID');
+  };
+
+  renderVals() {
+    const s = this.state, rows = s.rows, cur = rows[rows.length - 1], prev = rows[rows.length - 2] || cur;
+    const vis = this.visible();
+    const narrow = s.w < 1120;
+    const pct = (a, b) => (b ? ((a - b) / b) * 100 : 0);
+    const delta = v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+    const dCol = v => (v >= 0 ? DEEP : '#B3523E');
+
+    const maxRev = Math.max.apply(null, vis.map(r => r.net));
+    const maxMau = Math.max.apply(null, vis.map(r => r.mau));
+
+    const arpu = cur.net / cur.mau;
+    const arppu = cur.subNet / cur.paid;
+    const ltv = arppu / (cur.churn / 100);
+    const cac = 18.4;
+
+    const nav = ['Overview', 'Revenue', 'Users', 'Payouts', 'Settings'].map(name => ({
+      name,
+      bg: s.section === name ? 'rgba(0,217,166,0.14)' : 'transparent',
+      fg: s.section === name ? MINT : '#9BA9B4',
+      dot: s.section === name ? MINT : '#38454F',
+      go: () => this.setState({ section: name })
+    }));
+
+    const subtitles = {
+      Overview: 'Live platform performance · sample data until METRICS_URL is set',
+      Revenue: 'Subscription and advertising revenue, net of fees',
+      Users: 'Actives, retention and the creation loop',
+      Payouts: 'What goes back to rights holders, by locked split',
+      Settings: 'Data source and access control'
+    };
+
+    const cells = arr => arr.map((v, i) => ({ v, align: i === 0 ? 'left' : 'right', weight: i === 0 ? 700 : 600, color: i === 0 ? '#1F2933' : '#3C4A55' }));
+
+    return {
+      locked: !s.authed, unlocked: s.authed,
+      email: s.email, pass: s.pass, loginError: s.loginError,
+      onEmail: e => this.setState({ email: e.target.value }),
+      onPass: e => this.setState({ pass: e.target.value, loginError: '' }),
+      onKey: e => { if (e.key === 'Enter') this.signIn(); },
+      signIn: this.signIn, signOut: this.signOut,
+
+      shellCols: narrow ? '176px minmax(0,1fr)' : '224px minmax(0,1fr)',
+      chartCols: narrow ? 'minmax(0,1fr)' : 'minmax(0,1.45fr) minmax(0,1fr)',
+      barGap: vis.length > 8 ? '6px' : '14px',
+      nav,
+      sectionTitle: s.section, sectionSub: subtitles[s.section],
+      isOverview: s.section === 'Overview', isRevenue: s.section === 'Revenue',
+      isUsers: s.section === 'Users', isPayouts: s.section === 'Payouts', isSettings: s.section === 'Settings',
+
+      ranges: [['3m', '3M'], ['6m', '6M'], ['12m', '12M']].map(([id, label]) => ({
+        label,
+        bg: s.range === id ? '#fff' : 'transparent',
+        fg: s.range === id ? '#1F2933' : '#6E7B86',
+        go: () => this.setState({ range: id })
+      })),
+      exportCsv: this.exportCsv,
+
+      kpis: [
+        { label: 'MRR', value: money(cur.net), delta: delta(pct(cur.net, prev.net)), deltaColor: dCol(pct(cur.net, prev.net)), sub: 'vs last month' },
+        { label: 'ARR RUN-RATE', value: money(cur.net * 12), delta: delta(pct(cur.net, prev.net)), deltaColor: dCol(pct(cur.net, prev.net)), sub: 'annualised' },
+        { label: 'PAID SUBSCRIBERS', value: cur.paid.toLocaleString(), delta: delta(pct(cur.paid, prev.paid)), deltaColor: dCol(pct(cur.paid, prev.paid)), sub: (cur.paid / cur.mau * 100).toFixed(1) + '% of actives' },
+        { label: 'MONTHLY ACTIVES', value: short(cur.mau), delta: delta(pct(cur.mau, prev.mau)), deltaColor: dCol(pct(cur.mau, prev.mau)), sub: short(cur.dau) + ' daily' },
+        { label: 'BLENDED ARPU', value: money2(arpu), delta: delta(pct(arpu, prev.net / prev.mau)), deltaColor: dCol(pct(arpu, prev.net / prev.mau)), sub: 'per active, per month' },
+        { label: 'PAID CHURN', value: cur.churn.toFixed(1) + '%', delta: delta(cur.churn - prev.churn), deltaColor: cur.churn <= prev.churn ? DEEP : '#B3523E', sub: 'monthly, logo' }
+      ],
+
+      revBars: vis.map(r => ({
+        label: r.month.split(' ')[0],
+        title: r.month + ' · ' + money(r.net),
+        subH: (r.subNet / maxRev * 100).toFixed(1) + '%',
+        adH: (r.adNet / maxRev * 100).toFixed(1) + '%'
+      })),
+      userBars: vis.map(r => ({
+        label: r.month.split(' ')[0],
+        title: r.month + ' · ' + short(r.mau) + ' MAU',
+        h: (r.mau / maxMau * 100).toFixed(1) + '%',
+        paidH: (r.paid / r.mau * 100 * 3.2).toFixed(1) + '%'
+      })),
+
+      mix: [
+        { label: 'Subscriptions', value: money(cur.subNet), pct: (cur.subNet / cur.net * 100).toFixed(0) + '%', color: DEEP, note: cur.paid.toLocaleString() + ' subscribers · ' + money2(arppu) + ' net each' },
+        { label: 'Advertising', value: money(cur.adNet), pct: (cur.adNet / cur.net * 100).toFixed(0) + '%', color: '#9BE6D2', note: short(cur.impressions) + ' impressions · $2.60 eCPM' },
+        { label: 'Artist payouts', value: '−' + money(cur.payouts), pct: (cur.payouts / cur.net * 100).toFixed(0) + '%', color: '#0C1318', note: '52% of net revenue, paid on locked splits' },
+        { label: 'Contribution', value: money(cur.net - cur.payouts), pct: ((cur.net - cur.payouts) / cur.net * 100).toFixed(0) + '%', color: '#FFC24B', note: 'before infrastructure and payroll' }
+      ],
+
+      funnel: [
+        { label: 'Visitors', value: short(cur.mau * 3.1), pct: '100%', color: '#0C1318' },
+        { label: 'Signups', value: short(cur.mau * 0.42), pct: '38%', color: '#14564A' },
+        { label: 'Human-verified', value: short(cur.mau * 0.39), pct: '35%', color: '#00806A' },
+        { label: 'Published a track', value: short(cur.mau * 0.11), pct: '19%', color: '#00A583' },
+        { label: 'Started a trial', value: short(cur.paid * 1.9), pct: '11%', color: MINT },
+        { label: 'Converted to paid', value: cur.paid.toLocaleString(), pct: '7%', color: '#9BE6D2' }
+      ],
+
+      revKpis: [
+        { label: 'NET REVENUE (MONTH)', value: money(cur.net), sub: 'after store, card and ad-network fees' },
+        { label: 'SUBSCRIPTION SHARE', value: (cur.subNet / cur.net * 100).toFixed(0) + '%', sub: 'target 70% by 2028' },
+        { label: 'LTV / CAC', value: (ltv / cac).toFixed(1) + '×', sub: money2(ltv) + ' LTV · ' + money2(cac) + ' blended CAC' },
+        { label: 'GROSS MARGIN', value: '74%', sub: 'storage, egress, Content ID and moderation costed per user' }
+      ],
+
+      tableHead: ['MONTH', 'MAU', 'PAID', 'SUB NET', 'IMPRESSIONS', 'AD NET', 'TOTAL NET', 'PAYOUTS'].map((label, i) => ({ label, align: i === 0 ? 'left' : 'right' })),
+      tableRows: rows.slice().reverse().map(r => ({
+        cells: cells([r.month, short(r.mau), r.paid.toLocaleString(), money(r.subNet), short(r.impressions), money(r.adNet), money(r.net), money(r.payouts)])
+      })),
+
+      adStats: [
+        { label: 'IMPRESSIONS', value: short(cur.impressions), sub: 'free tier, this month' },
+        { label: 'eCPM', value: '$2.60', sub: 'blended audio + display' },
+        { label: 'FILL RATE', value: '91%', sub: 'programmatic + direct' },
+        { label: 'ADS PER HOUR', value: '3.4', sub: 'capped for listening quality' },
+        { label: 'AD-FREE UPGRADES', value: short(cur.paid * 0.31), sub: 'subs citing ads as reason' }
+      ],
+
+      userKpis: [
+        { label: 'MONTHLY ACTIVES', value: short(cur.mau), sub: delta(pct(cur.mau, prev.mau)) + ' month on month' },
+        { label: 'DAILY ACTIVES', value: short(cur.dau), sub: (cur.dau / cur.mau * 100).toFixed(0) + '% DAU/MAU stickiness' },
+        { label: 'CREATORS', value: short(cur.mau * 0.19), sub: 'published or contributed a stem' },
+        { label: 'HUMAN-VERIFIED', value: '96.2%', sub: 'of accounts created this month' },
+        { label: 'BOT SIGNUPS BLOCKED', value: short(cur.mau * 0.07), sub: 'rhythm check + device signals' }
+      ],
+
+      cohortHead: ['M0', 'M1', 'M2', 'M3', 'M6', 'M12'].map(label => ({ label })),
+      cohorts: ['Oct 25', 'Dec 25', 'Feb 26', 'Apr 26', 'Jun 26', 'Aug 26'].map((label, i) => ({
+        label,
+        cells: [100, 54 + i, 43 + i, 38 + i, 31 + i, 26 + i].slice(0, 6 - Math.max(0, i - 2)).concat(Array(Math.max(0, i - 2)).fill(null)).map(v => ({
+          v: v === null ? '—' : v + '%',
+          bg: v === null ? '#F7F9FA' : 'rgba(0,128,106,' + (0.08 + v / 160).toFixed(2) + ')',
+          fg: v === null ? '#C3CCD3' : v > 60 ? '#FFF' : '#0B3F34'
+        }))
+      })),
+
+      markets: [
+        ['United States', 0.31], ['Nigeria', 0.17], ['United Kingdom', 0.11],
+        ['Brazil', 0.10], ['Germany', 0.08], ['India', 0.07]
+      ].map(([name, share]) => ({
+        name, pct: (share * 100 / 0.31 * 0.95).toFixed(0) + '%',
+        mau: short(cur.mau * share),
+        arpu: money2(arpu * (share > 0.15 ? 1.3 : 0.72))
+      })),
+
+      health: [
+        { label: 'Projects created this month', value: short(cur.mau * 0.26) },
+        { label: 'Stems uploaded', value: short(cur.mau * 0.71) },
+        { label: 'Splits locked before release', value: '98.4%' },
+        { label: 'Content ID matches raised', value: short(cur.mau * 0.004) },
+        { label: 'Median time to first collaborator', value: '2d 4h' }
+      ],
+
+      payoutKpis: [
+        { label: 'PAYOUT POOL', value: money(cur.payouts), sub: '52% of net revenue' },
+        { label: 'RIGHTS HOLDERS PAID', value: short(cur.mau * 0.031), sub: 'with a locked split and a payout method' },
+        { label: 'AVERAGE PAYOUT', value: money2(cur.payouts / (cur.mau * 0.031)), sub: 'per rights holder, this month' },
+        { label: 'HELD IN DISPUTE', value: money(cur.payouts * 0.006), sub: '11 unresolved split claims' }
+      ],
+      payoutMonth: cur.month,
+      approveLabel: s.approved ? 'Run approved' : 'Approve run',
+      approveRun: () => { this.setState({ approved: true }); this.flash('Payout run approved — settles in 3 business days'); },
+      payouts: [
+        ['Mara Kessler', 'Home Is With You · 50%', 412844, 0.5],
+        ['Rue Okonkwo', 'Four in the Morning · 100%', 386120, 1],
+        ['Ada Oyelaran', 'Nightbus · 70%', 291455, 0.7],
+        ['Jonathan Reid', 'Home Is With You · 25%', 206422, 0.25],
+        ['Sami Fehr', 'Paper Radio · 60%', 148903, 0.6],
+        ['Ines Duarte', 'Slow Ferry · 40%', 96220, 0.4],
+        ['Tomas Vey', 'Cold Kitchen · 55%', 74118, 0.55]
+      ].map(([name, source, streams], i) => {
+        const gross = streams * 0.0041;
+        return {
+          name, source, streams: streams.toLocaleString(),
+          gross: money(gross), net: money(gross * 0.88),
+          status: i < 5 ? 'Ready' : i === 5 ? 'KYC pending' : 'Split dispute',
+          badgeBg: i < 5 ? '#E4FAF4' : i === 5 ? '#FFF4E0' : '#FFF1F1',
+          badgeFg: i < 5 ? '#00806A' : i === 5 ? '#96631A' : '#9B2C2C'
+        };
+      }),
+
+      schema: '{\n  "rows": [\n    {\n      "month": "Sep 26",\n      "mau": 412000,  "dau": 96400,\n      "paid": 18400, "free": 393600,\n      "subNet": 96500, "impressions": 16300000,\n      "adNet": 42400,  "net": 138900,\n      "payouts": 72200, "churn": 4.3\n    }\n  ]\n}',
+      settings: [
+        { label: 'Passcode', body: 'Set PASSCODE at the top of this file. It gates the UI only — anyone who downloads the page can read it.' },
+        { label: 'Server-side protection (required)', body: 'hPanel → Advanced → Password Protect Directories → /public_html/admin. That is the real lock; the passcode is convenience on top.' },
+        { label: 'Indexing', body: 'This directory is noindex and disallowed in robots.txt. Do not link to it from public pages.' },
+        { label: 'Session', body: 'Sign-in lasts for the browser session only and never leaves the device.' }
+      ],
+
+      toast: s.toast
+    };
+  }
+}
+
+</script>
+</body>
+</html>

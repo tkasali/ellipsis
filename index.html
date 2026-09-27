@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ellipsis — music made by people, provably</title>
+<meta name="description" content="Start a track, invite collaborators, settle the splits, publish to five tag charts. Human-made music, verified.">
+<meta name="theme-color" content="#0C1318">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Ellipsis — music made by people, provably">
+<meta property="og:description" content="Start a track, invite collaborators, settle the splits, publish.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="icons/play-512.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/ios-180.png">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta name="robots" content="index,follow">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html,body{margin:0;padding:0;background:#0C1318}
+    *{box-sizing:border-box}
+    a{color:#00D9A6;text-decoration:none}
+    a:hover{color:#5CF0C9}
+    @keyframes elRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  </style>
+  <script>
+    (function () {
+      var start = Date.now();
+      function fit() {
+        var box = document.getElementById('appShot'), f = document.getElementById('appFrame');
+        if (!box || !f) return false;
+        f.style.transform = 'scale(' + (box.clientWidth / 1440).toFixed(4) + ')';
+        return true;
+      }
+      (function poll(){ if (!fit() && Date.now() - start < 15000) requestAnimationFrame(poll); })();
+      addEventListener('resize', fit);
+    })();
+  </script>
+</helmet>
+
+<div style="background:#0C1318;color:#F4F7F9;font-family:Manrope,-apple-system,system-ui,sans-serif;min-height:100vh;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 40px;background:rgba(12,19,24,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.07)">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:34px;height:34px;border-radius:10px;background:#00D9A6;display:flex;align-items:center;justify-content:center;color:#06231B;font-weight:800;font-size:19px;letter-spacing:-1px">···</div>
+      <span style="font-size:19px;font-weight:800;letter-spacing:-0.5px">Ellipsis</span>
+    </div>
+    <nav style="display:flex;align-items:center;gap:28px;font-size:15px;font-weight:600;color:#9BA9B4">
+      <a href="#how" style="color:#9BA9B4">How it works</a>
+      <a href="#proof" style="color:#9BA9B4">Provenance</a>
+      <a href="app/index.html" style="display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;background:#00D9A6;color:#06231B;font-weight:700">Open the app</a>
+    </nav>
+  </header>
+
+  <section style="max-width:1240px;margin:0 auto;padding:72px 40px 40px">
+    <div style="max-width:760px;animation:elRise .6s ease both">
+      <div style="display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border-radius:999px;border:1px solid rgba(0,217,166,0.35);background:rgba(0,217,166,0.08);font-size:13px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:#00D9A6;margin-bottom:26px">Human-made, verified</div>
+      <h1 style="margin:0 0 22px;font-size:60px;line-height:1.03;letter-spacing:-2.4px;font-weight:800;text-wrap:balance">Music made by people.<br><span style="color:#00D9A6">Provably.</span></h1>
+      <p style="margin:0 0 34px;max-width:520px;font-size:19px;line-height:1.55;color:#9BA9B4;text-wrap:pretty">Start a track from a hum. Invite the people who finish it. Splits are agreed before anyone hits publish, and every contribution is fingerprinted to a human who made it.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:34px">
+        <a href="app/index.html" style="display:flex;align-items:center;gap:10px;padding:16px 30px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:16px;font-weight:800">Launch Ellipsis</a>
+        <a href="mobile/index.html" style="display:flex;align-items:center;gap:10px;padding:16px 30px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);color:#F4F7F9;font-size:16px;font-weight:700">Open the mobile app</a>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:32px;padding-top:26px;border-top:1px solid rgba(255,255,255,0.08)">
+        <div><div style="font-size:26px;font-weight:800;letter-spacing:-1px">100%</div><div style="font-size:13px;color:#7E8C97;font-weight:600">splits settled pre-release</div></div>
+        <div><div style="font-size:26px;font-weight:800;letter-spacing:-1px">0</div><div style="font-size:13px;color:#7E8C97;font-weight:600">generated uploads accepted</div></div>
+        <div><div style="font-size:26px;font-weight:800;letter-spacing:-1px">5</div><div style="font-size:13px;color:#7E8C97;font-weight:600">tags per release, ranked live</div></div>
+      </div>
+    </div>
+
+    <div style="margin-top:52px;animation:elRise .8s ease both;border-radius:16px;overflow:hidden;background:#1A242B;box-shadow:0 50px 100px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.09)">
+      <div style="display:flex;align-items:center;gap:9px;padding:11px 16px;background:#22303A;border-bottom:1px solid rgba(255,255,255,0.07)">
+        <span style="width:11px;height:11px;border-radius:50%;background:#FF5F57"></span>
+        <span style="width:11px;height:11px;border-radius:50%;background:#FEBC2E"></span>
+        <span style="width:11px;height:11px;border-radius:50%;background:#28C840"></span>
+        <span style="flex:1;max-width:340px;margin-left:14px;padding:5px 14px;border-radius:7px;background:rgba(0,0,0,0.28);color:#8C9AA5;font-size:12.5px;font-weight:600;text-align:center">ellipsis.app/app</span>
+        <span style="flex:1"></span>
+      </div>
+      <div id="appShot" style="position:relative;width:100%;padding-top:62.5%;background:#EFF2F5;overflow:hidden">
+        <iframe id="appFrame" src="app/index.html" title="Ellipsis web app" loading="lazy" style="position:absolute;top:0;left:0;width:1440px;height:900px;border:0;transform:scale(0.8);transform-origin:top left;background:#EFF2F5"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" style="border-top:1px solid rgba(255,255,255,0.07);background:#0F1820">
+    <div style="max-width:1240px;margin:0 auto;padding:84px 40px">
+      <h2 style="margin:0 0 12px;font-size:38px;font-weight:800;letter-spacing:-1.4px">Four steps, one finished record</h2>
+      <p style="margin:0 0 48px;font-size:17px;color:#9BA9B4;max-width:600px">Everything below already works in the app above — record it, share it, publish it.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">01 · CAPTURE</div>
+          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Record the idea</div>
+          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Live mic capture, a full multitrack mixer, and stems that stay separate all the way to release.</div>
+        </div>
+        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">02 · COLLABORATE</div>
+          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Invite the finishers</div>
+          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Send a project, not a file. Collaborators add stems, comment in time, and message in the same place.</div>
+        </div>
+        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">03 · SETTLE</div>
+          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Agree the splits</div>
+          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Percentages must total 100 and every party must sign before the publish button unlocks. No post-hoc disputes.</div>
+        </div>
+        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">04 · RELEASE</div>
+          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Publish and rank</div>
+          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Five tags put the track on five charts. Spikes move it. Listeners find it by scene, not by algorithm.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proof" style="border-top:1px solid rgba(255,255,255,0.07)">
+    <div style="max-width:1240px;margin:0 auto;padding:84px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px;align-items:start">
+      <div>
+        <h2 style="margin:0 0 18px;font-size:38px;font-weight:800;letter-spacing:-1.4px">Provenance is the product</h2>
+        <p style="margin:0 0 22px;font-size:17px;line-height:1.6;color:#9BA9B4;text-wrap:pretty">When a song takes nine seconds to generate, the scarce thing is proof that people made it together. Ellipsis records that proof as the track is built, not after it is uploaded.</p>
+        <a href="legal/dmca.html" style="font-size:15px;font-weight:700">Read the rights &amp; takedown policy →</a>
+      </div>
+      <div style="display:grid;gap:14px">
+        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
+          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:#00D9A6;display:flex;align-items:center;justify-content:center;font-weight:800">1</div>
+          <div><div style="font-weight:700;margin-bottom:5px">Human verification at capture</div><div style="font-size:15px;color:#9BA9B4;line-height:1.5">A liveness challenge plus device attestation gates every recording session.</div></div>
+        </div>
+        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
+          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:#00D9A6;display:flex;align-items:center;justify-content:center;font-weight:800">2</div>
+          <div><div style="font-weight:700;margin-bottom:5px">Fingerprint on every stem</div><div style="font-size:15px;color:#9BA9B4;line-height:1.5">Audio matching flags reuse before release and powers claims after it.</div></div>
+        </div>
+        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
+          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:#00D9A6;display:flex;align-items:center;justify-content:center;font-weight:800">3</div>
+          <div><div style="font-weight:700;margin-bottom:5px">A signed split ledger</div><div style="font-size:15px;color:#9BA9B4;line-height:1.5">Every agreement is retained and auditable, and contributors keep their share even if they leave the project.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top:1px solid rgba(255,255,255,0.07);background:linear-gradient(150deg,#0F2A24,#0C1318 65%)">
+    <div style="max-width:1240px;margin:0 auto;padding:76px 40px;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
+      <div>
+        <h2 style="margin:0 0 10px;font-size:34px;font-weight:800;letter-spacing:-1.2px">Desktop, tablet, phone</h2>
+        <p style="margin:0;font-size:17px;color:#9BA9B4;max-width:560px">The web app runs in any modern browser and installs to the dock or home screen. The mobile build is the same product laid out for one hand. Both work offline and record straight from the microphone.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="app/index.html" style="display:flex;align-items:center;gap:10px;padding:17px 32px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:16px;font-weight:800">Open the web app</a><a href="mobile/index.html" style="display:flex;align-items:center;gap:10px;padding:17px 32px;border-radius:14px;border:1px solid rgba(255,255,255,0.2);color:#F4F7F9;font-size:16px;font-weight:700">Mobile build</a></div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.07);padding:44px 40px 56px">
+    <div style="max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between">
+      <div style="font-size:14px;color:#6C7A85;line-height:1.6">
+        © 2026 Ellipsis. All rights reserved.<br>
+        Recordings, compositions and stems remain the property of their creators.
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;font-size:14px;font-weight:600">
+        <a href="legal/privacy.html" style="color:#9BA9B4">Privacy</a>
+        <a href="legal/terms.html" style="color:#9BA9B4">Terms</a>
+        <a href="legal/dmca.html" style="color:#9BA9B4">Copyright &amp; DMCA</a>
+        <a href="mailto:hello@ellipsis.app" style="color:#9BA9B4">Contact</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+</body>
+</html>

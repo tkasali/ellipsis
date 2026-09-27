@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ellipsis Console</title>
+<meta name="description" content="Internal administration console.">
+<meta name="theme-color" content="#0C1318">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="../icons/play-512.png" type="image/png">
+<link rel="apple-touch-icon" href="../icons/ios-180.png">
+<meta name="robots" content="noindex,nofollow">
+<script src="./fit-wide.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;background:#DFE3E8;font-family:Manrope,-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:#00B589;text-decoration:none}a:hover{color:#009974}
+    *{box-sizing:border-box}
+    ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#C9D0D8;border-radius:4px}
+    @keyframes adUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+    @keyframes adPulse{0%,100%{opacity:1}50%{opacity:.45}}
+  </style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 24px">
+  <x-import component-from-global-scope="ChromeWindow" from="./browser-window.jsx" url="admin.ellipsis.app/console" hint-size="1320px,860px">
+
+    <div style="display:flex;height:800px;background:#F4F6F8;font-family:Manrope,system-ui,sans-serif;color:#1F2933">
+
+      <!-- ══════════ SIDEBAR ══════════ -->
+      <div style="width:236px;flex:none;background:#0F1720;padding:20px 14px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;align-items:center;gap:10px;padding:4px 8px 20px">
+          <div style="display:flex;gap:4px">
+            <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+            <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+            <div style="width:7px;height:7px;border-radius:50%;background:#00D9A6"></div>
+          </div>
+          <div style="font-size:14px;font-weight:800;color:#fff;letter-spacing:.14em">ELLIPSIS</div>
+          <div style="font-size:9.5px;font-weight:800;color:#00D9A6;letter-spacing:.08em;padding:3px 6px;border-radius:5px;background:rgba(0,217,166,.14)">ADMIN</div>
+        </div>
+
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="8">
+          <div onClick="{{ n.pick }}" style="padding:10px 12px;border-radius:10px;background:{{ n.bg }};display:flex;align-items:center;gap:10px;cursor:pointer">
+            <div style="width:7px;height:7px;border-radius:2px;background:{{ n.dot }};flex:none"></div>
+            <div style="font-size:13px;font-weight:700;color:{{ n.fg }};white-space:nowrap">{{ n.name }}</div>
+            <sc-if value="{{ n.hasCount }}">
+              <div style="margin-left:auto;font-size:10.5px;font-weight:800;color:{{ n.countFg }};background:{{ n.countBg }};padding:2px 7px;border-radius:99px">{{ n.count }}</div>
+            </sc-if>
+          </div>
+        </sc-for>
+
+        <div style="margin-top:auto;padding:14px 12px;border-radius:12px;background:rgba(255,255,255,.05)">
+          <div style="font-size:10.5px;font-weight:800;letter-spacing:.08em;color:rgba(255,255,255,.4)">SYSTEM</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:9px">
+            <div style="width:8px;height:8px;border-radius:50%;background:#00D9A6;animation:adPulse 2s infinite"></div>
+            <div style="font-size:11.5px;font-weight:700;color:#fff">{{ systemState }}</div>
+          </div>
+          <div style="font-size:10.5px;font-weight:600;color:rgba(255,255,255,.4);margin-top:6px;line-height:1.5">{{ systemMeta }}</div>
+        </div>
+        <div style="padding:10px 12px;display:flex;align-items:center;gap:9px">
+          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(150deg,#00D9A6,#0E6B7A);flex:none"></div>
+          <div style="min-width:0">
+            <div style="font-size:11.5px;font-weight:800;color:#fff;white-space:nowrap">You · Trust &amp; Safety</div>
+            <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.4)">Full access</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ MAIN ══════════ -->
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="padding:18px 26px;background:#fff;border-bottom:1px solid #E7EBEF;display:flex;align-items:center;gap:16px">
+          <div style="min-width:0">
+            <div style="font-size:19px;font-weight:800;letter-spacing:-.01em;white-space:nowrap">{{ sectionTitle }}</div>
+            <div style="font-size:12.5px;font-weight:500;color:#8B95A1;margin-top:3px;white-space:nowrap">{{ sectionSub }}</div>
+          </div>
+          <div style="margin-left:auto;height:38px;width:260px;border-radius:10px;background:#F2F4F7;display:flex;align-items:center;gap:9px;padding:0 12px;flex:none">
+            <svg width="15" height="15" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#98A2AC" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="#98A2AC" stroke-width="2" stroke-linecap="round"/></svg>
+            <input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search users, projects, cases" style="flex:1;border:none;background:transparent;outline:none;font-family:Manrope,system-ui;font-size:13px;font-weight:600"/>
+          </div>
+          <div onClick="{{ exportCsv }}" style="height:38px;padding:0 14px;border-radius:10px;background:#111820;color:#fff;display:flex;align-items:center;font-size:12.5px;font-weight:800;cursor:pointer;flex:none;white-space:nowrap">Export CSV</div>
+        </div>
+
+        <div style="flex:1;overflow-y:auto;padding:22px 26px 40px">
+
+          <!-- ── OVERVIEW ── -->
+          <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+                <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+                  <div style="background:#fff;border-radius:14px;padding:17px;border:1px solid #E7EBEF">
+                    <div style="font-size:11.5px;font-weight:700;color:#8B95A1;white-space:nowrap">{{ k.label }}</div>
+                    <div style="font-size:26px;font-weight:800;margin-top:8px;letter-spacing:-.02em">{{ k.value }}</div>
+                    <div style="font-size:11.5px;font-weight:800;color:{{ k.deltaFg }};margin-top:5px">{{ k.delta }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-top:14px">
+                <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid #E7EBEF">
+                  <div style="display:flex;align-items:baseline;justify-content:space-between">
+                    <div style="font-size:14px;font-weight:800;white-space:nowrap">Publishes, Spikes and takedowns</div>
+                    <div style="display:flex;gap:8px">
+                      <sc-for list="{{ ranges }}" as="r" hint-placeholder-count="3">
+                        <div onClick="{{ r.pick }}" style="padding:6px 11px;border-radius:8px;background:{{ r.bg }};font-size:11px;font-weight:800;color:{{ r.fg }};cursor:pointer;white-space:nowrap">{{ r.name }}</div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:flex-end;gap:9px;height:190px;margin-top:20px">
+                    <sc-for list="{{ chart }}" as="c" hint-placeholder-count="14">
+                      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:flex-end">
+                        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:2px">
+                          <div style="width:100%;height:{{ c.takedown }};background:#F0546A;border-radius:3px 3px 0 0"></div>
+                          <div style="width:100%;height:{{ c.spikes }};background:#00D9A6"></div>
+                          <div style="width:100%;height:{{ c.publish }};background:#1F2933;border-radius:0 0 3px 3px"></div>
+                        </div>
+                        <div style="font-size:9.5px;font-weight:700;color:#A6AFB8">{{ c.day }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;gap:16px;margin-top:14px">
+                    <sc-for list="{{ legend }}" as="l" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:center;gap:7px">
+                        <div style="width:9px;height:9px;border-radius:3px;background:{{ l.color }}"></div>
+                        <div style="font-size:11.5px;font-weight:700;color:#6E7883;white-space:nowrap">{{ l.name }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:14px">
+                  <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid #E7EBEF">
+                    <div style="font-size:14px;font-weight:800">Needs a human</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+                      <sc-for list="{{ queues }}" as="q" hint-placeholder-count="4">
+                        <div onClick="{{ q.open }}" style="display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;background:{{ q.bg }};cursor:pointer">
+                          <div style="width:8px;height:8px;border-radius:50%;background:{{ q.dot }};flex:none"></div>
+                          <div style="font-size:12.5px;font-weight:700;flex:1;min-width:0;line-height:1.35">{{ q.name }}</div>
+                          <div style="font-size:13px;font-weight:800;color:{{ q.dot }};flex:none">{{ q.count }}</div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="background:#111820;border-radius:14px;padding:18px;color:#fff">
+                    <div style="font-size:13.5px;font-weight:800">Bot shield</div>
+                    <div style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.55);margin-top:7px;line-height:1.55">{{ shieldBlurb }}</div>
+                    <div style="display:flex;gap:9px;margin-top:14px">
+                      <div onClick="{{ toggleShield }}" style="flex:1;height:38px;border-radius:10px;background:{{ shieldBtnBg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:{{ shieldBtnFg }};cursor:pointer;white-space:nowrap">{{ shieldBtn }}</div>
+                      <div onClick="{{ raiseStrictness }}" style="flex:1;height:38px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;cursor:pointer;white-space:nowrap">{{ strictnessLabel }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ── TABLE SECTIONS (users / content / claims / bots) ── -->
+          <sc-if value="{{ isTable }}">
+            <div>
+              <div style="display:flex;gap:9px;margin-bottom:14px;flex-wrap:wrap">
+                <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+                  <div onClick="{{ f.pick }}" style="padding:8px 13px;border-radius:99px;background:{{ f.bg }};font-size:12px;font-weight:800;color:{{ f.fg }};cursor:pointer;white-space:nowrap">{{ f.name }}</div>
+                </sc-for>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+                  <div style="font-size:12px;font-weight:700;color:#8B95A1;white-space:nowrap">{{ rowSummary }}</div>
+                  <sc-if value="{{ hasSelection }}">
+                    <div onClick="{{ bulkAction }}" style="padding:8px 13px;border-radius:9px;background:#111820;color:#fff;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap">{{ bulkLabel }}</div>
+                  </sc-if>
+                </div>
+              </div>
+
+              <div style="background:#fff;border-radius:14px;border:1px solid #E7EBEF;overflow:hidden">
+                <div style="display:flex;padding:12px 16px;background:#F8FAFB;border-bottom:1px solid #E7EBEF">
+                  <sc-for list="{{ columns }}" as="c" hint-placeholder-count="5">
+                    <div style="flex:{{ c.flex }};font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#98A2AC;text-transform:uppercase;white-space:nowrap;text-align:{{ c.align }}">{{ c.name }}</div>
+                  </sc-for>
+                </div>
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                  <div style="border-bottom:1px solid #F2F4F6;background:{{ r.rowBg }}">
+                    <div onClick="{{ r.toggle }}" style="display:flex;align-items:center;padding:13px 16px;cursor:pointer">
+                      <div style="flex:2.4;display:flex;align-items:center;gap:11px;min-width:0">
+                        <div style="width:34px;height:34px;border-radius:{{ r.artRadius }};background:{{ r.art }};flex:none"></div>
+                        <div style="min-width:0">
+                          <div style="font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</div>
+                          <div style="font-size:11px;font-weight:600;color:#98A2AC;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</div>
+                        </div>
+                      </div>
+                      <div style="flex:1.3;font-size:12px;font-weight:700;color:#5A6673;white-space:nowrap">{{ r.colA }}</div>
+                      <div style="flex:1.1;font-size:12px;font-weight:700;color:#5A6673;white-space:nowrap">{{ r.colB }}</div>
+                      <div style="flex:1;text-align:center">
+                        <div style="display:inline-block;padding:4px 9px;border-radius:7px;background:{{ r.statusBg }};font-size:10.5px;font-weight:800;color:{{ r.statusFg }};white-space:nowrap">{{ r.status }}</div>
+                      </div>
+                      <div style="flex:1.4;display:flex;gap:7px;justify-content:flex-end">
+                        <div onClick="{{ r.primary }}" style="padding:7px 11px;border-radius:8px;background:{{ r.primaryBg }};font-size:11.5px;font-weight:800;color:{{ r.primaryFg }};cursor:pointer;white-space:nowrap">{{ r.primaryLabel }}</div>
+                        <div onClick="{{ r.secondary }}" style="padding:7px 11px;border-radius:8px;background:#F2F4F7;font-size:11.5px;font-weight:800;color:#5A6673;cursor:pointer;white-space:nowrap">{{ r.secondaryLabel }}</div>
+                      </div>
+                    </div>
+                    <sc-if value="{{ r.isOpen }}">
+                      <div style="padding:0 16px 16px 61px;animation:adUp .18s ease">
+                        <div style="background:#F8FAFB;border:1px solid #EBEEF1;border-radius:12px;padding:15px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+                          <sc-for list="{{ r.detail }}" as="d" hint-placeholder-count="6">
+                            <div>
+                              <div style="font-size:10px;font-weight:800;letter-spacing:.06em;color:#A6AFB8;text-transform:uppercase">{{ d.k }}</div>
+                              <div style="font-size:12.5px;font-weight:700;margin-top:5px;line-height:1.45;word-break:break-word">{{ d.v }}</div>
+                            </div>
+                          </sc-for>
+                        </div>
+                        <sc-if value="{{ r.hasEvidence }}">
+                          <div style="margin-top:12px;background:#0F1720;border-radius:12px;padding:15px">
+                            <div style="font-size:10.5px;font-weight:800;letter-spacing:.07em;color:rgba(255,255,255,.4)">{{ r.evidenceTitle }}</div>
+                            <div style="display:flex;align-items:flex-end;gap:2px;height:52px;margin-top:12px">
+                              <sc-for list="{{ r.evidenceBars }}" as="b" hint-placeholder-count="40">
+                                <div style="flex:1;border-radius:1px;height:{{ b.h }};background:{{ b.color }}"></div>
+                              </sc-for>
+                            </div>
+                            <div style="font-size:11.5px;font-weight:600;color:rgba(255,255,255,.55);margin-top:12px;line-height:1.55">{{ r.evidenceText }}</div>
+                            <div style="display:flex;gap:9px;margin-top:14px">
+                              <sc-for list="{{ r.evidenceActions }}" as="a" hint-placeholder-count="3">
+                                <div onClick="{{ a.act }}" style="padding:9px 13px;border-radius:9px;background:{{ a.bg }};font-size:12px;font-weight:800;color:{{ a.fg }};cursor:pointer;white-space:nowrap">{{ a.name }}</div>
+                              </sc-for>
+                            </div>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ noRows }}">
+                  <div style="padding:56px;text-align:center">
+                    <div style="font-size:14px;font-weight:800">Queue is clear</div>
+                    <div style="font-size:12.5px;font-weight:500;color:#98A2AC;margin-top:6px">Nothing matches this filter right now.</div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ── REVENUE ── -->
+          <sc-if value="{{ isRevenue }}">
+            <div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+                <sc-for list="{{ revKpis }}" as="k" hint-placeholder-count="4">
+                  <div style="background:#fff;border-radius:14px;padding:17px;border:1px solid #E7EBEF">
+                    <div style="font-size:11.5px;font-weight:700;color:#8B95A1;white-space:nowrap">{{ k.label }}</div>
+                    <div style="font-size:24px;font-weight:800;margin-top:8px;letter-spacing:-.02em">{{ k.value }}</div>
+                    <div style="font-size:11.5px;font-weight:800;color:{{ k.deltaFg }};margin-top:5px">{{ k.delta }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+                <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid #E7EBEF">
+                  <div style="font-size:14px;font-weight:800">Revenue mix</div>
+                  <div style="display:flex;flex-direction:column;gap:14px;margin-top:18px">
+                    <sc-for list="{{ revMix }}" as="m" hint-placeholder-count="4">
+                      <div>
+                        <div style="display:flex;justify-content:space-between;align-items:baseline">
+                          <div style="font-size:12.5px;font-weight:700;white-space:nowrap">{{ m.name }}</div>
+                          <div style="font-size:12.5px;font-weight:800;white-space:nowrap">{{ m.value }}</div>
+                        </div>
+                        <div style="height:9px;border-radius:5px;background:#EDF0F3;margin-top:8px;overflow:hidden">
+                          <div style="height:100%;width:{{ m.pct }};background:{{ m.color }};border-radius:5px"></div>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid #E7EBEF">
+                  <div style="font-size:14px;font-weight:800">Ad controls</div>
+                  <div style="display:flex;flex-direction:column;gap:2px;margin-top:10px">
+                    <sc-for list="{{ adControls }}" as="a" hint-placeholder-count="4">
+                      <div onClick="{{ a.tap }}" style="padding:13px 0;display:flex;align-items:center;gap:12px;cursor:pointer;border-top:1px solid {{ a.divider }}">
+                        <div style="flex:1">
+                          <div style="font-size:13px;font-weight:700">{{ a.name }}</div>
+                          <div style="font-size:11px;font-weight:500;color:#A6AFB8;margin-top:3px">{{ a.desc }}</div>
+                        </div>
+                        <sc-if value="{{ a.isToggle }}">
+                          <div style="width:44px;height:26px;border-radius:99px;background:{{ a.track }};position:relative;flex:none">
+                            <div style="position:absolute;top:3px;left:{{ a.knobLeft }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .18s"></div>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ a.isValue }}">
+                          <div style="font-size:13px;font-weight:800;color:#00B589;white-space:nowrap">{{ a.value }}</div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:16px;padding:13px;border-radius:11px;background:#F5F7F9;font-size:11.5px;font-weight:600;color:#6E7883;line-height:1.55">{{ adNote }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ── AUDIT LOG ── -->
+          <sc-if value="{{ isAudit }}">
+            <div style="background:#fff;border-radius:14px;border:1px solid #E7EBEF;overflow:hidden">
+              <sc-for list="{{ audit }}" as="a" hint-placeholder-count="8">
+                <div style="padding:14px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #F2F4F6">
+                  <div style="width:8px;height:8px;border-radius:50%;background:{{ a.dot }};flex:none"></div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:13px;font-weight:700;line-height:1.45">{{ a.text }}</div>
+                    <div style="font-size:11px;font-weight:600;color:#A6AFB8;margin-top:3px">{{ a.meta }}</div>
+                  </div>
+                  <div style="font-size:11px;font-weight:700;color:#98A2AC;flex:none;white-space:nowrap">{{ a.time }}</div>
+                </div>
+              </sc-for>
+              <div style="padding:16px 18px;font-size:11.5px;font-weight:600;color:#8B95A1;line-height:1.6">Every action here is written to an append-only log with the operator, IP and case reference. Logs are retained seven years for copyright disputes. © 2026 Ellipsis, LLC — Confidential.</div>
+            </div>
+          </sc-if>
+
+        </div>
+      </div>
+
+      <!-- toast -->
+      <sc-if value="{{ toast }}">
+        <div style="position:absolute;bottom:22px;left:50%;transform:translateX(-50%);background:#111820;color:#fff;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:0 10px 30px rgba(10,18,26,.3);animation:adUp .2s ease;z-index:40;white-space:nowrap">{{ toast }}</div>
+      </sc-if>
+    </div>
+  </x-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1400&quot;,&quot;height&quot;:&quot;940&quot;}}">
+const MINT = '#00D9A6', INK = '#1F2933';
+const ART = [
+  'linear-gradient(140deg,#F0546A,#7A2A6E)', 'linear-gradient(140deg,#1D3B53,#0E7C86)',
+  'linear-gradient(140deg,#F5A623,#D9435E)', 'linear-gradient(140deg,#2B2F5E,#5B4CC4)',
+  'linear-gradient(140deg,#0E6B5C,#8FD14F)', 'linear-gradient(140deg,#123C69,#41B6E6)',
+];
+const wave = (n, seed) => {
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(0.2 + Math.abs(Math.sin((i + seed) * 1.37) * Math.cos((i + seed) * 0.51)) * 0.8);
+  return out;
+};
+
+const USERS = [
+  { name: 'Jonathan Watson', handle: '@jwatson', loc: 'New York, US', plan: 'Premium', spikes: '12.4k', state: 'Active', joined: 'Mar 2026', verified: true, projects: 14, risk: 'Low' },
+  { name: 'Craig James', handle: '@craigj', loc: 'Milton Keynes, UK', plan: 'Free', spikes: '8.1k', state: 'Active', joined: 'Apr 2026', verified: true, projects: 9, risk: 'Low' },
+  { name: 'spike_king_442', handle: '@spike_king_442', loc: 'Unknown (VPN)', plan: 'Free', spikes: '96.2k', state: 'Flagged', joined: '3d ago', verified: false, projects: 0, risk: 'Critical' },
+  { name: 'Tanaka Hayashi', handle: '@tanaka_h', loc: 'Tokyo, JP', plan: 'Premium', spikes: '19.7k', state: 'Active', joined: 'Jan 2026', verified: true, projects: 22, risk: 'Low' },
+  { name: 'promo_bot_ellipsis', handle: '@promo_bot', loc: 'Unknown (datacentre)', plan: 'Free', spikes: '41.0k', state: 'Suspended', joined: '9d ago', verified: false, projects: 3, risk: 'Critical' },
+  { name: 'Carol Peters', handle: '@carolp', loc: 'Sydney, AU', plan: 'Premium', spikes: '3.3k', state: 'Active', joined: 'Feb 2026', verified: true, projects: 4, risk: 'Low' },
+  { name: 'Lo Mensah', handle: '@lomensah', loc: 'Accra, GH', plan: 'Free', spikes: '6.6k', state: 'Active', joined: 'May 2026', verified: true, projects: 11, risk: 'Medium' },
+];
+
+const CONTENT = [
+  { title: 'Drag Me Down', by: 'Jonathan Watson', tags: 'Hip-Hop · Late night', spikes: '1,543', state: 'Published', scan: 'Clean', licence: 'All rights reserved' },
+  { title: 'Figure 8', by: 'Craig James', tags: 'R&B · Chill', spikes: '940', state: 'Published', scan: 'Clean', licence: 'Collaboration' },
+  { title: 'Nightbus (rip)', by: 'spike_king_442', tags: 'Pop · Euphoric', spikes: '11,204', state: 'Under review', scan: 'Match 94%', licence: 'All rights reserved' },
+  { title: 'Can You Feel the Love', by: 'Tanaka Hayashi', tags: 'House · Euphoric', spikes: '654', state: 'Published', scan: 'Clean', licence: 'CC BY-NC' },
+  { title: 'Uplift (bootleg)', by: 'promo_bot_ellipsis', tags: 'Afrobeat · Lagos', spikes: '2,010', state: 'Taken down', scan: 'Match 99%', licence: '—' },
+  { title: 'Home Is With You', by: 'Tosin_A', tags: 'Hip-Hop · Lagos', spikes: '341', state: 'Published', scan: 'Clean', licence: 'All rights reserved' },
+];
+
+const CLAIMS = [
+  { id: 'DMCA-2026-4101', work: 'Nightbus (rip)', claimant: 'Carol Peters (rights holder)', kind: 'Recording re-uploaded', age: '4h', state: 'Open', match: '94%' },
+  { id: 'DMCA-2026-4098', work: 'Uplift (bootleg)', claimant: 'Tosin_A', kind: 'Composition used', age: '1d', state: 'Upheld', match: '99%' },
+  { id: 'DMCA-2026-4094', work: 'Tourches', claimant: 'Sample Pack Co.', kind: 'Uncleared sample', age: '2d', state: 'Counter-notice', match: '71%' },
+  { id: 'DMCA-2026-4090', work: 'Game Plan', claimant: 'A. Mensah', kind: 'Impersonation', age: '5d', state: 'Rejected', match: '12%' },
+];
+
+const BOTS = [
+  { id: 'BOT-8841', who: 'spike_king_442', signal: '96k Spikes from 12 devices, 40ms median interval', conf: '99%', state: 'Open', action: 'Ban' },
+  { id: 'BOT-8836', who: 'promo_bot_ellipsis', signal: 'Datacentre ASN, failed rhythm check 41 times', conf: '98%', state: 'Actioned', action: 'Banned' },
+  { id: 'BOT-8829', who: '17 accounts · Lagos chart', signal: 'Coordinated Spike ring on one project', conf: '91%', state: 'Open', action: 'Purge Spikes' },
+  { id: 'BOT-8811', who: 'Lo Mensah', signal: 'Emulator fingerprint, human check passed', conf: '34%', state: 'Cleared', action: 'Allow' },
+];
+
+class Component extends DCLogic {
+  state = {
+    section: 'Overview',
+    query: '',
+    filter: 'All',
+    open: '',
+    range: '14 days',
+    shield: true,
+    strict: 'Balanced',
+    actions: {},
+    toast: '',
+    ads: { audio: true, inline: true, premiumFree: false, floor: 1.25 },
+    audit: [],
+  };
+
+  flash = m => { this.setState({ toast: m }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 1800); };
+  act = (key, value, msg, logText) => {
+    this.setState(s => ({
+      actions: { ...s.actions, [key]: value },
+      audit: [{ text: logText || msg, meta: 'you@ellipsis.app · 10.4.2.19 · ' + (s.section || 'Console'), time: 'just now', dot: MINT }, ...s.audit],
+    }));
+    this.flash(msg);
+  };
+
+  renderVals() {
+    const st = this.state;
+    const sec = st.section;
+    const q = st.query.toLowerCase();
+    const A = (k, dflt) => (st.actions[k] !== undefined ? st.actions[k] : dflt);
+
+    const nav = [
+      { name: 'Overview' }, { name: 'Users', count: 2 }, { name: 'Content', count: 1 },
+      { name: 'Copyright claims', count: 2 }, { name: 'Bots & abuse', count: 2 },
+      { name: 'Revenue & ads' }, { name: 'Audit log' },
+    ].map(n => ({
+      name: n.name,
+      bg: sec === n.name ? 'rgba(0,217,166,.14)' : 'transparent',
+      fg: sec === n.name ? '#fff' : 'rgba(255,255,255,.6)',
+      dot: sec === n.name ? MINT : 'rgba(255,255,255,.25)',
+      hasCount: !!n.count, count: n.count,
+      countBg: sec === n.name ? MINT : 'rgba(255,255,255,.12)',
+      countFg: sec === n.name ? '#04231C' : 'rgba(255,255,255,.7)',
+      pick: () => this.setState({ section: n.name, open: '', filter: 'All' }),
+    }));
+
+    const subs = {
+      'Overview': 'Platform health, moderation load and trust signals',
+      'Users': USERS.length + ' accounts · human verification and plan state',
+      'Content': 'Published projects, Content ID results and licences',
+      'Copyright claims': 'DMCA and rights disputes with SLA countdowns',
+      'Bots & abuse': 'Automation detection, Spike farms and device signals',
+      'Revenue & ads': 'Subscription and advertising performance',
+      'Audit log': 'Append-only record of every operator action',
+    };
+
+    // ── table config per section
+    let columns = [], rows = [], filters = ['All'];
+    if (sec === 'Users') {
+      filters = ['All', 'Flagged', 'Suspended', 'Unverified', 'Premium'];
+      columns = [
+        { name: 'Account', flex: 2.4, align: 'left' }, { name: 'Location', flex: 1.3, align: 'left' },
+        { name: 'Spikes given', flex: 1.1, align: 'left' }, { name: 'State', flex: 1, align: 'center' },
+        { name: 'Actions', flex: 1.4, align: 'right' },
+      ];
+      rows = USERS.filter(u => {
+        if (q && !(u.name + u.handle + u.loc).toLowerCase().includes(q)) return false;
+        if (st.filter === 'Flagged') return u.state === 'Flagged';
+        if (st.filter === 'Suspended') return A('u' + u.handle, u.state) === 'Suspended';
+        if (st.filter === 'Unverified') return !u.verified;
+        if (st.filter === 'Premium') return u.plan === 'Premium';
+        return true;
+      }).map((u, i) => {
+        const state = A('u' + u.handle, u.state);
+        const susp = state === 'Suspended';
+        return {
+          key: u.handle, title: u.name, sub: u.handle + ' · ' + u.plan,
+          art: ART[i % 6], artRadius: '50%',
+          colA: u.loc, colB: u.spikes,
+          status: u.verified ? state + ' · human' : state + ' · unverified',
+          statusBg: susp ? '#FFE9E9' : state === 'Flagged' ? '#FFF4E5' : '#EAFBF6',
+          statusFg: susp ? '#C2453F' : state === 'Flagged' ? '#B4741A' : '#00967A',
+          rowBg: st.open === u.handle ? '#FBFDFE' : '#fff',
+          primaryLabel: susp ? 'Reinstate' : 'Suspend',
+          primaryBg: susp ? '#EAFBF6' : '#FFE9E9', primaryFg: susp ? '#00967A' : '#C2453F',
+          primary: () => this.act('u' + u.handle, susp ? 'Active' : 'Suspended', susp ? u.name + ' reinstated' : u.name + ' suspended', (susp ? 'Reinstated ' : 'Suspended ') + u.handle),
+          secondaryLabel: 'Force re-verify',
+          secondary: () => this.act('v' + u.handle, true, 'Re-verification required at next sign-in', 'Forced human re-verification for ' + u.handle),
+          toggle: () => this.setState(s => ({ open: s.open === u.handle ? '' : u.handle })),
+          isOpen: st.open === u.handle,
+          detail: [
+            { k: 'Joined', v: u.joined }, { k: 'Projects', v: u.projects },
+            { k: 'Human verification', v: u.verified ? 'Passed rhythm + device check' : 'Never passed' },
+            { k: 'Risk score', v: u.risk }, { k: 'Plan', v: u.plan },
+            { k: 'Storage used', v: (u.projects * 0.4).toFixed(1) + ' GB' },
+          ],
+          hasEvidence: u.risk === 'Critical',
+          evidenceTitle: 'SPIKE TIMING FINGERPRINT',
+          evidenceBars: wave(40, i * 3).map((h, j) => ({ h: Math.round((u.risk === 'Critical' ? 0.9 : h) * 52) + 'px', color: u.risk === 'Critical' ? '#F0546A' : MINT })),
+          evidenceText: 'Perfectly even 40ms intervals across 12 device IDs on one ASN. No human hits a button that consistently — this is the pattern the rhythm check exists to catch.',
+          evidenceActions: [
+            { name: 'Purge their Spikes', bg: MINT, fg: '#04231C', act: () => this.act('p' + u.handle, true, 'Purged 96,204 Spikes from the charts', 'Purged Spikes from ' + u.handle) },
+            { name: 'Ban account', bg: '#F0546A', fg: '#fff', act: () => this.act('u' + u.handle, 'Suspended', u.name + ' banned', 'Banned ' + u.handle) },
+            { name: 'Mark false positive', bg: 'rgba(255,255,255,.12)', fg: '#fff', act: () => this.act('fp' + u.handle, true, 'Marked as false positive', 'Cleared ' + u.handle + ' as false positive') },
+          ],
+        };
+      });
+    } else if (sec === 'Content') {
+      filters = ['All', 'Under review', 'Content ID match', 'Taken down'];
+      columns = [
+        { name: 'Project', flex: 2.4, align: 'left' }, { name: 'Tags', flex: 1.3, align: 'left' },
+        { name: 'Content ID', flex: 1.1, align: 'left' }, { name: 'State', flex: 1, align: 'center' },
+        { name: 'Actions', flex: 1.4, align: 'right' },
+      ];
+      rows = CONTENT.filter(c => {
+        if (q && !(c.title + c.by + c.tags).toLowerCase().includes(q)) return false;
+        if (st.filter === 'Under review') return c.state === 'Under review';
+        if (st.filter === 'Content ID match') return c.scan !== 'Clean';
+        if (st.filter === 'Taken down') return A('c' + c.title, c.state) === 'Taken down';
+        return true;
+      }).map((c, i) => {
+        const state = A('c' + c.title, c.state);
+        const down = state === 'Taken down';
+        return {
+          key: c.title, title: c.title, sub: 'by ' + c.by + ' · ' + c.licence,
+          art: ART[(i + 2) % 6], artRadius: '9px',
+          colA: c.tags, colB: c.scan,
+          status: state,
+          statusBg: down ? '#FFE9E9' : state === 'Under review' ? '#FFF4E5' : '#EAFBF6',
+          statusFg: down ? '#C2453F' : state === 'Under review' ? '#B4741A' : '#00967A',
+          rowBg: st.open === c.title ? '#FBFDFE' : '#fff',
+          primaryLabel: down ? 'Restore' : 'Take down',
+          primaryBg: down ? '#EAFBF6' : '#FFE9E9', primaryFg: down ? '#00967A' : '#C2453F',
+          primary: () => this.act('c' + c.title, down ? 'Published' : 'Taken down', down ? c.title + ' restored' : c.title + ' taken down', (down ? 'Restored ' : 'Took down ') + c.title),
+          secondaryLabel: 'Freeze payouts',
+          secondary: () => this.act('f' + c.title, true, 'Payouts frozen pending review', 'Froze payouts on ' + c.title),
+          toggle: () => this.setState(s => ({ open: s.open === c.title ? '' : c.title })),
+          isOpen: st.open === c.title,
+          detail: [
+            { k: 'Spikes', v: c.spikes }, { k: 'Licence', v: c.licence },
+            { k: 'Watermark', v: c.scan === 'Clean' ? 'Embedded · registry verified' : 'Mismatch with claimed owner' },
+            { k: 'Registry ID', v: 'ELP-2026-' + (1800 + i * 7) },
+            { k: 'Splits agreed', v: c.by === 'promo_bot_ellipsis' ? 'No — single unverified party' : 'Yes, all parties' },
+            { k: 'AI training', v: 'Opted out' },
+          ],
+          hasEvidence: c.scan !== 'Clean',
+          evidenceTitle: 'CONTENT ID OVERLAP',
+          evidenceBars: wave(40, i * 4).map((h, j) => ({ h: Math.round(h * 52) + 'px', color: j > 8 && j < 32 ? '#F5A623' : 'rgba(255,255,255,.2)' })),
+          evidenceText: c.scan + ' overlap across a 23-second window against a registered recording. Waveform, tempo and key all align — consistent with a re-upload rather than an interpolation.',
+          evidenceActions: [
+            { name: 'Uphold claim · take down', bg: '#F0546A', fg: '#fff', act: () => this.act('c' + c.title, 'Taken down', 'Claim upheld, project removed', 'Upheld claim on ' + c.title) },
+            { name: 'Reject claim', bg: 'rgba(255,255,255,.12)', fg: '#fff', act: () => this.act('c' + c.title, 'Published', 'Claim rejected', 'Rejected claim on ' + c.title) },
+            { name: 'Ask for licence proof', bg: MINT, fg: '#04231C', act: () => this.flash('Requested proof from uploader') },
+          ],
+        };
+      });
+    } else if (sec === 'Copyright claims') {
+      filters = ['All', 'Open', 'Counter-notice', 'Resolved'];
+      columns = [
+        { name: 'Case', flex: 2.4, align: 'left' }, { name: 'Claim type', flex: 1.3, align: 'left' },
+        { name: 'Match', flex: 1.1, align: 'left' }, { name: 'State', flex: 1, align: 'center' },
+        { name: 'Actions', flex: 1.4, align: 'right' },
+      ];
+      rows = CLAIMS.filter(c => {
+        if (q && !(c.id + c.work + c.claimant).toLowerCase().includes(q)) return false;
+        const s = A('k' + c.id, c.state);
+        if (st.filter === 'Open') return s === 'Open';
+        if (st.filter === 'Counter-notice') return s === 'Counter-notice';
+        if (st.filter === 'Resolved') return s === 'Upheld' || s === 'Rejected';
+        return true;
+      }).map((c, i) => {
+        const state = A('k' + c.id, c.state);
+        return {
+          key: c.id, title: c.id + ' · ' + c.work, sub: c.claimant + ' · filed ' + c.age + ' ago',
+          art: ART[(i + 4) % 6], artRadius: '9px',
+          colA: c.kind, colB: c.match, status: state,
+          statusBg: state === 'Open' ? '#FFF4E5' : state === 'Counter-notice' ? '#EEF1FF' : state === 'Upheld' ? '#FFE9E9' : '#EAFBF6',
+          statusFg: state === 'Open' ? '#B4741A' : state === 'Counter-notice' ? '#4A3EB0' : state === 'Upheld' ? '#C2453F' : '#00967A',
+          rowBg: st.open === c.id ? '#FBFDFE' : '#fff',
+          primaryLabel: 'Uphold', primaryBg: '#FFE9E9', primaryFg: '#C2453F',
+          primary: () => this.act('k' + c.id, 'Upheld', c.id + ' upheld · work removed', 'Upheld ' + c.id),
+          secondaryLabel: 'Reject',
+          secondary: () => this.act('k' + c.id, 'Rejected', c.id + ' rejected', 'Rejected ' + c.id),
+          toggle: () => this.setState(s => ({ open: s.open === c.id ? '' : c.id })),
+          isOpen: st.open === c.id,
+          detail: [
+            { k: 'Statutory SLA', v: state === 'Open' ? '20h left to decide' : 'Met' },
+            { k: 'Sworn statement', v: 'On file · penalty of perjury' },
+            { k: 'Original work', v: 'ISRC on file, registry verified' },
+            { k: 'Uploader notified', v: state === 'Open' ? 'Yes · 4h ago' : 'Yes' },
+            { k: 'Counter-notice', v: state === 'Counter-notice' ? 'Filed with licence PDF' : 'None' },
+            { k: 'Streaming', v: state === 'Upheld' ? 'Paused' : 'Live' },
+          ],
+          hasEvidence: false, evidenceBars: [], evidenceActions: [],
+        };
+      });
+    } else if (sec === 'Bots & abuse') {
+      filters = ['All', 'Open', 'Actioned', 'Cleared'];
+      columns = [
+        { name: 'Detection', flex: 2.4, align: 'left' }, { name: 'Signal', flex: 1.3, align: 'left' },
+        { name: 'Confidence', flex: 1.1, align: 'left' }, { name: 'State', flex: 1, align: 'center' },
+        { name: 'Actions', flex: 1.4, align: 'right' },
+      ];
+      rows = BOTS.filter(b => {
+        if (q && !(b.id + b.who + b.signal).toLowerCase().includes(q)) return false;
+        const s = A('b' + b.id, b.state);
+        if (st.filter !== 'All') return s === st.filter;
+        return true;
+      }).map((b, i) => {
+        const state = A('b' + b.id, b.state);
+        return {
+          key: b.id, title: b.id + ' · ' + b.who, sub: b.signal,
+          art: ART[(i + 1) % 6], artRadius: '9px',
+          colA: b.signal.split(',')[0], colB: b.conf, status: state,
+          statusBg: state === 'Open' ? '#FFF4E5' : state === 'Actioned' ? '#FFE9E9' : '#EAFBF6',
+          statusFg: state === 'Open' ? '#B4741A' : state === 'Actioned' ? '#C2453F' : '#00967A',
+          rowBg: st.open === b.id ? '#FBFDFE' : '#fff',
+          primaryLabel: b.action, primaryBg: '#111820', primaryFg: '#fff',
+          primary: () => this.act('b' + b.id, 'Actioned', b.action + ' applied to ' + b.who, b.action + ' → ' + b.who),
+          secondaryLabel: 'Clear',
+          secondary: () => this.act('b' + b.id, 'Cleared', b.who + ' cleared', 'Cleared ' + b.id),
+          toggle: () => this.setState(s => ({ open: s.open === b.id ? '' : b.id })),
+          isOpen: st.open === b.id,
+          detail: [
+            { k: 'Devices', v: b.id === 'BOT-8829' ? '17 accounts, 3 devices' : '12 device IDs' },
+            { k: 'Rhythm check', v: b.conf === '34%' ? 'Passed' : 'Failed or bypassed' },
+            { k: 'Network', v: 'Datacentre ASN 14061' },
+            { k: 'Spikes at risk', v: b.id === 'BOT-8841' ? '96,204' : '2,010' },
+            { k: 'Charts affected', v: 'Late night, Lagos, Pop' },
+            { k: 'First seen', v: '3 days ago' },
+          ],
+          hasEvidence: state === 'Open',
+          evidenceTitle: 'INTERACTION CADENCE',
+          evidenceBars: wave(40, i * 6).map((h, j) => ({ h: Math.round((state === 'Open' ? 0.85 : h) * 52) + 'px', color: state === 'Open' ? '#F0546A' : MINT })),
+          evidenceText: 'Machine-flat cadence with zero jitter and no scroll events between taps. Legitimate listeners produce visible variance — that difference is what the human check measures.',
+          evidenceActions: [
+            { name: 'Purge Spikes and recompute charts', bg: MINT, fg: '#04231C', act: () => this.act('b' + b.id, 'Actioned', 'Charts recomputed without farmed Spikes', 'Purged Spikes for ' + b.id) },
+            { name: 'Require human check platform-wide', bg: 'rgba(255,255,255,.12)', fg: '#fff', act: () => this.flash('Human check now required for all new accounts') },
+          ],
+        };
+      });
+    }
+
+    return {
+      nav,
+      sectionTitle: sec,
+      sectionSub: subs[sec],
+      query: st.query,
+      onQuery: e => this.setState({ query: e.target.value }),
+      exportCsv: () => this.flash('Exported ' + (rows.length || 7) + ' rows · watermarked with your operator ID'),
+      systemState: 'All systems nominal',
+      systemMeta: 'p95 stream start 410ms · 1,142 nodes · CDN 99.98%',
+
+      isOverview: sec === 'Overview',
+      isTable: ['Users', 'Content', 'Copyright claims', 'Bots & abuse'].includes(sec),
+      isRevenue: sec === 'Revenue & ads',
+      isAudit: sec === 'Audit log',
+
+      kpis: [
+        { label: 'Monthly active users', value: '1.74M', delta: '+4.1% vs last month', up: true },
+        { label: 'Projects published', value: '38.2k', delta: '+7.8% this week', up: true },
+        { label: 'Spikes purged as bot', value: '112k', delta: '2.1% of all Spikes', up: false },
+        { label: 'Open copyright cases', value: '2', delta: 'SLA met on 98.4%', up: true },
+      ].map(k => ({ label: k.label, value: k.value, delta: k.delta, deltaFg: k.up ? '#00967A' : '#C2703F' })),
+
+      ranges: ['7 days', '14 days', '90 days'].map(r => ({
+        name: r, bg: st.range === r ? '#111820' : '#F2F4F7', fg: st.range === r ? '#fff' : '#5A6673',
+        pick: () => this.setState({ range: r }),
+      })),
+      chart: wave(st.range === '7 days' ? 7 : st.range === '14 days' ? 14 : 20, 3).map((h, i) => ({
+        day: st.range === '90 days' ? 'W' + (i + 1) : 'D' + (i + 1),
+        publish: Math.round(h * 74) + 'px',
+        spikes: Math.round(h * 58 + 14) + 'px',
+        takedown: Math.round((1 - h) * 13 + 3) + 'px',
+      })),
+      legend: [
+        { name: 'Publishes', color: '#1F2933' }, { name: 'Spikes (indexed)', color: MINT }, { name: 'Takedowns', color: '#F0546A' },
+      ],
+      queues: [
+        { name: 'Copyright claims awaiting decision', count: 2, dot: '#F5A623', bg: '#FFFBF4', to: 'Copyright claims' },
+        { name: 'Content ID matches to review', count: 2, dot: '#F0546A', bg: '#FFF6F6', to: 'Content' },
+        { name: 'Bot detections open', count: 2, dot: '#5B4CC4', bg: '#F6F6FF', to: 'Bots & abuse' },
+        { name: 'Accounts flagged for verification', count: 2, dot: MINT, bg: '#F5FEFB', to: 'Users' },
+      ].map(qq => ({ ...qq, open: () => this.setState({ section: qq.to, filter: 'All', open: '' }) })),
+      shieldBlurb: st.shield
+        ? 'On. Spike farms are filtered before they hit the charts, and unverified accounts cannot publish or message. Strictness: ' + st.strict + '.'
+        : 'Off. Charts are accepting unverified activity — turn this back on unless you are debugging.',
+      shieldBtn: st.shield ? 'Disable shield' : 'Enable shield',
+      shieldBtnBg: st.shield ? 'rgba(255,255,255,.12)' : MINT,
+      shieldBtnFg: st.shield ? '#fff' : '#04231C',
+      toggleShield: () => { const n = !st.shield; this.setState({ shield: n }); this.act('shield', n, n ? 'Bot shield enabled' : 'Bot shield disabled', (n ? 'Enabled' : 'Disabled') + ' bot shield'); },
+      strictnessLabel: 'Strictness: ' + st.strict,
+      raiseStrictness: () => {
+        const next = st.strict === 'Balanced' ? 'Strict' : st.strict === 'Strict' ? 'Relaxed' : 'Balanced';
+        this.setState({ strict: next });
+        this.act('strict', next, 'Strictness set to ' + next, 'Set bot-shield strictness to ' + next);
+      },
+
+      filters: filters.map(f => ({
+        name: f, bg: st.filter === f ? '#111820' : '#fff', fg: st.filter === f ? '#fff' : '#5A6673',
+        pick: () => this.setState({ filter: f, open: '' }),
+      })),
+      columns, rows,
+      noRows: rows.length === 0,
+      rowSummary: rows.length + ' of ' + (sec === 'Users' ? USERS.length : sec === 'Content' ? CONTENT.length : sec === 'Copyright claims' ? CLAIMS.length : BOTS.length) + ' shown',
+      hasSelection: !!st.open,
+      bulkLabel: 'Action selected',
+      bulkAction: () => this.flash('Applied to selection'),
+
+      revKpis: [
+        { label: 'Revenue this month', value: '$4.31M', delta: '+6.2%', up: true },
+        { label: 'ARPU · free', value: '$1.80', delta: 'ads only', up: true },
+        { label: 'ARPU · premium', value: '$5.99', delta: 'in-app tier', up: true },
+        { label: 'Royalty exposure', value: '$0', delta: 'user-owned catalogue', up: true },
+      ].map(k => ({ ...k, deltaFg: k.up ? '#00967A' : '#C2703F' })),
+      revMix: [
+        { name: 'Audio ads', value: '$1.84M', pct: '43%', color: MINT },
+        { name: 'Click revenue', value: '$1.31M', pct: '30%', color: '#5B4CC4' },
+        { name: 'Impressions', value: '$0.62M', pct: '14%', color: '#41B6E6' },
+        { name: 'Subscriptions', value: '$0.54M', pct: '13%', color: '#F5A623' },
+      ],
+      adControls: [
+        { name: 'Audio ads between songs', desc: 'One per six streams for free listeners', key: 'audio' },
+        { name: 'Inline timeline ads', desc: 'Native card in Timeline and tag charts', key: 'inline' },
+        { name: 'Ads for Premium users', desc: 'Should stay off — Premium is the ad-free promise', key: 'premiumFree' },
+        { name: 'RPM floor', desc: 'Reject fills below this rate', value: '$' + st.ads.floor.toFixed(2) },
+      ].map((a, i) => {
+        const isT = !!a.key;
+        const on = isT ? !!st.ads[a.key] : false;
+        return {
+          name: a.name, desc: a.desc, divider: i === 0 ? 'transparent' : '#F1F3F5',
+          isToggle: isT, isValue: !isT, value: a.value,
+          track: on ? MINT : '#DFE4E9', knobLeft: on ? '21px' : '3px',
+          tap: isT
+            ? () => this.act('ad' + a.key, !on, a.name + (on ? ' off' : ' on'), 'Toggled ' + a.name) || this.setState(s => ({ ads: { ...s.ads, [a.key]: !on } }))
+            : () => this.setState(s => ({ ads: { ...s.ads, floor: s.ads.floor >= 2 ? 1.0 : +(s.ads.floor + 0.25).toFixed(2) } })),
+        };
+      }),
+      adNote: 'Creators keep 100% of their copyright. Ad revenue is shared per the published split agreement on each project — payouts freeze automatically while a copyright case is open.',
+
+      audit: [...st.audit, ...[
+        { text: 'Upheld DMCA-2026-4098 · Uplift (bootleg) removed', meta: 'you@ellipsis.app · case linked to ELP-2026-1814', time: '1d ago', dot: '#F0546A' },
+        { text: 'Banned @promo_bot after 41 failed human checks', meta: 'automation · reviewed by you@ellipsis.app', time: '1d ago', dot: '#F0546A' },
+        { text: 'Purged 8,411 Spikes from the Lagos chart', meta: 'bot shield · strictness Balanced', time: '2d ago', dot: MINT },
+        { text: 'Rhythm verification rolled out to 100% of signups', meta: 'release 1.0.128', time: '4d ago', dot: MINT },
+        { text: 'Retention policy set to 7 years for rights records', meta: 'legal@ellipsis.app', time: '1w ago', dot: '#5B4CC4' },
+      ]],
+      toast: st.toast,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

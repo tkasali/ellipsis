@@ -1,0 +1,89 @@
+CREATE TABLE IF NOT EXISTS users (
+  id {PK}, email VARCHAR(191) NOT NULL UNIQUE, pass VARCHAR(255) NOT NULL,
+  name VARCHAR(120) NOT NULL, handle VARCHAR(60) NOT NULL UNIQUE,
+  place VARCHAR(80) DEFAULT '', cc VARCHAR(4) DEFAULT '', tz INTEGER DEFAULT 0, lang VARCHAR(8) DEFAULT 'en',
+  roles VARCHAR(255) DEFAULT '', bio TEXT, premium INTEGER DEFAULT 0, role VARCHAR(20) DEFAULT 'user',
+  status VARCHAR(20) DEFAULT 'active', human_at INTEGER DEFAULT 0, payout_account VARCHAR(120) DEFAULT '',
+  created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS sessions (
+  token_hash VARCHAR(64) PRIMARY KEY, user_id INTEGER NOT NULL, created INTEGER NOT NULL, expires INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS challenges (
+  id VARCHAR(40) PRIMARY KEY, bpm INTEGER NOT NULL, created INTEGER NOT NULL, used INTEGER DEFAULT 0, ip VARCHAR(64) DEFAULT ''
+);
+CREATE TABLE IF NOT EXISTS human_tokens (
+  token VARCHAR(64) PRIMARY KEY, created INTEGER NOT NULL, used INTEGER DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS tracks (
+  id {PK}, owner_id INTEGER NOT NULL, title VARCHAR(160) NOT NULL,
+  genre VARCHAR(40) DEFAULT '', mood VARCHAR(40) DEFAULT '', like_ref VARCHAR(80) DEFAULT '',
+  bpm INTEGER DEFAULT 90, music_key VARCHAR(16) DEFAULT '', state VARCHAR(16) DEFAULT 'seed',
+  needs TEXT, offer_pct INTEGER DEFAULT 0, tags TEXT, kind VARCHAR(16) DEFAULT 'song',
+  file VARCHAR(60) DEFAULT 'lofi', spike_base INTEGER DEFAULT 0, published INTEGER DEFAULT 0, created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS contributors (
+  track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, pct INTEGER DEFAULT 0, signed INTEGER DEFAULT 0,
+  role VARCHAR(60) DEFAULT '', removed INTEGER DEFAULT 0, joined INTEGER DEFAULT 0,
+  PRIMARY KEY (track_id, user_id)
+);
+CREATE TABLE IF NOT EXISTS stems (
+  id {PK}, track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, name VARCHAR(120) NOT NULL,
+  path VARCHAR(255) NOT NULL, mime VARCHAR(60) NOT NULL, bytes INTEGER NOT NULL, sha256 VARCHAR(64) NOT NULL,
+  version VARCHAR(16) DEFAULT 'v1', hold INTEGER DEFAULT 0, created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS messages (
+  id {PK}, track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, text TEXT NOT NULL,
+  lang VARCHAR(8) DEFAULT '', translated TEXT, created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS presence (
+  track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, lane INTEGER DEFAULT -1, pos REAL DEFAULT 0,
+  voice INTEGER DEFAULT 0, speaking INTEGER DEFAULT 0, seen INTEGER NOT NULL,
+  PRIMARY KEY (track_id, user_id)
+);
+CREATE TABLE IF NOT EXISTS offers (
+  id {PK}, track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, note VARCHAR(300) DEFAULT '',
+  ask_pct INTEGER NOT NULL, stem_id INTEGER, status VARCHAR(16) DEFAULT 'pending', created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS branches (
+  id {PK}, track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, name VARCHAR(120) NOT NULL,
+  from_version VARCHAR(16) DEFAULT '', status VARCHAR(16) DEFAULT 'open', created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS versions (
+  id {PK}, track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, label VARCHAR(16) NOT NULL,
+  note VARCHAR(200) DEFAULT '', created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS spikes (
+  track_id INTEGER NOT NULL, user_id INTEGER NOT NULL, day INTEGER NOT NULL, created INTEGER NOT NULL,
+  PRIMARY KEY (track_id, user_id, day)
+);
+CREATE TABLE IF NOT EXISTS plays (
+  id {PK}, track_id INTEGER NOT NULL, user_id INTEGER, premium INTEGER DEFAULT 0, ms INTEGER DEFAULT 0, created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS ad_impressions (
+  id {PK}, track_id INTEGER NOT NULL, user_id INTEGER, cpm_micros INTEGER NOT NULL, created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS follows (
+  follower_id INTEGER NOT NULL, followee_id INTEGER NOT NULL, created INTEGER NOT NULL,
+  PRIMARY KEY (follower_id, followee_id)
+);
+CREATE TABLE IF NOT EXISTS reports (
+  id {PK}, reporter_id INTEGER NOT NULL, target_type VARCHAR(20) NOT NULL, target_id INTEGER NOT NULL,
+  reason VARCHAR(60) NOT NULL, note VARCHAR(500) DEFAULT '', status VARCHAR(16) DEFAULT 'open',
+  resolved_by INTEGER, created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS payouts (
+  id {PK}, user_id INTEGER NOT NULL, amount_micros INTEGER NOT NULL, currency VARCHAR(4) NOT NULL,
+  local_amount REAL NOT NULL, status VARCHAR(16) DEFAULT 'queued', provider_ref VARCHAR(120) DEFAULT '', created INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS rate (
+  k VARCHAR(191) PRIMARY KEY, n INTEGER NOT NULL, reset INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS audit (
+  id {PK}, user_id INTEGER, action VARCHAR(60) NOT NULL, detail TEXT, created INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_msg ON messages (track_id, id);
+CREATE INDEX IF NOT EXISTS ix_plays ON plays (track_id, created);
+CREATE INDEX IF NOT EXISTS ix_ads ON ad_impressions (track_id, created);
+CREATE INDEX IF NOT EXISTS ix_stem_hash ON stems (sha256);
+CREATE INDEX IF NOT EXISTS ix_track_state ON tracks (state, created)
