@@ -102,6 +102,9 @@
       <sc-if value="{{ showPremium }}" hint-placeholder-val="{{ true }}">
         <button onClick="{{ goPremium }}" style="flex:none;padding:9px 15px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">Go Premium</button>
       </sc-if>
+      <sc-if value="{{ showAdmin }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goAdmin }}" title="Open the admin console" style="flex:none;display:flex;align-items:center;gap:7px;padding:9px 14px;border:0;border-radius:12px;background:#0C1318;color:#fff;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap"><span style="color:#00D9A6">⚙</span>Admin</button>
+      </sc-if>
       <button onClick="{{ toggleTheme }}" title="Switch to {{ themeWord }} mode" style="flex:none;display:flex;align-items:center;gap:7px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap"><span>{{ themeIcon }}</span>{{ themeWord }}</button>
       <button onClick="{{ goMe }}" title="Your profile" style="flex:none;width:40px;height:40px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 2px var(--mint);background:{{ meBg }};color:#fff;font-size:13px;font-weight:800;cursor:pointer">{{ meInitials }}</button>
     </header>
@@ -1824,7 +1827,7 @@ class Component extends DCLogic {
     this._noteT = setInterval(() => this.pullNotes(), 60000); this.pullNotes();
   }
   acctFromMe(me, token) {
-    return { name: me.name, email: me.email, type: me.type, plan: me.plan, company: me.company, title: me.title, genres: me.genres, token, remote: true, id: me.id, refCode: me.refCode, verified: me.verified, execVerified: me.execVerified, profile: me.profile || (this.state.acct && this.state.acct.profile) };
+    return { name: me.name, email: me.email, type: me.type, plan: me.plan, company: me.company, title: me.title, genres: me.genres, token, remote: true, id: me.id, refCode: me.refCode, verified: me.verified, execVerified: me.execVerified, staffRole: me.staffRole || 'user', profile: me.profile || (this.state.acct && this.state.acct.profile) };
   }
   mergeRemote(me, token, fresh) {
     if (!me) return; const acct = this.acctFromMe(me, token);
@@ -2974,7 +2977,14 @@ class Component extends DCLogic {
         }
       };
     }
-    const acctVals = { acctLine: s.acct ? (s.acct.type === 'exec' ? 'Industry account · ' + (s.acct.company || '') : 'Creator account') : 'Account', acctEmail: s.acct ? s.acct.email + (s.acct.demo ? ' · demo' : '') : '', signOut: this.signOut };
+    const staffRole = s.acct ? (s.acct.remote ? (s.acct.staffRole || 'user') : 'demo') : 'user';
+    const showAdmin = staffRole !== 'user';
+    const goAdmin = () => {
+      try { if (s.acct && s.acct.remote && s.acct.token) localStorage.setItem('ellipsis.admin.token', JSON.stringify(s.acct.token)); } catch (e) {}
+      const inApp = /\/app\/?(index\.html)?$/.test(location.pathname);
+      location.href = inApp ? '../admin/' : 'Ellipsis Admin Console.dc.html';
+    };
+    const acctVals = { showAdmin, goAdmin, acctLine: s.acct ? (s.acct.type === 'exec' ? 'Industry account · ' + (s.acct.company || '') : 'Creator account') : 'Account', acctEmail: s.acct ? s.acct.email + (s.acct.demo ? ' · demo' : '') : '', signOut: this.signOut };
 
     /* ═══ mixer view ═══ */
     const mp = s.mxOpen ? this.proj(s.mxPid) : null;
