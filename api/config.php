@@ -44,5 +44,5 @@ return array_replace([
   'stripe_price_industry'  => $env('ELLIPSIS_PRICE_INDUSTRY', ''),  // price_… for $49 / month
   'stripe_auto_tax'        => false,                                // turn on after enabling Stripe Tax (dashboard → Tax)
   'site_url'               => $env('ELLIPSIS_SITE', 'https://ellipsismusic.net'),
-  'mail_from'              => $env('ELLIPSIS_MAIL_FROM', ''),       // e.g. Ellipsis <hello@ellipsismusic.net> — create this mailbox in hPanel → Emails                                  // true only on a test install: lets anyone flip Premium on
+  'mail_from'              => $env('ELLIPSIS_MAIL_FROM', ''),       // plain address, e.g. noreply@ellipsismusic.net — create this mailbox first in hPanel → Emails
 ], $local);

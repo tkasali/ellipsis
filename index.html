@@ -2,20 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ellipsis — music made by people, provably</title>
-<meta name="description" content="Start a track, invite collaborators, settle the splits, publish to five tag charts. Human-made music, verified.">
-<meta name="theme-color" content="#0C1318">
-<meta name="color-scheme" content="dark">
-<meta property="og:title" content="Ellipsis — music made by people, provably">
-<meta property="og:description" content="Start a track, invite collaborators, settle the splits, publish.">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<link rel="icon" href="icons/play-512.png" type="image/png">
-<link rel="apple-touch-icon" href="icons/ios-180.png">
-<link rel="preconnect" href="https://unpkg.com" crossorigin>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<meta name="robots" content="index,follow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -94,8 +81,17 @@
       </div>
 
       <div style="position:absolute;left:0;top:64px;display:flex;align-items:center;gap:12px;padding:12px 16px 12px 12px;border-radius:20px;background:rgba(14,22,27,0.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.12);box-shadow:0 20px 44px rgba(0,0,0,0.45);animation:elFloat 6s ease-in-out infinite">
-        <span style="position:relative;flex:none;width:48px;height:48px;border-radius:50%;background:conic-gradient(#00D9A6,#5B3E9E,#FF8A5C,#00D9A6);animation:elSpin 6s linear infinite"><span style="position:absolute;inset:16px;border-radius:50%;background:#0C1318"></span></span>
-        <span><span style="display:block;font-size:11px;font-weight:800;letter-spacing:0.1em;color:#00D9A6">NOW PLAYING</span><span style="display:block;font-size:15px;font-weight:800;color:#fff">Velvet Hours</span><span style="display:block;font-size:12.5px;color:#9BA9B4">Ada · Lagos ↔ Theo · London</span></span>
+        <span style="position:relative;flex:none;width:54px;height:54px">
+          <span style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(#00D9A6,#5B3E9E,#FF8A5C,#00D9A6);animation:elSpin 6s linear infinite;animation-play-state:{{ npSpin }}"></span>
+          <button onClick="{{ npToggle }}" aria-label="{{ npAria }}" title="{{ npAria }}" style="position:absolute;inset:5px;padding:0;border:0;border-radius:50%;background:#0C1318;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center">{{ npIcon }}</button>
+        </span>
+        <span style="min-width:180px">
+          <span style="display:block;font-size:11px;font-weight:800;letter-spacing:0.1em;color:#00D9A6">{{ npLabel }}</span>
+          <span style="display:block;font-size:15px;font-weight:800;color:#fff">{{ npTitle }}</span>
+          <span style="display:block;font-size:12.5px;color:#9BA9B4">{{ npBy }}</span>
+          <span onClick="{{ npSeek }}" title="Jump to a point in the song" style="display:block;margin-top:8px;height:5px;border-radius:3px;background:rgba(255,255,255,0.16);cursor:pointer;overflow:hidden"><span style="display:block;height:100%;width:{{ npProg }};background:#00D9A6;border-radius:3px"></span></span>
+        </span>
+        <button onClick="{{ npNext }}" aria-label="Next song" title="Next song" style="flex:none;align-self:center;width:34px;height:34px;padding:0;border:1px solid rgba(255,255,255,0.22);border-radius:50%;background:transparent;color:#fff;font-size:12px;cursor:pointer">⏭</button>
       </div>
 
       <div style="position:absolute;right:-6px;bottom:120px;padding:14px 16px;border-radius:20px;background:rgba(14,22,27,0.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.12);box-shadow:0 20px 44px rgba(0,0,0,0.45);animation:elFloat2 5s ease-in-out infinite">
@@ -179,7 +175,7 @@
     <div style="max-width:1240px;margin:0 auto;padding:76px 40px;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
       <div>
         <h2 style="margin:0 0 10px;font-size:34px;font-weight:800;letter-spacing:-1.2px">Desktop, tablet, phone</h2>
-        <p style="margin:0;font-size:17px;color:#9BA9B4;max-width:560px">The web app runs in any modern browser and installs to the dock or home screen. It adapts to any screen, from phone to desktop. Both work offline and record straight from the microphone.</p>
+        <p style="margin:0;font-size:17px;color:#9BA9B4;max-width:560px">The web app runs in any modern browser and installs to the dock or home screen. The mobile build is the same product laid out for one hand. Both work offline and record straight from the microphone.</p>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="app/index.html" style="display:flex;align-items:center;gap:10px;padding:17px 32px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:16px;font-weight:800">Open the web app</a></div>
     </div>
@@ -202,5 +198,35 @@
   </footer>
 </div>
 </x-dc>
+<script type="text/x-dc" data-dc-script>
+const TRACKS = [{"title":"Velvet Hours","by":"Ada · Lagos ↔ Theo · London","src":"app/assets/audio/lib09.wav"},{"title":"Lagos to Lisbon","by":"Imani · Nairobi ↔ Lucas · Lisbon","src":"app/assets/audio/lib05.wav"},{"title":"Boom Bap Psalm","by":"Kofi · Accra ↔ Jae · Seoul","src":"app/assets/audio/lib29.wav"},{"title":"Slow Burn Satellite","by":"Leila · Paris ↔ Malik · Atlanta","src":"app/assets/audio/lib25.wav"},{"title":"Warehouse Prayer","by":"Oskar · Berlin ↔ Zara · Johannesburg","src":"app/assets/audio/lib17.wav"},{"title":"Paper Lanterns","by":"Mei · Tokyo ↔ Rafael · São Paulo","src":"app/assets/audio/lib01.wav"}];
+class Component extends DCLogic {
+  state = { i: 0, playing: false, t: 0, d: 0, started: false };
+  componentDidMount() {
+    const a = new Audio(); a.preload = 'none'; a.src = TRACKS[0].src;
+    a.addEventListener('timeupdate', () => this.setState({ t: a.currentTime }));
+    a.addEventListener('loadedmetadata', () => this.setState({ d: isFinite(a.duration) ? a.duration : 0 }));
+    a.addEventListener('play', () => this.setState({ playing: true, started: true }));
+    a.addEventListener('pause', () => this.setState({ playing: false }));
+    a.addEventListener('ended', () => this.next());
+    this.a = a;
+  }
+  componentWillUnmount() { if (this.a) { this.a.pause(); this.a.removeAttribute('src'); } }
+  toggle = () => { const a = this.a; if (!a) return; if (a.paused) { const p = a.play(); if (p && p.catch) p.catch(() => {}); } else a.pause(); };
+  next = () => { const a = this.a; if (!a) return; const i = (this.state.i + 1) % TRACKS.length; a.src = TRACKS[i].src; this.setState({ i, t: 0, d: 0 }); const p = a.play(); if (p && p.catch) p.catch(() => {}); };
+  seek = e => { const a = this.a; if (!a || !this.state.d) { this.toggle(); return; } const r = e.currentTarget.getBoundingClientRect(); a.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * this.state.d; };
+  renderVals() {
+    const s = this.state, tr = TRACKS[s.i];
+    return {
+      npTitle: tr.title, npBy: tr.by,
+      npLabel: s.playing ? 'NOW PLAYING' : s.started ? 'PAUSED' : 'TAP TO LISTEN',
+      npIcon: s.playing ? '❚❚' : '▶', npAria: (s.playing ? 'Pause ' : 'Play ') + tr.title,
+      npSpin: s.playing ? 'running' : 'paused',
+      npProg: (s.d ? Math.min(100, s.t / s.d * 100) : 0).toFixed(1) + '%',
+      npToggle: this.toggle, npNext: this.next, npSeek: this.seek
+    };
+  }
+}
+</script>
 </body>
 </html>

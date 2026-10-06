@@ -40,6 +40,18 @@ v2_schema();
   db()->exec("CREATE TABLE IF NOT EXISTS stripe_customers (user_id INTEGER PRIMARY KEY, customer VARCHAR(80) NOT NULL)");
   @file_put_contents($flag, (string)now());
 })();
+(function () {
+  $flag = cfg('data_dir') . '/.v2c'; if (is_file($flag)) return;
+  db()->exec("CREATE TABLE IF NOT EXISTS password_resets (token_hash VARCHAR(64) PRIMARY KEY, user_id INTEGER NOT NULL, expires INTEGER NOT NULL, used INTEGER DEFAULT 0, created INTEGER NOT NULL)");
+  @file_put_contents($flag, (string)now());
+})();
+function v2_mail(string $to, string $subject, string $body): bool {
+  $from = trim((string)cfg('mail_from'));
+  if (preg_match('/<([^>]+)>/', $from, $m)) $from = $m[1];
+  if (!filter_var($from, FILTER_VALIDATE_EMAIL)) return false;
+  $headers = 'From: Ellipsis <' . $from . ">\r\nReply-To: " . (cfg('mail_reply_to') ?: $from) . "\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8";
+  return @mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers, '-f' . $from);
+}
 
 /* ── helpers ── */
 function v2_profile(int $uid): array {
@@ -147,6 +159,47 @@ case 'POST login': {
   if ($u['status'] !== 'active') fail($u['status'] === 'banned' ? 'This account has been banned. You can appeal at support@ellipsismusic.net.' : 'This account is suspended while we review a report.', 403, ['status' => $u['status']]);
   v2_event((int)$u['id'], 'login');
   out(['ok' => true, 'token' => new_session((int)$u['id']), 'me' => v2_me((int)$u['id'])]);
+}
+/* ───── password reset: email link, single use, 30 minutes ───── */
+case 'GET mail/test': {
+  $u = v2_need('roles');
+  $ok = v2_mail((string)$u['email'], 'Ellipsis email test', "If you can read this, password-reset emails will work.\n\n— Ellipsis");
+  out(['ok' => $ok, 'from' => (string)cfg('mail_from'), 'to' => $u['email'], 'hint' => $ok ? 'Sent. Check your inbox and spam folder.' : 'Not sent. Set mail_from in ellipsis-data/config.local.php to a mailbox you created in hPanel → Emails.']);
+}
+case 'POST password/forgot': {
+  limit('v2forgot', 6, 900);
+  $email = strtolower(str_in('email', 191, true));
+  $mailOn = (bool)cfg('mail_from');
+  if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $u = one('SELECT id, name, email, status FROM users WHERE email = ?', [$email]);
+    if ($u && $u['status'] === 'active') {
+      q('DELETE FROM password_resets WHERE user_id = ?', [$u['id']]);
+      $tok = bin2hex(random_bytes(32));
+      q('INSERT INTO password_resets (token_hash, user_id, expires, used, created) VALUES (?,?,?,0,?)', [hash('sha256', $tok), $u['id'], now() + 1800, now()]);
+      $site = rtrim((string)cfg('site_url', 'https://' . ($_SERVER['HTTP_HOST'] ?? 'ellipsismusic.net')), '/');
+      v2_mail($u['email'], 'Reset your Ellipsis password', "Hi " . $u['name'] . ",\n\nWe got a request to reset the password for your Ellipsis account. Open this link within 30 minutes to choose a new one:\n\n" . $site . "/app/?reset=" . $tok . "\n\nThe link works once. If you didn't ask for this, you can ignore this email — your password won't change.\n\n— Ellipsis");
+      audit((int)$u['id'], 'password_reset_requested');
+    }
+  }
+  usleep(random_int(120000, 380000));
+  out(['ok' => true, 'mail' => $mailOn]);
+}
+case 'POST password/reset': {
+  limit('v2reset', 10, 900);
+  $tok = preg_replace('/[^a-f0-9]/', '', strtolower(str_in('token', 128, true)));
+  $pw = (string)(body()['password'] ?? '');
+  if (strlen($pw) < 8 || strlen($pw) > 200) fail('Use at least 8 characters for your password.', 422);
+  $r = $tok !== '' ? one('SELECT * FROM password_resets WHERE token_hash = ?', [hash('sha256', $tok)]) : null;
+  if (!$r || (int)$r['used'] || (int)$r['expires'] < now()) fail('This reset link has expired or was already used. Ask for a new one.', 410);
+  $u = one('SELECT id, email, name, status FROM users WHERE id = ?', [$r['user_id']]);
+  if (!$u || $u['status'] !== 'active') fail('This reset link has expired or was already used. Ask for a new one.', 410);
+  if (strtolower($pw) === strtolower((string)$u['email'])) fail('Don’t use your email as your password.', 422);
+  q('UPDATE users SET pass = ? WHERE id = ?', [password_hash($pw, PASSWORD_DEFAULT), $u['id']]);
+  q('UPDATE password_resets SET used = 1 WHERE user_id = ?', [$u['id']]);
+  q('DELETE FROM sessions WHERE user_id = ?', [$u['id']]);
+  audit((int)$u['id'], 'password_reset');
+  v2_mail($u['email'], 'Your Ellipsis password was changed', "Hi " . $u['name'] . ",\n\nThe password for your Ellipsis account was just changed, and you were signed out on all devices.\n\nIf this wasn't you, reply to this email right away so we can secure your account.\n\n— Ellipsis");
+  out(['ok' => true, 'email' => $u['email']]);
 }
 case 'POST logout': { if ($t = bearer()) q('DELETE FROM sessions WHERE token_hash = ?', [hash('sha256', $t)]); out(['ok' => true]); }
 case 'GET me': { $u = user(); if ($u['status'] !== 'active') fail('Account ' . $u['status'], 403, ['status' => $u['status']]); v2_event((int)$u['id'], 'active'); out(['ok' => true, 'me' => v2_me((int)$u['id'])]); }

@@ -1024,6 +1024,7 @@
                   <div style="width:80px;height:80px;margin:0 auto 14px;border-radius:50%;background:var(--mint);color:var(--on-mint);font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:700;display:flex;align-items:center;justify-content:center;animation:elPop .5s ease both">✓</div>
                   <div style="font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:23px;font-weight:700;letter-spacing:-0.7px;margin-bottom:6px">{{ pubName }} is published</div>
                   <div style="font-size:14px;line-height:1.55;color:var(--dim)">It's ranked in Explore by every tag you chose. Fans can Spike it, and music executives can Spike Back.</div>
+                  <button onClick="{{ pubShare }}" style="margin-top:16px;padding:12px 20px;border:0;border-radius:13px;background:#0C1318;color:#fff;font-size:14.5px;font-weight:800;cursor:pointer">⇪ Share it on social</button>
                 </div>
               </sc-if>
               <div style="display:flex;gap:10px;margin-top:20px">
@@ -1058,6 +1059,84 @@
                 <button onClick="{{ swSignOut }}" style="width:100%;padding:13px;border:0;border-radius:13px;background:var(--coral-btn);color:#fff;font-size:14.5px;font-weight:800;cursor:pointer">Sign out</button>
               </div>
               <div style="font-size:12.5px;color:var(--dim);margin-top:12px;line-height:1.5">{{ swNote }}</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCrop }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:var(--dim);margin-bottom:8px">FRAME</div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
+                <sc-for list="{{ cropFrames }}" as="f" hint-placeholder-count="5">
+                  <button onClick="{{ f.go }}" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid {{ f.border }};border-radius:12px;background:{{ f.bg }};color:{{ f.fg }};cursor:pointer">
+                    <span style="flex:none;width:{{ f.iw }};height:{{ f.ih }};border:2px solid currentColor;border-radius:3px"></span>
+                    <span style="text-align:left"><span style="display:block;font-size:13px;font-weight:800">{{ f.label }}</span><span style="display:block;font-size:11px;opacity:0.75">{{ f.ratio }}</span></span>
+                  </button>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;justify-content:center;padding:14px;border-radius:18px;background:var(--panel2);margin-bottom:14px">
+                <div onPointerDown="{{ cropDown }}" title="Drag to reposition" style="position:relative;flex:none;width:{{ cropPW }};height:{{ cropPH }};border-radius:12px;overflow:hidden;background:#0C1318;cursor:grab;touch-action:none;box-shadow:0 10px 30px rgba(0,0,0,0.25)">
+                  <sc-if value="{{ cropFit }}" hint-placeholder-val="{{ false }}"><img src="{{ cropSrc }}" alt="" draggable="false" style="position:absolute;left:-10%;top:-10%;width:120%;height:120%;object-fit:cover;filter:blur(22px) brightness(0.72);pointer-events:none" /></sc-if>
+                  <img src="{{ cropSrc }}" alt="Your cover art" draggable="false" style="position:absolute;left:{{ cropL }};top:{{ cropT }};width:{{ cropW }};height:{{ cropH }};max-width:none;user-select:none;pointer-events:none" />
+                  <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to right,transparent 33.2%,rgba(255,255,255,0.35) 33.2%,rgba(255,255,255,0.35) 33.5%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,0.35) 66.5%,rgba(255,255,255,0.35) 66.8%,transparent 66.8%),linear-gradient(to bottom,transparent 33.2%,rgba(255,255,255,0.35) 33.2%,rgba(255,255,255,0.35) 33.5%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,0.35) 66.5%,rgba(255,255,255,0.35) 66.8%,transparent 66.8%);opacity:{{ cropGrid }}"></div>
+                  <div style="position:absolute;inset:0;border:2px solid rgba(255,255,255,0.85);border-radius:12px;pointer-events:none"></div>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <button onClick="{{ cropOut }}" title="Zoom out" style="flex:none;width:36px;height:36px;border:1px solid var(--line2);border-radius:10px;background:var(--panel);color:var(--ink);font-size:18px;font-weight:800;cursor:pointer">−</button>
+                <input type="range" min="100" max="400" value="{{ cropZoom }}" onChange="{{ onCropZoom }}" aria-label="Zoom" style="flex:1;min-width:0;accent-color:var(--mint)" />
+                <button onClick="{{ cropIn }}" title="Zoom in" style="flex:none;width:36px;height:36px;border:1px solid var(--line2);border-radius:10px;background:var(--panel);color:var(--ink);font-size:18px;font-weight:800;cursor:pointer">+</button>
+                <span style="flex:none;min-width:44px;text-align:right;font-size:13px;font-weight:800;color:var(--dim)">{{ cropZoomText }}</span>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+                <div style="display:flex;gap:3px;padding:3px;border-radius:11px;background:var(--panel2)">
+                  <sc-for list="{{ cropModes }}" as="m" hint-placeholder-count="2"><button onClick="{{ m.go }}" title="{{ m.hint }}" style="padding:8px 13px;border:0;border-radius:8px;background:{{ m.bg }};color:{{ m.fg }};font-size:13px;font-weight:800;cursor:pointer">{{ m.label }}</button></sc-for>
+                </div>
+                <button onClick="{{ cropReset }}" style="padding:9px 13px;border:1px solid var(--line2);border-radius:10px;background:transparent;color:var(--ink);font-size:13px;font-weight:800;cursor:pointer">Reset</button>
+                <span style="flex:1;min-width:150px;font-size:12.5px;color:var(--dim)">{{ cropHint }}</span>
+              </div>
+
+              <div style="display:flex;gap:9px">
+                <button onClick="{{ cropCancel }}" style="padding:13px 18px;border:1px solid var(--line2);border-radius:13px;background:transparent;color:var(--ink);font-size:14.5px;font-weight:800;cursor:pointer">Cancel</button>
+                <button onClick="{{ cropDone }}" disabled="{{ cropBusy }}" style="flex:1;padding:13px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:15px;font-weight:800;cursor:pointer">{{ cropDoneLabel }}</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isShare }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="display:flex;align-items:center;gap:14px;padding:12px;border-radius:18px;background:var(--panel2);margin-bottom:16px">
+                <div style="flex:none;width:72px;height:72px;border-radius:14px;background:{{ shArt }}"></div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shTitle }}</div>
+                  <div style="font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shBy }}</div>
+                  <div style="font-size:12px;color:var(--mint-ink);font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shUrlShort }}</div>
+                </div>
+              </div>
+
+              <div style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:var(--dim);margin-bottom:8px">POST WITH A LINK</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-bottom:16px">
+                <sc-for list="{{ shNets }}" as="n" hint-placeholder-count="10">
+                  <a href="{{ n.href }}" target="_blank" rel="noopener" onClick="{{ n.go }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 6px;border:1px solid var(--line2);border-radius:14px;background:var(--panel);color:var(--ink);text-decoration:none">
+                    <span style="width:36px;height:36px;border-radius:11px;background:{{ n.bg }};color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ n.icon }}</span>
+                    <span style="font-size:12px;font-weight:700">{{ n.label }}</span>
+                  </a>
+                </sc-for>
+              </div>
+
+              <div style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:var(--dim);margin-bottom:8px">INSTAGRAM · TIKTOK · STORIES</div>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px">
+                <button onClick="{{ shStory }}" style="padding:12px;border:0;border-radius:13px;background:linear-gradient(135deg,#F58529,#DD2A7B 50%,#8134AF);color:#fff;font-size:13.5px;font-weight:800;cursor:pointer">⇩ Story image (9:16)</button>
+                <button onClick="{{ shPost }}" style="padding:12px;border:0;border-radius:13px;background:#0C1318;color:#fff;font-size:13.5px;font-weight:800;cursor:pointer">⇩ Post image (1:1)</button>
+              </div>
+              <div style="font-size:12.5px;line-height:1.5;color:var(--dim);margin-bottom:16px">Instagram and TikTok don't accept links in posts. Save the image, post it, and put the link in your bio or a link sticker{{ shNativeHint }}.</div>
+
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <sc-if value="{{ shCanNative }}" hint-placeholder-val="{{ false }}"><button onClick="{{ shNative }}" style="flex:1;min-width:140px;padding:13px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:14.5px;font-weight:800;cursor:pointer">⇪ Share…</button></sc-if>
+                <button onClick="{{ shCopy }}" style="flex:1;min-width:140px;padding:13px;border:1px solid var(--line2);border-radius:13px;background:var(--panel);color:var(--ink);font-size:14.5px;font-weight:800;cursor:pointer">{{ shCopyLabel }}</button>
+              </div>
             </div>
           </sc-if>
 
@@ -1412,13 +1491,14 @@
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:12px;font-weight:700;color:var(--dim)"><span style="flex:1;height:1px;background:var(--line)"></span>or with email<span style="flex:1;height:1px;background:var(--line)"></span></div>
               <sc-if value="{{ auIsCreate }}" hint-placeholder-val="{{ true }}"><label style="display:block;margin-bottom:12px"><span style="display:block;font-size:12.5px;font-weight:800;color:var(--dim);margin-bottom:6px">Your name</span><input type="text" value="{{ auName }}" onChange="{{ onAuName }}" placeholder="Artist or real name" style="width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-family:inherit;outline:none" /></label></sc-if>
               <label style="display:block;margin-bottom:12px"><span style="display:block;font-size:12.5px;font-weight:800;color:var(--dim);margin-bottom:6px">Email</span><input type="email" value="{{ auEmail }}" onChange="{{ onAuEmail }}" placeholder="you@example.com" style="width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-family:inherit;outline:none" /></label>
-              <label style="display:block;margin-bottom:12px"><span style="display:block;font-size:12.5px;font-weight:800;color:var(--dim);margin-bottom:6px">Password</span><input type="password" value="{{ auPw }}" onChange="{{ onAuPw }}" placeholder="At least 8 characters" style="width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-family:inherit;outline:none" /></label>
+              <div style="margin-bottom:12px"><div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px"><span style="font-size:12.5px;font-weight:800;color:var(--dim)">Password</span><sc-if value="{{ auIsSignin }}" hint-placeholder-val="{{ false }}"><button onClick="{{ auForgot }}" style="padding:0;border:0;background:transparent;color:var(--mint-ink);font-size:12.5px;font-weight:800;cursor:pointer">Forgot password?</button></sc-if></div><input type="password" value="{{ auPw }}" onChange="{{ onAuPw }}" placeholder="At least 8 characters" aria-label="Password" style="width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-family:inherit;outline:none" /></div>
               <sc-if value="{{ auIsCreate }}" hint-placeholder-val="{{ true }}">
                 <button onClick="{{ auToggleAgree }}" style="display:flex;gap:10px;align-items:flex-start;width:100%;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left;margin:4px 0 14px">
                   <span style="flex:none;width:20px;height:20px;border-radius:6px;border:2px solid {{ auAgreeBorder }};background:{{ auAgreeBg }};color:var(--on-mint);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ auAgreeTick }}</span>
                   <span style="font-size:13px;line-height:1.5;color:var(--dim)">I'm 13 or older, a real person, and I agree to the <a href="../legal/terms.html" target="_blank">Terms</a>, <a href="../legal/privacy.html" target="_blank">Privacy</a> and <a href="../legal/dmca.html" target="_blank">Copyright</a> policies.</span>
                 </button>
               </sc-if>
+              <sc-if value="{{ auNotice }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 12px;border-radius:10px;background:var(--mint-soft);color:var(--mint-ink);font-size:13px;font-weight:700;margin-bottom:12px">✓ {{ auNotice }}</div></sc-if>
               <sc-if value="{{ auErr }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 12px;border-radius:10px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;font-weight:700;margin-bottom:12px">{{ auErr }}</div></sc-if>
               <button onClick="{{ auSubmit }}" style="width:100%;padding:14px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:15.5px;font-weight:800;cursor:pointer">{{ auSubmitLabel }}</button>
               <div style="margin-top:22px;padding:14px;border-radius:14px;background:var(--panel2)">
@@ -1428,6 +1508,54 @@
                   <button onClick="{{ auDemoExec }}" style="flex:1;min-width:150px;padding:10px;border:1px solid var(--line2);border-radius:11px;background:var(--panel);color:var(--ink);font-size:13px;font-weight:800;cursor:pointer">◆ Music executive</button>
                 </div>
               </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ auIsForgot }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <button onClick="{{ auToSignin }}" style="display:inline-flex;align-items:center;gap:6px;padding:0;margin-bottom:18px;border:0;background:transparent;color:var(--dim);font-size:13.5px;font-weight:800;cursor:pointer">← Back to sign in</button>
+              <div style="font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:27px;font-weight:700;letter-spacing:-0.9px;margin-bottom:6px">Reset your password</div>
+              <p style="margin:0 0 20px;font-size:14.5px;line-height:1.55;color:var(--dim)">Enter the email you use for Ellipsis. We'll send you a link to choose a new password.</p>
+              <label style="display:block;margin-bottom:14px"><span style="display:block;font-size:12.5px;font-weight:800;color:var(--dim);margin-bottom:6px">Email</span><input type="email" value="{{ auEmail }}" onChange="{{ onAuEmail }}" onKeyDown="{{ auForgotKey }}" placeholder="you@example.com" autocomplete="email" style="width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-family:inherit;outline:none" /></label>
+              <sc-if value="{{ auErr }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 12px;border-radius:10px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;font-weight:700;margin-bottom:12px">{{ auErr }}</div></sc-if>
+              <button onClick="{{ auSendReset }}" disabled="{{ auBusy }}" style="width:100%;padding:14px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:15.5px;font-weight:800;cursor:pointer">{{ auSendLabel }}</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ auIsSent }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="width:58px;height:58px;border-radius:18px;background:var(--mint-soft);color:var(--mint-ink);font-size:26px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">✉</div>
+              <div style="font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:27px;font-weight:700;letter-spacing:-0.9px;margin-bottom:6px">Check your email</div>
+              <p style="margin:0 0 8px;font-size:14.5px;line-height:1.6;color:var(--dim)">If an account exists for <b style="color:var(--ink)">{{ auSentTo }}</b>, we've sent a link to reset your password. The link works once and expires in 30 minutes.</p>
+              <p style="margin:0 0 18px;font-size:13px;line-height:1.55;color:var(--dim)">Didn't get it? Check your spam or promotions folder, or send it again.</p>
+              <sc-if value="{{ auDemoLink }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:13px 14px;border-radius:13px;background:var(--panel2);border:1px dashed var(--line2);margin-bottom:14px">
+                  <div style="font-size:12.5px;line-height:1.5;color:var(--dim);margin-bottom:9px">Demo mode: email isn't connected on this device, so here's the link we would have sent.</div>
+                  <button onClick="{{ auOpenDemo }}" style="padding:9px 14px;border:0;border-radius:10px;background:#0C1318;color:#fff;font-size:13px;font-weight:800;cursor:pointer">Open reset link →</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ auErr }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 12px;border-radius:10px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;font-weight:700;margin-bottom:12px">{{ auErr }}</div></sc-if>
+              <sc-if value="{{ auNoMail }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:12px 14px;border-radius:13px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;line-height:1.5;margin-bottom:14px">Email isn't set up on the server yet, so no message was sent. Contact support@ellipsismusic.net and we'll reset it for you.</div>
+              </sc-if>
+              <div style="display:flex;gap:9px;flex-wrap:wrap">
+                <button onClick="{{ auResend }}" style="flex:1;min-width:140px;padding:13px;border:1px solid var(--line2);border-radius:13px;background:transparent;color:var(--ink);font-size:14.5px;font-weight:800;cursor:pointer">{{ auResendLabel }}</button>
+                <button onClick="{{ auToSignin }}" style="flex:1;min-width:140px;padding:13px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:14.5px;font-weight:800;cursor:pointer">Back to sign in</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ auIsReset }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:27px;font-weight:700;letter-spacing:-0.9px;margin-bottom:6px">Choose a new password</div>
+              <p style="margin:0 0 18px;font-size:14.5px;line-height:1.55;color:var(--dim)">{{ auResetSub }}</p>
+              <div style="margin-bottom:10px"><div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px"><span style="font-size:12.5px;font-weight:800;color:var(--dim)">New password</span><button onClick="{{ auToggleShow }}" style="padding:0;border:0;background:transparent;color:var(--mint-ink);font-size:12.5px;font-weight:800;cursor:pointer">{{ auShowLabel }}</button></div><input type="{{ auPwType }}" value="{{ auPw1 }}" onChange="{{ onAuPw1 }}" placeholder="At least 8 characters" autocomplete="new-password" style="width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-family:inherit;outline:none" /></div>
+              <div style="display:flex;gap:4px;margin-bottom:5px"><sc-for list="{{ auStrength }}" as="b" hint-placeholder-count="4"><span style="flex:1;height:5px;border-radius:3px;background:{{ b.bg }}"></span></sc-for></div>
+              <div style="font-size:12.5px;font-weight:700;color:{{ auStrengthFg }};margin-bottom:14px">{{ auStrengthText }}</div>
+              <label style="display:block;margin-bottom:14px"><span style="display:block;font-size:12.5px;font-weight:800;color:var(--dim);margin-bottom:6px">Confirm new password</span><input type="{{ auPwType }}" value="{{ auPw2 }}" onChange="{{ onAuPw2 }}" onKeyDown="{{ auResetKey }}" placeholder="Type it again" autocomplete="new-password" style="width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-family:inherit;outline:none" /></label>
+              <sc-if value="{{ auErr }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 12px;border-radius:10px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;font-weight:700;margin-bottom:12px">{{ auErr }}</div></sc-if>
+              <button onClick="{{ auDoReset }}" disabled="{{ auBusy }}" style="width:100%;padding:14px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:15.5px;font-weight:800;cursor:pointer">{{ auResetLabel }}</button>
+              <p style="margin:12px 0 0;font-size:12.5px;line-height:1.5;color:var(--dim)">Changing your password signs you out on every other device.</p>
             </div>
           </sc-if>
 
@@ -1724,6 +1852,7 @@ function seedAll(USERS) {
   return { I, P, A };
 }
 
+const CROP_FRAMES = [['1:1', 'Square', 1, '1 : 1'], ['4:5', 'Portrait', 0.8, '4 : 5'], ['9:16', 'Story', 9 / 16, '9 : 16'], ['16:9', 'Wide', 16 / 9, '16 : 9'], ['orig', 'Original', null, 'as shot']];
 const AOF = x => x && x.cover ? 'url(' + x.cover + ') center/cover' : ART[x && x.file] || ART.lofi;
 const VERIFY_SB = 10;
 /* Chat moderation. Swearing about the music is fine; attacks on people are not.
@@ -1895,6 +2024,8 @@ class Component extends DCLogic {
       this.pullState();
     }
     const qs = new URLSearchParams(location.search);
+    const rtk = (qs.get('reset') || '').replace(/[^A-Za-z0-9]/g, '');
+    if (rtk) { try { history.replaceState(null, '', location.pathname); } catch (e) {} setTimeout(() => this.setState({ auth: { step: 'reset', mode: 'signin', token: rtk, name: '', email: '', pw: '', pw1: '', pw2: '', agree: false, err: '' } }), 80); }
     if (qs.get('billing') === 'success') {
       const sid = qs.get('session_id');
       (sid ? this.api('billing/confirm?session_id=' + encodeURIComponent(sid)) : this.api('me')).then(r => { this.mergeRemote(r.me, a && a.token, false); this.flash(r.me && r.me.plan !== 'free' ? 'Payment confirmed — ' + (r.me.plan === 'industry' ? 'Industry' : 'Premium') + ' is active' : 'Payment received — your plan switches on in a moment'); }).catch(e => this.flash(e.message));
@@ -2045,7 +2176,189 @@ class Component extends DCLogic {
     try { localStorage.removeItem('ellipsis4.account'); } catch (e) {}
     this.setState({ acct: null, playing: false, mxOpen: false, sheet: null, view: 'explore', auth: { step: 'welcome', mode: 'signin', name: '', email: '', pw: '', agree: false, err: '' } });
   };
+  pwHashLocal(pw) { return String((pw || '').split('').reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7)); }
+  async sendReset() {
+    const au = this.state.auth; if (!au) return;
+    const email = (au.email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return this.setAuth({ err: 'Enter the email you signed up with.' });
+    if (au.sentAt && au.sentTo === email && Date.now() - au.sentAt < 60000) return this.setAuth({ err: 'We just sent a link. You can send another in ' + Math.ceil((60000 - (Date.now() - au.sentAt)) / 1000) + ' seconds.' });
+    this.setAuth({ busy: true, err: '' });
+    if (this._api) {
+      try { const r = await this.api('password/forgot', { body: { email } }); this.setAuth({ step: 'sent', busy: false, sentTo: email, sentAt: Date.now(), noMail: r && r.mail === false, demoToken: null }); }
+      catch (e) { this.setAuth({ busy: false, err: e.message === 'offline' ? 'Can\'t reach Ellipsis right now — check your connection.' : e.message }); }
+      return;
+    }
+    let all = {}; try { all = JSON.parse(localStorage.getItem('ellipsis4.accounts') || '{}'); } catch (e) {}
+    let tok = null;
+    if (all[email]) {
+      const a = new Uint8Array(24); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => { a[i] = Math.random() * 256; });
+      tok = Array.from(a, b => b.toString(16).padStart(2, '0')).join('');
+      let rs = {}; try { rs = JSON.parse(localStorage.getItem('ellipsis4.resets') || '{}'); } catch (e) {}
+      Object.keys(rs).forEach(k => { if (rs[k].email === email || rs[k].exp < Date.now()) delete rs[k]; });
+      rs[tok] = { email, exp: Date.now() + 30 * 60000 };
+      try { localStorage.setItem('ellipsis4.resets', JSON.stringify(rs)); } catch (e) {}
+    }
+    setTimeout(() => this.setAuth({ step: 'sent', busy: false, sentTo: email, sentAt: Date.now(), noMail: false, demoToken: tok }), 450);
+  }
+  async doReset() {
+    const au = this.state.auth; if (!au) return;
+    const p1 = au.pw1 || '', p2 = au.pw2 || '';
+    if (p1.length < 8) return this.setAuth({ err: 'Use at least 8 characters.' });
+    if (p1 !== p2) return this.setAuth({ err: 'The two passwords don\'t match.' });
+    if (au.resetEmail && p1.toLowerCase() === au.resetEmail) return this.setAuth({ err: 'Don\'t use your email as your password.' });
+    this.setAuth({ busy: true, err: '' });
+    let email = au.resetEmail || '';
+    if (this._api) {
+      try { const r = await this.api('password/reset', { body: { token: au.token, password: p1 } }); email = (r && r.email) || email; }
+      catch (e) { return this.setAuth({ busy: false, err: e.message === 'offline' ? 'Can\'t reach Ellipsis right now — check your connection.' : e.message }); }
+    } else {
+      let rs = {}, all = {}; try { rs = JSON.parse(localStorage.getItem('ellipsis4.resets') || '{}'); all = JSON.parse(localStorage.getItem('ellipsis4.accounts') || '{}'); } catch (e) {}
+      const r = rs[au.token];
+      if (!r || r.exp < Date.now() || !all[r.email]) return this.setAuth({ busy: false, err: 'This reset link has expired or was already used. Ask for a new one.' });
+      email = r.email; all[email] = Object.assign({}, all[email], { pwh: this.pwHashLocal(p1) }); delete rs[au.token];
+      try { localStorage.setItem('ellipsis4.accounts', JSON.stringify(all)); localStorage.setItem('ellipsis4.resets', JSON.stringify(rs)); } catch (e) {}
+    }
+    const cur = this.state.acct;
+    if (cur && cur.email && cur.email.toLowerCase() === email.toLowerCase()) { try { localStorage.removeItem('ellipsis4.account'); } catch (e) {} this.setState({ acct: null }); }
+    this.setState({ auth: { step: 'welcome', mode: 'signin', name: '', email, pw: '', agree: false, err: '', notice: 'Password updated. Sign in with your new password.' } });
+  }
+  resetVals(au) {
+    const tokInfo = (() => { if (this._api || !au.token) return null; try { return JSON.parse(localStorage.getItem('ellipsis4.resets') || '{}')[au.token] || null; } catch (e) { return null; } })();
+    const p = au.pw1 || '';
+    let sc = 0; if (p.length >= 8) sc++; if (p.length >= 12) sc++; if (/[a-z]/.test(p) && /[A-Z]/.test(p)) sc++; if (/\d/.test(p) && /[^A-Za-z0-9]/.test(p)) sc++;
+    const lvl = !p ? 0 : p.length < 8 ? 1 : Math.max(1, Math.min(4, sc));
+    const LV = [['', 'var(--dim)'], ['Too short — use at least 8 characters', '#B3523E'], ['Fair — add length or a mix of characters', '#9E7415'], ['Good', 'var(--mint-ink)'], ['Strong', 'var(--mint-ink)']];
+    const goSignin = () => this.setAuth({ step: 'welcome', mode: 'signin', err: '', busy: false });
+    return {
+      auIsSignin: au.mode === 'signin', auNotice: au.step === 'welcome' ? (au.notice || '') : '',
+      auForgot: () => this.setAuth({ step: 'forgot', err: '', notice: '' }),
+      auIsForgot: au.step === 'forgot', auIsSent: au.step === 'sent', auIsReset: au.step === 'reset',
+      auToSignin: goSignin, auBusy: !!au.busy,
+      auForgotKey: e => { if (e.key === 'Enter') this.sendReset(); },
+      auSendReset: () => this.sendReset(), auSendLabel: au.busy ? 'Sending…' : 'Send reset link',
+      auSentTo: au.sentTo || '', auDemoLink: !!au.demoToken, auNoMail: !!au.noMail,
+      auOpenDemo: () => this.setAuth({ step: 'reset', token: au.demoToken, resetEmail: au.sentTo, pw1: '', pw2: '', err: '' }),
+      auResend: () => this.sendReset(), auResendLabel: 'Send it again',
+      auResetSub: (au.resetEmail || (tokInfo && tokInfo.email)) ? 'For ' + (au.resetEmail || tokInfo.email) + '. Pick something you don\'t use anywhere else.' : 'Pick something you don\'t use anywhere else.',
+      auPw1: p, onAuPw1: e => this.setAuth({ pw1: e.target.value, err: '' }),
+      auPw2: au.pw2 || '', onAuPw2: e => this.setAuth({ pw2: e.target.value, err: '' }),
+      auPwType: au.showPw ? 'text' : 'password', auShowLabel: au.showPw ? 'Hide' : 'Show', auToggleShow: () => this.setAuth({ showPw: !au.showPw }),
+      auStrength: [1, 2, 3, 4].map(k => ({ bg: k <= lvl ? (lvl <= 1 ? '#B3523E' : lvl === 2 ? '#E0A33A' : 'var(--mint)') : 'var(--line)' })),
+      auStrengthText: LV[lvl][0] || 'Use 8 or more characters. Longer is stronger.', auStrengthFg: LV[lvl][1],
+      auResetKey: e => { if (e.key === 'Enter') this.doReset(); },
+      auDoReset: () => this.doReset(), auResetLabel: au.busy ? 'Updating…' : 'Update password'
+    };
+  }
   setAuth(p) { this.setState(s => ({ auth: s.auth ? Object.assign({}, s.auth, p) : null })); }
+  openCrop(target, back) {
+    pickImage(2400, url => {
+      const im = new Image();
+      im.onload = () => this.setState({ sheet: { type: 'crop', src: url, iw: im.width, ih: im.height, frame: '1:1', zoom: 1, cx: 0.5, cy: 0.5, fit: false, target, back: back || null, busy: false } });
+      im.src = url;
+    });
+  }
+  cropGeom(sh) {
+    const base = this.state.w < 560 ? 290 : 380;
+    const A = sh.frame === 'orig' ? sh.iw / sh.ih : CROP_FRAMES.find(f => f[0] === sh.frame)[2];
+    const PW = A >= 1 ? base : Math.round(base * A), PH = A >= 1 ? Math.round(base / A) : base;
+    const sc = (sh.fit ? Math.min(PW / sh.iw, PH / sh.ih) : Math.max(PW / sh.iw, PH / sh.ih)) * sh.zoom;
+    const cw = PW / sc / sh.iw, ch = PH / sc / sh.ih;
+    const cl = (c, w) => w >= 1 ? 0.5 : Math.max(w / 2, Math.min(1 - w / 2, c));
+    return { A, PW, PH, sc, cw, ch, cl, cx: cl(sh.cx, cw), cy: cl(sh.cy, ch) };
+  }
+  cropDrag(e) {
+    const sh = this.state.sheet; if (!sh || sh.type !== 'crop') return;
+    if (e.button != null && e.button !== 0) return;
+    e.preventDefault();
+    const g = this.cropGeom(sh), x0 = e.clientX, y0 = e.clientY, c0 = { cx: g.cx, cy: g.cy };
+    const move = ev => {
+      const nx = g.cl(c0.cx - (ev.clientX - x0) / (g.sc * sh.iw), g.cw), ny = g.cl(c0.cy - (ev.clientY - y0) / (g.sc * sh.ih), g.ch);
+      this._cropPend = { cx: nx, cy: ny };
+      if (!this._cropRaf) this._cropRaf = requestAnimationFrame(() => { this._cropRaf = null; if (this._cropPend) this.setSheet(this._cropPend); this._cropPend = null; });
+    };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); if (this._cropRaf) { cancelAnimationFrame(this._cropRaf); this._cropRaf = null; } this.setSheet(Object.assign({ dragging: false }, this._cropPend || {})); this._cropPend = null; };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+    this.setSheet({ dragging: true });
+  }
+  cropExport() {
+    const sh = this.state.sheet; if (!sh || sh.type !== 'crop') return;
+    const g = this.cropGeom(sh), M = 1400;
+    const OW = g.A >= 1 ? M : Math.round(M * g.A), OH = g.A >= 1 ? Math.round(M / g.A) : M, k = OW / g.PW;
+    this.setSheet({ busy: true });
+    const im = new Image();
+    im.onload = () => {
+      const c = document.createElement('canvas'); c.width = OW; c.height = OH; const x = c.getContext('2d');
+      x.fillStyle = '#0C1318'; x.fillRect(0, 0, OW, OH);
+      if (sh.fit) {
+        const bs = Math.max(OW / sh.iw, OH / sh.ih) * 1.15;
+        try { x.filter = 'blur(36px) brightness(0.72)'; } catch (e) {}
+        x.drawImage(im, (OW - sh.iw * bs) / 2, (OH - sh.ih * bs) / 2, sh.iw * bs, sh.ih * bs);
+        try { x.filter = 'none'; } catch (e) {}
+        if (!('filter' in x) || x.filter === 'none') { x.fillStyle = 'rgba(12,19,24,0.35)'; x.fillRect(0, 0, OW, OH); }
+      }
+      const L = (g.PW / 2 - g.cx * sh.iw * g.sc) * k, T = (g.PH / 2 - g.cy * sh.ih * g.sc) * k;
+      x.drawImage(im, L, T, sh.iw * g.sc * k, sh.ih * g.sc * k);
+      const url = c.toDataURL('image/jpeg', 0.88), t = sh.target || {};
+      if (t.type === 'project') {
+        const p = this.proj(t.pid);
+        this.updProj(t.pid, z => { z.cover = url; z.coverFrame = sh.frame; return z; });
+        if (p && p.songId) this.updItem(p.songId, y => { y.cover = url; return y; });
+        this.setState({ sheet: sh.back || null }); this.flash('Cover art updated');
+      } else if (t.type === 'publish' && sh.back) {
+        this.setState({ sheet: Object.assign({}, sh.back, { cover: url, useCover: true, coverFrame: sh.frame }) });
+      } else this.setState({ sheet: sh.back || null });
+    };
+    im.onerror = () => { this.setSheet({ busy: false }); this.flash('Could not read that image — try another'); };
+    im.src = sh.src;
+  }
+  openShare(pid) {
+    const p = this.proj(pid); if (!p || p.stage !== 'published') { this.flash('Release the song first, then share it'); return; }
+    this.setState({ sheet: { type: 'share', pid, copied: false } });
+  }
+  shareInfo(p) {
+    const song = p.songId ? this.item(p.songId) : null, owner = this.U(p.owner);
+    const names = [p.owner].concat(p.collabs || []).map(id => this.U(id).name).filter(Boolean);
+    const by = names.length > 2 ? names[0] + ' + ' + (names.length - 1) + ' collaborators' : names.join(' & ');
+    const url = location.origin + (p.shareUrl || '/s/?id=' + (p.songId || p.id));
+    const tags = [].concat(p.tags.genre || [], p.tags.like || []).slice(0, 3).map(t => '#' + t.replace(/[^A-Za-z0-9]/g, ''));
+    const text = '“' + p.title + '” by ' + by + ' — made together on Ellipsis 🎧';
+    return { song, owner, by, url, tags, text, cover: p.cover, art: p.art, title: p.title, cities: Array.from(new Set([p.owner].concat(p.collabs || []).map(id => this.U(id).city).filter(Boolean))).slice(0, 3) };
+  }
+  shareCard(p, w, h) {
+    const I = this.shareInfo(p), c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+    const cols = (ART[I.art] || ART.lofi).match(/#[0-9a-fA-F]{6}/g) || ['#00D9A6', '#0A6E58'];
+    const bg = g.createLinearGradient(0, 0, w, h); bg.addColorStop(0, '#0C1318'); bg.addColorStop(1, '#13202A'); g.fillStyle = bg; g.fillRect(0, 0, w, h);
+    const glow = g.createRadialGradient(w * 0.2, h * 0.15, 0, w * 0.2, h * 0.15, w * 0.9); glow.addColorStop(0, cols[0] + '88'); glow.addColorStop(1, '#0C131800'); g.fillStyle = glow; g.fillRect(0, 0, w, h);
+    const S = Math.min(w * 0.78, h * 0.5), x0 = (w - S) / 2, y0 = h > w ? Math.round((h - (S + w * 0.062 * 4.2)) / 2 - h * 0.03) : h * 0.1;
+    const drawText = () => {
+      const fs = Math.round(w * 0.062), ty = y0 + S + fs * 1.9;
+      g.textAlign = 'center'; g.fillStyle = '#FFFFFF'; g.font = '700 ' + fs + 'px Sora, "Plus Jakarta Sans", sans-serif';
+      let t = I.title; while (g.measureText(t).width > w * 0.86 && t.length > 4) t = t.slice(0, -2); if (t !== I.title) t = t.trim() + '…';
+      g.fillText(t, w / 2, ty);
+      g.fillStyle = '#C9D4DB'; g.font = '600 ' + Math.round(fs * 0.5) + 'px "Plus Jakarta Sans", sans-serif'; g.fillText(I.by, w / 2, ty + fs * 0.95);
+      if (I.cities.length > 1) { g.fillStyle = '#3FE6BD'; g.font = '700 ' + Math.round(fs * 0.4) + 'px "Plus Jakarta Sans", sans-serif'; g.fillText(I.cities.join('  ↔  '), w / 2, ty + fs * 1.75); }
+      const by = h - Math.round(w * 0.12);
+      g.fillStyle = '#00D9A6'; const r = Math.round(w * 0.035); g.beginPath(); g.arc(w / 2 - w * 0.2, by - r * 0.35, r, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#06231B'; g.font = '800 ' + Math.round(r * 1.1) + 'px sans-serif'; g.fillText('···', w / 2 - w * 0.2, by - r * 0.1);
+      g.textAlign = 'left'; g.fillStyle = '#FFFFFF'; g.font = '700 ' + Math.round(w * 0.034) + 'px Sora, sans-serif'; g.fillText('Listen on ellipsismusic.net', w / 2 - w * 0.2 + r * 1.6, by);
+    };
+    const frame = () => { g.save(); const rr = S * 0.06; g.beginPath(); g.moveTo(x0 + rr, y0); g.arcTo(x0 + S, y0, x0 + S, y0 + S, rr); g.arcTo(x0 + S, y0 + S, x0, y0 + S, rr); g.arcTo(x0, y0 + S, x0, y0, rr); g.arcTo(x0, y0, x0 + S, y0, rr); g.closePath(); g.clip(); };
+    return new Promise(res => {
+      const finish = () => { g.restore(); drawText(); c.toBlob(b => res(b), 'image/png'); };
+      frame();
+      if (I.cover) { const im = new Image(); im.onload = () => { const k = Math.max(S / im.width, S / im.height); g.drawImage(im, x0 + (S - im.width * k) / 2, y0 + (S - im.height * k) / 2, im.width * k, im.height * k); finish(); }; im.onerror = () => { g.fillStyle = cols[0]; g.fillRect(x0, y0, S, S); finish(); }; im.src = I.cover; }
+      else { const gg = g.createLinearGradient(x0, y0, x0 + S, y0 + S); gg.addColorStop(0, cols[0]); gg.addColorStop(1, cols[1] || cols[0]); g.fillStyle = gg; g.fillRect(x0, y0, S, S); g.fillStyle = 'rgba(255,255,255,0.9)'; g.font = '800 ' + Math.round(S * 0.22) + 'px sans-serif'; g.textAlign = 'center'; g.fillText('···', x0 + S / 2, y0 + S / 2 + S * 0.06); finish(); }
+    });
+  }
+  async shareImage(pid, kind) {
+    const p = this.proj(pid); if (!p) return;
+    const blob = await this.shareCard(p, 1080, kind === 'story' ? 1920 : 1080); if (!blob) { this.flash('Could not make the image in this browser'); return; }
+    const name = p.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + (kind === 'story' ? '-story' : '-post') + '.png';
+    const file = new File([blob], name, { type: 'image/png' }), I = this.shareInfo(p);
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: p.title, text: I.text + ' ' + I.url }); this.track('share', { id: p.songId, net: kind }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    this.track('share', { id: p.songId, net: kind + '-download' }); this.flash('Image saved — post it, then add your link in bio or a link sticker');
+  }
   openProfileEdit() {
     const me = this.U('me');
     this.setState({ sheet: { type: 'profile', name: me.name, handle: (me.handle || '').replace(/^@/, ''), city: me.city || '', role: me.role || '', skills: (me.skills || []).join(', '), bio: me.bio || '', photo: me.photo || null, grad: me.grad, g1: me.g1, g2: me.g2 } });
@@ -2097,7 +2410,7 @@ class Component extends DCLogic {
     this._keys = e => {
       if (e.key === 'Escape' && this.state.mxOpen && !this.state.sheet) { if (this.state.mxTut >= 0) { try { localStorage.setItem('ellipsis4.mxTut', '1'); } catch (x) {} this.setState({ mxTut: -1 }); return; } if (this.state.mxFocus) this.setState({ mxFocus: null }); else this.closeMixer(); return; }
       if (this.state.mxOpen && e.code === 'Space' && !/INPUT|TEXTAREA/.test((e.target || {}).tagName || '')) { e.preventDefault(); this.togglePlay(); return; }
-      if (e.key === 'Escape') { if (this.state.sheet) this.setState({ sheet: null }); this.setState({ searchOpen: false }); return; }
+      if (e.key === 'Escape') { if (this.state.sheet) this.setState({ sheet: this.state.sheet.type === 'crop' ? (this.state.sheet.back || null) : null }); this.setState({ searchOpen: false }); return; }
       if (/INPUT|TEXTAREA/.test((e.target || {}).tagName || '') || this.state.rec || this.state.sheet) return;
       if (e.code === 'Space') { e.preventDefault(); this.togglePlay(); }
     };
@@ -2966,6 +3279,53 @@ class Component extends DCLogic {
         swNote: s.acct && s.acct.token ? 'Your work is saved to your account and follows you to any device.' : 'Each account keeps its own work on this device.'
       };
     }
+    let CR = { isCrop: false };
+    if (sh && sh.type === 'crop') {
+      sheetTitle = 'Adjust cover art'; sheetSub = 'Pick a frame, then drag and zoom until it looks right.';
+      const g = this.cropGeom(sh), px = v => v.toFixed(1) + 'px';
+      const chip = on => ({ bg: on ? 'var(--mint-soft)' : 'var(--panel)', fg: on ? 'var(--mint-ink)' : 'var(--ink)', border: on ? 'var(--mint)' : 'var(--line2)' });
+      const z = v => this.setSheet({ zoom: Math.max(1, Math.min(4, Math.round(v * 100) / 100)) });
+      CR = {
+        isCrop: true, cropSrc: sh.src, cropPW: g.PW + 'px', cropPH: g.PH + 'px',
+        cropL: px(g.PW / 2 - g.cx * sh.iw * g.sc), cropT: px(g.PH / 2 - g.cy * sh.ih * g.sc), cropW: px(sh.iw * g.sc), cropH: px(sh.ih * g.sc),
+        cropFit: !!sh.fit, cropGrid: sh.dragging ? '1' : '0.45',
+        cropDown: e => this.cropDrag(e),
+        cropFrames: CROP_FRAMES.map(([k, label, a, ratio]) => { const A = a || sh.iw / sh.ih; return Object.assign({ label, ratio, iw: (A >= 1 ? 18 : Math.round(18 * A)) + 'px', ih: (A >= 1 ? Math.round(18 / A) : 18) + 'px', go: () => this.setSheet({ frame: k }) }, chip(sh.frame === k)); }),
+        cropZoom: String(Math.round(sh.zoom * 100)), onCropZoom: e => z(+e.target.value / 100), cropIn: () => z(sh.zoom + 0.25), cropOut: () => z(sh.zoom - 0.25), cropZoomText: Math.round(sh.zoom * 100) + '%',
+        cropModes: [['Fill', false, 'Fill the frame — edges may be cropped'], ['Fit', true, 'Show the whole photo on a blurred backdrop']].map(([label, v, hint]) => ({ label, hint, bg: !!sh.fit === v ? 'var(--panel)' : 'transparent', fg: !!sh.fit === v ? 'var(--ink)' : 'var(--dim)', go: () => this.setSheet({ fit: v, zoom: 1, cx: 0.5, cy: 0.5 }) })),
+        cropReset: () => this.setSheet({ zoom: 1, cx: 0.5, cy: 0.5 }),
+        cropHint: g.cw >= 1 && g.ch >= 1 ? 'Zoom in to reposition' : 'Drag the photo to reposition',
+        cropCancel: () => this.setState({ sheet: sh.back || null }),
+        cropDone: () => this.cropExport(), cropBusy: !!sh.busy, cropDoneLabel: sh.busy ? 'Saving…' : 'Use this cover'
+      };
+    }
+    const shP = sh && sh.type === 'share' ? this.proj(sh.pid) : null;
+    let SH = { isShare: false };
+    if (shP) {
+      sheetTitle = 'Share ' + shP.title; sheetSub = 'Every link opens a preview of the song with its cover.';
+      const I = this.shareInfo(shP), u = encodeURIComponent(I.url), t = encodeURIComponent(I.text), tt = encodeURIComponent(I.text + ' ' + I.tags.join(' '));
+      const mark = net => () => { this.track('share', { id: shP.songId, net }); };
+      SH = {
+        isShare: true, shArt: I.cover ? 'url(' + I.cover + ') center/cover' : ART[I.art], shTitle: I.title, shBy: I.by, shUrlShort: I.url.replace(/^https?:\/\//, ''),
+        shNets: [
+          ['X', '𝕏', '#000000', 'https://x.com/intent/post?text=' + tt + '&url=' + u],
+          ['Facebook', 'f', '#1877F2', 'https://www.facebook.com/sharer/sharer.php?u=' + u],
+          ['WhatsApp', '✆', '#25D366', 'https://wa.me/?text=' + encodeURIComponent(I.text + ' ' + I.url)],
+          ['Threads', '@', '#101010', 'https://www.threads.net/intent/post?text=' + encodeURIComponent(I.text + ' ' + I.url)],
+          ['Bluesky', '🦋', '#1185FE', 'https://bsky.app/intent/compose?text=' + encodeURIComponent(I.text + ' ' + I.url)],
+          ['Telegram', '➤', '#229ED9', 'https://t.me/share/url?url=' + u + '&text=' + t],
+          ['Reddit', 'r', '#FF4500', 'https://www.reddit.com/submit?url=' + u + '&title=' + encodeURIComponent('“' + I.title + '” by ' + I.by)],
+          ['LinkedIn', 'in', '#0A66C2', 'https://www.linkedin.com/sharing/share-offsite/?url=' + u],
+          ['Email', '✉', '#56646F', 'mailto:?subject=' + encodeURIComponent('Listen: ' + I.title) + '&body=' + encodeURIComponent(I.text + '\n\n' + I.url)],
+          ['Text', '💬', '#00A982', 'sms:?&body=' + encodeURIComponent(I.text + ' ' + I.url)]
+        ].map(([label, icon, bg, href]) => ({ label, icon, bg, href, go: mark(label.toLowerCase()) })),
+        shStory: () => this.shareImage(shP.id, 'story'), shPost: () => this.shareImage(shP.id, 'post'),
+        shCanNative: !!navigator.share, shNativeHint: navigator.share ? ' — on a phone, Share… can send the image straight to Instagram or TikTok' : '',
+        shNative: () => { navigator.share({ title: I.title, text: I.text, url: I.url }).then(mark('native')).catch(() => {}); },
+        shCopyLabel: sh.copied ? '✓ Link copied' : '⧉ Copy link',
+        shCopy: () => { (navigator.clipboard ? navigator.clipboard.writeText(I.url) : Promise.reject()).then(() => { this.setSheet({ copied: true }); mark('copy')(); }).catch(() => this.flash(I.url)); }
+      };
+    }
     const pe = sh && sh.type === 'profile' ? sh : null;
     if (pe) { sheetTitle = 'Edit profile'; sheetSub = 'This is what collaborators and labels see.'; }
     const PE = !pe ? { isProfEdit: false } : {
@@ -3013,7 +3373,7 @@ class Component extends DCLogic {
     };
 
     /* ═══ auth ═══ */
-    const au = s.auth;
+    const au = s.auth ? Object.assign({ name: '', email: '', pw: '', agree: false, err: '' }, s.auth) : null;
     let AUTH = { authOpen: false };
     if (au) {
       const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(au.email.trim());
@@ -3042,7 +3402,8 @@ class Component extends DCLogic {
         authOpen: true, authWide: w >= 960, authCols: w >= 960 ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)',
         authWave: bars(91, 48, 14, 100).map((h, k) => ({ h: Math.round(h) + '%', c: k % 6 === 0 ? '#FF8A5C' : '#00D9A6' })),
         authDots: [0, 1, 2].map(k => ({ bg: k <= idx ? 'var(--mint)' : 'var(--line)' })),
-        auIsWelcome: au.step === 'welcome', auIsType: au.step === 'type', auIsPlan: au.step === 'plan', auIsExec: au.step === 'exec', auHasFooter: au.step !== 'welcome',
+        auIsWelcome: au.step === 'welcome', auIsType: au.step === 'type', auIsPlan: au.step === 'plan', auIsExec: au.step === 'exec', auHasFooter: ['type', 'plan', 'exec'].indexOf(au.step) >= 0,
+        ...this.resetVals(au),
         auIsCreate: au.mode === 'create', auHeading: au.mode === 'create' ? 'Create your account' : 'Welcome back', auSub: au.mode === 'create' ? 'One account per person — Ellipsis is for humans making music.' : 'Sign in to pick up where you left off.',
         auModes: [['create', 'Create account'], ['signin', 'Sign in']].map(([k, l]) => ({ label: l, go: () => this.setAuth({ mode: k, err: '' }), bg: au.mode === k ? 'var(--panel)' : 'transparent', fg: au.mode === k ? 'var(--ink)' : 'var(--dim)' })),
         auName: au.name, onAuName: e => this.setAuth({ name: e.target.value, err: '' }),
@@ -3205,7 +3566,7 @@ class Component extends DCLogic {
     }
 
     return {
-      ...MX, ...DESK, ...AUTH, ...acctVals, ...PE, ...SW,
+      ...MX, ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
       askLogout: () => this.setState({ sheet: { type: 'switch' } }),
       askLogoutOld: () => this.setState({ sheet: { type: 'confirm', title: 'Log out of Ellipsis?', body: 'Your work is saved' + (s.acct && s.acct.token ? ' to your account — sign back in on any device to pick up where you left off.' : ' on this device and will be here when you sign back in.'), cta: 'Log out', go: () => { this.setState({ sheet: null }); if (this._api && s.acct && s.acct.token) this.api('logout', { body: {} }).catch(() => {}); this.signOut(); this.flash('Logged out'); } } }),
       inviteNote: s.acct && s.acct.refCode ? 'You both get a month of Premium when they release a song' : 'Share Ellipsis with collaborators',
@@ -3250,7 +3611,7 @@ class Component extends DCLogic {
       newProject: () => this.newProject(), projCards: projList.map(projCard), projEmpty: projList.length === 0,
       projEmptyText: s.projTab === 'Mine' ? 'No projects yet. Press Create to start one.' : "You're not collaborating on anything yet. Find a project in Explore → Let's collaborate.",
 
-      pArt: pp.cover ? 'url(' + pp.cover + ') center/cover' : ART[pp.art], pCanCover: pMine, pCanShare: pp.stage === 'published', pShare: () => { const url = location.origin + (pp.shareUrl || '/s/?id=' + pp.songId); (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => this.flash('Share link copied — it shows a preview in any chat app')).catch(() => this.flash(url)); }, pCover: () => pickImage(900, url => { this.updProj(pp.id, z => { z.cover = url; return z; }); if (pp.songId) this.updItem(pp.songId, x => { x.cover = url; return x; }); this.flash('Cover art updated'); }), pCoverLabel: pp.cover ? 'Change cover' : 'Add cover art', pDot: st[1], pStatus: st[0], pTitle: pp.title, pSub: (pMine ? 'Your project' : 'Owned by ' + U(pp.owner).name) + ' · ' + countsOf(pp),
+      pArt: pp.cover ? 'url(' + pp.cover + ') center/cover' : ART[pp.art], pCanCover: pMine, pCanShare: pp.stage === 'published', pShare: () => this.openShare(pp.id), pCover: () => this.openCrop({ type: 'project', pid: pp.id }, null), pCoverLabel: pp.cover ? 'Change cover' : 'Add cover art', pDot: st[1], pStatus: st[0], pTitle: pp.title, pSub: (pMine ? 'Your project' : 'Owned by ' + U(pp.owner).name) + ' · ' + countsOf(pp),
       pTagCount: tagCount(pp.tags), pTags: () => pMine ? this.openTags('project', pp.id) : this.flash('Only ' + U(pp.owner).name.split(' ')[0] + ' can edit project tags'),
       pAddLabel: pMember ? (pp.stage === 'published' ? '▶ Play song' : '＋ Add content') : s.requested[pp.id] ? 'Requested ✓' : 'Request to collaborate',
       pAdd: () => pp.stage === 'published' && pMember ? this.play(pp.songId) : pMember ? this.setState({ sheet: { type: 'menu', pid: pp.id } }) : this.request(pp.id), pCounts: countsOf(pp), pNoContent: pItems.length === 0,
@@ -3357,7 +3718,7 @@ class Component extends DCLogic {
       pubStep0: !!pubP && sh.step === 0, pubStep1: !!pubP && sh.step === 1, pubStep2: !!pubP && sh.step === 2, pubStep3: !!pubP && sh.step === 3, pubName: pubP ? pubP.title : '',
       artOpts: FILES.map(f => ({ bg: ART[f], border: pubP && sh.art === f && !sh.useCover ? 'var(--mint)' : 'transparent', go: () => this.setSheet({ art: f, useCover: false }) })),
       pubHasCover: !!(pubP && sh.cover), pubCoverBg: pubP && sh.cover ? 'url(' + sh.cover + ') center/cover' : 'transparent', pubCoverBorder: pubP && sh.useCover ? 'var(--mint)' : 'transparent', pubUseCover: () => this.setSheet({ useCover: true }),
-      pubUpload: () => pickImage(900, url => this.setSheet({ cover: url, useCover: true })),
+      pubUpload: () => this.openCrop({ type: 'publish' }, this.state.sheet),
       pubEditTags: () => { const saved = Object.assign({}, sh); this.openTags('project', pubP.id, 'Sounds like and Genre are required to publish. Up to 5 each.', saved); },
       pubTagSummary: pubP ? [['Sounds like', pubP.tags.like, true], ['Genre', pubP.tags.genre, true], ['Mood', pubP.tags.mood, false]].map(([l, v, req]) => ({ label: l, value: v.length ? v.join(', ') : req ? 'Required — add at least one' : 'Optional', fg: v.length ? 'var(--ink)' : req ? 'var(--coral-ink)' : 'var(--dim)' })) : [],
       splits: pubP ? sh.splits.map((c, i) => ({ initials: U(c.uid).initials, bg: U(c.uid).avatar, name: c.uid === 'me' ? 'You' : U(c.uid).name, role: c.role, pct: c.pct,
@@ -3366,6 +3727,7 @@ class Component extends DCLogic {
       splitLabel: splitTotal === 100 ? 'Total 100% — everyone is notified to sign' : 'Total ' + splitTotal + '% — must be exactly 100%', splitFg: splitTotal === 100 ? 'var(--mint-ink)' : 'var(--coral-ink)',
       tap: this.tap, tapCount: sh && sh.type === 'publish' ? (sh.ok ? '✓' : String(sh.taps.length)) : '0', tapBg: sh && sh.ok ? 'var(--mint-soft)' : 'transparent', tapMsg: sh && sh.type === 'publish' ? sh.msg : '', tapFg: sh && sh.ok ? 'var(--mint-ink)' : 'var(--coral-ink)',
       pubCanBack: !!pubP && sh.step > 0 && sh.step < 3, pubBack: () => this.setSheet({ step: sh.step - 1 }), pubHasNext: !!pubP && sh.step !== 2,
+      pubShare: () => { if (pubP) this.openShare(pubP.id); },
       pubCta: pubP && sh.step === 3 ? 'Done' : 'Continue', pubBlocked: pubP && sh.step === 3 ? false : pubBlocked,
       pubNext: () => { if (sh.step === 3) { this.setState({ sheet: null }); this.flash(pubP.title + ' is live in Explore'); return; } if (!pubBlocked) this.setSheet({ step: sh.step + 1 }); },
       pubBtnBg: pubP && (sh.step === 3 || !pubBlocked) ? 'var(--mint)' : 'var(--line)', pubBtnFg: pubP && (sh.step === 3 || !pubBlocked) ? 'var(--on-mint)' : 'var(--dim)',
