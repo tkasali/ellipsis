@@ -1,5 +1,5 @@
 /* Ellipsis offline shell. Bump CACHE on every deploy. */
-var CACHE = 'ellipsis-v44';
+var CACHE = 'ellipsis-v45';
 var CORE = ["support.js","manifest.webmanifest","assets/audio/lofi.wav","assets/audio/afrobeats.wav","assets/audio/neosoul.wav","assets/audio/drill.wav","assets/audio/house.wav","assets/audio/ambient.wav"];
 
 self.addEventListener('install', function (e) {

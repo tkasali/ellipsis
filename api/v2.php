@@ -171,6 +171,32 @@ case 'DELETE me': {
   audit($uid, 'v2_delete_self'); out(['ok' => true]);
 }
 
+/* ───── recordings, uploads and bounces ───── */
+case 'POST media': {
+  $u = user(); limit('media', 200, 3600);
+  $key = preg_replace('/[^A-Za-z0-9_-]/', '', (string)($_GET['key'] ?? '')); if ($key === '') fail('Missing key', 422);
+  $mime = strtolower(trim(explode(';', (string)($_SERVER['CONTENT_TYPE'] ?? ''))[0]));
+  $EXT = ['audio/webm' => 'webm', 'video/webm' => 'webm', 'audio/ogg' => 'ogg', 'audio/mp4' => 'm4a', 'audio/aac' => 'aac', 'audio/mpeg' => 'mp3', 'audio/wav' => 'wav', 'audio/x-wav' => 'wav', 'audio/wave' => 'wav', 'audio/flac' => 'flac'];
+  if (!isset($EXT[$mime])) fail('Unsupported audio type', 415);
+  $raw = file_get_contents('php://input') ?: ''; if ($raw === '') fail('Empty file', 422); if (strlen($raw) > (int)cfg('max_upload', 62914560)) fail('File too large', 413);
+  $dir = cfg('data_dir') . '/media/' . (int)$u['id']; if (!is_dir($dir)) @mkdir($dir, 0750, true);
+  $f = (int)$u['id'] . '/' . $key . '.' . $EXT[$mime];
+  if (file_put_contents(cfg('data_dir') . '/media/' . $f, $raw) === false) fail('Could not store the file', 500);
+  out(['ok' => true, 'url' => '../api/v2/media?f=' . rawurlencode($f) . '&sig=' . substr(hash_hmac('sha256', $f, (string)cfg('secret')), 0, 32)], 201);
+}
+case 'GET media': {
+  $f = (string)($_GET['f'] ?? '');
+  if (!preg_match('#^\d+/[A-Za-z0-9_-]+\.(webm|ogg|m4a|aac|mp3|wav|flac)$#', $f, $m)) fail('Not found', 404);
+  if (!hash_equals(substr(hash_hmac('sha256', $f, (string)cfg('secret')), 0, 32), (string)($_GET['sig'] ?? ''))) fail('Not found', 404);
+  $p = cfg('data_dir') . '/media/' . $f; if (!is_file($p)) fail('Not found', 404);
+  $T = ['webm' => 'audio/webm', 'ogg' => 'audio/ogg', 'm4a' => 'audio/mp4', 'aac' => 'audio/aac', 'mp3' => 'audio/mpeg', 'wav' => 'audio/wav', 'flac' => 'audio/flac'];
+  $size = filesize($p); $start = 0; $end = $size - 1;
+  header('Content-Type: ' . $T[$m[1]]); header('Accept-Ranges: bytes'); header('Cache-Control: private, max-age=31536000, immutable');
+  if (preg_match('/bytes=(\d*)-(\d*)/', (string)($_SERVER['HTTP_RANGE'] ?? ''), $r)) { if ($r[1] !== '') $start = (int)$r[1]; if ($r[2] !== '') $end = min((int)$r[2], $end); if ($r[1] === '' && $r[2] !== '') { $start = max(0, $size - (int)$r[2]); $end = $size - 1; } http_response_code(206); header("Content-Range: bytes $start-$end/$size"); }
+  header('Content-Length: ' . ($end - $start + 1));
+  $fh = fopen($p, 'rb'); fseek($fh, $start); $left = $end - $start + 1; while ($left > 0 && !feof($fh)) { $chunk = fread($fh, min(65536, $left)); echo $chunk; $left -= strlen($chunk); } fclose($fh); exit;
+}
+
 /* ───── cross-device sync ───── */
 case 'GET state': { $u = user(); $r = one('SELECT json, updated FROM user_state WHERE user_id = ?', [$u['id']]); out(['ok' => true, 'state' => $r ? json_decode((string)$r['json'], true) : null, 'updated' => $r ? (int)$r['updated'] : 0]); }
 case 'PUT state': {

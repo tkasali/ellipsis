@@ -1793,6 +1793,7 @@ class Component extends DCLogic {
   userMap = Object.assign(Object.fromEntries(this.users.map(u => [u.id, u])), { lib: { id: 'lib', name: 'Ellipsis Sounds', city: 'Everywhere', tz: 0, role: 'Royalty-free starter library', initials: 'ES', avatar: '#0C1318', grad: 'linear-gradient(135deg,#00D9A6,#0C1318)', g1: '#00D9A6', g2: '#0C1318', followers: 0, followingN: 0, bio: 'Free parts for every Ellipsis account. Use them in any project and release — no clearance needed, no split owed.', handle: '@ellipsissounds', skills: ['Samples'], exec: false } });
   stock = buildStock();
   stockMap = Object.fromEntries(this.stock.map(x => [x.id, x]));
+  blobs = {};
   scrollRef = React.createRef(); chatRef = React.createRef(); fileRef = React.createRef(); nameRef = React.createRef();
   seeded = seedAll(this.users);
   state = {
@@ -1827,31 +1828,47 @@ class Component extends DCLogic {
     const patch = {}; this.PERSIST.forEach(k => { if (d[k] !== undefined) patch[k] = d[k]; });
     if (patch.items) { const have = new Set(patch.items.map(x => x.id)); const fresh = (this.state.items || []).filter(x => !have.has(x.id)); if (fresh.length) patch.items = patch.items.concat(fresh); }
     this.setState(patch);
-    (patch.items || []).filter(x => x.takeKey).forEach(x => {
-      this.idb('readonly', st => st.get(x.takeKey)).then(blob => {
-        const url = blob instanceof Blob ? URL.createObjectURL(blob) : null;
-        this.setState(s => ({ items: s.items.map(y => y.id === x.id ? Object.assign({}, y, { url }) : y) }));
-      });
+    this.loadAudio(patch.items);
+    (patch.items || []).filter(x => false).forEach(x => {
     });
     return true;
   }
-  persist() {
+  /* Recorded / uploaded / bounced audio: saved to this device (IndexedDB) the moment it is created,
+     and uploaded to the server when the live backend is on, so it survives refreshes and new devices. */
+  keepAudio(id, blob, url) {
+    const key = 'take-' + id;
+    this.blobs[key] = url || URL.createObjectURL(blob);
+    this.idb('readwrite', st => st.put(blob, key));
+    if (this._api && this.state.acct && this.state.acct.token) {
+      const base = this.apiBase(), mime = (blob.type || 'audio/webm').split(';')[0];
+      if (base) fetch(base + 'media?key=' + encodeURIComponent(key), { method: 'POST', headers: { 'Content-Type': mime, Authorization: 'Bearer ' + this.state.acct.token }, body: blob })
+        .then(r => r.json()).then(j => { if (j && j.ok && j.url) this.setState(st => ({ items: st.items.map(y => y.id === id ? Object.assign({}, y, { remote: j.url }) : y) })); }).catch(() => {});
+    }
+    return key;
+  }
+  loadAudio(items) {
+    (items || []).filter(x => x.takeKey && !this.blobs[x.takeKey]).forEach(x => {
+      this.idb('readonly', st => st.get(x.takeKey)).then(b => { if (b instanceof Blob && !this.blobs[x.takeKey]) { this.blobs[x.takeKey] = URL.createObjectURL(b); this.forceUpdate(); } });
+    });
+  }
+  persist(now) {
     clearTimeout(this._saveT);
-    this._saveT = setTimeout(() => {
-      if (this._unmounted) return;
+    const run = () => {
+      if (this._unmounted && !now) return;
       const s = this.state, d = {};
       this.PERSIST.forEach(k => { d[k] = s[k]; });
       d.items = s.items.map(x => {
         if (x.url && x.url.indexOf('blob:') === 0) {
           const key = x.takeKey || ('take-' + x.id);
-          if (!x.takeKey) { fetch(x.url).then(r => r.blob()).then(b => this.idb('readwrite', st => st.put(b, key))).catch(() => {}); this.setState(st => ({ items: st.items.map(y => y.id === x.id ? Object.assign({}, y, { takeKey: key }) : y) })); }
+          if (!x.takeKey) { const u0 = x.url; this.blobs[key] = u0; fetch(u0).then(r => r.blob()).then(b => this.idb('readwrite', st => st.put(b, key))).catch(() => {}); this.setState(st => ({ items: st.items.map(y => y.id === x.id ? Object.assign({}, y, { takeKey: key }) : y) })); }
           return Object.assign({}, x, { url: null, takeKey: key });
         }
         return x;
       });
-      try { localStorage.setItem(this.SAVE_KEY, JSON.stringify(d)); this.setState({ saved: true }); } catch (e) {}
-      this.pushState(d);
-    }, 500);
+      try { localStorage.setItem(this.SAVE_KEY, JSON.stringify(d)); if (!now) this.setState({ saved: true }); } catch (e) {}
+      this.pushState(d, now);
+    };
+    if (now) run(); else this._saveT = setTimeout(run, 500);
   }
   setState(p, cb) {
     super.setState(p, cb);
@@ -1896,11 +1913,19 @@ class Component extends DCLogic {
     if (fresh) this.finishAuth(acct); else this.applyAccount(acct);
   }
   async pullState() {
-    try { const r = await this.api('state'); if (r.state) { const patch = {}; this.PERSIST.forEach(k => { if (r.state[k] !== undefined) patch[k] = r.state[k]; }); this._pulling = true; this.setState(patch); setTimeout(() => { this._pulling = false; }, 800); } } catch (e) {}
+    try { const r = await this.api('state'); if (r.state) { const patch = {}; this.PERSIST.forEach(k => { if (r.state[k] !== undefined) patch[k] = r.state[k]; });
+      if (patch.items) { const local = this.state.items || [], srv = new Map(patch.items.map(x => [x.id, x]));
+        local.forEach(x => { const y = srv.get(x.id); if (!y) { if (x.owner === 'me') patch.items.push(x); } else if ((x.takeKey && !y.takeKey) || (x.remote && !y.remote)) srv.set(x.id, Object.assign({}, y, { takeKey: x.takeKey || y.takeKey, remote: x.remote || y.remote })); });
+        patch.items = patch.items.map(x => srv.get(x.id) || x);
+        if (patch.projects && this.state.projects) { const sp = new Set(patch.projects.map(p => p.id)); this.state.projects.forEach(p => { if (!sp.has(p.id) && p.owner === 'me') patch.projects.push(p); }); }
+        this.loadAudio(patch.items); }
+      this._pulling = true; this.setState(patch); setTimeout(() => { this._pulling = false; }, 800); } } catch (e) {}
   }
-  pushState(d) {
+  pushState(d, now) {
     if (!this._api || this._pulling || !(this.state.acct && this.state.acct.token)) return;
-    clearTimeout(this._pushT); this._pushT = setTimeout(() => this.api('state', { method: 'PUT', body: { state: d } }).catch(() => {}), 1500);
+    clearTimeout(this._pushT);
+    if (now) { try { fetch(this.apiBase() + 'state', { method: 'PUT', keepalive: true, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.acct.token }, body: JSON.stringify({ state: d }) }); } catch (e) {} return; }
+    this._pushT = setTimeout(() => this.api('state', { method: 'PUT', body: { state: d } }).catch(() => {}), 1500);
   }
   track(name, props) { (this._ev = this._ev || []).push({ name, props: props || {} }); }
   flushEvents() { if (!this._api || !this._ev || !this._ev.length) return; const ev = this._ev.splice(0, 50); this.api('events', { body: { events: ev } }).catch(() => {}); }
@@ -2059,6 +2084,9 @@ class Component extends DCLogic {
     let th = 'light'; try { th = localStorage.getItem('ellipsis4.theme') || 'light'; } catch (e) {}
     this.setState({ theme: th }); this.applyTheme(th);
     this.restore();
+    this._hide = () => { if (this._booted) this.persist(true); };
+    window.addEventListener('pagehide', this._hide); window.addEventListener('beforeunload', this._hide);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') this._hide(); });
     setTimeout(() => this.apiBoot(), 50);
     let onb = false; try { onb = localStorage.getItem('ellipsis4.onboarded') === '1'; } catch (e) {}
     let acct = null; try { acct = JSON.parse(localStorage.getItem('ellipsis4.account') || 'null'); } catch (e) {}
@@ -2090,6 +2118,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     clearTimeout(this._saveT); clearTimeout(this._chk); clearInterval(this._evT); clearInterval(this._noteT); this._unmounted = true;
+    window.removeEventListener('pagehide', this._hide); window.removeEventListener('beforeunload', this._hide);
     window.removeEventListener('resize', this._resize); window.removeEventListener('keydown', this._keys); document.removeEventListener('mousedown', this._down, true);
     this.mxStopNodes();
     (this._timers || []).forEach(clearTimeout); clearInterval(this._cd); cancelAnimationFrame(this._raf);
@@ -2135,7 +2164,12 @@ class Component extends DCLogic {
   }
 
   /* audio */
-  srcOf(it) { return it.url || ('assets/audio/' + (it.file || 'lofi') + '.wav'); }
+  srcOf(it) {
+    if (it.takeKey) return this.blobs[it.takeKey] || (it.remote ? new URL(it.remote, location.href).href : null);
+    if (it.url) return it.url;
+    if (it.remote) return new URL(it.remote, location.href).href;
+    return 'assets/audio/' + (it.file || 'lofi') + '.wav';
+  }
   togglePlay = () => {
     if (this.state.mixPid) { this.stopMix(); return; }
     if (this.state.mxOpen) { const p = this.proj(this.state.mxPid); if (p) this.startMix(p); return; }
@@ -2148,7 +2182,9 @@ class Component extends DCLogic {
     if (it.kind === 'lyric') { this.openLyric(id); return; }
     this.stopMix();
     if (this.state.curId === id) { this.togglePlay(); return; }
-    const a = this.audio; a.src = this.srcOf(it); a.currentTime = 0;
+    const src0 = this.srcOf(it);
+    if (!src0) { this.flash('This recording is saved on the device where you made it. Sign in there, or switch on the live server to sync it everywhere.'); return; }
+    const a = this.audio; a.src = src0; a.currentTime = 0;
     try { a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; } catch (e) {}
     a.playbackRate = it.rate || 1;
     this.setState(st => ({ curId: id, time: 0, dur: 0, plays: Object.assign({}, st.plays, { [id]: Math.min(20, ((st.plays || {})[id] || 0) + 1) }) }));
@@ -2169,7 +2205,7 @@ class Component extends DCLogic {
   ensureCtx() { const C = window.AudioContext || window.webkitAudioContext; if (!this._ctx) this._ctx = new C(); if (this._ctx.state === 'suspended') { const r = this._ctx.resume(); if (r && r.catch) r.catch(() => {}); } return this._ctx; }
   async mxLoad(p) {
     const ctx = this.ensureCtx(); this._bufs = this._bufs || {}; this._peaks = this._peaks || {};
-    const need = this.mxAudio(p, true).filter(x => !(this._bufs[x.id] && this._bufs[x.id].src === this.srcOf(x)));
+    const need = this.mxAudio(p, true).filter(x => this.srcOf(x) && !(this._bufs[x.id] && this._bufs[x.id].src === this.srcOf(x)));
     if (!need.length) return;
     this.setState({ mxLoading: true });
     await Promise.all(need.map(async x => {
@@ -2358,8 +2394,8 @@ class Component extends DCLogic {
       const g = this.buildGraph(oc, p, false);
       lanes.forEach(x => g.chs[x.id] && g.chs[x.id].src.start(0));
       const out = await oc.startRendering();
-      const blob = this.encWav(out), url = URL.createObjectURL(blob), id = 'b' + Date.now();
-      const item = { id, kind: 'song', title: p.title, owner: p.owner, file: p.art, url, tags: p.tags, sections: null, published: false, spikes: 0, week: 0, year: 0, created: 60, pid: p.id, bounce: true };
+      const blob = this.encWav(out), url = URL.createObjectURL(blob), id = 'b' + Date.now(), takeKey = this.keepAudio(id, blob, url);
+      const item = { id, kind: 'song', title: p.title, owner: p.owner, file: p.art, url: null, takeKey, tags: p.tags, sections: null, published: false, spikes: 0, week: 0, year: 0, created: 60, pid: p.id, bounce: true };
       this.setState(s => ({ items: s.items.filter(x => x.id !== p.bounceId).concat([item]), mxBouncing: false, mxDl: { pid, url, name: p.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '-mix.wav' } }));
       this.updProj(pid, z => { z.stage = 'built'; z.bounceId = id; return z; });
       this.flash('Bounced · ' + fmt(out.duration) + ' stereo WAV — ready to publish');
@@ -2380,7 +2416,7 @@ class Component extends DCLogic {
     this.stopMix(); if (this.audio) this.audio.pause();
     const lanes = p.items.map(id => this.item(id)).filter(x => x && /instrumental|melody|acapella/.test(x.kind)).filter(x => !(p.mix[x.id] && p.mix[x.id].on === false));
     if (!lanes.length) return;
-    this._mix = lanes.map(x => { const au = new Audio(this.srcOf(x)); au.volume = ((p.mix[x.id] && p.mix[x.id].vol != null) ? p.mix[x.id].vol : 80) / 100 * 0.8; au.dataset.id = x.id; return au; });
+    this._mix = lanes.filter(x => this.srcOf(x)).map(x => { const au = new Audio(this.srcOf(x)); au.volume = ((p.mix[x.id] && p.mix[x.id].vol != null) ? p.mix[x.id].vol : 80) / 100 * 0.8; au.dataset.id = x.id; return au; });
     this._mix.forEach(au => au.play().catch(() => {}));
     this._mix[0].onended = () => this.stopMix();
     this.setState({ mixPid: p.id, playing: false });
@@ -2469,7 +2505,7 @@ class Component extends DCLogic {
     inp.onchange = () => {
       const f = inp.files && inp.files[0]; if (!f) return;
       const id = 'n' + Date.now();
-      const it = { id, kind: 'instrumental', title: f.name.replace(/\.[^.]+$/, '').slice(0, 40), owner: 'me', file: FILES[Date.now() % 6], url: URL.createObjectURL(f), tags: tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
+      const it = { id, kind: 'instrumental', title: f.name.replace(/\.[^.]+$/, '').slice(0, 40), owner: 'me', file: FILES[Date.now() % 6], url: null, takeKey: this.keepAudio(id, f), tags: tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
       this.setState(s => ({ items: s.items.concat([it]) }));
       if (pid) this.attach(id, pid, true);
       this.later(() => this.openTags('item', id, 'Uploaded. Add Sounds like, genre and mood so people can find it.'), 30);
@@ -2601,7 +2637,7 @@ class Component extends DCLogic {
   stopMic() { try { if (this._mr && this._mr.state !== 'inactive') this._mr.stop(); } catch (e) {} this._mr = null; if (this._stream) this._stream.getTracks().forEach(x => x.stop()); if (this._mctx) { try { this._mctx.close(); } catch (e) {} } this._stream = null; this._mctx = null; this._an = null; }
   recStop = () => {
     cancelAnimationFrame(this._raf); if (this.audio) { this.audio.pause(); this.setState({ playing: false }); }
-    const done = () => { let url = null; if (this._real && this._chunks.length) url = URL.createObjectURL(new Blob(this._chunks, { type: (this._mime || this._chunks[0].type || 'audio/webm').split(';')[0] })); this.setRec({ phase: 'review', url, err: url ? '' : 'Nothing was captured — the mic sent no audio. Check your input device and try again.' }); };
+    const done = () => { let url = null, blob = null; if (this._real && this._chunks.length) { blob = new Blob(this._chunks, { type: (this._mime || this._chunks[0].type || 'audio/webm').split(';')[0] }); url = URL.createObjectURL(blob); } this.setRec({ phase: 'review', url, blob, err: url ? '' : 'Nothing was captured — the mic sent no audio. Check your input device and try again.' }); };
     if (this._mr && this._mr.state === 'recording') { this._mr.onstop = () => { this.stopMic(); done(); }; this._mr.stop(); } else { this.stopMic(); done(); }
   };
   recClose = () => { clearInterval(this._cd); cancelAnimationFrame(this._raf); this.stopMic(); if (this._take) { this._take.pause(); this._take = null; } if (this.audio) this.audio.pause(); this.setState({ rec: null, playing: false }); };
@@ -2614,9 +2650,10 @@ class Component extends DCLogic {
   recSave = () => {
     const r = this.state.rec; if (!r) return;
     const id = 'n' + Date.now(); const b = r.backing ? this.item(r.backing) : null;
-    const it = { id, kind: r.kind, title: r.name.trim() || (KIND[r.kind][0] + ' take ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })), owner: 'me', file: b ? b.file : 'ambient', url: r.url, tags: b ? { genre: b.tags.genre.slice(0, 2), mood: [], like: [] } : tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
+    const it = { id, kind: r.kind, title: r.name.trim() || (KIND[r.kind][0] + ' take ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })), owner: 'me', file: b ? b.file : 'ambient', url: null, takeKey: r.blob ? this.keepAudio(id, r.blob, r.url) : undefined, tags: b ? { genre: b.tags.genre.slice(0, 2), mood: [], like: [] } : tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
     if (this._take) { this._take.pause(); this._take = null; }
-    this.setState(s => ({ items: s.items.concat([it]), rec: null }));
+    if (!it.takeKey) it.url = r.url;
+    this.setState(s => ({ items: s.items.concat([it]), rec: null }), () => this.persist(true));
     const sub = 'Saved. Add Sounds like, genre and mood — up to 5 each — so it can be found and ranked.';
     if (r.dest === 'project' && r.pid) { this.attach(id, r.pid, true); this.later(() => this.openTags('item', id, sub), 30); }
     else if (r.dest === 'new') { this.later(() => this.setState({ sheet: { type: 'name', mode: 'project', val: '', then: pid => { this.attach(id, pid, true); this.openProject(pid); this.later(() => this.openTags('item', id, sub), 40); } } }), 30); }
