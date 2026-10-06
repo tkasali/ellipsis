@@ -1,0 +1,73 @@
+# Ellipsis — tuned for Hostinger (LiteSpeed web server, hPanel)
+Options -Indexes
+DirectoryIndex index.html index.php
+ErrorDocument 404 /404.html
+
+# Git deploys put the repository in public_html — never serve it
+RedirectMatch 404 /\.git
+RedirectMatch 404 /(config\.local\.example\.php|README-DEPLOY\.md|htaccess-no-ssl\.txt)$
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # force https + strip www (Hostinger's free SSL covers both; this keeps one canonical URL)
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+  # pretty paths: /app -> /app/
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^(.+[^/])$ /$1/ [L,R=301]
+</IfModule>
+
+# ── LiteSpeed Cache: cache static pages at the edge, never the API ──
+<IfModule LiteSpeed>
+  CacheLookup on
+  RewriteEngine On
+  RewriteRule ^api/ - [E=Cache-Control:no-cache]
+  RewriteRule \.(html|webmanifest)$ - [E=Cache-Control:max-age=60]
+  RewriteRule ^(app|mobile)/sw\.js$ - [E=Cache-Control:no-cache]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/manifest+json      .webmanifest
+  AddType text/javascript                .js .jsx
+  AddType audio/wav                      .wav
+  AddType image/png                      .png
+  AddCharset utf-8                       .html .js .jsx .css .json .webmanifest
+</IfModule>
+
+# LiteSpeed compresses with Brotli automatically; this covers gzip fallbacks
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json application/manifest+json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                          "access plus 1 hour"
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/javascript           "access plus 7 days"
+  ExpiresByType audio/wav                 "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+</IfModule>
+
+# never cache the workers or the app documents
+<FilesMatch "^(sw\.js|index\.html|moderation\.html)$">
+  Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+
+# private files are never served, wherever they end up
+<FilesMatch "\.(sqlite|sql|log|md|zip)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "microphone=(self), camera=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://unpkg.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'self'"
+</IfModule>
+
+# Protect /admin/ with hPanel → Advanced → Password Protect Directories (see README step 6).
+# Directory blocks are not allowed in .htaccess, so the console lock lives in hPanel, not here.

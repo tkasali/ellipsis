@@ -1,0 +1,34 @@
+{
+  "name": "Ellipsis — human-made music",
+  "short_name": "Ellipsis",
+  "description": "Collaborative music creation, splits and publishing.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EFF2F5",
+  "theme_color": "#0C1318",
+  "categories": [
+    "music",
+    "social",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "icons/play-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/play-adaptive-432.png",
+      "sizes": "432x432",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/ios-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

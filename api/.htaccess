@@ -1,0 +1,39 @@
+# Ellipsis API — Hostinger / LiteSpeed
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # pass the bearer token through to PHP (LiteSpeed LSAPI strips it unless forwarded)
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+  # internals are never reachable over HTTP
+  RewriteRule ^(config|lib|seed|cron)\.php$ - [F,L]
+  RewriteRule ^schema\.sql$ - [F,L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*)$ index.php?r=$1 [QSA,L]
+</IfModule>
+
+# LiteSpeed Cache and Hostinger CDN must never store API responses
+<IfModule LiteSpeed>
+  CacheDisable public /
+  CacheDisable private /
+</IfModule>
+<IfModule mod_headers.c>
+  Header always set Cache-Control "no-store"
+  Header always set X-LiteSpeed-Cache-Control "no-cache"
+  Header always set CDN-Cache-Control "no-store"
+</IfModule>
+
+<FilesMatch "\.(sql|sqlite|log)$">
+  Require all denied
+</FilesMatch>
+
+# Uploads up to 60 MB per stem. LiteSpeed honours these on Hostinger;
+# if hPanel → PHP Configuration shows lower values, raise them there too.
+<IfModule lsapi_module>
+  php_value upload_max_filesize 64M
+  php_value post_max_size 70M
+  php_value max_execution_time 120
+  php_value memory_limit 256M
+</IfModule>

@@ -1,0 +1,6 @@
+# never commit secrets or data
+config.local.php
+ellipsis-data/
+*.sqlite
+*.log
+.DS_Store

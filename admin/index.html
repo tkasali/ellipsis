@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="../icons/play-512.png" type="image/png">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Ellipsis Admin</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    html,body{margin:0;background:#F3F5F7;height:100%}
+    *{box-sizing:border-box}
+    a{color:#00806A}a:hover{color:#005A45}
+    ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#CBD4DB;border-radius:8px;border:3px solid transparent;background-clip:content-box}
+  </style>
+</helmet>
+
+<div style="height:100vh;display:grid;grid-template-columns:240px minmax(0,1fr);font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#13202A;-webkit-font-smoothing:antialiased">
+
+  <sc-if value="{{ gate }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 20% 20%,#00D9A6 0,transparent 40%),radial-gradient(circle at 80% 80%,#5B3E9E 0,transparent 45%),#0C1318;display:flex;align-items:center;justify-content:center;padding:24px">
+      <div style="width:100%;max-width:440px;background:#fff;border-radius:24px;padding:28px">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px"><span style="width:40px;height:40px;border-radius:12px;background:#00D9A6;color:#06231B;font-weight:800;font-size:19px;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Sora,sans-serif;font-size:19px;font-weight:700">Ellipsis Admin</span></div>
+        <div style="font-family:Sora,sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.7px;margin-bottom:6px">Staff sign-in</div>
+        <p style="margin:0 0 16px;font-size:14px;line-height:1.55;color:#56646F">Access is role-based. What you can see and change depends on the role an owner assigned you.</p>
+        <sc-if value="{{ liveGate }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:10px 12px;border-radius:11px;background:#E8FBF5;color:#00594A;font-size:13px;font-weight:700;margin-bottom:12px">Connected to the live server. Sign in with an Ellipsis account that has a staff role.</div>
+          <input value="{{ lEmail }}" onChange="{{ onLEmail }}" placeholder="Staff email" style="width:100%;padding:13px 14px;border:1px solid #DDE3E8;border-radius:12px;font-size:15px;font-family:inherit;outline:none;margin-bottom:8px" />
+        </sc-if>
+        <sc-if value="{{ demoGate }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+          <sc-for list="{{ staffPick }}" as="u" hint-placeholder-count="6">
+            <button onClick="{{ u.go }}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:2px solid {{ u.border }};border-radius:14px;background:{{ u.bg }};cursor:pointer;text-align:left">
+              <span style="flex:none;width:36px;height:36px;border-radius:50%;background:{{ u.color }};color:#fff;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ u.initials }}</span>
+              <span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:800;color:#13202A">{{ u.name }}</span><span style="display:block;font-size:12px;color:#56646F">{{ u.role }} · {{ u.email }}</span></span>
+            </button>
+          </sc-for>
+        </div>
+        </sc-if>
+        <input type="password" value="{{ pin }}" onChange="{{ onPin }}" onKeyDown="{{ onPinKey }}" placeholder="{{ pinPh }}" style="width:100%;padding:13px 14px;border:1px solid #DDE3E8;border-radius:12px;font-size:15px;font-family:inherit;outline:none;margin-bottom:10px" />
+        <sc-if value="{{ gateErr }}" hint-placeholder-val="{{ false }}"><div style="padding:9px 12px;border-radius:10px;background:#FFE9E4;color:#8C2B1E;font-size:13px;font-weight:700;margin-bottom:10px">{{ gateErr }}</div></sc-if>
+        <button onClick="{{ signIn }}" style="width:100%;padding:13px;border:0;border-radius:12px;background:#00D9A6;color:#06231B;font-size:15px;font-weight:800;cursor:pointer">Sign in</button>
+        <p style="margin:12px 0 0;font-size:12px;color:#56646F;line-height:1.5">Production: replace with SSO + 2FA. Every action here is written to the audit log.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <aside style="background:#0C1318;color:#C9D4DB;display:flex;flex-direction:column;padding:18px 12px;gap:4px;overflow-y:auto">
+    <div style="display:flex;align-items:center;gap:10px;padding:0 8px 16px"><span style="width:34px;height:34px;border-radius:10px;background:#00D9A6;color:#06231B;font-weight:800;font-size:17px;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Sora,sans-serif;font-size:16px;font-weight:700;color:#fff">Admin</span><span style="margin-left:auto;padding:3px 7px;border-radius:6px;background:rgba(0,217,166,0.16);color:#3FE6BD;font-size:10px;font-weight:800">{{ envLabel }}</span></div>
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="9">
+      <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:11px;padding:10px 12px;border:0;border-radius:11px;background:{{ n.bg }};color:{{ n.fg }};font-size:14px;font-weight:700;cursor:pointer;text-align:left">
+        <span style="width:18px;text-align:center">{{ n.icon }}</span><span style="flex:1">{{ n.label }}</span>
+        <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;padding:2px 6px;border-radius:9px;background:#C2402B;color:#fff;font-size:11px;font-weight:800;text-align:center">{{ n.badge }}</span></sc-if>
+      </button>
+    </sc-for>
+    <div style="flex:1"></div>
+    <div style="padding:12px;border-radius:13px;background:rgba(255,255,255,0.05)">
+      <div style="font-size:13px;font-weight:800;color:#fff">{{ meName }}</div>
+      <div style="font-size:11.5px;color:#9BA9B4;margin-bottom:9px">{{ meRole }}</div>
+      <button onClick="{{ signOut }}" style="width:100%;padding:7px;border:1px solid rgba(255,255,255,0.18);border-radius:9px;background:transparent;color:#E6EDF1;font-size:12px;font-weight:800;cursor:pointer">Sign out</button>
+    </div>
+  </aside>
+
+  <main style="min-width:0;overflow-y:auto">
+    <header style="position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 28px;background:rgba(243,245,247,0.92);backdrop-filter:blur(10px);border-bottom:1px solid #E3E8EC">
+      <div style="flex:1;min-width:200px">
+        <div style="font-family:Sora,sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.7px">{{ pageTitle }}</div>
+        <div style="font-size:13px;color:#56646F">{{ pageSub }}</div>
+      </div>
+      <div style="display:flex;gap:4px;padding:4px;border-radius:11px;background:#fff;border:1px solid #E3E8EC">
+        <sc-for list="{{ ranges }}" as="r" hint-placeholder-count="3"><button onClick="{{ r.go }}" style="padding:7px 12px;border:0;border-radius:8px;background:{{ r.bg }};color:{{ r.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ r.label }}</button></sc-for>
+      </div>
+      <button onClick="{{ exportCsv }}" disabled="{{ noExport }}" title="{{ exportHint }}" style="padding:9px 14px;border:1px solid #DDE3E8;border-radius:10px;background:#fff;color:{{ exportFg }};font-size:13px;font-weight:800;cursor:{{ exportCursor }}">⇩ Export CSV</button>
+    </header>
+
+    <div style="padding:22px 28px 60px;max-width:1360px">
+
+      <sc-if value="{{ noAccess }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px;border-radius:20px;background:#fff;border:1px solid #E3E8EC;text-align:center"><div style="font-size:30px;margin-bottom:8px">🔒</div><div style="font-size:16px;font-weight:800;margin-bottom:4px">Your role can't open this section</div><div style="font-size:14px;color:#56646F">Ask a Super admin to grant the permission in Roles &amp; rights.</div></div>
+      </sc-if>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <sc-if value="{{ hasLive }}" hint-placeholder-val="{{ false }}">
+            <section style="padding:16px 18px;border-radius:20px;background:#fff;border:2px solid #00D9A6;margin-bottom:14px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="width:8px;height:8px;border-radius:50%;background:#00D9A6"></span><span style="font-size:12px;font-weight:800;letter-spacing:0.1em;color:#00806A">LIVE · FROM YOUR DATABASE</span><span style="margin-left:auto;font-size:12px;color:#56646F">Everything below this box is a projection model</span></div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
+                <sc-for list="{{ liveCards }}" as="k" hint-placeholder-count="12"><div style="padding:11px 13px;border-radius:13px;background:#F6F8F9"><div style="font-size:11px;font-weight:800;color:#56646F">{{ k.label }}</div><div style="font-family:Sora,sans-serif;font-size:22px;font-weight:700">{{ k.value }}</div></div></sc-for>
+              </div>
+            </section>
+          </sc-if>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 20px;border-radius:20px;background:#0C1318;color:#fff;margin-bottom:16px">
+            <div style="flex:1;min-width:240px">
+              <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;color:#3FE6BD;margin-bottom:4px">NORTH STAR · SONGS FINISHED TOGETHER</div>
+              <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:Sora,sans-serif;font-size:40px;font-weight:700;letter-spacing:-1.4px">{{ ns.value }}</span><span style="font-size:14px;font-weight:800;color:#3FE6BD">{{ ns.delta }}</span></div>
+              <div style="font-size:13px;color:#9BA9B4">{{ ns.note }}</div>
+            </div>
+            <div style="flex:2;min-width:300px;display:flex;align-items:flex-end;gap:4px;height:70px">
+              <sc-for list="{{ ns.bars }}" as="b" hint-placeholder-count="26"><div title="{{ b.t }}" style="flex:1;border-radius:3px 3px 0 0;height:{{ b.h }};background:{{ b.c }}"></div></sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px">
+            <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="12">
+              <div title="{{ k.def }}" style="padding:15px 16px;border-radius:17px;background:#fff;border:1px solid #E3E8EC">
+                <div style="font-size:11.5px;font-weight:800;letter-spacing:0.06em;color:#56646F;margin-bottom:6px">{{ k.label }}</div>
+                <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-family:Sora,sans-serif;font-size:25px;font-weight:700;letter-spacing:-0.6px">{{ k.value }}</span><span style="font-size:12.5px;font-weight:800;color:{{ k.dFg }}">{{ k.delta }}</span></div>
+                <div style="display:flex;align-items:flex-end;gap:2px;height:22px;margin-top:8px"><sc-for list="{{ k.spark }}" as="s" hint-placeholder-count="12"><div style="flex:1;border-radius:1px;height:{{ s.h }};background:{{ k.sc }}"></div></sc-for></div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px;margin-bottom:14px">
+            <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:800">Revenue by stream</span><span style="font-size:13px;font-weight:800;color:#00806A">{{ mrrNow }} MRR</span></div>
+              <div style="font-size:12.5px;color:#56646F;margin-bottom:12px">Monthly, last 12 months</div>
+              <div style="display:flex;align-items:flex-end;gap:6px;height:170px">
+                <sc-for list="{{ mrrBars }}" as="m" hint-placeholder-count="12">
+                  <div title="{{ m.t }}" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:1px">
+                    <sc-for list="{{ m.seg }}" as="g" hint-placeholder-count="4"><div style="height:{{ g.h }};background:{{ g.c }};border-radius:2px"></div></sc-for>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#56646F;margin-top:5px"><sc-for list="{{ mrrLabels }}" as="l" hint-placeholder-count="12"><span>{{ l.t }}</span></sc-for></div>
+              <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px"><sc-for list="{{ streamKey }}" as="k" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700"><span style="width:10px;height:10px;border-radius:3px;background:{{ k.c }}"></span>{{ k.label }} · {{ k.v }}</span></sc-for></div>
+            </section>
+
+            <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+              <div style="font-size:15px;font-weight:800;margin-bottom:4px">Creator funnel</div>
+              <div style="font-size:12.5px;color:#56646F;margin-bottom:14px">Signups this period, and how far they got</div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="6">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px"><span>{{ f.label }}</span><span>{{ f.n }} · <span style="color:#56646F">{{ f.pct }}</span></span></div>
+                    <div style="height:12px;border-radius:6px;background:#EEF2F4;overflow:hidden"><div style="height:100%;width:{{ f.w }};background:{{ f.c }};border-radius:6px"></div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px">
+            <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow-x:auto">
+              <div style="font-size:15px;font-weight:800;margin-bottom:4px">Retention by signup cohort</div>
+              <div style="font-size:12.5px;color:#56646F;margin-bottom:12px">% of each month's signups still active</div>
+              <div style="display:grid;grid-template-columns:70px repeat(7,minmax(40px,1fr));gap:4px;font-size:11.5px;font-weight:700">
+                <span></span><sc-for list="{{ cohortHead }}" as="h" hint-placeholder-count="7"><span style="text-align:center;color:#56646F">{{ h.t }}</span></sc-for>
+                <sc-for list="{{ cohorts }}" as="c" hint-placeholder-count="6">
+                  <span style="color:#56646F;align-self:center">{{ c.label }}</span>
+                  <sc-for list="{{ c.cells }}" as="x" hint-placeholder-count="7"><span style="padding:7px 0;border-radius:6px;text-align:center;background:{{ x.bg }};color:{{ x.fg }}">{{ x.t }}</span></sc-for>
+                </sc-for>
+              </div>
+            </section>
+            <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+              <div style="font-size:15px;font-weight:800;margin-bottom:12px">Unit economics</div>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+                <sc-for list="{{ unit }}" as="u" hint-placeholder-count="8">
+                  <div title="{{ u.def }}" style="padding:11px 13px;border-radius:13px;background:#F6F8F9"><div style="font-size:11.5px;font-weight:800;color:#56646F">{{ u.label }}</div><div style="font-family:Sora,sans-serif;font-size:19px;font-weight:700">{{ u.value }}</div></div>
+                </sc-for>
+              </div>
+            </section>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGrowth }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px"><span style="font-size:15px;font-weight:800">Daily active users</span><span style="font-size:13px;color:#56646F">{{ dauNote }}</span></div>
+            <svg width="100%" height="190" viewBox="0 0 900 190" preserveAspectRatio="none" style="display:block">
+              <sc-for list="{{ dauGrid }}" as="g" hint-placeholder-count="4"><line x1="0" y1="{{ g.y }}" x2="900" y2="{{ g.y }}" style="stroke:#EEF2F4;stroke-width:1"></line></sc-for>
+              <polygon points="{{ dauFill }}" style="fill:#00D9A6;fill-opacity:0.14"></polygon>
+              <polyline points="{{ dauLine }}" style="fill:none;stroke:#00A982;stroke-width:2.5"></polyline>
+              <polyline points="{{ wauLine }}" style="fill:none;stroke:#5B3E9E;stroke-width:1.5;stroke-dasharray:4 4"></polyline>
+            </svg>
+            <div style="display:flex;gap:14px;font-size:12px;font-weight:700;margin-top:6px"><span style="color:#00806A">— DAU</span><span style="color:#5B3E9E">- - 7-day average</span></div>
+          </section>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px">
+            <sc-for list="{{ growthTables }}" as="t" hint-placeholder-count="3">
+              <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+                <div style="font-size:15px;font-weight:800;margin-bottom:12px">{{ t.title }}</div>
+                <sc-for list="{{ t.rows }}" as="r" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:minmax(0,1fr) 90px 60px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #F0F3F5;font-size:13.5px">
+                    <span style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.a }}</span>
+                    <span style="height:8px;border-radius:4px;background:#EEF2F4;overflow:hidden"><span style="display:block;height:100%;width:{{ r.w }};background:{{ t.c }}"></span></span>
+                    <span style="text-align:right;font-weight:800">{{ r.b }}</span>
+                  </div>
+                </sc-for>
+              </section>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRevenue }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+            <sc-for list="{{ revCards }}" as="k" hint-placeholder-count="8"><div title="{{ k.def }}" style="padding:15px 16px;border-radius:17px;background:#fff;border:1px solid #E3E8EC"><div style="font-size:11.5px;font-weight:800;letter-spacing:0.06em;color:#56646F;margin-bottom:6px">{{ k.label }}</div><div style="font-family:Sora,sans-serif;font-size:24px;font-weight:700">{{ k.value }}</div><div style="font-size:12px;color:#56646F;margin-top:3px">{{ k.note }}</div></div></sc-for>
+          </div>
+          <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow-x:auto">
+            <div style="font-size:15px;font-weight:800;margin-bottom:12px">Where the money goes · this month</div>
+            <div style="display:grid;grid-template-columns:minmax(160px,1.4fr) repeat(4,minmax(90px,1fr));gap:8px;font-size:13px;min-width:620px">
+              <span style="font-weight:800;color:#56646F">Stream</span><span style="font-weight:800;color:#56646F;text-align:right">Gross</span><span style="font-weight:800;color:#56646F;text-align:right">Store / fees</span><span style="font-weight:800;color:#56646F;text-align:right">To creators</span><span style="font-weight:800;color:#56646F;text-align:right">Ellipsis net</span>
+              <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="5"><span style="font-weight:{{ l.w }};padding:7px 0;border-top:1px solid #F0F3F5">{{ l.a }}</span><span style="text-align:right;padding:7px 0;border-top:1px solid #F0F3F5;font-weight:{{ l.w }}">{{ l.b }}</span><span style="text-align:right;padding:7px 0;border-top:1px solid #F0F3F5;font-weight:{{ l.w }}">{{ l.c }}</span><span style="text-align:right;padding:7px 0;border-top:1px solid #F0F3F5;font-weight:{{ l.w }};color:#00806A">{{ l.d }}</span><span style="text-align:right;padding:7px 0;border-top:1px solid #F0F3F5;font-weight:{{ l.w }}">{{ l.e }}</span></sc-for>
+            </div>
+            <p style="margin:12px 0 0;font-size:12.5px;color:#56646F;line-height:1.55">Ad revenue: 70% of each impression's revenue is paid to the signed split sheet of the song that was playing. Subscriptions: a pro-rata pool of 50% of net is paid by listening share.</p>
+          </section>
+          <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+            <div style="font-size:15px;font-weight:800;margin-bottom:12px">MRR movement</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px"><sc-for list="{{ mrrMove }}" as="m" hint-placeholder-count="5"><div style="flex:1;min-width:140px;padding:12px 14px;border-radius:13px;background:{{ m.bg }}"><div style="font-size:12px;font-weight:800;color:#56646F">{{ m.label }}</div><div style="font-family:Sora,sans-serif;font-size:20px;font-weight:700;color:{{ m.fg }}">{{ m.v }}</div></div></sc-for></div>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isIndustry }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+            <sc-for list="{{ indCards }}" as="k" hint-placeholder-count="6"><div style="padding:15px 16px;border-radius:17px;background:#fff;border:1px solid #E3E8EC"><div style="font-size:11.5px;font-weight:800;letter-spacing:0.06em;color:#56646F;margin-bottom:6px">{{ k.label }}</div><div style="font-family:Sora,sans-serif;font-size:24px;font-weight:700">{{ k.value }}</div><div style="font-size:12px;color:#56646F;margin-top:3px">{{ k.note }}</div></div></sc-for>
+          </div>
+          <section style="padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px"><span style="font-size:15px;font-weight:800">Industry verification queue</span><span style="font-size:12.5px;color:#56646F">SLA 24 hours · {{ verPending }} pending</span></div>
+            <sc-if value="{{ verEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:18px;text-align:center;color:#56646F;font-size:14px">Queue is clear.</div></sc-if>
+            <sc-for list="{{ verQueue }}" as="v" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 0;border-top:1px solid #F0F3F5">
+                <span style="flex:none;width:36px;height:36px;border-radius:50%;background:#0C1318;color:#3FE6BD;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ v.initials }}</span>
+                <span style="flex:1;min-width:200px"><span style="display:block;font-size:14px;font-weight:800">{{ v.name }} · {{ v.title }}</span><span style="display:block;font-size:12.5px;color:#56646F">{{ v.company }} · {{ v.email }} · {{ v.signal }}</span></span>
+                <span style="padding:5px 10px;border-radius:8px;background:{{ v.stBg }};color:{{ v.stFg }};font-size:11.5px;font-weight:800">{{ v.status }}</span>
+                <button onClick="{{ v.reject }}" disabled="{{ v.off }}" style="padding:8px 13px;border:1px solid #DDE3E8;border-radius:9px;background:#fff;color:#13202A;font-size:12.5px;font-weight:800;cursor:pointer">Reject</button>
+                <button onClick="{{ v.approve }}" disabled="{{ v.off }}" style="padding:8px 13px;border:0;border-radius:9px;background:#00D9A6;color:#06231B;font-size:12.5px;font-weight:800;cursor:pointer">Verify</button>
+              </div>
+            </sc-for>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isUsers }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+            <input value="{{ uq }}" onChange="{{ onUq }}" placeholder="Search name, email, city…" style="flex:1;min-width:220px;padding:11px 14px;border:1px solid #DDE3E8;border-radius:12px;background:#fff;font-size:14px;font-family:inherit;outline:none" />
+            <sc-for list="{{ uFilters }}" as="f" hint-placeholder-count="6"><button onClick="{{ f.go }}" style="padding:8px 13px;border:1px solid {{ f.border }};border-radius:999px;background:{{ f.bg }};color:{{ f.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ f.label }}</button></sc-for>
+          </div>
+          <div style="border-radius:18px;background:#fff;border:1px solid #E3E8EC;overflow-x:auto">
+            <div style="display:grid;grid-template-columns:minmax(200px,1.6fr) 120px 110px 90px 110px minmax(250px,1.4fr);gap:10px;padding:11px 16px;font-size:11.5px;font-weight:800;letter-spacing:0.05em;color:#56646F;border-bottom:1px solid #E3E8EC;min-width:920px"><span>USER</span><span>TYPE</span><span>PLAN</span><span>STRIKES</span><span>STATUS</span><span>ACTIONS</span></div>
+            <sc-for list="{{ uRows }}" as="u" hint-placeholder-count="12">
+              <div style="display:grid;grid-template-columns:minmax(200px,1.6fr) 120px 110px 90px 110px minmax(250px,1.4fr);gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid #F0F3F5;font-size:13px;min-width:920px">
+                <span style="display:flex;align-items:center;gap:10px;min-width:0"><span style="flex:none;width:32px;height:32px;border-radius:50%;background:{{ u.color }};color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ u.initials }}</span><span style="min-width:0"><span style="display:block;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.name }} <span style="color:#00A982">{{ u.ver }}</span></span><span style="display:block;font-size:11.5px;color:#56646F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.email }} · {{ u.city }}</span></span></span>
+                <span style="font-weight:700">{{ u.type }}</span>
+                <span><span style="padding:4px 9px;border-radius:7px;background:{{ u.planBg }};font-size:11.5px;font-weight:800">{{ u.plan }}</span></span>
+                <span style="font-weight:800;color:{{ u.strFg }}">{{ u.strikes }}</span>
+                <span><span style="padding:4px 9px;border-radius:7px;background:{{ u.stBg }};color:{{ u.stFg }};font-size:11.5px;font-weight:800">{{ u.status }}</span></span>
+                <span style="display:flex;gap:6px;flex-wrap:wrap">
+                  <sc-for list="{{ u.actions }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.go }}" disabled="{{ a.off }}" title="{{ a.hint }}" style="padding:6px 10px;border:1px solid {{ a.border }};border-radius:8px;background:{{ a.bg }};color:{{ a.fg }};font-size:12px;font-weight:800;cursor:{{ a.cursor }};white-space:nowrap">{{ a.label }}</button></sc-for>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:13px;color:#56646F">
+            <span>{{ uCount }}</span>
+            <span style="display:flex;gap:6px"><button onClick="{{ uPrev }}" style="padding:7px 12px;border:1px solid #DDE3E8;border-radius:9px;background:#fff;font-weight:800;cursor:pointer">← Prev</button><button onClick="{{ uNext }}" style="padding:7px 12px;border:1px solid #DDE3E8;border-radius:9px;background:#fff;font-weight:800;cursor:pointer">Next →</button></span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMod }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:{{ modCols }};gap:14px;align-items:start">
+          <section style="border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid #E3E8EC">
+              <span style="flex:1;font-size:15px;font-weight:800">Chat moderation queue</span>
+              <sc-for list="{{ modTabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.go }}" style="padding:7px 12px;border:1px solid {{ t.border }};border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ t.label }}</button></sc-for>
+            </div>
+            <sc-if value="{{ modEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:26px;text-align:center;color:#56646F;font-size:14px">Nothing here.</div></sc-if>
+            <sc-for list="{{ modRows }}" as="m" hint-placeholder-count="5">
+              <div style="padding:14px 18px;border-bottom:1px solid #F0F3F5">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+                  <span style="padding:4px 9px;border-radius:7px;background:{{ m.catBg }};color:{{ m.catFg }};font-size:11px;font-weight:800">{{ m.cat }}</span>
+                  <span style="font-size:13px;font-weight:800">{{ m.user }}</span><span style="font-size:12.5px;color:#56646F">in {{ m.project }} · {{ m.when }} · strike {{ m.strikes }}</span>
+                  <span style="margin-left:auto;padding:4px 9px;border-radius:7px;background:#EEF2F4;font-size:11px;font-weight:800">{{ m.status }}</span>
+                </div>
+                <div style="padding:10px 12px;border-radius:11px;background:#F6F8F9;font-size:14px;margin-bottom:9px">“{{ m.text }}”</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ m.actions }}" as="a" hint-placeholder-count="5"><button onClick="{{ a.go }}" disabled="{{ a.off }}" style="padding:7px 11px;border:1px solid {{ a.border }};border-radius:8px;background:{{ a.bg }};color:{{ a.fg }};font-size:12px;font-weight:800;cursor:pointer">{{ a.label }}</button></sc-for></div>
+              </div>
+            </sc-for>
+          </section>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <section style="padding:16px 18px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+              <div style="font-size:15px;font-weight:800;margin-bottom:8px">Policy</div>
+              <div style="font-size:13px;line-height:1.6;color:#3C4A54">Swearing is allowed in lyrics, recordings and chat about the music. Held automatically: insults aimed at a person, threats, and terms on the blocked list. 3 holds → 10-minute chat pause; moderators can mute 24h or ban.</div>
+            </section>
+            <section style="padding:16px 18px;border-radius:20px;background:#fff;border:1px solid #E3E8EC">
+              <div style="font-size:15px;font-weight:800;margin-bottom:4px">Blocked terms</div>
+              <div style="font-size:12.5px;color:#56646F;margin-bottom:10px">Slurs and hate terms. Matched as whole words in chat only — never in lyrics.</div>
+              <div style="display:flex;gap:6px;margin-bottom:10px"><input value="{{ termDraft }}" onChange="{{ onTerm }}" onKeyDown="{{ onTermKey }}" placeholder="Add a term" style="flex:1;min-width:0;padding:9px 11px;border:1px solid #DDE3E8;border-radius:10px;font-size:13.5px;font-family:inherit;outline:none" /><button onClick="{{ addTerm }}" disabled="{{ noTerms }}" style="padding:9px 13px;border:0;border-radius:10px;background:#0C1318;color:#fff;font-size:12.5px;font-weight:800;cursor:pointer">Add</button></div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ terms }}" as="t" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;padding:5px 6px 5px 10px;border-radius:999px;background:#FFE9E4;color:#8C2B1E;font-size:12.5px;font-weight:800">{{ t.masked }}<button onClick="{{ t.remove }}" title="Remove" style="width:18px;height:18px;border:0;border-radius:50%;background:rgba(0,0,0,0.08);color:inherit;font-size:11px;cursor:pointer">×</button></span></sc-for></div>
+              <sc-if value="{{ noTermList }}" hint-placeholder-val="{{ true }}"><div style="font-size:12.5px;color:#56646F">No custom terms yet.</div></sc-if>
+            </section>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRights }}" hint-placeholder-val="{{ false }}">
+        <section style="border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow:hidden">
+          <div style="padding:14px 18px;border-bottom:1px solid #E3E8EC;font-size:15px;font-weight:800">Copyright, splits and disputes</div>
+          <sc-for list="{{ rights }}" as="r" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid #F0F3F5">
+              <span style="padding:4px 9px;border-radius:7px;background:{{ r.kBg }};color:{{ r.kFg }};font-size:11px;font-weight:800">{{ r.kind }}</span>
+              <span style="flex:1;min-width:240px"><span style="display:block;font-size:14px;font-weight:800">{{ r.title }}</span><span style="display:block;font-size:12.5px;color:#56646F">{{ r.detail }}</span></span>
+              <span style="font-size:12px;font-weight:800;color:{{ r.slaFg }}">{{ r.sla }}</span>
+              <span style="padding:4px 9px;border-radius:7px;background:#EEF2F4;font-size:11px;font-weight:800">{{ r.status }}</span>
+              <sc-for list="{{ r.actions }}" as="a" hint-placeholder-count="2"><button onClick="{{ a.go }}" disabled="{{ a.off }}" style="padding:7px 11px;border:1px solid {{ a.border }};border-radius:8px;background:{{ a.bg }};color:{{ a.fg }};font-size:12px;font-weight:800;cursor:pointer">{{ a.label }}</button></sc-for>
+            </div>
+          </sc-for>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ isRoles }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <section style="border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow-x:auto">
+            <div style="padding:14px 18px;border-bottom:1px solid #E3E8EC;display:flex;align-items:baseline;justify-content:space-between;gap:10px"><span style="font-size:15px;font-weight:800">Permissions by role</span><span style="font-size:12.5px;color:#56646F">{{ rolesNote }}</span></div>
+            <div style="display:grid;grid-template-columns:200px repeat(7,minmax(92px,1fr));min-width:880px">
+              <span style="padding:10px 14px;font-size:11.5px;font-weight:800;color:#56646F">PERMISSION</span>
+              <sc-for list="{{ roleHead }}" as="h" hint-placeholder-count="7"><span style="padding:10px 6px;font-size:11.5px;font-weight:800;color:#56646F;text-align:center">{{ h.t }}</span></sc-for>
+              <sc-for list="{{ permRows }}" as="p" hint-placeholder-count="13">
+                <span style="padding:9px 14px;border-top:1px solid #F0F3F5;font-size:13px;font-weight:700">{{ p.label }}</span>
+                <sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="7"><span style="padding:6px;border-top:1px solid #F0F3F5;display:flex;justify-content:center"><button onClick="{{ c.go }}" disabled="{{ c.off }}" title="{{ c.hint }}" style="width:26px;height:26px;border-radius:8px;border:2px solid {{ c.border }};background:{{ c.bg }};color:#06231B;font-size:13px;font-weight:800;cursor:{{ c.cursor }}">{{ c.tick }}</button></span></sc-for>
+              </sc-for>
+            </div>
+          </section>
+          <section style="border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow:hidden">
+            <div style="padding:14px 18px;border-bottom:1px solid #E3E8EC;font-size:15px;font-weight:800">Staff</div>
+            <sc-for list="{{ staffRows }}" as="u" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 18px;border-bottom:1px solid #F0F3F5">
+                <span style="flex:none;width:34px;height:34px;border-radius:50%;background:{{ u.color }};color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center">{{ u.initials }}</span>
+                <span style="flex:1;min-width:180px"><span style="display:block;font-size:14px;font-weight:800">{{ u.name }}</span><span style="display:block;font-size:12px;color:#56646F">{{ u.email }} · 2FA {{ u.tfa }}</span></span>
+                <button onClick="{{ u.cycle }}" disabled="{{ u.off }}" title="{{ u.hint }}" style="padding:7px 12px;border:1px solid #DDE3E8;border-radius:9px;background:#fff;color:#13202A;font-size:12.5px;font-weight:800;cursor:pointer">{{ u.role }} ▾</button>
+              </div>
+            </sc-for>
+          </section>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isAudit }}" hint-placeholder-val="{{ false }}">
+        <section style="border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow:hidden">
+          <div style="padding:14px 18px;border-bottom:1px solid #E3E8EC;font-size:15px;font-weight:800">Audit log · {{ auditCount }}</div>
+          <sc-if value="{{ auditEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:26px;text-align:center;color:#56646F;font-size:14px">No admin actions recorded yet.</div></sc-if>
+          <sc-for list="{{ audit }}" as="a" hint-placeholder-count="8">
+            <div style="display:grid;grid-template-columns:150px 160px minmax(0,1fr);gap:12px;padding:10px 18px;border-bottom:1px solid #F0F3F5;font-size:13px">
+              <span style="color:#56646F;font-variant-numeric:tabular-nums">{{ a.when }}</span><span style="font-weight:800">{{ a.who }}</span><span>{{ a.what }}</span>
+            </div>
+          </sc-for>
+        </section>
+      </sc-if>
+    </div>
+  </main>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;padding:12px 18px;border-radius:13px;background:#0C1318;color:#fff;font-size:14px;font-weight:700;box-shadow:0 14px 34px rgba(0,0,0,0.3)"><span style="color:#00D9A6">✓</span> {{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const MINT = '#00D9A6';
+const PERMS = [
+  ['dash', 'View dashboards'], ['revenue', 'View revenue & finance'], ['export', 'Export data'],
+  ['users', 'View & search users'], ['suspend', 'Suspend / restore users'], ['ban', 'Ban users'], ['plans', 'Change plans & refunds'],
+  ['moderate', 'Moderate chat'], ['terms', 'Manage blocked terms'], ['verify', 'Verify industry accounts'],
+  ['rights', 'Rights, DMCA & disputes'], ['roles', 'Manage roles & staff'], ['audit', 'View audit log']
+];
+const ROLE_NAMES = ['Super admin', 'Admin', 'Moderator', 'Support', 'Finance', 'A&R verifier', 'Analyst'];
+const ROLE_DEFAULT = {
+  'Super admin': PERMS.map(p => p[0]),
+  'Admin': PERMS.map(p => p[0]).filter(p => p !== 'roles'),
+  'Moderator': ['dash', 'users', 'suspend', 'moderate', 'terms', 'audit'],
+  'Support': ['dash', 'users', 'suspend', 'plans'],
+  'Finance': ['dash', 'revenue', 'export', 'plans', 'audit'],
+  'A&R verifier': ['dash', 'users', 'verify'],
+  'Analyst': ['dash', 'revenue', 'export']
+};
+const STAFF0 = [
+  ['s1', 'Tosin Kasali', 'tosin@ellipsismusic.net', 'Super admin', '#0A6E58'], ['s2', 'Priya Raman', 'priya@ellipsismusic.net', 'Moderator', '#5B3E9E'],
+  ['s3', 'Marcus Bell', 'marcus@ellipsismusic.net', 'Finance', '#2C4A9E'], ['s4', 'Lena Vogt', 'lena@ellipsismusic.net', 'A&R verifier', '#B3523E'],
+  ['s5', 'Sam Okafor', 'sam@ellipsismusic.net', 'Support', '#7A5A10'], ['s6', 'Investor view', 'board@ellipsismusic.net', 'Analyst', '#2F3E48']
+];
+const NAV = [['overview', 'Overview', '◎', 'dash'], ['growth', 'Growth & engagement', '↗', 'dash'], ['revenue', 'Revenue', '$', 'revenue'], ['industry', 'Industry & A&R', '◆', 'verify'], ['users', 'Users', '☺', 'users'], ['mod', 'Moderation', '⚑', 'moderate'], ['rights', 'Rights & splits', '©', 'rights'], ['roles', 'Roles & rights', '⚿', 'dash'], ['audit', 'Audit log', '≡', 'audit']];
+const FIRST = ['Amara','Kenji','Sofia','Malik','Lucía','Theo','Imani','Rafael','Noor','Elias','Zara','Mateus','Ayo','Hana','Diego','Leila','Oskar','Chiamaka','Ravi','Mei','Tariq','Ines','Jonas','Adaeze','Luca','Yara','Kai','Fatou','Arjun','Maren'];
+const LAST = ['Okafor','Tanaka','Moreau','Silva','Haddad','Lindqvist','Mensah','Kowalski','Rahman','Castillo','Nakamura','Adeyemi','Ferreira','Novak','Osei','Petrov','Alvarez','Kaur','Bianchi','Mbeki'];
+const CITIES = ['Lagos','London','São Paulo','Tokyo','Berlin','Accra','Mexico City','Seoul','Paris','Johannesburg','Mumbai','Toronto','Kingston','Nairobi','Lisbon','Atlanta','Manila','Cairo','Stockholm','Bogotá'];
+const AVA = ['#0A6E58','#2C4A9E','#B3523E','#5B3E9E','#2F3E48','#7A5A10','#0B5E7A','#8C1E4B','#3E6B2F','#6B2F5E'];
+const ls = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const money = v => v >= 1e6 ? '$' + (v / 1e6).toFixed(2) + 'M' : v >= 1e3 ? '$' + (v / 1e3).toFixed(1) + 'k' : '$' + Math.round(v);
+const num = v => v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : v >= 1e4 ? (v / 1e3).toFixed(1) + 'k' : Math.round(v).toLocaleString();
+const series = (n, base, growth, noise, seed) => { let r = seed || 7; const out = []; for (let i = 0; i < n; i++) { r = (r * 16807) % 2147483647; out.push(base * Math.pow(1 + growth, i) * (1 + ((r / 2147483647) - 0.5) * noise)); } return out; };
+
+class Component extends DCLogic {
+  base() { return /^https?:/.test(location.protocol) && location.pathname.indexOf('/admin') >= 0 ? new URL('../api/v2/', location.href).href : null; }
+  async api(path, opts) {
+    const b = this.base(); if (!b) throw new Error('offline'); const o = opts || {};
+    const r = await fetch(b + path, { method: o.method || (o.body ? 'POST' : 'GET'), headers: Object.assign({ 'Content-Type': 'application/json' }, this._tok ? { Authorization: 'Bearer ' + this._tok } : {}), body: o.body ? JSON.stringify(o.body) : undefined });
+    let j = {}; try { j = await r.json(); } catch (e) {}
+    if (!r.ok || j.ok === false) throw new Error(j.error || 'Request failed (' + r.status + ')');
+    return j;
+  }
+  async reload() {
+    if (!this.live || !this._tok) return;
+    const g = async (p, k) => { try { this['_' + k] = await this.api(p); } catch (e) {} };
+    await Promise.all([g('admin/metrics', 'metrics'), g('admin/users?page=' + this.state.page + '&q=' + encodeURIComponent(this.state.uq), 'users'), g('admin/mod', 'mod'), g('admin/audit', 'audit'), g('admin/roles', 'roles')]);
+    this.forceUpdate();
+  }
+  async liveAct(path, body, what) { try { await this.api(path, { body, method: body && body._m ? body._m : undefined }); this.flash(what); this.reload(); } catch (e) { this.flash(e.message); } }
+  state = { lEmail: '', staff: null, pick: 's1', pin: '', gateErr: '', view: 'overview', range: '30d', uq: '', uf: 'All', page: 0, modTab: 'Held', termDraft: '', toast: '', tick: 0 };
+
+  componentDidMount() {
+    this.api('config').then(() => { this.live = true; const t = ls('ellipsis.admin.token', null); if (t) { this._tok = t; this.api('me').then(r => { if (r.me.staffRole === 'user') throw new Error('x'); this._me = r.me; this.setState({ staff: 'live' }); this.reload(); }).catch(() => { lsSet('ellipsis.admin.token', null); this._tok = null; this.forceUpdate(); }); } else this.forceUpdate(); }).catch(() => { this.live = false; });
+    const sid = ls('ellipsis.admin.session', null);
+    if (sid && this.staffList().some(s => s.id === sid)) this.setState({ staff: sid });
+    this._poll = setInterval(() => this.setState(s => ({ tick: s.tick + 1 })), 4000);
+  }
+  componentWillUnmount() { clearInterval(this._poll); clearTimeout(this._t); }
+
+  staffList() { const roles = ls('ellipsis.admin.staffRoles', {}); return STAFF0.map(([id, name, email, role, color]) => ({ id, name, email, role: roles[id] || role, color, initials: name.split(' ').map(x => x[0]).join('') })); }
+  roleMatrix() { return Object.assign({}, ROLE_DEFAULT, ls('ellipsis.admin.roles', {})); }
+  me() { if (this.live && this._me && this.state.staff === 'live') { const L = { admin: 'Admin', moderator: 'Moderator', support: 'Support', finance: 'Finance', verifier: 'A&R verifier', analyst: 'Analyst' }; return { id: 'live', name: this._me.name, email: this._me.email, role: L[this._me.staffRole] || this._me.staffRole, perms: this._me.perms || [] }; } return this.staffList().find(s => s.id === this.state.staff) || null; }
+  can(p) { const m = this.me(); if (m && m.perms) return m.perms.indexOf(p) >= 0; return !!m && (this.roleMatrix()[m.role] || []).indexOf(p) >= 0; }
+  flash(t) { this.setState({ toast: t }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 2200); }
+  log(what) { const m = this.me(); const a = ls('ellipsis.admin.audit', []); a.unshift({ at: Date.now(), who: m ? m.name + ' (' + m.role + ')' : 'system', what }); lsSet('ellipsis.admin.audit', a.slice(0, 500)); }
+  act(perm, what, fn) { if (!this.can(perm)) { this.flash('Your role cannot do that'); return; } fn(); this.log(what); this.flash(what); this.forceUpdate(); }
+
+  users() {
+    if (this.live && this._users) return (this._users.users || []).map((u, k) => ({ id: u.id, name: u.name, email: u.email, city: u.city || '—', type: u.type === 'exec' ? 'Music exec' : 'Creator', plan: u.plan === 'industry' ? 'Industry' : u.plan === 'premium' ? 'Premium' : 'Free', status: u.status === 'active' ? 'Active' : u.status === 'banned' ? 'Banned' : 'Suspended', verified: !!+u.verified, strikes: +u.strikes || 0, exec: u.type === 'exec', real: true, company: u.company, title: u.title, execStatus: u.exec_verified, color: AVA[k % AVA.length], initials: (u.name || '?').split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase() }));
+    const over = ls('ellipsis.admin.users', {}), q = ls('ellipsis.mod.queue', []), strikes = {};
+    q.forEach(m => { const k = (m.email || m.user || '').toLowerCase(); strikes[k] = Math.max(strikes[k] || 0, m.strikes || 1); });
+    const real = Object.values(ls('ellipsis4.accounts', {})).map(a => ({ id: a.email, name: a.name, email: a.email, city: (a.profile && a.profile.city) || '—', type: a.type === 'exec' ? 'Music exec' : 'Creator', plan: a.plan === 'industry' ? 'Industry' : a.plan === 'premium' ? 'Premium' : 'Free', real: true, exec: a.type === 'exec', company: a.company, title: a.title, created: a.created }));
+    const gen = []; for (let i = 0; i < 500; i++) { const name = FIRST[(i * 7) % FIRST.length] + ' ' + LAST[(i * 13 + Math.floor(i / 40)) % LAST.length]; const exec = i % 41 === 7; gen.push({ id: 'g' + i, name, email: name.toLowerCase().replace(/[^a-z]+/g, '.') + (i % 9) + '@' + (exec ? 'label.co' : 'mail.com'), city: CITIES[(i * 11) % CITIES.length], type: exec ? 'Music exec' : 'Creator', plan: exec ? 'Industry' : i % 5 === 0 ? 'Premium' : 'Free', exec, ver: !exec && i % 17 === 3 }); }
+    return real.concat(gen).map((u, k) => { const o = over[u.id] || {}; return Object.assign({}, u, { status: o.status || 'Active', plan: o.plan || u.plan, verified: o.verified != null ? o.verified : !!u.ver, strikes: strikes[(u.email || '').toLowerCase()] || strikes[(u.name || '').toLowerCase()] || (u.real ? 0 : (k % 23 === 5 ? 1 : 0)), color: AVA[k % AVA.length], initials: u.name.split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase() }); });
+  }
+  setUser(id, patch) {
+    if (this.live) { const b = {}; if (patch.status) b.status = patch.status.toLowerCase(); if (patch.plan) b.plan = patch.plan.toLowerCase(); if (patch.verified != null) b.verified = patch.verified; this.liveAct('admin/users/' + id, b, 'Saved on the server'); return; }
+    const o = ls('ellipsis.admin.users', {}); o[id] = Object.assign({}, o[id], patch); lsSet('ellipsis.admin.users', o); }
+
+  renderVals() {
+    const s = this.state, me = this.me();
+    if (!me) {
+      const st = this.staffList();
+      const signIn = () => { if (s.pin !== '2026') { this.setState({ gateErr: 'Wrong passcode. Demo passcode is 2026.' }); return; } lsSet('ellipsis.admin.session', s.pick); this.setState({ staff: s.pick, gateErr: '', pin: '' }); const m = st.find(x => x.id === s.pick); const a = ls('ellipsis.admin.audit', []); a.unshift({ at: Date.now(), who: m.name + ' (' + m.role + ')', what: 'Signed in' }); lsSet('ellipsis.admin.audit', a); };
+      if (this.live) {
+        const liveIn = () => { this.api('login', { body: { email: s.lEmail.trim(), password: s.pin } }).then(r => { if (r.me.staffRole === 'user') { this.setState({ gateErr: 'That account has no staff role. Add its email to admin_emails, or ask an admin to assign a role.' }); return; } this._tok = r.token; this._me = r.me; lsSet('ellipsis.admin.token', r.token); this.setState({ staff: 'live', pin: '', gateErr: '' }); this.reload(); }).catch(e => this.setState({ gateErr: e.message })); };
+        return { gate: true, liveGate: true, demoGate: false, staffPick: [], lEmail: s.lEmail, onLEmail: e => this.setState({ lEmail: e.target.value, gateErr: '' }), pin: s.pin, pinPh: 'Password', onPin: e => this.setState({ pin: e.target.value, gateErr: '' }), onPinKey: e => { if (e.key === 'Enter') liveIn(); }, signIn: liveIn, gateErr: s.gateErr, nav: [], ranges: [], toast: s.toast, envLabel: '', meName: '', meRole: '', pageTitle: '', pageSub: '' };
+      }
+      return { gate: true, liveGate: false, demoGate: true, pinPh: 'Staff passcode (demo: 2026)', lEmail: '', onLEmail: () => {}, staffPick: st.map(u => ({ name: u.name, role: u.role, email: u.email, initials: u.initials, color: u.color, border: s.pick === u.id ? MINT : '#E3E8EC', bg: s.pick === u.id ? '#E8FBF5' : '#fff', go: () => this.setState({ pick: u.id }) })), pin: s.pin, onPin: e => this.setState({ pin: e.target.value, gateErr: '' }), onPinKey: e => { if (e.key === 'Enter') signIn(); }, signIn, gateErr: s.gateErr, nav: [], ranges: [], toast: s.toast, envLabel: '', meName: '', meRole: '', pageTitle: '', pageSub: '' };
+    }
+    const can = p => this.can(p);
+    const R = { '7d': 0.25, '30d': 1, '90d': 3 }[s.range];
+    const navItem = NAV.find(n => n[0] === s.view) || NAV[0];
+    const allowed = can(navItem[3]);
+    const U = this.users();
+    const q = this.live && this._mod ? (this._mod.queue || []).map(m => ({ id: 'srv' + m.id, srvId: m.id, at: m.created * 1000, project: m.project, user: m.user || 'Unknown', email: m.email, text: m.text, cat: m.cat, strikes: 1, status: m.status })) : ls('ellipsis.mod.queue', []);
+    const held = q.filter(m => (m.status || 'held') === 'held').length;
+    const realAcc = U.filter(u => u.real);
+    const appData = ls('ellipsis4.data.v1', null);
+
+    /* ── core platform model (12 months) ── */
+    const mo = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
+    const mau = series(12, 9800, 0.158, 0.06, 11), prem = mau.map((m, i) => m * (0.11 + i * 0.0075)), seats = series(12, 38, 0.17, 0.08, 5);
+    const premRev = prem.map(p => p * 5.99), indRev = seats.map(x => x * 49), adRev = mau.map((m, i) => m * 0.72 * 38 * (1.4 + i * 0.06) / 1000 * 3.1), syncRev = series(12, 1400, 0.21, 0.4, 9);
+    const mrr = premRev.map((p, i) => p + indRev[i] + adRev[i] + syncRev[i]);
+    const L = 11, mrrNow = mrr[L], mrrPrev = mrr[L - 1];
+    const pct = (a, b) => (a >= b ? '▲ ' : '▼ ') + Math.abs((a / b - 1) * 100).toFixed(1) + '%';
+    const spark = arr => { const mx = Math.max.apply(null, arr), mn = Math.min.apply(null, arr) * 0.9; return arr.map(v => ({ h: Math.max(8, (v - mn) / (mx - mn || 1) * 100).toFixed(0) + '%' })); };
+    const songsWeek = series(26, 180, 0.078, 0.12, 3), nsNow = songsWeek[25] * (s.range === '7d' ? 1 : s.range === '30d' ? 4.3 : 13);
+    const dauRatio = 0.31, collabXB = 0.64, actRate = 0.47;
+    const realProjects = appData && appData.projects ? appData.projects.length : 0;
+
+    const kpis = [
+      ['MONTHLY ACTIVE USERS', num(mau[L]), pct(mau[L], mau[L - 1]), mau, 'Unique people who opened Ellipsis in the last 30 days'],
+      ['DAU / MAU', (dauRatio * 100).toFixed(0) + '%', '▲ 2.1 pts', mau.map((m, i) => 0.24 + i * 0.006), 'Stickiness: share of monthly users active on a typical day'],
+      ['NEW SIGNUPS', num(mau[L] * 0.21 * R), pct(1.12, 1), series(12, 2000, 0.15, 0.1, 4), 'Accounts created this period (human-verified)'],
+      ['ACTIVATION (7-DAY)', (actRate * 100).toFixed(0) + '%', '▲ 3.4 pts', series(12, 0.36, 0.024, 0.04, 6), 'New users who added a part or joined a project within 7 days'],
+      ['CROSS-BORDER COLLABS', (collabXB * 100).toFixed(0) + '%', '▲ 1.8 pts', series(12, 0.52, 0.018, 0.03, 8), 'Released songs with collaborators in 2+ countries'],
+      ['OPEN CALLS FILLED', '58%', '▲ 4.0 pts', series(12, 0.41, 0.03, 0.05, 2), 'Open project requests that accepted a collaborator within 14 days'],
+      ['MRR', money(mrrNow), pct(mrrNow, mrrPrev), mrr, 'Monthly recurring revenue: subscriptions + Industry + ads + sync'],
+      ['ARR (RUN-RATE)', money(mrrNow * 12), pct(mrrNow, mrr[L - 12 + 11] ? mrr[0] : mrrNow), mrr, 'MRR × 12'],
+      ['PAYING USERS', num(prem[L] + seats[L]), pct(prem[L], prem[L - 1]), prem, 'Premium subscribers + Industry seats'],
+      ['PREMIUM CONVERSION', (prem[L] / mau[L] * 100).toFixed(1) + '%', '▲ 0.7 pts', prem.map((p, i) => p / mau[i]), 'Premium subscribers ÷ MAU'],
+      ['INDUSTRY SEATS', num(seats[L]), pct(seats[L], seats[L - 1]), seats, 'Paying music-executive accounts ($49/mo)'],
+      ['ARTISTS SIGNED VIA ELLIPSIS', String(Math.round(seats[L] * 0.21)), '▲ ' + Math.round(seats[L] * 0.04) + ' this mo', seats.map(x => x * 0.2), 'Deals marked Signed in executives’ pipelines']
+    ].map(([label, value, delta, arr, def]) => ({ label, value, delta, def, dFg: /▼/.test(delta) ? '#B3523E' : '#00806A', spark: spark(arr), sc: /▼/.test(delta) ? '#FFB3A6' : '#7FE9CF' }));
+
+    const mx = Math.max.apply(null, mrr);
+    const COL = { p: '#00D9A6', i: '#0C1318', a: '#5B8CFF', y: '#B07CFF' };
+    const mrrBars = mrr.map((t, i) => ({ t: mo[i] + ' · ' + money(t), seg: [['y', syncRev[i]], ['a', adRev[i]], ['i', indRev[i]], ['p', premRev[i]]].map(([k, v]) => ({ h: (v / mx * 160).toFixed(1) + 'px', c: COL[k] })) }));
+    const signups = Math.round(mau[L] * 0.21 * R);
+    const funnel = [['Signed up (human-verified)', 1], ['Completed profile', 0.82], ['Added a first part', 0.53], ['Joined or started a collab', 0.41], ['Released a song', 0.19], ['Received a Spike Back', 0.034]].map(([label, k], i) => ({ label, n: num(signups * k), pct: (k * 100).toFixed(k < 0.1 ? 1 : 0) + '%', w: (k * 100) + '%', c: i === 0 ? '#0C1318' : i < 3 ? '#00A982' : i < 5 ? '#00D9A6' : '#5B3E9E' }));
+    const cohorts = ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'].map((label, r) => ({ label, cells: [0, 1, 2, 3, 4, 5, 6].map(c => { if (c > 5 - r) return { t: '', bg: 'transparent', fg: '#13202A' }; const v = c === 0 ? 100 : Math.round(100 * (0.52 + r * 0.012) * Math.pow(0.9, c - 1)); const a = v / 100; return { t: v + '%', bg: 'rgba(0,169,130,' + (0.08 + a * 0.75).toFixed(2) + ')', fg: a > 0.5 ? '#fff' : '#13202A' }; }) }));
+    const arpu = mrrNow / mau[L], arppu = (premRev[L] + indRev[L]) / (prem[L] + seats[L]), cac = 4.6, churn = 0.041, gm = 0.71, ltv = arpu * gm / churn * 3.2;
+    const unit = [['ARPU (monthly)', '$' + arpu.toFixed(2), 'MRR ÷ MAU'], ['ARPPU', '$' + arppu.toFixed(2), 'Subscription revenue ÷ paying users'], ['Blended CAC', '$' + cac.toFixed(2), 'Paid acquisition ÷ new signups'], ['LTV (paying)', '$' + ltv.toFixed(0), 'ARPU × gross margin ÷ churn, paying mix'], ['LTV : CAC', (ltv / cac).toFixed(1) + '×', 'Healthy above 3×'], ['Payback', (cac / (arpu * gm)).toFixed(1) + ' mo', 'Months to recover CAC'], ['Gross margin', (gm * 100).toFixed(0) + '%', 'After store fees, hosting, creator payouts'], ['Monthly churn (paid)', (churn * 100).toFixed(1) + '%', 'Premium + Industry cancellations']].map(([label, value, def]) => ({ label, value, def }));
+
+    /* ── growth ── */
+    const dau = series(30, mau[L] * dauRatio * 0.93, 0.0028, 0.16, 21), dmx = Math.max.apply(null, dau) * 1.08;
+    const pts = arr => arr.map((v, i) => (i / 29 * 900).toFixed(1) + ',' + (190 - v / dmx * 180).toFixed(1)).join(' ');
+    const wau = dau.map((v, i) => { const sl = dau.slice(Math.max(0, i - 6), i + 1); return sl.reduce((a, b) => a + b, 0) / sl.length; });
+    const tbl = (title, c, rows) => { const m = Math.max.apply(null, rows.map(r => r[1])); return { title, c, rows: rows.map(([a, v, f]) => ({ a, b: f ? f(v) : num(v), w: (v / m * 100).toFixed(0) + '%' })) }; };
+    const growthTables = [
+      tbl('Signups by source', '#00A982', [['Shared song links', 4820 * R], ['Creator invites to projects', 3910 * R], ['Organic / app store search', 2660 * R], ['TikTok & Reels clips', 2140 * R], ['Paid social', 980 * R], ['Label referrals', 310 * R]]),
+      tbl('Top collaboration corridors', '#5B3E9E', [['Lagos ↔ London', 1140 * R], ['São Paulo ↔ Lisbon', 860 * R], ['Accra ↔ Atlanta', 790 * R], ['Seoul ↔ Los Angeles', 640 * R], ['Johannesburg ↔ Berlin', 420 * R], ['Kingston ↔ Toronto', 380 * R]]),
+      tbl('Engagement', '#0C1318', [['Avg collaborators per song', 3.4, v => v.toFixed(1)], ['Median hours to fill an open call', 19, v => v + 'h'], ['Songs per active creator / mo', 1.7, v => v.toFixed(1)], ['Spikes per listener / week', 6.2, v => v.toFixed(1)], ['Sessions per DAU', 2.8, v => v.toFixed(1)], ['Avg session (min)', 23, v => v + 'm']])
+    ];
+
+    /* ── revenue ── */
+    const fee = 0.15;
+    const led = [['Premium · $5.99', premRev[L], fee, 0.5], ['Industry · $49', indRev[L], fee, 0], ['Ads · eCPM $' + (1.4 + L * 0.06).toFixed(2), adRev[L], 0, 0.7], ['Sync & licensing', syncRev[L], 0, 0.6]];
+    const ledger = led.map(([a, g, f, cr]) => { const fees = g * f, creators = (g - fees) * cr; return { a, b: money(g), c: money(fees), d: money(creators), e: money(g - fees - creators), w: '600' }; });
+    const tot = led.reduce((acc, [, g, f, cr]) => { const fees = g * f, c = (g - fees) * cr; acc[0] += g; acc[1] += fees; acc[2] += c; acc[3] += g - fees - c; return acc; }, [0, 0, 0, 0]);
+    ledger.push({ a: 'Total', b: money(tot[0]), c: money(tot[1]), d: money(tot[2]), e: money(tot[3]), w: '800' });
+    const revCards = [['MRR', money(mrrNow), pct(mrrNow, mrrPrev) + ' vs last month', 'All recurring revenue this month'], ['ARR run-rate', money(mrrNow * 12), 'MRR × 12', ''], ['Paid to creators', money(tot[2]), Math.round(tot[2] / tot[0] * 100) + '% of gross', 'Ad share + subscription pool + sync'], ['Net revenue', money(tot[3]), Math.round(tot[3] / tot[0] * 100) + '% take rate', 'After store fees and creator payouts'], ['Ad impressions', num(mau[L] * 0.72 * 38 * 3.1), 'free-tier only', ''], ['Fill rate', '93%', 'direct + programmatic', ''], ['Refunds', money(premRev[L] * 0.006), '0.6% of subscriptions', ''], ['Industry trial → paid', '61%', '14-day trial', '']].map(([label, value, note, def]) => ({ label, value, note, def }));
+    const mrrMove = [['New', money(mrrNow * 0.13), '#E8FBF5', '#00806A'], ['Expansion', money(mrrNow * 0.04), '#E8FBF5', '#00806A'], ['Reactivation', money(mrrNow * 0.015), '#E8FBF5', '#00806A'], ['Churn', '−' + money(mrrNow * 0.041), '#FFE9E4', '#8C2B1E'], ['Net new MRR', money(mrrNow * 0.144), '#0C1318', '#3FE6BD']].map(([label, v, bg, fg]) => ({ label, v, bg, fg }));
+
+    /* ── industry ── */
+    const verMap = ls('ellipsis.admin.verify', {});
+    const execs = U.filter(u => u.exec && u.real).concat(U.filter(u => u.exec && !u.real).slice(0, 4));
+    const verQueue = execs.map(u => { const st = verMap[u.id] || (u.real ? 'Pending' : 'Pending'); const domainOk = !/gmail|yahoo|hotmail|outlook|icloud|mail\.com/.test(u.email); return { initials: u.initials, name: u.name, title: u.title || 'A&R', company: u.company || (u.email.split('@')[1] || '').split('.')[0], email: u.email, signal: domainOk ? '✓ company email domain' : '⚠ personal email — ask for proof', status: st, stBg: st === 'Verified' ? '#E8FBF5' : st === 'Rejected' ? '#FFE9E4' : '#FFF3D6', stFg: st === 'Verified' ? '#00806A' : st === 'Rejected' ? '#8C2B1E' : '#7A5A10', off: !can('verify'), approve: () => this.act('verify', 'Verified industry account ' + u.email, () => { verMap[u.id] = 'Verified'; lsSet('ellipsis.admin.verify', verMap); }), reject: () => this.act('verify', 'Rejected industry account ' + u.email, () => { verMap[u.id] = 'Rejected'; lsSet('ellipsis.admin.verify', verMap); }) }; });
+    const sbLocal = appData && appData.sb ? Object.keys(appData.sb).length : 0;
+    const signedLocal = appData && appData.sb ? Object.values(appData.sb).filter(x => x.stage === 4).length : 0;
+    const indCards = [['Industry seats', num(seats[L]), 'paying · ' + Math.round(seats[L] * 0.18) + ' in trial'], ['Spike Backs this period', num(seats[L] * 9.4 * R + sbLocal), sbLocal ? sbLocal + ' from this device' : 'labels flagging songs'], ['Artists signed', String(Math.round(seats[L] * 0.21) + signedLocal), 'pipeline stage = Signed'], ['Verified artists', num(U.filter(u => u.verified).length * 9), '≥10 Spike Backs or signed'], ['Median days to signing', '38', 'first Spike Back → Signed'], ['Pending verifications', String(verQueue.filter(v => v.status === 'Pending').length), 'SLA 24 hours']].map(([label, value, note]) => ({ label, value, note }));
+
+    /* ── users ── */
+    const uq = s.uq.trim().toLowerCase();
+    const filt = U.filter(u => (s.uf === 'All' || (s.uf === 'Creators' && u.type === 'Creator') || (s.uf === 'Execs' && u.exec) || (s.uf === 'Premium' && u.plan !== 'Free') || (s.uf === 'Flagged' && u.strikes > 0) || (s.uf === 'Suspended' && u.status !== 'Active') || (s.uf === 'This device' && u.real)) && (!uq || (u.name + ' ' + u.email + ' ' + u.city).toLowerCase().indexOf(uq) >= 0));
+    const PER = 25, pages = Math.max(1, Math.ceil(filt.length / PER)), page = Math.min(s.page, pages - 1);
+    const btn = (label, perm, go, kind) => ({ label, go, off: !can(perm), hint: can(perm) ? '' : 'Your role cannot do this', bg: kind === 'danger' ? '#FFE9E4' : kind === 'pri' ? MINT : '#fff', fg: !can(perm) ? '#9AA6AE' : kind === 'danger' ? '#8C2B1E' : kind === 'pri' ? '#06231B' : '#13202A', border: kind === 'pri' ? MINT : kind === 'danger' ? '#F5C8BE' : '#DDE3E8', cursor: can(perm) ? 'pointer' : 'not-allowed' });
+    const uRows = filt.slice(page * PER, page * PER + PER).map(u => ({
+      name: u.name, ver: u.verified ? '✓' : '', email: u.email, city: u.city, color: u.color, initials: u.initials, type: u.type + (u.real ? ' · live' : ''), plan: u.plan, planBg: u.plan === 'Free' ? '#EEF2F4' : u.plan === 'Industry' ? '#0C1318' : '#E8FBF5',
+      strikes: String(u.strikes), strFg: u.strikes >= 3 ? '#B3523E' : u.strikes ? '#7A5A10' : '#56646F', status: u.status, stBg: u.status === 'Active' ? '#E8FBF5' : u.status === 'Banned' ? '#0C1318' : '#FFF3D6', stFg: u.status === 'Active' ? '#00806A' : u.status === 'Banned' ? '#fff' : '#7A5A10',
+      actions: [
+        u.exec ? null : btn(u.verified ? 'Unverify' : 'Verify', 'verify', () => this.act('verify', (u.verified ? 'Removed verified badge from ' : 'Verified artist ') + u.name, () => this.setUser(u.id, { verified: !u.verified }))),
+        btn(u.plan === 'Free' ? 'Comp Premium' : 'Set Free', 'plans', () => this.act('plans', 'Changed plan for ' + u.name + ' → ' + (u.plan === 'Free' ? 'Premium' : 'Free'), () => this.setUser(u.id, { plan: u.plan === 'Free' ? 'Premium' : 'Free' }))),
+        u.status === 'Active' ? btn('Suspend', 'suspend', () => this.act('suspend', 'Suspended ' + u.name, () => this.setUser(u.id, { status: 'Suspended' })), 'danger') : btn('Restore', 'suspend', () => this.act('suspend', 'Restored ' + u.name, () => this.setUser(u.id, { status: 'Active' })), 'pri'),
+        u.status === 'Banned' ? null : btn('Ban', 'ban', () => this.act('ban', 'Banned ' + u.name, () => this.setUser(u.id, { status: 'Banned' })), 'danger')
+      ].filter(Boolean)
+    }));
+
+    /* ── moderation ── */
+    const seededQ = [{ id: 'sq1', at: Date.now() - 3600e3 * 5, project: 'Drag Me Down', user: 'Tomas Novak', text: 'nobody likes you, stick to tambourine', cat: 'Harassment', strikes: 1, status: 'held' }, { id: 'sq2', at: Date.now() - 3600e3 * 26, project: 'Kora for Two', user: 'Rio Silva', text: 'watch your back if you steal my verse', cat: 'Threat', strikes: 2, status: 'held' }];
+    const modAll = this.live ? q : q.concat(ls('ellipsis.admin.seedQDone', false) ? [] : seededQ);
+    const modStatus = ls('ellipsis.admin.modStatus', {});
+    const withSt = modAll.map(m => Object.assign({}, m, { status: modStatus[m.id] || m.status || 'held' }));
+    const MT = { Held: x => x.status === 'held', Removed: x => x.status === 'removed', Released: x => x.status === 'released', All: () => true };
+    const ago = t => { const m = Math.round((Date.now() - t) / 60000); return m < 60 ? m + 'm ago' : m < 1440 ? Math.round(m / 60) + 'h ago' : Math.round(m / 1440) + 'd ago'; };
+    const setMod = (m, st, what) => { if (this.live && m.srvId) { if (!can('moderate')) return this.flash('Your role cannot do that'); return this.liveAct('admin/mod/' + m.srvId, { status: st }, what); } this.act('moderate', what, () => { modStatus[m.id] = st; lsSet('ellipsis.admin.modStatus', modStatus); }); };
+    const modRows = withSt.filter(MT[s.modTab]).map(m => ({ cat: m.cat, catBg: m.cat === 'Threat' ? '#0C1318' : m.cat === 'Hate speech' ? '#8C2B1E' : '#FFE9E4', catFg: m.cat === 'Threat' || m.cat === 'Hate speech' ? '#fff' : '#8C2B1E', user: m.user, project: m.project, when: ago(m.at), strikes: String(m.strikes || 1), status: m.status.toUpperCase(), text: m.text,
+      actions: [btn('Release (false positive)', 'moderate', () => setMod(m, 'released', 'Released held message from ' + m.user)), btn('Keep removed', 'moderate', () => setMod(m, 'removed', 'Confirmed removal of message from ' + m.user), 'danger'), btn('Warn', 'moderate', () => this.act('moderate', 'Warned ' + m.user, () => {})), btn('Mute 24h', 'suspend', () => this.act('suspend', 'Muted ' + m.user + ' for 24 hours', () => {})), btn('Ban', 'ban', () => this.act('ban', 'Banned ' + m.user + ' from chat', () => { modStatus[m.id] = 'removed'; lsSet('ellipsis.admin.modStatus', modStatus); }), 'danger')] }));
+    const termList = this.live && this._mod ? (this._mod.terms || []) : ls('ellipsis.mod.terms', []);
+    const addTerm = () => { const t = s.termDraft.trim().toLowerCase(); if (!t || termList.indexOf(t) >= 0) return; if (this.live) { if (!can('terms')) return this.flash('Your role cannot do that'); this.setState({ termDraft: '' }); return this.liveAct('admin/terms', { term: t }, 'Added a blocked term'); } this.act('terms', 'Added a blocked term', () => { lsSet('ellipsis.mod.terms', termList.concat([t])); this.setState({ termDraft: '' }); }); };
+
+    /* ── rights ── */
+    const rightsSt = ls('ellipsis.admin.rights', {});
+    const rights = [['DMCA', 'Takedown: “Slow Static” uses an uncleared sample', 'Claimant: Harbour Music (Kofi Mensah) · counter-notice window 10 days', 'r1', 6], ['FINGERPRINT', '4-second match in “Room perc” stem', 'Reference: commercial drum loop library · auto-held before publish', 'r2', 20], ['SPLIT DISPUTE', '“Cassette Sunday” — vocalist disputes 15% share', '3 contributors · split sheet signed by 2 of 3', 'r3', 44], ['DMCA', 'Counter-notice filed on “Velvet Harbour”', 'Uploader claims original composition · evidence attached', 'r4', 71], ['AI CONTENT', 'Suspected generated vocal on “Glass Avenue”', 'Liveness check failed on 2 of 3 sessions', 'r5', 3]].map(([kind, title, detail, id, hrs]) => { const st = rightsSt[id] || 'Open'; return { kind, title, detail, status: st, sla: st !== 'Open' ? 'closed' : hrs > 48 ? '⚠ ' + hrs + 'h — over SLA' : hrs + 'h open', slaFg: hrs > 48 && st === 'Open' ? '#B3523E' : '#56646F', kBg: kind === 'DMCA' ? '#0C1318' : kind === 'AI CONTENT' ? '#5B3E9E' : '#FFF3D6', kFg: kind === 'DMCA' || kind === 'AI CONTENT' ? '#fff' : '#7A5A10', actions: [btn('Uphold', 'rights', () => this.act('rights', 'Upheld ' + kind + ': ' + title, () => { rightsSt[id] = 'Upheld'; lsSet('ellipsis.admin.rights', rightsSt); }), 'danger'), btn('Dismiss', 'rights', () => this.act('rights', 'Dismissed ' + kind + ': ' + title, () => { rightsSt[id] = 'Dismissed'; lsSet('ellipsis.admin.rights', rightsSt); }))] }; });
+
+    /* ── roles ── */
+    const matrix = this.roleMatrix(), canRoles = can('roles');
+    const permRows = PERMS.map(([pk, label]) => ({ label, cells: ROLE_NAMES.map(rn => { const on = (matrix[rn] || []).indexOf(pk) >= 0, locked = rn === 'Super admin'; return { tick: on ? '✓' : '', bg: on ? MINT : '#fff', border: on ? MINT : '#CBD4DB', off: !canRoles || locked, cursor: canRoles && !locked ? 'pointer' : 'default', hint: locked ? 'Super admin always has every permission' : canRoles ? 'Click to toggle' : 'Only Super admins can change roles', go: () => this.act('roles', (on ? 'Removed “' : 'Granted “') + label + '” ' + (on ? 'from ' : 'to ') + rn, () => { const m = this.roleMatrix(); m[rn] = on ? m[rn].filter(x => x !== pk) : (m[rn] || []).concat([pk]); const save = ls('ellipsis.admin.roles', {}); save[rn] = m[rn]; lsSet('ellipsis.admin.roles', save); }) }; }) }));
+    const staffRows = this.staffList().map((u, k) => ({ name: u.name, email: u.email, initials: u.initials, color: u.color, tfa: k === 5 ? 'pending' : 'on', role: u.role, off: !canRoles || u.id === me.id, hint: u.id === me.id ? 'You can’t change your own role' : canRoles ? 'Click to change role' : 'Only Super admins can change roles', cycle: () => this.act('roles', 'Changed ' + u.name + ' role', () => { const r = ls('ellipsis.admin.staffRoles', {}); const i = ROLE_NAMES.indexOf(u.role); r[u.id] = ROLE_NAMES[(i + 1) % ROLE_NAMES.length]; lsSet('ellipsis.admin.staffRoles', r); }) }));
+
+    /* ── audit ── */
+    const auditL = this.live && this._audit ? (this._audit.log || []).map(a => ({ at: a.created * 1000, who: (a.name || 'system') + (a.role ? ' (' + a.role + ')' : ''), what: a.action + (a.detail ? ' · ' + a.detail : '') })) : ls('ellipsis.admin.audit', []);
+    const fmtT = t => { const d = new Date(t); return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); };
+
+    const titles = { overview: ['Overview', 'The numbers an investor asks for first'], growth: ['Growth & engagement', 'Acquisition, corridors and how people use Ellipsis'], revenue: ['Revenue', 'Streams, payouts and margin'], industry: ['Industry & A&R', 'Label activity and account verification'], users: ['Users', U.length.toLocaleString() + ' accounts · ' + realAcc.length + ' created on this device'], mod: ['Moderation', held + ' messages held for review'], rights: ['Rights & splits', 'Copyright, fingerprint matches and split disputes'], roles: ['Roles & rights', 'Who on the team can see and do what'], audit: ['Audit log', 'Every admin action, who did it and when'] };
+    const t = titles[s.view] || titles.overview;
+    const exportCsv = () => {
+      if (!can('export')) { this.flash('Your role cannot export data'); return; }
+      const rows = s.view === 'users' ? [['name', 'email', 'type', 'plan', 'status', 'strikes']].concat(filt.map(u => [u.name, u.email, u.type, u.plan, u.status, u.strikes])) : [['metric', 'value', 'change']].concat(kpis.map(k => [k.label, k.value, k.delta]));
+      const csv = rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n');
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'ellipsis-' + s.view + '-' + s.range + '.csv'; a.click();
+      this.log('Exported ' + s.view + ' CSV'); this.flash('Export downloaded');
+    };
+
+    return {
+      gate: false, toast: s.toast, hasLive: !!(this.live && this._metrics),
+      liveCards: this._metrics ? [['Users', this._metrics.users], ['Creators', this._metrics.creators], ['Music execs', this._metrics.execs], ['DAU', this._metrics.dau], ['MAU', this._metrics.mau], ['Signups · 7d', this._metrics.signups7], ['Releases · 30d', this._metrics.releases30], ['Spike Backs · 30d', this._metrics.spikebacks30], ['Signings · 30d', this._metrics.signings30], ['Premium subs', this._metrics.premium], ['Industry seats', this._metrics.industry], ['MRR', money(this._metrics.mrr || 0)], ['Held messages', this._metrics.held], ['Exec verifications', this._metrics.execPending]].map(([label, v]) => ({ label, value: typeof v === 'number' ? v.toLocaleString() : v })) : [], envLabel: this.live ? 'LIVE' : 'DEMO', meName: me.name, meRole: me.role + ' · ' + (matrix[me.role] || []).length + ' permissions',
+      signOut: () => { if (this.live) { this.api('logout', { body: {} }).catch(() => {}); lsSet('ellipsis.admin.token', null); this._tok = null; this._me = null; this.setState({ staff: null, view: 'overview' }); return; } this.log('Signed out'); lsSet('ellipsis.admin.session', null); this.setState({ staff: null, view: 'overview' }); },
+      nav: NAV.map(([id, label, icon, perm]) => ({ label, icon, badge: id === 'mod' && held ? String(held) : id === 'industry' && verQueue.some(v => v.status === 'Pending') ? String(verQueue.filter(v => v.status === 'Pending').length) : null, bg: s.view === id ? 'rgba(0,217,166,0.16)' : 'transparent', fg: s.view === id ? '#3FE6BD' : can(perm) ? '#C9D4DB' : '#5E6C77', go: () => this.setState({ view: id }) })),
+      pageTitle: t[0], pageSub: t[1],
+      ranges: ['7d', '30d', '90d'].map(r => ({ label: r, go: () => this.setState({ range: r }), bg: s.range === r ? '#0C1318' : 'transparent', fg: s.range === r ? '#fff' : '#3C4A54' })),
+      exportCsv, noExport: !can('export'), exportHint: can('export') ? 'Download as CSV' : 'Your role cannot export', exportFg: can('export') ? '#13202A' : '#9AA6AE', exportCursor: can('export') ? 'pointer' : 'not-allowed',
+      noAccess: !allowed,
+      isOverview: allowed && s.view === 'overview', isGrowth: allowed && s.view === 'growth', isRevenue: allowed && s.view === 'revenue', isIndustry: allowed && s.view === 'industry', isUsers: allowed && s.view === 'users', isMod: allowed && s.view === 'mod', isRights: allowed && s.view === 'rights', isRoles: allowed && s.view === 'roles', isAudit: allowed && s.view === 'audit',
+      ns: { value: num(nsNow), delta: pct(songsWeek[25], songsWeek[21]), note: 'Released songs with 2+ human contributors · ' + (s.range === '7d' ? 'this week' : s.range === '30d' ? 'last 30 days' : 'last 90 days') + (realProjects ? ' · ' + realProjects + ' projects on this device' : ''), bars: songsWeek.map((v, i) => ({ h: (v / songsWeek[25] * 100).toFixed(0) + '%', c: i === 25 ? '#00D9A6' : 'rgba(0,217,166,0.4)', t: 'Week ' + (i + 1) + ': ' + Math.round(v) })) },
+      kpis, mrrNow: money(mrrNow), mrrBars, mrrLabels: mo.map(t => ({ t })),
+      streamKey: [['Premium', premRev[L], COL.p], ['Industry', indRev[L], COL.i], ['Ads', adRev[L], COL.a], ['Sync', syncRev[L], COL.y]].map(([label, v, c]) => ({ label, v: money(v), c })),
+      funnel, cohortHead: ['M0', 'M1', 'M2', 'M3', 'M4', 'M5', ''].map(t => ({ t })), cohorts, unit,
+      dauNote: 'avg ' + num(dau.reduce((a, b) => a + b, 0) / 30) + ' · peak ' + num(Math.max.apply(null, dau)), dauLine: pts(dau), wauLine: pts(wau), dauFill: '0,190 ' + pts(dau) + ' 900,190', dauGrid: [40, 85, 130, 175].map(y => ({ y })), growthTables,
+      revCards, ledger, mrrMove,
+      indCards, verQueue, verPending: String(verQueue.filter(v => v.status === 'Pending').length), verEmpty: verQueue.length === 0,
+      uq: s.uq, onUq: e => { this.setState({ uq: e.target.value, page: 0 }); if (this.live) { clearTimeout(this._qT); this._qT = setTimeout(() => this.reload(), 350); } },
+      uFilters: ['All', 'Creators', 'Execs', 'Premium', 'Flagged', 'Suspended', 'This device'].map(f => ({ label: f, go: () => this.setState({ uf: f, page: 0 }), bg: s.uf === f ? '#E8FBF5' : '#fff', fg: s.uf === f ? '#00806A' : '#13202A', border: s.uf === f ? MINT : '#DDE3E8' })),
+      uRows, uCount: filt.length.toLocaleString() + ' users · page ' + (page + 1) + ' of ' + pages, uPrev: () => this.setState({ page: Math.max(0, page - 1) }), uNext: () => this.setState({ page: Math.min(pages - 1, page + 1) }),
+      modCols: 'minmax(0,1.6fr) minmax(280px,1fr)', modTabs: ['Held', 'Removed', 'Released', 'All'].map(l => ({ label: l + ' · ' + withSt.filter(MT[l]).length, go: () => this.setState({ modTab: l }), bg: s.modTab === l ? '#0C1318' : '#fff', fg: s.modTab === l ? '#fff' : '#13202A', border: s.modTab === l ? '#0C1318' : '#DDE3E8' })),
+      modRows, modEmpty: modRows.length === 0,
+      termDraft: s.termDraft, onTerm: e => this.setState({ termDraft: e.target.value }), onTermKey: e => { if (e.key === 'Enter') addTerm(); }, addTerm, noTerms: !can('terms'),
+      terms: termList.map(w => ({ masked: w[0] + '•'.repeat(Math.max(1, w.length - 2)) + (w.length > 1 ? w[w.length - 1] : ''), remove: () => this.live ? this.liveAct('admin/terms', { term: w, op: 'remove' }, 'Removed a blocked term') : this.act('terms', 'Removed a blocked term', () => lsSet('ellipsis.mod.terms', termList.filter(x => x !== w))) })), noTermList: termList.length === 0,
+      rights, roleHead: ROLE_NAMES.map(t => ({ t })), permRows, staffRows, rolesNote: canRoles ? 'Click a box to grant or remove · changes apply immediately' : 'Read-only — only Super admins can change roles',
+      audit: auditL.slice(0, 200).map(a => ({ when: fmtT(a.at), who: a.who, what: a.what })), auditCount: auditL.length + ' entries', auditEmpty: auditL.length === 0
+    };
+  }
+}
+</script>
+</body>
+</html>
