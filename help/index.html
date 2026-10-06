@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../icons/play-512.png" type="image/png">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Ellipsis Help · How to use everything</title>
+  <meta name="description" content="Answers for creators, listeners and music executives on Ellipsis.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    html,body{margin:0;background:#F3F5F7}
+    *{box-sizing:border-box}
+    a{color:#00806A;text-decoration:none}
+    a:hover{color:#005A45;text-decoration:underline}
+  </style>
+</helmet>
+
+<div style="min-height:100vh;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#13202A;-webkit-font-smoothing:antialiased">
+
+  <header style="background:#0C1318;color:#fff">
+    <div style="max-width:1080px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <a href="{{ homeHref }}" style="display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none">
+        <span style="width:36px;height:36px;border-radius:11px;background:#00D9A6;color:#06231B;font-weight:800;font-size:18px;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center">···</span>
+        <span style="font-family:Sora,sans-serif;font-size:18px;font-weight:700">Ellipsis Help</span>
+      </a>
+      <span style="flex:1"></span>
+      <a href="{{ appHref }}" style="padding:10px 16px;border-radius:11px;background:#00D9A6;color:#06231B;font-size:14px;font-weight:800;text-decoration:none">Open the app</a>
+    </div>
+    <div style="max-width:1080px;margin:0 auto;padding:18px 24px 34px">
+      <h1 style="margin:0 0 8px;font-family:Sora,sans-serif;font-size:40px;font-weight:700;letter-spacing:-1.4px;line-height:1.1">How to use everything</h1>
+      <p style="margin:0 0 20px;max-width:620px;font-size:16px;line-height:1.6;color:#B9C6D0">Plain answers for creators, listeners and music executives. Search, or pick a topic.</p>
+      <div style="display:flex;align-items:center;gap:10px;max-width:640px;height:54px;padding:0 16px;border-radius:16px;background:#fff">
+        <span style="font-size:18px;color:#56646F">⌕</span>
+        <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Try “record”, “splits”, “Spike Back”, “refund”…" style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:#13202A;font-size:16px;font-family:inherit" />
+        <sc-if value="{{ hasQ }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:13px;font-weight:700;color:#56646F;white-space:nowrap">{{ countText }}</span>
+          <button onClick="{{ clearQ }}" title="Clear search" style="width:30px;height:30px;border-radius:9px;border:0;background:#EEF2F4;color:#13202A;font-size:15px;cursor:pointer">×</button>
+        </sc-if>
+      </div>
+    </div>
+  </header>
+
+  <div style="max-width:1080px;margin:0 auto;padding:24px 24px 72px;display:grid;grid-template-columns:{{ cols }};gap:28px;align-items:start">
+
+    <nav style="position:{{ navPos }};top:20px;display:flex;flex-direction:{{ navDir }};flex-wrap:wrap;gap:6px">
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="14">
+        <button onClick="{{ c.go }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid {{ c.border }};border-radius:12px;background:{{ c.bg }};color:{{ c.fg }};font-size:14px;font-weight:700;cursor:pointer;text-align:left">
+          <span style="width:20px;text-align:center">{{ c.icon }}</span><span style="flex:1">{{ c.label }}</span><span style="font-size:12px;color:{{ c.nFg }}">{{ c.n }}</span>
+        </button>
+      </sc-for>
+    </nav>
+
+    <main style="min-width:0;display:flex;flex-direction:column;gap:22px">
+      <sc-if value="{{ showStart }}" hint-placeholder-val="{{ true }}">
+        <section style="padding:22px;border-radius:22px;background:#fff;border:1px solid #E3E8EC">
+          <div style="font-size:12px;font-weight:800;letter-spacing:0.1em;color:#00806A;margin-bottom:10px">START HERE · 5 MINUTES</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px">
+            <sc-for list="{{ steps }}" as="st" hint-placeholder-count="5">
+              <div style="padding:14px;border-radius:16px;background:#F6F8F9">
+                <div style="width:28px;height:28px;border-radius:50%;background:#00D9A6;color:#06231B;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:9px">{{ st.n }}</div>
+                <div style="font-size:14.5px;font-weight:800;margin-bottom:4px">{{ st.t }}</div>
+                <div style="font-size:13px;line-height:1.5;color:#46545F">{{ st.d }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:34px;border-radius:22px;background:#fff;border:1px solid #E3E8EC;text-align:center">
+          <div style="font-size:17px;font-weight:800;margin-bottom:6px">No answers match “{{ q }}”</div>
+          <div style="font-size:14.5px;color:#56646F;line-height:1.55">Try a simpler word like “record”, “mix”, “publish” or “plan”, or email <a href="mailto:support@ellipsismusic.net">support@ellipsismusic.net</a>.</div>
+        </div>
+      </sc-if>
+
+      <sc-for list="{{ sections }}" as="sec" hint-placeholder-count="3">
+        <section id="{{ sec.id }}">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="width:34px;height:34px;border-radius:11px;background:#0C1318;color:#00D9A6;font-size:16px;display:flex;align-items:center;justify-content:center">{{ sec.icon }}</span>
+            <h2 style="margin:0;font-family:Sora,sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.5px">{{ sec.label }}</h2>
+          </div>
+          <div style="border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow:hidden">
+            <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4">
+              <div style="border-top:1px solid #EEF2F4">
+                <button onClick="{{ it.toggle }}" style="display:flex;align-items:center;gap:12px;width:100%;padding:16px 18px;border:0;background:transparent;color:#13202A;font-size:15.5px;font-weight:800;cursor:pointer;text-align:left;font-family:inherit">
+                  <span style="flex:1">{{ it.q }}</span>
+                  <span style="flex:none;width:26px;height:26px;border-radius:8px;background:{{ it.signBg }};color:{{ it.signFg }};font-size:16px;display:flex;align-items:center;justify-content:center">{{ it.sign }}</span>
+                </button>
+                <sc-if value="{{ it.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:0 18px 18px;font-size:14.5px;line-height:1.65;color:#2F3D47">
+                    <sc-for list="{{ it.lines }}" as="ln" hint-placeholder-count="2">
+                      <div style="display:flex;gap:9px;margin-top:6px">
+                        <sc-if value="{{ ln.bullet }}" hint-placeholder-val="{{ false }}"><span style="flex:none;color:#00A982;font-weight:800">•</span></sc-if>
+                        <span style="flex:1;text-wrap:pretty">{{ ln.t }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-for>
+
+      <section style="padding:22px;border-radius:22px;background:#0C1318;color:#fff;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px">
+          <div style="font-family:Sora,sans-serif;font-size:20px;font-weight:700;margin-bottom:4px">Still stuck?</div>
+          <div style="font-size:14px;color:#B9C6D0;line-height:1.55">Email us and a person replies within one working day. Include your account email and what you tapped.</div>
+        </div>
+        <a href="mailto:support@ellipsismusic.net" style="padding:12px 18px;border-radius:12px;background:#00D9A6;color:#06231B;font-size:14.5px;font-weight:800;text-decoration:none">support@ellipsismusic.net</a>
+      </section>
+      <div style="font-size:12.5px;color:#56646F;line-height:1.6">© 2026 Ellipsis. <a href="{{ legalTerms }}">Terms</a> · <a href="{{ legalPrivacy }}">Privacy</a> · <a href="{{ legalDmca }}">Copyright &amp; DMCA</a></div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const FAQ = [
+  ['start', 'Getting started', '★', [
+    ['What is Ellipsis?', 'A place to finish songs with real people anywhere. Start a project, say what part you need, and musicians around the world add theirs. Splits are agreed before release, and every part is credited.', 'Listeners Spike the songs they love, and music executives use Spike Backs to find and sign artists.'],
+    ['How do I create an account?', 'Open the app and tap Create account. Pick your account type — Creator (free or Premium) or Music executive (Industry) — then enter your name, email and a password. You can also continue with Apple or Google.', 'Everyone passes a quick human check (tap four times on the beat). Ellipsis is for people, not bots.'],
+    ['What is the walkthrough when I first sign in?', 'Three quick steps:', '- Pick what you bring (vocals, cello, drums…) and the genres you love.', '- Follow a few creators suggested for those genres.', '- See a real project that needs your part, then open it.', 'You can tap Skip at any time and replay it later from Profile.'],
+    ['What are the main sections?', 'The left rail has five places:', '- Create: start a project, lyrics or a recording.', '- Explore: charts, search and open calls.', '- Projects: everything you own or collaborate on.', '- Library: your parts, plus 520 royalty-free sample parts.', '- Activity: requests, invites and signatures waiting on you.', 'Your Profile is at the bottom of the rail, and the top bar has search, Dark mode and (for staff) Admin.'],
+    ['Is there a dark mode?', 'Yes. Tap ☾ Dark in the top bar, or use the Dark mode switch in Profile. Tap ☀ Light to switch back.']
+  ]],
+  ['explore', 'Explore & listening', '◎', [
+    ['How do charts work?', 'Songs and Instrumentals are ranked by Spikes from listeners. Choose This week, This year or All time, and rank by a tag: Sounds like, Genre or Mood.'],
+    ['What does ✦ For you mean?', 'Explore learns from what you do — what you play, Spike, favorite and work on — and blends that with what is trending. The line under the tags tells you what it is using. Tap All to see the plain trending chart.'],
+    ['How do I search?', 'Use the search bar on Explore to search songs by title, artist, city, genre, mood or “sounds like”. The ⌕ search in the top bar searches people, songs and projects across the whole app.'],
+    ['What is a Spike?', 'A Spike is a vote for a song. Tap ⚡ Spike on any song to lift it up the charts. You can Spike each song once, and tap again to undo.'],
+    ['What is “Let\'s collaborate”?', 'The third tab on Explore lists open projects that are looking for collaborators, with the parts they need (for example “Needs bass”). Open one and tap Request to collaborate.'],
+    ['How do I play music?', 'Tap ▶ on any song. The player bar at the bottom shows what is playing, with play/pause, a scrubber and ⚡ Spike. Press Space to play or pause.']
+  ]],
+  ['projects', 'Projects & collaborating', '▦', [
+    ['How do I start a project?', 'Tap ＋ Create in the rail (or New project on the Projects page). Give it a title, then add parts: lyrics, a melody, an acapella or an instrumental.'],
+    ['What is the step bar on a project?', 'Every project shows four steps — Add parts, Build the mix, Splits & tags, Released — and one Next step card with a single button telling you exactly what to do now.'],
+    ['How do I find collaborators?', 'Open your project and switch on Open to collaborators, then choose the parts you need. It appears in Explore under Let\'s collaborate. You can also invite someone directly from their profile.'],
+    ['How do I join someone else\'s project?', 'Open it from Explore and tap Request to collaborate. When the owner accepts, you can add parts and suggest lyric edits. You will be asked to sign the split before release.'],
+    ['How does project chat work?', 'Each project has a chat for collaborators. Talk freely about the music — swearing about the work is fine. Messages that attack a person are held (see Chat & safety).'],
+    ['Who can change what?', 'The owner controls the mix, splits and release. Collaborators add parts, suggest lyric edits and can listen in the mixer with mute and solo.']
+  ]],
+  ['record', 'Recording & Library', '◉', [
+    ['How do I record a melody or acapella?', 'Go to Library and tap ＋ New, then choose Melody, Acapella or Instrumental. Or, on the Melodies or Acapellas tab, tap the Record button next to Upload.', '- Allow the microphone when your browser asks.', '- Pick a backing track to sing over (optional) — wear headphones so it is not recorded.', '- Press Record, wait for the 3-2-1 count-in, then perform.', '- Stop, play it back, name it, and save it to your Library or a project.'],
+    ['The microphone isn\'t working — what do I do?', 'Check these in order:', '- You must be on the https website (ellipsismusic.net), not a file on your computer.', '- Allow the microphone: tap the lock icon by the address, set Microphone to Allow, then reload.', '- Close Zoom, FaceTime or other apps that use the mic.', '- On iPhone: Settings → Safari → Microphone → Allow.', 'The app shows a message explaining the exact problem if recording can\'t start.'],
+    ['How do I write lyrics?', 'Library → ＋ New → Lyrics (or the New lyrics button on the Lyrics tab). Lyrics open in sections like Verse and Chorus. Add them to a project, and collaborators can suggest edits for the owner to accept.'],
+    ['What is the sample library?', '520 royalty-free parts — instrumentals, melodies, acapellas and lyrics — across six genres. Use them in any project or release with no split owed. Switch Library to Sample library to browse them.'],
+    ['Can I upload my own audio?', 'Yes. Tap ⇪ Upload in the Library and choose an audio file. It is fingerprinted to check it is yours before it can be released.']
+  ]],
+  ['mixer', 'The mixer', '🎚', [
+    ['How do I open the mixer?', 'Open a project and tap Open mixer in the mix section. It opens full screen.'],
+    ['Simple or Pro?', 'Simple shows a sound preset, level, reverb, pan, mute and solo for each track. Pro adds input trim, a low-cut filter, a 4-band EQ, a compressor and delay.'],
+    ['What does ✦ Auto-mix do?', 'It measures how loud each track really is, balances the levels, and picks a starting sound for each one (Vocal, Keys or Beat). Use it as a starting point, then adjust.'],
+    ['How do I use the controls?', '- Drag knobs and faders up or down. Hold Shift for fine moves.', '- Double-click any control to reset it.', '- Tap EQ on a track to open the large EQ graph.', '- Space plays or stops; Esc closes the EQ, then the mixer.'],
+    ['What are A/B and Share mix?', 'A/B keeps two versions of your mix so you can compare them. Share mix posts the current levels to the project chat for collaborators.'],
+    ['What is Bounce?', 'Bounce renders a real stereo WAV of your mix with every effect and the master applied. You can download it, and it becomes the released song when you publish.']
+  ]],
+  ['release', 'Splits, tags & releasing', '◆', [
+    ['What are splits?', 'Splits decide who gets what share of the song\'s earnings. They must add up to exactly 100%, and every contributor must sign before release.'],
+    ['How do I release a song?', 'On the project, follow the step bar: build and bounce the mix, then tap Splits & release.', '- Set and send the split for signatures.', '- Add up to five tags (genre, mood, sounds like…).', '- Choose or upload cover art.', '- Confirm the rights statement and pass the human check, then publish.'],
+    ['How do I add cover art?', 'In the release flow, pick a cover or tap ⇪ Upload for your own artwork. Project owners can also tap 🖼 Add cover art on the project at any time, including after release.'],
+    ['What happens after I publish?', 'The song appears in Explore, ranked by its tags, and everyone on the split is credited. Earnings are paid by the signed split.'],
+    ['Can I change a song after it\'s released?', 'The mix and splits are locked once a song is published, so everyone\'s agreement stays valid. You can still change the cover art.']
+  ]],
+  ['exec', 'For music executives', '◈', [
+    ['What do I get with an Industry account?', 'An A&R Desk to find and track artists: Spike Back songs, move artists through a pipeline, and message them. Industry accounts are verified by our team before full access.'],
+    ['What is a Spike Back?', 'A Spike Back flags a song as one you are interested in. It adds the song to your Shortlist and counts toward the artist\'s verified badge.'],
+    ['How does the pipeline work?', 'Each artist moves through five stages: Shortlisted → Contacted → Meeting → Offer out → Signed. Tap the stage button to move them forward. Counts on the Desk always match the pipeline.'],
+    ['Where do I see my history?', 'Activity lists every Spike Back and stage change with the time. Your profile shows your Spike Back total, signings and roster.']
+  ]],
+  ['profile', 'Profile & verification', '☺', [
+    ['How do I edit my profile?', 'Go to Profile and tap ✎ Edit profile. Change your photo, banner colour, name, handle, city, role, skills and bio, then tap Save profile.'],
+    ['How do I get the verified ✓?', 'A creator is verified after 10 Spike Backs from music executives, or as soon as they are signed. Until then your profile shows progress, for example “◆ 6 / 10 Spike Backs”.'],
+    ['How do I sign out or switch accounts?', 'Profile → ⇄ Sign out / switch. Pick another saved account to switch, or sign out completely.'],
+    ['Can I export or delete my data?', 'Yes, from Profile. Export downloads everything you\'ve made. Deleting your account removes your profile and drafts; signed splits and released songs are kept as legal records.']
+  ]],
+  ['plans', 'Plans & payments', '$', [
+    ['What plans are there?', '- Free: create, collaborate and release, with ads between songs.', '- Premium ($5.99/month): no ads, more storage and lossless downloads. Includes a 7-day free trial.', '- Industry ($49/month): the A&R Desk for music executives.'],
+    ['How do I upgrade?', 'Tap Go Premium in the top bar or Profile. Payment is handled securely by Stripe; Ellipsis never sees your card number.'],
+    ['How do I cancel or change my card?', 'Profile → Manage plan opens the Stripe billing page, where you can cancel, change plan or update your card. Cancelling keeps Premium until the end of the period you paid for.'],
+    ['How do creators get paid?', '70% of ad revenue from each song goes to that song\'s signed split, and a share of subscription revenue is paid by listening. Payouts appear on your Earnings page.'],
+    ['Do invites earn anything?', 'Yes. Share your invite link from Profile. When someone joins with it and releases their first song, you both get a month of Premium.']
+  ]],
+  ['safety', 'Chat & safety', '⚑', [
+    ['What can I say in chat?', 'Talk however you like about the music, including swearing (“this beat is fire as hell” is fine). Insults aimed at a person, threats and hate speech are not allowed.'],
+    ['Why was my message held?', 'Ellipsis held it because it read as an attack on a person, a threat or hate speech. It was not sent. Tap Edit message to rewrite it. Lyrics and recordings are never checked.'],
+    ['What happens after repeated holds?', 'Three held messages pause your chat for 10 minutes. Moderators review held messages and can release false positives, warn, mute for 24 hours or ban.'],
+    ['How do I report someone?', 'Use the ⋯ menu on their profile or message to report or block them. A person on our team reviews every report.'],
+    ['How are copyright and AI content handled?', 'Every upload is fingerprinted. Matches to existing recordings are held before release, and suspected AI-generated vocals are reviewed. Rights holders can file a takedown from the Copyright & DMCA page.']
+  ]],
+  ['admin', 'Admin console (staff)', '⚙', [
+    ['How do I open the admin console?', 'Staff see an ⚙ Admin button in the app\'s top bar. It opens the console already signed in. Staff access is set up privately by the site owner.'],
+    ['What can staff do?', '- Overview, Growth and Revenue: investor dashboards and KPIs.', '- Industry & A&R: approve or reject music-executive accounts.', '- Users: search, verify, give Premium, suspend or ban.', '- Moderation: review held chat and manage blocked terms.', '- Rights & splits: copyright, sample matches and split disputes.', '- Roles & rights and Audit log: who can do what, and a record of every action.'],
+    ['How do I give a teammate access?', 'Have them create an account in the app, then change their role in Admin → Users (or Roles & rights). Seven roles are available, from Super admin to read-only Analyst.']
+  ]],
+  ['trouble', 'Troubleshooting', '?', [
+    ['I don\'t see the latest version.', 'Reload with Ctrl+Shift+R (Cmd+Shift+R on Mac). On the installed app, close and reopen it. Updates arrive automatically.'],
+    ['A song won\'t play.', 'Tap ▶ again — browsers need one tap on the page before they allow sound. Check your device isn\'t muted, and that you\'re online.'],
+    ['My work disappeared after switching devices.', 'Sign in with the same account. Your projects, lyrics and takes sync to your account when the live server is on; in demo mode they stay on the device where you made them.'],
+    ['Can I use Ellipsis on my phone?', 'Yes, in Safari or Chrome. To install it like an app: Share → Add to Home Screen (iPhone) or ⋮ → Install app (Android).'],
+    ['Something else is broken.', 'Email support@ellipsismusic.net with your account email, your device and browser, and what you tapped. A screenshot helps.']
+  ]]
+];
+const STEPS = [
+  ['Create an account', 'Pick Creator or Music executive and pass the human check.'],
+  ['Tell us what you bring', 'Your part and genres shape Explore and your matches.'],
+  ['Join or start a project', 'Request to collaborate, or start your own.'],
+  ['Add your part', 'Record, write or upload — then build the mix.'],
+  ['Sign splits & release', 'Five tags, cover art, everyone signs, publish.']
+];
+
+class Component extends DCLogic {
+  state = { q: '', cat: 'all', open: {}, w: typeof window !== 'undefined' ? window.innerWidth : 1200 };
+  componentDidMount() {
+    this._r = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    const h = (location.hash || '').slice(1);
+    if (h && FAQ.some(c => c[0] === h)) this.setState({ cat: h });
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+
+  renderVals() {
+    const s = this.state, wide = s.w >= 900, q = s.q.trim().toLowerCase();
+    const inApp = typeof location !== 'undefined' && /\/help\/?(index\.html)?$/.test(location.pathname);
+    const match = (title, lines) => !q || (title + ' ' + lines.join(' ')).toLowerCase().indexOf(q) >= 0;
+    const sections = FAQ.filter(([id]) => q || s.cat === 'all' || s.cat === id).map(([id, label, icon, items]) => ({
+      id, label, icon,
+      items: items.filter(([title, ...lines]) => match(title, lines)).map(([title, ...lines]) => {
+        const key = id + ':' + title, open = q ? true : !!s.open[key];
+        return {
+          q: title, open, sign: open ? '−' : '+', signBg: open ? '#00D9A6' : '#EEF2F4', signFg: open ? '#06231B' : '#13202A',
+          toggle: () => this.setState(st => ({ open: Object.assign({}, st.open, { [key]: !st.open[key] }) })),
+          lines: lines.map(t => ({ bullet: t.indexOf('- ') === 0, t: t.indexOf('- ') === 0 ? t.slice(2) : t }))
+        };
+      })
+    })).filter(sec => sec.items.length);
+    const total = sections.reduce((a, x) => a + x.items.length, 0);
+    const chip = on => ({ bg: on ? '#0C1318' : '#fff', fg: on ? '#fff' : '#13202A', border: on ? '#0C1318' : '#E3E8EC', nFg: on ? '#9BA9B4' : '#56646F' });
+    return {
+      q: s.q, onQ: e => this.setState({ q: e.target.value }), clearQ: () => this.setState({ q: '' }), hasQ: !!q,
+      countText: total + (total === 1 ? ' answer' : ' answers'),
+      cols: wide ? '230px minmax(0,1fr)' : 'minmax(0,1fr)', navPos: wide ? 'sticky' : 'static', navDir: wide ? 'column' : 'row',
+      cats: [['all', 'Everything', '≡', FAQ.reduce((a, c) => a + c[3].length, 0)]].concat(FAQ.map(([id, label, icon, items]) => [id, label, icon, items.length])).map(([id, label, icon, n]) => Object.assign({
+        label, icon, n: String(n), go: () => { this.setState({ cat: id, q: '' }); try { history.replaceState(null, '', id === 'all' ? location.pathname : '#' + id); window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} }
+      }, chip(!q && s.cat === id))),
+      showStart: !q && (s.cat === 'all' || s.cat === 'start'),
+      steps: STEPS.map(([t, d], i) => ({ n: String(i + 1), t, d })),
+      sections, empty: !!q && total === 0,
+      homeHref: inApp ? '../' : 'Ellipsis Web Landing.dc.html', appHref: inApp ? '../app/' : 'Ellipsis 4.dc.html',
+      legalTerms: inApp ? '../legal/terms.html' : 'web/legal/terms.html', legalPrivacy: inApp ? '../legal/privacy.html' : 'web/legal/privacy.html', legalDmca: inApp ? '../legal/dmca.html' : 'web/legal/dmca.html'
+    };
+  }
+}
+</script>
+</body>
+</html>

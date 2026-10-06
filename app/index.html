@@ -102,6 +102,7 @@
       <sc-if value="{{ showPremium }}" hint-placeholder-val="{{ true }}">
         <button onClick="{{ goPremium }}" style="flex:none;padding:9px 15px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">Go Premium</button>
       </sc-if>
+      <button onClick="{{ goHelp }}" title="Help & FAQ" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:var(--ink);font-size:16px;font-weight:800;cursor:pointer">?</button>
       <sc-if value="{{ showAdmin }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ goAdmin }}" title="Open the admin console" style="flex:none;display:flex;align-items:center;gap:7px;padding:9px 14px;border:0;border-radius:12px;background:#0C1318;color:#fff;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap"><span style="color:#00D9A6">⚙</span>Admin</button>
       </sc-if>
@@ -1175,18 +1176,19 @@
           <div style="font-size:10.5px;font-weight:800;letter-spacing:0.14em;color:#00D9A6">MIXER</div>
           <div style="font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:700;letter-spacing:-0.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mxTitle }}</div>
         </div>
-        <div style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23">
+        <button onClick="{{ tutOpen }}" title="Mixer tutorial" style="padding:9px 14px;border:1px solid #00D9A6;border-radius:10px;background:rgba(0,217,166,0.12);color:#3FE6BD;font-size:12.5px;font-weight:800;cursor:pointer">? Tutorial</button>
+        <div style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23;box-shadow:{{ hl.modes }};">
           <sc-for list="{{ mxModes }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="padding:7px 14px;border:0;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ t.label }}</button></sc-for>
         </div>
-        <div title="Compare two mixes" style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23">
+        <div title="Compare two mixes" style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23;box-shadow:{{ hl.ab }};">
           <sc-for list="{{ mxAB }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="width:34px;padding:7px 0;border:0;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ t.label }}</button></sc-for>
         </div>
-        <button onClick="{{ mxAuto }}" title="Balance levels and pick a starting sound for every track" style="padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">✦ Auto-mix</button>
-        <button onClick="{{ mxShare }}" title="Post this mix to the project chat" style="padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">Share mix</button>
+        <button onClick="{{ mxAuto }}" title="Balance levels and pick a starting sound for every track" style="box-shadow:{{ hl.auto }};padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">✦ Auto-mix</button>
+        <button onClick="{{ mxShare }}" title="Post this mix to the project chat" style="box-shadow:{{ hl.ab }};padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">Share mix</button>
         <button onClick="{{ closeMixer }}" title="Close mixer (Esc)" style="width:36px;height:36px;border-radius:10px;border:1px solid #2A363E;background:transparent;color:#E6EDF1;font-size:15px;cursor:pointer">✕</button>
       </div>
 
-      <div style="flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid #1C262D">
+      <div style="flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid #1C262D;box-shadow:{{ hl.transport }};">
         <button onClick="{{ mxToStart }}" title="Back to start" style="width:36px;height:36px;border-radius:10px;border:1px solid #2A363E;background:#141D23;color:#E6EDF1;font-size:13px;cursor:pointer">⏮</button>
         <button onClick="{{ mxPlay }}" title="Play / stop (Space)" style="width:46px;height:36px;border-radius:10px;border:0;background:{{ mxPlayBg }};color:{{ mxPlayFg }};font-size:14px;font-weight:800;cursor:pointer">{{ mxPlayIcon }}</button>
         <button onClick="{{ mxLoop }}" title="Loop" style="width:36px;height:36px;border-radius:10px;border:1px solid {{ mxLoopBorder }};background:{{ mxLoopBg }};color:{{ mxLoopFg }};font-size:15px;cursor:pointer">⟲</button>
@@ -1199,14 +1201,14 @@
           <span>PEAK <b style="color:#E6EDF1" data-pk="1">−∞</b></span><span>LOUDNESS <b style="color:#E6EDF1" data-lufs="1">—</b></span>
         </div>
         <sc-if value="{{ mxHasDl }}" hint-placeholder-val="{{ false }}"><a href="{{ mxDlUrl }}" download="{{ mxDlName }}" style="padding:9px 14px;border:1px solid #2A363E;border-radius:10px;color:#E6EDF1;font-size:12.5px;font-weight:800;text-decoration:none;white-space:nowrap">⇩ WAV</a></sc-if>
-        <button onClick="{{ mxBounce }}" disabled="{{ mxBounceOff }}" title="{{ mxBounceHint }}" style="padding:10px 16px;border:0;border-radius:10px;background:{{ mxBounceBg }};color:{{ mxBounceFg }};font-size:13px;font-weight:800;cursor:{{ mxBounceCursor }};white-space:nowrap">{{ mxBounceLabel }}</button>
+        <button onClick="{{ mxBounce }}" disabled="{{ mxBounceOff }}" title="{{ mxBounceHint }}" style="box-shadow:{{ hl.bounce }};padding:10px 16px;border:0;border-radius:10px;background:{{ mxBounceBg }};color:{{ mxBounceFg }};font-size:13px;font-weight:800;cursor:{{ mxBounceCursor }};white-space:nowrap">{{ mxBounceLabel }}</button>
       </div>
 
       <sc-if value="{{ mxNote }}" hint-placeholder-val="{{ false }}">
         <div style="flex:none;padding:8px 18px;background:#1A2328;color:#C9D4DB;font-size:12.5px;font-weight:700;border-bottom:1px solid #1C262D">{{ mxNote }}</div>
       </sc-if>
 
-      <div onClick="{{ mxSeek }}" title="Click to move the playhead" style="flex:none;position:relative;padding:8px 18px 10px;border-bottom:1px solid #1C262D;cursor:text">
+      <div onClick="{{ mxSeek }}" title="Click to move the playhead" style="box-shadow:{{ hl.timeline }};flex:none;position:relative;padding:8px 18px 10px;border-bottom:1px solid #1C262D;cursor:text">
         <sc-for list="{{ mxLanes }}" as="l" hint-placeholder-count="3">
           <div style="display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center;height:30px;opacity:{{ l.opacity }}">
             <div style="display:flex;align-items:center;gap:8px;min-width:0"><span style="flex:none;width:4px;height:20px;border-radius:2px;background:{{ l.color }}"></span><span style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span></div>
@@ -1220,7 +1222,7 @@
         </div>
       </div>
 
-      <div style="flex:1;min-height:0;overflow:auto;padding:14px 18px">
+      <div style="flex:1;min-height:0;overflow:auto;padding:14px 18px;box-shadow:{{ hl.strips }};">
         <div style="display:flex;gap:8px;align-items:stretch;width:max-content;min-height:100%">
         <sc-for list="{{ mxStrips }}" as="st" hint-placeholder-count="5">
           <div style="flex:none;width:{{ st.w }};display:flex;flex-direction:column;align-items:center;gap:8px;padding:9px 7px 10px;border-radius:14px;background:{{ st.bg }};border:1px solid {{ st.border }}">
@@ -1303,6 +1305,38 @@
         </sc-for>
         </div>
       </div>
+
+      <sc-if value="{{ tutOn }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;right:22px;bottom:22px;z-index:96;width:min(440px,calc(100vw - 44px));max-height:calc(100vh - 140px);display:flex;flex-direction:column;border-radius:20px;background:#F6F8F9;color:#13202A;box-shadow:0 24px 60px rgba(0,0,0,0.55),0 0 0 2px #00D9A6;overflow:hidden;animation:elIn .2s ease both">
+          <div style="height:5px;background:#E3E8EC"><div style="height:100%;width:{{ tutPct }};background:#00D9A6;transition:width .25s"></div></div>
+          <div style="flex:none;display:flex;gap:5px;overflow-x:auto;padding:10px 14px 0">
+            <sc-for list="{{ tutChapters }}" as="c" hint-placeholder-count="7"><button onClick="{{ c.go }}" style="flex:none;padding:5px 10px;border:1px solid {{ c.border }};border-radius:999px;background:{{ c.bg }};color:{{ c.fg }};font-size:11.5px;font-weight:800;cursor:pointer;white-space:nowrap">{{ c.label }}</button></sc-for>
+          </div>
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:12px 18px 6px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:11px;font-weight:800;letter-spacing:0.12em;color:#00806A">{{ tutChapter }} · {{ tutStepLabel }}</span>
+              <span style="flex:1"></span>
+              <button onClick="{{ tutClose }}" title="Close tutorial" style="width:26px;height:26px;border-radius:8px;border:0;background:#E3E8EC;color:#13202A;font-size:12px;cursor:pointer">✕</button>
+            </div>
+            <div style="font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:700;letter-spacing:-0.4px;margin-bottom:7px">{{ tutTitle }}</div>
+            <sc-for list="{{ tutLines }}" as="ln" hint-placeholder-count="3">
+              <div style="display:flex;gap:8px;margin-bottom:5px;font-size:13.5px;line-height:1.55;color:#2F3D47">
+                <sc-if value="{{ ln.bullet }}" hint-placeholder-val="{{ false }}"><span style="flex:none;color:#00A982;font-weight:800">•</span></sc-if>
+                <span style="flex:1;text-wrap:pretty">{{ ln.t }}</span>
+              </div>
+            </sc-for>
+            <sc-if value="{{ tutHasTry }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ tutTry }}" style="margin:6px 0 2px;padding:9px 14px;border:1px solid #00A982;border-radius:10px;background:#E8FBF5;color:#00594A;font-size:13px;font-weight:800;cursor:pointer">{{ tutTryLabel }}</button>
+            </sc-if>
+          </div>
+          <div style="flex:none;display:flex;align-items:center;gap:8px;padding:12px 18px 16px;border-top:1px solid #E3E8EC">
+            <sc-if value="{{ tutCanBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tutBack }}" style="padding:10px 14px;border:1px solid #CBD4DB;border-radius:11px;background:#fff;color:#13202A;font-size:13.5px;font-weight:800;cursor:pointer">Back</button></sc-if>
+            <button onClick="{{ tutSkip }}" style="padding:10px 6px;border:0;background:transparent;color:#56646F;font-size:13px;font-weight:700;cursor:pointer">{{ tutSkipLabel }}</button>
+            <span style="flex:1"></span>
+            <button onClick="{{ tutNext }}" style="padding:10px 18px;border:0;border-radius:11px;background:#00D9A6;color:#06231B;font-size:14px;font-weight:800;cursor:pointer">{{ tutNextLabel }}</button>
+          </div>
+        </div>
+      </sc-if>
 
       <sc-if value="{{ mxFocusOpen }}" hint-placeholder-val="{{ false }}">
         <div style="flex:none;display:flex;gap:22px;align-items:center;flex-wrap:wrap;padding:14px 18px 16px;border-top:1px solid #1C262D;background:#0D1418">
@@ -1723,6 +1757,33 @@ const PRESETS = {
   Air: { hpf: true, eq: [-1, 0, 2, 5], eqf: [100, 350, 4000, 12000], thr: -18, ratio: 2, rev: 20, dly: 6 },
   Warm: { hpf: false, eq: [2, 1.5, -1, -3], eqf: [120, 300, 2500, 8000], thr: -12, ratio: 2, rev: 10, dly: 0 }
 };
+const MX_TUT = [{"c":"Basics","t":"Welcome to the mixer","hl":null,"try":null,"lines":["This is where your separate parts become one finished song. Every audio part in the project gets its own channel, like a studio desk.","- Nothing you do here changes the original recordings. Every move can be undone or reset with a double-click.","- This tutorial has 8 chapters. Jump between them with the chips above, or press Next.","- Close it any time with ✕ or Esc, and reopen it with ? Tutorial."]},
+  {"c":"Basics","t":"The layout","hl":null,"try":null,"lines":["The mixer has four areas, top to bottom:","- Header: Simple/Pro, A/B compare, Auto-mix, Share mix and close.","- Transport: play, loop, the clock, loudness meters and Bounce.","- Timeline: one waveform row per track.","- Desk: one channel per track, then the reverb, delay and master channels."]},
+  {"c":"Basics","t":"Play, stop and loop","hl":"transport","try":"play","lines":["- ▶ plays and ■ stops. Space does the same from anywhere in the mixer.","- ⏮ jumps back to the start.","- ⟲ loops the song, so it keeps playing while you adjust things. Mixing is easiest with loop on.","- Changes are heard instantly while the song plays."]},
+  {"c":"Basics","t":"Reading the clock and meters","hl":"transport","try":null,"lines":["- The clock shows bars.beats.sixteenths, then minutes:seconds. Use bars to tell collaborators where a moment is (\"bar 17\").","- BPM, KEY and TRACKS describe the project.","- PEAK is the loudest instant in the last moment. It turns red at 0 dB — that means clipping.","- LOUDNESS (LUFS) is how loud the song feels overall. More on this in the Master chapter."]},
+  {"c":"Basics","t":"The timeline","hl":"timeline","try":null,"lines":["- Each row is one track, drawn from its real waveform, in the same colour as its channel.","- Click anywhere on the timeline to move the playhead there — great for repeating one section.","- Faded rows are muted or switched off in the project."]},
+  {"c":"Channels","t":"Anatomy of a channel","hl":"strips","try":null,"lines":["Each column is one track. Sound flows through it from top to bottom:","- Sound preset → TRIM → HPF → EQ → compressor → REV/DLY sends → PAN → fader → meters.","- The coloured bar at the top matches the track on the timeline.","- Under the name you can see what kind of part it is and who recorded it."]},
+  {"c":"Channels","t":"Faders and level","hl":"strips","try":null,"lines":["- Drag a fader up or down to set that track's level. 0 dB is about three-quarters up and means \"unchanged\".","- Hold Shift while dragging for fine moves. Double-click to return to 0 dB.","- The number under the fader shows its exact setting.","- Good habit: start every fader a little low and bring the most important part (usually the vocal) up first."]},
+  {"c":"Channels","t":"Meters","hl":"strips","try":null,"lines":["- The two bars beside each fader show left and right level while the song plays.","- Green is healthy, amber is getting loud, red is too hot.","- If a channel hits red, lower its fader or TRIM — never fix one loud track by turning everything else up."]},
+  {"c":"Channels","t":"Mute and solo","hl":"strips","try":null,"lines":["- M mutes a channel so you can hear the mix without it.","- S solos it so you hear only that channel (you can solo several at once).","- Collaborators can use mute and solo too — they only change what they hear, not the shared mix."]},
+  {"c":"Channels","t":"Pan","hl":"strips","try":null,"lines":["- PAN places a track from the left speaker (L) to the right (R). C is centre.","- Keep the lead vocal, kick, snare and bass in the centre.","- Spread supporting parts — keys a little left, a second guitar a little right — so everything has room."]},
+  {"c":"Getting started fast","t":"Auto-mix","hl":"auto","try":"auto","lines":["Auto-mix measures how loud each track really is, balances the levels and gives every track a starting sound.","- Acapellas get the Vocal preset, melodies get Keys, instrumentals get Beat.","- Repeated parts of the same kind are spread left and right.","- Treat it as a first draft, then adjust by ear."]},
+  {"c":"Getting started fast","t":"Sound presets","hl":"strips","try":null,"lines":["The button at the top of each channel is its sound preset. Click to cycle through them:","- Vocal: removes rumble and mud, adds clarity and gentle compression with some reverb.","- Keys: warm and even. Beat: punchy low end, tighter middle.","- Lo-fi: darker, dusty top end. Air: bright and open. Warm: fuller low-mids, softer highs. Flat: no processing.","- Touching any Pro control changes the label to Custom."]},
+  {"c":"Pro tools","t":"Simple or Pro","hl":"modes","try":"pro","lines":["Simple shows preset, level, reverb, pan, mute and solo — enough for most songs.","Pro adds the engineer's tools to every channel: TRIM, HPF, a 4-band EQ, a compressor and the delay send. Switch any time; nothing is lost."]},
+  {"c":"Pro tools","t":"Trim and HPF","hl":"strips","try":"pro","lines":["- TRIM sets how loud the track enters the channel (−12 to +12 dB). Use it when a recording is much quieter or louder than the rest.","- HPF (high-pass filter) removes rumble below 90 Hz. Switch it on for vocals, keys and guitars; leave it off for kick and bass."]},
+  {"c":"Pro tools","t":"EQ: shaping tone","hl":"strips","try":"eq","lines":["Tap EQ on a channel to open the large EQ graph at the bottom. Four bands, each with GAIN and FREQ:","- LOW (30–400 Hz): weight and boom. LOW-MID (120 Hz–2 kHz): body, or mud if too much.","- HIGH-MID (600 Hz–8 kHz): presence and bite. HIGH (2.5–18 kHz): air and sparkle.","- GAIN up boosts, down cuts. FREQ chooses where. The curve and coloured dots show the result.","- Cut before you boost, and use small moves (2–4 dB). Flatten resets the EQ."]},
+  {"c":"Pro tools","t":"Compressor","hl":"strips","try":"pro","lines":["A compressor evens out loud and quiet moments so a track sits steadily in the mix.","- THRESH: the level where it starts working. Lower = more compression.","- RATIO: how strongly it works. 2:1 is gentle, 4:1 firm, 8:1+ heavy.","- The amber bar under the knobs shows how much it is turning the track down. A few dB on loud words is typical for vocals."]},
+  {"c":"Space & effects","t":"Reverb and delay sends","hl":"strips","try":null,"lines":["- REV on a channel sends some of it to the shared Plate reverb (the purple channel near the right).","- DLY sends it to the Tape delay (the blue channel).","- Sends add space without making the track itself louder. Start low — around 10–25% — and raise until you can just hear it."]},
+  {"c":"Space & effects","t":"The reverb and delay channels","hl":"strips","try":null,"lines":["- Plate reverb: its fader sets the overall amount of reverb; DECAY sets how long the tail lasts (short for rap, long for ballads).","- Tape delay: TIME is the gap between echoes, FDBK is how many repeats you get. A 375 ms delay suits most mid-tempo songs.","- Lower these return faders to tame effects across the whole song at once."]},
+  {"c":"Master & loudness","t":"The master channel","hl":"strips","try":null,"lines":["The last, widest column is the master. Everything you hear passes through it.","- Its fader sets the overall level of the mix.","- Glue comp gently holds the mix together. Click the button to switch it on or off and compare.","- CEILING is a limiter that stops the mix ever going over that level. -1 dB is safe for streaming."]},
+  {"c":"Master & loudness","t":"Getting the loudness right","hl":"transport","try":null,"lines":["- Aim for about -14 LUFS for streaming services and -9 to -11 LUFS for loud club or drill mixes.","- Raise the master fader to get louder; the limiter catches the peaks.","- If PEAK keeps hitting the ceiling and the mix sounds squashed, lower the master fader and fix loud channels instead."]},
+  {"c":"Recipes","t":"A clean vocal in four moves","hl":"strips","try":null,"lines":["- Preset: Vocal (or HPF on).","- EQ: cut LOW-MID by 2–3 dB around 300 Hz; boost HIGH by 2 dB for air.","- Compressor: RATIO 3:1, lower THRESH until the amber bar moves 3–5 dB on loud words.","- Space: REV 15–25%, DLY 5–15%, then set the fader so every word is clear over the beat."]},
+  {"c":"Recipes","t":"A balanced mix, in order","hl":null,"try":null,"lines":["- 1. Pull every fader down, then bring up the beat or instrumental until it peaks in amber.","- 2. Bring the lead vocal up until it sits on top of the beat.","- 3. Add melodies and harmonies underneath, panning them for space.","- 4. Add reverb and delay, then check loudness on the master.","- 5. Loop the chorus and switch between A and B to compare ideas."]},
+  {"c":"Recipes","t":"Common fixes","hl":null,"try":null,"lines":["- Muddy or boomy: switch on HPF and cut LOW-MID on non-bass parts.","- Vocal buried: raise its fader or cut HIGH-MID a little on the beat.","- Harsh: cut HIGH-MID around 3–5 kHz. Too dull: boost HIGH.","- Too much echo: lower the Plate reverb and Tape delay return faders.","- Red meters: lower the channel's TRIM or fader."]},
+  {"c":"Share & finish","t":"A/B compare","hl":"ab","try":null,"lines":["- A and B are two saved versions of your mix. Mix A is your current mix.","- Click B: it starts as a copy of A. Change things, then flip between A and B to hear which you prefer.","- Whichever is selected when you bounce is the one that gets released."]},
+  {"c":"Share & finish","t":"Share mix and collaborators","hl":"ab","try":null,"lines":["- Share mix posts the current levels to the project chat so collaborators can comment.","- Only the project owner can change levels and sound. Collaborators can open the mixer to listen, mute and solo.","- Once a song is published, its mix is locked so everyone's split agreement stays valid."]},
+  {"c":"Share & finish","t":"Bounce your song","hl":"bounce","try":null,"lines":["- Bounce mix renders a real stereo WAV with every effect and the master applied.","- ⇩ WAV downloads it to your computer.","- The bounce becomes the released song. The project's step bar then moves on to Splits & tags.","- Changed something after bouncing? Bounce again — the newest bounce is always the one used."]},
+  {"c":"Share & finish","t":"Shortcuts and you're done","hl":null,"try":null,"lines":["- Space: play / stop.  Esc: close the EQ, the tutorial, then the mixer.","- Drag up/down on any knob or fader. Shift = fine. Double-click = reset.","- Click the timeline to jump.","That's the whole mixer. Have a great session."]}];
 const PRESET_ORDER = ['Flat', 'Vocal', 'Keys', 'Beat', 'Lo-fi', 'Air', 'Warm'];
 
 const U0 = (c, id) => c.users.find(u => u.id === id) || c.users[0];
@@ -1745,7 +1806,7 @@ class Component extends DCLogic {
     sheet: null, rec: null, ctxPid: null, premium: false, toast: '',
     ob: null, myPart: null, myGenres: [], saved: false,
     auth: null, acct: null, sb: {}, sbLog: [], chatWarn: null, strikes: 0, muteUntil: null, deskTab: 'Rising', deskGenre: 'All',
-    mxOpen: false, mxPid: null, mxPro: true, mxFocus: null, mxLoopOn: false, mxLoading: false, mxBouncing: false, mxDl: null
+    mxOpen: false, mxTut: -1, mxPid: null, mxPro: true, mxFocus: null, mxLoopOn: false, mxLoading: false, mxBouncing: false, mxDl: null
   };
 
   SAVE_KEY = 'ellipsis4.data.v1';
@@ -2006,7 +2067,7 @@ class Component extends DCLogic {
     setTimeout(() => { this._snap = {}; this.PERSIST.forEach(k => { this._snap[k] = this.state[k]; }); this._booted = true; }, 300);
     this._resize = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this._resize);
     this._keys = e => {
-      if (e.key === 'Escape' && this.state.mxOpen && !this.state.sheet) { if (this.state.mxFocus) this.setState({ mxFocus: null }); else this.closeMixer(); return; }
+      if (e.key === 'Escape' && this.state.mxOpen && !this.state.sheet) { if (this.state.mxTut >= 0) { try { localStorage.setItem('ellipsis4.mxTut', '1'); } catch (x) {} this.setState({ mxTut: -1 }); return; } if (this.state.mxFocus) this.setState({ mxFocus: null }); else this.closeMixer(); return; }
       if (this.state.mxOpen && e.code === 'Space' && !/INPUT|TEXTAREA/.test((e.target || {}).tagName || '')) { e.preventDefault(); this.togglePlay(); return; }
       if (e.key === 'Escape') { if (this.state.sheet) this.setState({ sheet: null }); this.setState({ searchOpen: false }); return; }
       if (/INPUT|TEXTAREA/.test((e.target || {}).tagName || '') || this.state.rec || this.state.sheet) return;
@@ -2304,7 +2365,15 @@ class Component extends DCLogic {
       this.flash('Bounced · ' + fmt(out.duration) + ' stereo WAV — ready to publish');
     } catch (e) { this.setState({ mxBouncing: false }); this.flash('Bounce failed in this browser — try Chrome, Edge or Safari'); }
   }
-  openMixer(pid) { const p = this.proj(pid); if (!p) return; if (this.audio) this.audio.pause(); this.setState({ mxOpen: true, mxPid: pid, mxFocus: null, playing: false }); this.mxLoad(p); }
+  goMix(pid) {
+    const p = this.proj(pid); if (!p) return;
+    if (this.mxAudio(p).length) { this.openMixer(pid); return; }
+    const el = document.querySelector('[data-mix]'), sc = this.scrollRef.current;
+    if (el && sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 20, behavior: 'smooth' });
+    this.flash('Turn on at least one audio track below, then open the mixer');
+  }
+  openMixer(pid) { const p = this.proj(pid); if (!p) return; if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
+    this.setState({ mxOpen: true, mxPid: pid, mxFocus: null, playing: false, mxTut: seen ? -1 : 0 }); this.mxLoad(p); }
   closeMixer = () => { this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
 
   startMixOld(p) {
@@ -2701,7 +2770,7 @@ class Component extends DCLogic {
     const pNext = !pMember
       ? { kicker: 'WANT IN?', title: 'Ask to join ' + pp.title, body: (pp.open.needs.length ? ownerFirst + ' is looking for ' + pp.open.needs.join(', ').toLowerCase() + '. ' : '') + 'Once accepted you can add parts and suggest lyric edits.', label: s.requested[pp.id] ? null : 'Request to collaborate', go: () => this.request(pp.id) }
       : stepNow === 0 ? { kicker: 'STEP 1 · NEXT', title: hasParts ? 'Add something you can hear' : 'Add your first part', body: hasParts ? 'Lyrics are in. Record a melody or acapella, or bring in an instrumental, so there is audio to mix.' : 'Write lyrics, record a melody or acapella, or bring in an instrumental.', label: '＋ Add a part', go: () => this.setState({ sheet: { type: 'menu', pid: pp.id } }) }
-      : stepNow === 1 ? (pMine ? { kicker: 'STEP 2 · NEXT', title: 'Build the mix', body: 'Choose which tracks play and set their levels below, preview it, then merge them into one song.', label: '↓ Go to the mix', go: () => { const el = document.querySelector('[data-mix]'); if (el && this.scrollRef.current) this.scrollRef.current.scrollTo({ top: el.offsetTop - 20, behavior: 'smooth' }); } } : { kicker: 'STEP 2 · WAITING ON ' + ownerFirst.toUpperCase(), title: ownerFirst + ' builds the mix', body: 'Keep adding parts and suggesting lyric changes. You will get a request to sign the split before release.', label: null })
+      : stepNow === 1 ? (pMine ? { kicker: 'STEP 2 · NEXT', title: 'Build the mix', body: 'Open the mixer to balance your tracks, shape the sound, then bounce them into one song. First time? A short tutorial walks you through it.', label: '🎚 Open the mixer', go: () => this.goMix(pp.id) } : { kicker: 'STEP 2 · WAITING ON ' + ownerFirst.toUpperCase(), title: ownerFirst + ' builds the mix', body: 'Keep adding parts and suggesting lyric changes. You will get a request to sign the split before release.', label: null })
       : stepNow === 2 ? (pMine ? { kicker: 'STEP 3 · NEXT', title: 'Confirm splits, tag it, release it', body: 'Splits must total 100% and be signed by everyone. Add up to five tags so it is ranked in Explore.', label: 'Splits & release…', go: () => this.openPublish(pp.id) } : { kicker: 'STEP 3 · WAITING ON ' + ownerFirst.toUpperCase(), title: 'Waiting for the split sheet', body: ownerFirst + ' is setting the split. You will sign it from Activity.', label: null })
       : { kicker: 'RELEASED', title: pp.title + ' is live', body: 'Ranked in Explore by its tags. Every contributor is credited and paid by the signed split.', label: '▶ Play the song', go: () => this.play(pp.songId), done: true };
     let buildLabel, buildGo, buildDisabled = false, buildHint;
@@ -2984,7 +3053,8 @@ class Component extends DCLogic {
       const inApp = /\/app\/?(index\.html)?$/.test(location.pathname);
       location.href = inApp ? '../admin/' : 'Ellipsis Admin Console.dc.html';
     };
-    const acctVals = { showAdmin, goAdmin, acctLine: s.acct ? (s.acct.type === 'exec' ? 'Industry account · ' + (s.acct.company || '') : 'Creator account') : 'Account', acctEmail: s.acct ? s.acct.email + (s.acct.demo ? ' · demo' : '') : '', signOut: this.signOut };
+    const goHelp = () => { const inApp = /\/app\/?(index\.html)?$/.test(location.pathname); window.open(inApp ? '../help/' : 'Ellipsis Help.dc.html', '_blank'); };
+    const acctVals = { showAdmin, goAdmin, goHelp, acctLine: s.acct ? (s.acct.type === 'exec' ? 'Industry account · ' + (s.acct.company || '') : 'Creator account') : 'Account', acctEmail: s.acct ? s.acct.email + (s.acct.demo ? ' · demo' : '') : '', signOut: this.signOut };
 
     /* ═══ mixer view ═══ */
     const mp = s.mxOpen ? this.proj(s.mxPid) : null;
@@ -3048,6 +3118,24 @@ class Component extends DCLogic {
       const fPts = fk ? curve(fk, W, H, R, 120) : '';
       const pBar = s.mxPid && s._ ? 0 : 0;
       MX = {
+        ...(() => {
+          const k = s.mxTut, on = k >= 0 && k < MX_TUT.length, st = on ? MX_TUT[k] : null;
+          const GLOW = '0 0 0 3px #00D9A6, 0 0 0 7px rgba(0,217,166,0.25), 0 0 40px rgba(0,217,166,0.35)';
+          const hlv = {}; ['modes', 'ab', 'auto', 'transport', 'bounce', 'timeline', 'strips'].forEach(x => { hlv[x] = st && st.hl === x ? GLOW : 'none'; });
+          const done = () => { try { localStorage.setItem('ellipsis4.mxTut', '1'); } catch (e) {} this.setState({ mxTut: -1 }); };
+          const TRY = { play: ['▶ Try it: play the mix', () => this.togglePlay()], auto: ['✦ Try it: run Auto-mix', () => this.mxAutoMix(pid)], pro: ['Switch to Pro', () => this.setState({ mxPro: true })], eq: ['Open the EQ on the first track', () => { const f = lanesOn[0]; if (f) this.setState({ mxPro: true, mxFocus: f.id }); }] };
+          const tr = st && st.try ? TRY[st.try] : null;
+          return {
+            hl: hlv, tutOn: on, tutOpen: () => this.setState({ mxTut: 0 }), tutClose: done, tutSkip: done,
+            tutTitle: st ? st.t : '', tutLines: st ? st.lines.map(t => ({ bullet: t.indexOf('- ') === 0, t: t.indexOf('- ') === 0 ? t.slice(2) : t })) : [],
+            tutStepLabel: on ? (k + 1) + ' / ' + MX_TUT.length : '', tutChapter: st ? st.c.toUpperCase() : '',
+            tutChapters: MX_TUT.reduce((acc, x, i) => { if (!acc.some(y => y.c === x.c)) acc.push({ c: x.c, i }); return acc; }, []).map(ch => { const cur = st && st.c === ch.c; return { label: ch.c, go: () => this.setState({ mxTut: ch.i }), bg: cur ? '#0C1318' : '#fff', fg: cur ? '#fff' : '#13202A', border: cur ? '#0C1318' : '#CBD4DB' }; }), tutPct: on ? ((k + 1) / MX_TUT.length * 100).toFixed(1) + '%' : '0%',
+            tutHasTry: !!tr, tutTryLabel: tr ? tr[0] : '', tutTry: tr ? tr[1] : () => {},
+            tutCanBack: k > 0, tutBack: () => this.setState({ mxTut: Math.max(0, k - 1) }),
+            tutNext: () => { if (k >= MX_TUT.length - 1) done(); else this.setState({ mxTut: k + 1 }); },
+            tutNextLabel: k >= MX_TUT.length - 1 ? 'Finish' : 'Next', tutSkipLabel: k >= MX_TUT.length - 1 ? '' : 'Skip tutorial'
+          };
+        })(),
         mxOpen: true, mxTitle: mp.title + (ro ? ' · listening' : ''), mxCount: String(lanesOn.length), mxBpm: String(mp.bpm || 90), mxKey: mp.key || 'F min',
         mxNote: s.mxLoading ? 'Loading audio…' : s.mxBouncing ? 'Bouncing the mixdown with the master bus…' : ro ? (mp.stage === 'published' ? 'Published — the mix is locked. Solo and mute still work for listening.' : 'You are listening to ' + U(mp.owner).name.split(' ')[0] + "'s mix. Solo and mute work for you; only the owner can change levels and sound.") : '',
         mxModes: [['Simple', false], ['Pro', true]].map(([l, v]) => ({ label: l, go: () => this.setState({ mxPro: v, mxFocus: v ? s.mxFocus : null }), bg: s.mxPro === v ? '#00D9A6' : 'transparent', fg: s.mxPro === v ? '#06231B' : '#C9D4DB' })),
