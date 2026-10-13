@@ -4,4 +4,4 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /deck/
 
-Sitemap: https://REPLACE-WITH-YOUR-DOMAIN/sitemap.xml
+Sitemap: https://ellipsismusic.net/sitemap.xml

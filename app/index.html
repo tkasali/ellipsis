@@ -108,6 +108,7 @@
       </sc-if>
       <button onClick="{{ toggleTheme }}" title="Switch to {{ themeWord }} mode" style="flex:none;display:flex;align-items:center;gap:7px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap"><span>{{ themeIcon }}</span>{{ themeWord }}</button>
       <button onClick="{{ goMe }}" title="Your profile" style="flex:none;width:40px;height:40px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 2px var(--mint);background:{{ meBg }};color:#fff;font-size:13px;font-weight:800;cursor:pointer">{{ meInitials }}</button>
+      <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ askLogout }}" title="Sign out or switch account" style="flex:none;display:flex;align-items:center;gap:6px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">⎋ Sign out</button></sc-if>
     </header>
 
     <div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto">
@@ -1076,8 +1077,8 @@
 
               <div style="display:flex;justify-content:center;padding:14px;border-radius:18px;background:var(--panel2);margin-bottom:14px">
                 <div onPointerDown="{{ cropDown }}" title="Drag to reposition" style="position:relative;flex:none;width:{{ cropPW }};height:{{ cropPH }};border-radius:12px;overflow:hidden;background:#0C1318;cursor:grab;touch-action:none;box-shadow:0 10px 30px rgba(0,0,0,0.25)">
-                  <sc-if value="{{ cropFit }}" hint-placeholder-val="{{ false }}"><img src="{{ cropSrc }}" alt="" draggable="false" style="position:absolute;left:-10%;top:-10%;width:120%;height:120%;object-fit:cover;filter:blur(22px) brightness(0.72);pointer-events:none" /></sc-if>
-                  <img src="{{ cropSrc }}" alt="Your cover art" draggable="false" style="position:absolute;left:{{ cropL }};top:{{ cropT }};width:{{ cropW }};height:{{ cropH }};max-width:none;user-select:none;pointer-events:none" />
+                  <sc-if value="{{ cropFitSrc }}" hint-placeholder-val="{{ false }}"><div aria-hidden="true" style="position:absolute;left:-10%;top:-10%;width:120%;height:120%;object-fit:cover;filter:blur(22px) brightness(0.72);pointer-events:none;background-image:url({{ cropSrc }});background-size:100% 100%;background-repeat:no-repeat"></div></sc-if>
+                  <sc-if value="{{ cropHasSrc }}" hint-placeholder-val="{{ false }}"><div role="img" aria-label="Your cover art" style="position:absolute;left:{{ cropL }};top:{{ cropT }};width:{{ cropW }};height:{{ cropH }};user-select:none;pointer-events:none;background-image:url({{ cropSrc }});background-size:100% 100%;background-repeat:no-repeat"></div></sc-if>
                   <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to right,transparent 33.2%,rgba(255,255,255,0.35) 33.2%,rgba(255,255,255,0.35) 33.5%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,0.35) 66.5%,rgba(255,255,255,0.35) 66.8%,transparent 66.8%),linear-gradient(to bottom,transparent 33.2%,rgba(255,255,255,0.35) 33.2%,rgba(255,255,255,0.35) 33.5%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,0.35) 66.5%,rgba(255,255,255,0.35) 66.8%,transparent 66.8%);opacity:{{ cropGrid }}"></div>
                   <div style="position:absolute;inset:0;border:2px solid rgba(255,255,255,0.85);border-radius:12px;pointer-events:none"></div>
                 </div>
@@ -1259,14 +1260,15 @@
         <div style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23;box-shadow:{{ hl.modes }};">
           <sc-for list="{{ mxModes }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="padding:7px 14px;border:0;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ t.label }}</button></sc-for>
         </div>
-        <div title="Compare two mixes" style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23;box-shadow:{{ hl.ab }};">
+        <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:center"><div title="Compare two mixes" style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23;box-shadow:{{ hl.ab }};">
           <sc-for list="{{ mxAB }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="width:34px;padding:7px 0;border:0;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ t.label }}</button></sc-for>
         </div>
-        <button onClick="{{ mxAuto }}" title="Balance levels and pick a starting sound for every track" style="box-shadow:{{ hl.auto }};padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">✦ Auto-mix</button>
+        <button onClick="{{ mxAuto }}" title="Balance levels and pick a starting sound for every track" style="box-shadow:{{ hl.auto }};padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">✦ Auto-mix</button></div></sc-if>
         <button onClick="{{ mxShare }}" title="Post this mix to the project chat" style="box-shadow:{{ hl.ab }};padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">Share mix</button>
         <button onClick="{{ closeMixer }}" title="Close mixer (Esc)" style="width:36px;height:36px;border-radius:10px;border:1px solid #2A363E;background:transparent;color:#E6EDF1;font-size:15px;cursor:pointer">✕</button>
       </div>
 
+      <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}">
       <div style="flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid #1C262D;box-shadow:{{ hl.transport }};">
         <button onClick="{{ mxToStart }}" title="Back to start" style="width:36px;height:36px;border-radius:10px;border:1px solid #2A363E;background:#141D23;color:#E6EDF1;font-size:13px;cursor:pointer">⏮</button>
         <button onClick="{{ mxPlay }}" title="Play / stop (Space)" style="width:46px;height:36px;border-radius:10px;border:0;background:{{ mxPlayBg }};color:{{ mxPlayFg }};font-size:14px;font-weight:800;cursor:pointer">{{ mxPlayIcon }}</button>
@@ -1282,11 +1284,115 @@
         <sc-if value="{{ mxHasDl }}" hint-placeholder-val="{{ false }}"><a href="{{ mxDlUrl }}" download="{{ mxDlName }}" style="padding:9px 14px;border:1px solid #2A363E;border-radius:10px;color:#E6EDF1;font-size:12.5px;font-weight:800;text-decoration:none;white-space:nowrap">⇩ WAV</a></sc-if>
         <button onClick="{{ mxBounce }}" disabled="{{ mxBounceOff }}" title="{{ mxBounceHint }}" style="box-shadow:{{ hl.bounce }};padding:10px 16px;border:0;border-radius:10px;background:{{ mxBounceBg }};color:{{ mxBounceFg }};font-size:13px;font-weight:800;cursor:{{ mxBounceCursor }};white-space:nowrap">{{ mxBounceLabel }}</button>
       </div>
+      </sc-if>
 
       <sc-if value="{{ mxNote }}" hint-placeholder-val="{{ false }}">
         <div style="flex:none;padding:8px 18px;background:#1A2328;color:#C9D4DB;font-size:12.5px;font-weight:700;border-bottom:1px solid #1C262D">{{ mxNote }}</div>
       </sc-if>
 
+      <sc-if value="{{ mxIsEasy }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;min-height:0;overflow-y:auto">
+        <div style="max-width:1200px;margin:0 auto;padding:20px 20px 44px;display:grid;grid-template-columns:{{ ezCols }};gap:18px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+
+            <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:22px;border-radius:26px;background:radial-gradient(circle at 12% 18%,rgba(0,217,166,0.34),transparent 55%),radial-gradient(circle at 92% 95%,rgba(91,62,158,0.5),transparent 55%),#111A20;border:1px solid #1C262D">
+              <button onClick="{{ ezPlay }}" disabled="{{ ezNoTracks }}" aria-label="{{ ezPlayAria }}" title="{{ ezPlayAria }}" style="flex:none;width:96px;height:96px;border-radius:50%;border:0;background:{{ ezPlayBg }};color:{{ ezPlayFg }};font-size:32px;font-weight:800;cursor:{{ ezPlayCursor }};box-shadow:0 14px 34px rgba(0,217,166,0.32)">{{ ezPlayIcon }}</button>
+              <div style="flex:1;min-width:220px">
+                <div style="font-size:11px;font-weight:800;letter-spacing:0.14em;color:#3FE6BD;margin-bottom:4px">{{ ezKicker }}</div>
+                <div style="font-family:Sora,'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:700;letter-spacing:-0.8px;line-height:1.15;margin-bottom:11px">{{ ezHeadline }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:7px">
+                  <sc-for list="{{ ezChips }}" as="c" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;background:rgba(255,255,255,0.08);color:#E6EDF1">{{ c.icon }} {{ c.text }}</span></sc-for>
+                </div>
+              </div>
+              <div aria-hidden="true" style="flex:none;display:flex;align-items:flex-end;gap:4px;height:80px;width:min(240px,100%)">
+                <sc-for list="{{ ezBars }}" as="b" hint-placeholder-count="24"><div data-ezbar="1" style="flex:1;height:6%;border-radius:3px;background:linear-gradient(to top,#00D9A6,#5B8CFF 70%,#B07CFF);transition:height .08s linear"></div></sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:18px;background:#111A20;border:1px solid #1C262D">
+              <span style="font-size:24px">✨</span>
+              <div style="flex:1;min-width:220px"><div style="font-size:15px;font-weight:800">Magic match</div><div style="font-size:12.5px;line-height:1.45;color:#9BA9B4">{{ ezMagicSub }}</div></div>
+              <button onClick="{{ ezMagic }}" role="switch" aria-checked="{{ ezMagicOnStr }}" title="Turn magic match on or off" style="flex:none;position:relative;width:56px;height:32px;border-radius:16px;border:0;background:{{ ezMagicTrack }};cursor:pointer"><span style="position:absolute;top:3px;left:{{ ezMagicKnob }};width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);transition:left .18s"></span></button>
+            </div>
+
+            <div>
+              <div style="font-size:11.5px;font-weight:800;letter-spacing:0.12em;color:#8C9AA5;margin-bottom:8px">PICK A VIBE</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px">
+                <sc-for list="{{ ezVibes }}" as="v" hint-placeholder-count="6"><button onClick="{{ v.go }}" title="{{ v.hint }}" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 8px;border:2px solid {{ v.border }};border-radius:16px;background:{{ v.bg }};color:#E6EDF1;cursor:pointer"><span style="font-size:26px;line-height:1">{{ v.emoji }}</span><span style="font-size:13px;font-weight:800">{{ v.label }}</span></button></sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ ezTracks }}" as="t" hint-placeholder-count="2">
+                <div style="padding:14px 16px;border-radius:20px;background:#111A20;border:2px solid {{ t.cardBorder }};opacity:{{ t.opacity }}">
+                  <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px">
+                    <span style="flex:none;width:52px;height:52px;border-radius:16px;background:{{ t.color }};font-size:26px;display:flex;align-items:center;justify-content:center">{{ t.emoji }}</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.title }}</div>
+                      <div style="font-size:12.5px;color:#9BA9B4;margin-bottom:6px">{{ t.by }}</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ t.badges }}" as="b" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;padding:4px 9px;font-size:11.5px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.t }}</span></sc-for></div>
+                    </div>
+                    <sc-if value="{{ t.canRemove }}" hint-placeholder-val="{{ true }}"><button onClick="{{ t.remove }}" title="Remove from the song" aria-label="Remove {{ t.title }}" style="flex:none;width:36px;height:36px;border-radius:11px;border:1px solid #2A363E;background:transparent;color:#C9D4DB;font-size:15px;cursor:pointer">✕</button></sc-if>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                    <div style="flex:1;min-width:220px;display:flex;align-items:center;gap:10px">
+                      <span style="font-size:13px">🔈</span>
+                      <input type="range" min="0" max="100" value="{{ t.vol }}" onChange="{{ t.onVol }}" aria-label="Volume of {{ t.title }}" style="flex:1;min-width:0;height:28px;accent-color:{{ t.color }};cursor:pointer" />
+                      <span style="font-size:13px">🔊</span>
+                      <span style="flex:none;min-width:58px;font-size:12.5px;font-weight:800;color:#C9D4DB">{{ t.volLabel }}</span>
+                    </div>
+                    <div style="display:flex;gap:7px;flex-wrap:wrap">
+                      <button onClick="{{ t.solo }}" style="padding:9px 13px;border:0;border-radius:11px;background:{{ t.soloBg }};color:{{ t.soloFg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ t.soloLabel }}</button>
+                      <button onClick="{{ t.mute }}" style="padding:9px 13px;border:0;border-radius:11px;background:{{ t.muteBg }};color:{{ t.muteFg }};font-size:12.5px;font-weight:800;cursor:pointer">{{ t.muteLabel }}</button>
+                      <sc-if value="{{ t.canLead }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.makeLead }}" title="Everything else follows this track's tempo and key" style="padding:9px 13px;border:1px solid #2A363E;border-radius:11px;background:transparent;color:#E6EDF1;font-size:12.5px;font-weight:800;cursor:pointer">⭐ Make this the beat</button></sc-if>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div onDragOver="{{ ezDragOver }}" onDragLeave="{{ ezDragLeave }}" onDrop="{{ ezDrop }}" onClick="{{ ezPickFile }}" role="button" title="Drop a sound here, or click to choose an audio file" style="padding:26px 20px;border-radius:22px;border:2px dashed {{ ezDropBorder }};background:{{ ezDropBg }};text-align:center;cursor:pointer;transition:background .15s,border-color .15s">
+              <div style="font-size:34px;line-height:1;margin-bottom:8px">{{ ezDropIcon }}</div>
+              <div style="font-size:17px;font-weight:800;margin-bottom:5px">{{ ezDropTitle }}</div>
+              <div style="font-size:13px;line-height:1.5;color:#9BA9B4;max-width:460px;margin:0 auto">{{ ezDropSub }}</div>
+              <sc-if value="{{ ezNoTracks }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px">
+                  <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;background:rgba(255,138,92,0.16);color:#FFB9A0">1 · Pick a voice 🎤</span>
+                  <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;background:rgba(0,217,166,0.16);color:#7FF0D2">2 · Pick a beat 🥁</span>
+                  <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;background:rgba(91,140,255,0.18);color:#B9CCFF">3 · Press play ▶</span>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button onClick="{{ mxBounce }}" disabled="{{ mxBounceOff }}" title="{{ mxBounceHint }}" style="flex:1;min-width:230px;padding:18px;border:0;border-radius:18px;background:{{ mxBounceBg }};color:{{ mxBounceFg }};font-size:17px;font-weight:800;cursor:{{ mxBounceCursor }}">{{ ezMakeLabel }}</button>
+              <sc-if value="{{ ezCanRelease }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ezRelease }}" style="padding:18px 22px;border:0;border-radius:18px;background:#fff;color:#0A0F12;font-size:16px;font-weight:800;cursor:pointer">🚀 Release it</button></sc-if>
+              <sc-if value="{{ mxHasDl }}" hint-placeholder-val="{{ false }}"><a href="{{ mxDlUrl }}" download="{{ mxDlName }}" style="display:flex;align-items:center;padding:18px 20px;border:1px solid #2A363E;border-radius:18px;color:#E6EDF1;font-size:15px;font-weight:800;text-decoration:none">⇩ Download</a></sc-if>
+            </div>
+          </div>
+
+          <aside style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:22px;background:#111A20;border:1px solid #1C262D;max-height:{{ ezDrawerH }};min-height:0">
+            <div><div style="font-size:16px;font-weight:800">Add sounds</div><div style="font-size:12.5px;line-height:1.45;color:#9BA9B4">Drag onto your song, or tap ＋. We match the speed and key for you.</div></div>
+            <div style="display:flex;gap:4px;padding:3px;border-radius:12px;background:#0A0F12">
+              <sc-for list="{{ ezTabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.go }}" style="flex:1;padding:8px 4px;border:0;border-radius:9px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap">{{ t.label }}</button></sc-for>
+            </div>
+            <input value="{{ ezQ }}" onChange="{{ onEzQ }}" placeholder="Search: chill, afrobeats, sad…" aria-label="Search sounds" style="padding:11px 13px;border:1px solid #2A363E;border-radius:12px;background:#0A0F12;color:#E6EDF1;font-size:14px;font-family:inherit;outline:none" />
+            <div style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:7px">
+              <sc-if value="{{ ezNoRows }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 8px;text-align:center;font-size:13px;color:#9BA9B4">{{ ezNoRowsText }}</div></sc-if>
+              <sc-for list="{{ ezRows }}" as="r" hint-placeholder-count="8">
+                <div draggable="true" onDragStart="{{ r.drag }}" title="Drag onto your song" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:14px;background:#0D1418;border:1px solid #1C262D;cursor:grab">
+                  <button onClick="{{ r.preview }}" aria-label="Preview {{ r.title }}" style="flex:none;width:40px;height:40px;border-radius:11px;border:0;background:{{ r.art }};color:#fff;font-size:13px;cursor:pointer">{{ r.icon }}</button>
+                  <span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span><span style="display:block;font-size:11.5px;color:#8C9AA5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span></span>
+                  <button onClick="{{ r.add }}" aria-label="Add {{ r.title }}" style="flex:none;padding:8px 11px;border:0;border-radius:10px;background:#00D9A6;color:#06231B;font-size:12.5px;font-weight:800;cursor:pointer">＋ Add</button>
+                </div>
+              </sc-for>
+            </div>
+          </aside>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}"><div style="flex:1;min-height:0;display:flex;flex-direction:column">
       <div onClick="{{ mxSeek }}" title="Click to move the playhead" style="box-shadow:{{ hl.timeline }};flex:none;position:relative;padding:8px 18px 10px;border-bottom:1px solid #1C262D;cursor:text">
         <sc-for list="{{ mxLanes }}" as="l" hint-placeholder-count="3">
           <div style="display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center;height:30px;opacity:{{ l.opacity }}">
@@ -1384,6 +1490,7 @@
         </sc-for>
         </div>
       </div>
+      </div></sc-if>
 
       <sc-if value="{{ tutOn }}" hint-placeholder-val="{{ false }}">
         <div style="position:fixed;right:22px;bottom:22px;z-index:96;width:min(440px,calc(100vw - 44px));max-height:calc(100vh - 140px);display:flex;flex-direction:column;border-radius:20px;background:#F6F8F9;color:#13202A;box-shadow:0 24px 60px rgba(0,0,0,0.55),0 0 0 2px #00D9A6;overflow:hidden;animation:elIn .2s ease both">
@@ -1756,7 +1863,7 @@ function buildStock() {
   let n = 0;
   plan.forEach(([kind, count]) => {
     for (let k = 0; k < count; k++, n++) {
-      const f = FILES[(n * 5 + k) % 6], g = FILE_GENRE[f];
+      const f = FILES[(k * 7 + Math.floor(k / 6)) % 6], g = FILE_GENRE[f];
       const semis = ((n * 7 + k * 3) % 9) - 4; const rate = Math.round(Math.pow(2, semis / 12) * 1000) / 1000;
       const bpm = Math.round(STOCK_BASE_BPM[f] * rate);
       const key = STOCK_KEYS[(n * 5 + semis + 12) % STOCK_KEYS.length];
@@ -1877,6 +1984,83 @@ function pickImage(max, cb) {
   inp.click();
 }
 
+/* ── Magic match: tempo/key analysis, time-stretch, pitch-shift, beat alignment ── */
+const PCN = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+const BASE_KEY = { lofi: 'F maj', neosoul: 'E♭ maj' };
+function parseKey(k) {
+  const m = String(k || '').match(/^\s*([A-Ga-g])\s*([#♯b♭]?)\s*(m(?!aj)|min|minor)?/); if (!m) return null;
+  const base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()];
+  const acc = m[2] === '#' || m[2] === '♯' ? 1 : (m[2] === 'b' || m[2] === '♭') ? -1 : 0;
+  return { pc: (base + acc + 12) % 12, minor: !!m[3] };
+}
+const keyName = k => k ? PCN[k.pc] + (k.minor ? ' minor' : ' major') : '';
+const mxTick = () => new Promise(r => setTimeout(r, 0));
+function anaAudio(buf) {
+  const sr = buf.sampleRate, len = Math.min(buf.length, Math.floor(sr * 45));
+  const A = buf.getChannelData(0), B = buf.numberOfChannels > 1 ? buf.getChannelData(1) : A;
+  const dec = Math.max(1, Math.round(sr / 11025)), dsr = sr / dec, n = Math.floor(len / dec), m = new Float32Array(n);
+  for (let i = 0; i < n; i++) { let v = 0; const o = i * dec; for (let j = 0; j < dec; j++) v += A[o + j] + B[o + j]; m[i] = v / (2 * dec); }
+  const hop = Math.max(1, Math.round(dsr / 100)), F = Math.floor(n / hop), rms = new Float32Array(F), flux = new Float32Array(F);
+  let prev = 0, mx = 0;
+  for (let f = 0; f < F; f++) { let e = 0; for (let i = f * hop, end = i + hop; i < end; i++) e += m[i] * m[i]; rms[f] = Math.sqrt(e / hop); if (rms[f] > mx) mx = rms[f]; const le = Math.log(1e-4 + rms[f]); if (f) flux[f] = Math.max(0, le - prev); prev = le; }
+  const ac = []; let best = 0, bl = 55, sum = 0, cnt = 0;
+  for (let L = 33; L <= 100; L++) { let t = 0; for (let f = 0; f + L < F; f++) t += flux[f] * flux[f + L]; ac[L] = t; sum += t; cnt++; const bpm = 6000 / L, w = Math.exp(-0.5 * Math.pow(Math.log2(bpm / 110) / 0.9, 2)); if (t * w > best) { best = t * w; bl = L; } }
+  let L = bl; if (ac[bl - 1] != null && ac[bl + 1] != null) { const a = ac[bl - 1], b = ac[bl], c = ac[bl + 1], d = a - 2 * b + c; if (d < 0) L = bl + 0.5 * (a - c) / d; }
+  let bpm = 6000 / L; while (bpm < 70) bpm *= 2; while (bpm > 160) bpm /= 2;
+  const bpmConf = cnt && sum ? ac[bl] / (sum / cnt) : 0;
+  let on = 0; for (let f = 0; f < F; f++) if (rms[f] > mx * 0.12) { on = f; break; }
+  const N = 4096, chroma = new Float64Array(12), win = new Float32Array(N); for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+  const frames = Math.max(0, Math.min(40, Math.floor((n - N) / N))), step = frames ? Math.floor((n - N) / frames) : 0, coefs = [];
+  for (let midi = 40; midi <= 83; midi++) coefs.push([midi % 12, 2 * Math.cos(2 * Math.PI * 440 * Math.pow(2, (midi - 69) / 12) / dsr)]);
+  for (let k = 0; k < frames; k++) { const o = k * step; let en = 0; for (let i = 0; i < N; i += 16) en += Math.abs(m[o + i]); if (en < 1e-3) continue; for (const [pc, c] of coefs) { let s1 = 0, s2 = 0; for (let i = 0; i < N; i++) { const s0 = m[o + i] * win[i] + c * s1 - s2; s2 = s1; s1 = s0; } chroma[pc] += Math.sqrt(Math.max(0, s1 * s1 + s2 * s2 - c * s1 * s2)); } }
+  const MAJ = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88], MIN = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17];
+  const corr = (x, y) => { const mx2 = x.reduce((a, b) => a + b, 0) / 12, my = y.reduce((a, b) => a + b, 0) / 12; let nu = 0, dx = 0, dy = 0; for (let i = 0; i < 12; i++) { nu += (x[i] - mx2) * (y[i] - my); dx += (x[i] - mx2) ** 2; dy += (y[i] - my) ** 2; } return dx && dy ? nu / Math.sqrt(dx * dy) : 0; };
+  let key = null, kc = -2;
+  for (let t = 0; t < 12; t++) { const rot = Array.from({ length: 12 }, (_, i) => chroma[(i + t) % 12]); const a = corr(rot, MAJ), b = corr(rot, MIN); if (a > kc) { kc = a; key = { pc: t, minor: false }; } if (b > kc) { kc = b; key = { pc: t, minor: true }; } }
+  if (key) key.conf = kc;
+  return { bpm: Math.round(bpm * 10) / 10, bpmConf, onset: on / 100, key };
+}
+async function wsola(chs, factor) {
+  const len = chs[0].length;
+  if (Math.abs(factor - 1) < 0.004) return chs.map(c => new Float32Array(c));
+  const N = 2048, Hs = 512, Ha = Hs / factor, tol = 384, L = Math.ceil(len * factor), outLen = L + N;
+  const out = chs.map(() => new Float32Array(outLen)), ws = new Float32Array(outLen), win = new Float32Array(N);
+  for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N);
+  const mono = chs.length > 1 ? (() => { const q = new Float32Array(len); for (let i = 0; i < len; i++) q[i] = (chs[0][i] + chs[1][i]) * 0.5; return q; })() : chs[0];
+  let prev = 0;
+  for (let k = 0; ; k++) {
+    const ys = k * Hs, xa = Math.round(k * Ha);
+    if (ys + N > outLen || xa + N + tol >= len) break;
+    let best = 0;
+    const nat = prev + Hs;
+    if (k > 0 && nat + N / 2 < len) {
+      let bc = -Infinity;
+      for (let d = -tol; d <= tol; d += 16) { const p = xa + d; if (p < 0) continue; let c = 0; for (let i = 0; i < N / 2; i += 8) c += mono[nat + i] * mono[p + i]; if (c > bc) { bc = c; best = d; } }
+      const b0 = best; bc = -Infinity;
+      for (let d = b0 - 15; d <= b0 + 15; d += 3) { const p = xa + d; if (p < 0) continue; let c = 0; for (let i = 0; i < N / 2; i += 4) c += mono[nat + i] * mono[p + i]; if (c > bc) { bc = c; best = d; } }
+    }
+    const pos = Math.max(0, xa + best); prev = pos;
+    for (let c = 0; c < chs.length; c++) { const src = chs[c], dst = out[c]; for (let i = 0; i < N; i++) dst[ys + i] += src[pos + i] * win[i]; }
+    for (let i = 0; i < N; i++) ws[ys + i] += win[i];
+    if (k % 250 === 249) await mxTick();
+  }
+  for (let c = 0; c < out.length; c++) { const o = out[c]; for (let i = 0; i < L; i++) { const w = ws[i]; o[i] = w > 0.15 ? o[i] / w : o[i] / 0.15; } }
+  return out.map(o => o.subarray(0, L));
+}
+function mxResample(ch, P) {
+  const n = Math.max(1, Math.floor(ch.length / P)), o = new Float32Array(n);
+  for (let i = 0; i < n; i++) { const x = i * P, j = Math.floor(x), f = x - j; o[i] = (ch[j] || 0) * (1 - f) + (ch[j + 1] || 0) * f; }
+  return o;
+}
+const VIBES = [
+  ['clean', '✨', 'Clean', 'Balanced and clear', { acapella: 'Vocal', melody: 'Keys', instrumental: 'Beat' }, { rev: { decay: 2.2, fader: -4 }, dly: { fader: -6 }, master: { glue: true, ceil: -1 } }],
+  ['radio', '📻', 'Radio', 'Loud, punchy, vocal up front', { acapella: 'Vocal', melody: 'Keys', instrumental: 'Beat' }, { rev: { decay: 1.6, fader: -7 }, dly: { fader: -9 }, master: { glue: true, ceil: -0.5 } }],
+  ['lofi', '🌙', 'Lo-fi', 'Dusty, soft, late night', { acapella: 'Lo-fi', melody: 'Lo-fi', instrumental: 'Lo-fi' }, { rev: { decay: 2.6, fader: -3 }, dly: { fader: -6 }, master: { glue: true, ceil: -1.5 } }],
+  ['club', '🪩', 'Club', 'Big low end, echoes', { acapella: 'Vocal', melody: 'Air', instrumental: 'Beat' }, { rev: { decay: 1.8, fader: -5 }, dly: { fader: -3, time: 0.375 }, master: { glue: true, ceil: -0.3 } }],
+  ['dreamy', '☁️', 'Dreamy', 'Floaty and wide', { acapella: 'Air', melody: 'Air', instrumental: 'Air' }, { rev: { decay: 4.2, fader: -1 }, dly: { fader: -3 }, master: { glue: true, ceil: -1 } }],
+  ['warm', '🔥', 'Warm', 'Rich and close', { acapella: 'Warm', melody: 'Warm', instrumental: 'Warm' }, { rev: { decay: 2.0, fader: -5 }, dly: { fader: -8 }, master: { glue: true, ceil: -1 } }]
+];
+
 const PRESETS = {
   Flat: { hpf: false, eq: [0, 0, 0, 0], eqf: [100, 350, 2800, 9000], thr: 0, ratio: 1, rev: 0, dly: 0 },
   Vocal: { hpf: true, eq: [-2, -2.5, 3, 2.5], eqf: [120, 320, 3200, 10000], thr: -22, ratio: 3, rev: 22, dly: 12 },
@@ -1936,7 +2120,7 @@ class Component extends DCLogic {
     sheet: null, rec: null, ctxPid: null, premium: false, toast: '',
     ob: null, myPart: null, myGenres: [], saved: false,
     auth: null, acct: null, sb: {}, sbLog: [], chatWarn: null, strikes: 0, muteUntil: null, deskTab: 'Rising', deskGenre: 'All',
-    mxOpen: false, mxTut: -1, mxPid: null, mxPro: true, mxFocus: null, mxLoopOn: false, mxLoading: false, mxBouncing: false, mxDl: null
+    mxOpen: false, mxTut: -1, mxPid: null, mxPro: false, mxMatching: false, mxMatchTick: 0, ezTab: 'Voices', ezQ: '', ezOver: false, mxFocus: null, mxLoopOn: false, mxLoading: false, mxBouncing: false, mxDl: null
   };
 
   SAVE_KEY = 'ellipsis4.data.v1';
@@ -2555,10 +2739,11 @@ class Component extends DCLogic {
     g.dIn = ctx.createGain(); g.dl = ctx.createDelay(2); g.dlp = ctx.createBiquadFilter(); g.dlp.type = 'lowpass'; g.dlp.frequency.value = 3800; g.dfb = ctx.createGain(); g.dRet = ctx.createGain();
     g.dIn.connect(g.dl); g.dl.connect(g.dlp); g.dlp.connect(g.dfb); g.dfb.connect(g.dl); g.dlp.connect(g.dRet); g.dRet.connect(g.inG);
     if (live) { g.mAn = an(g.mg); g.rAn = an(g.rRet); g.dAn = an(g.dRet); }
+    const sigNow = this.matchSig(p);
     lanes.forEach(x => {
-      const buf = this._bufs[x.id].buf; g.dur = Math.max(g.dur, buf.duration / ((this.item(x.id) || {}).rate || 1));
+      const mm = this.matchFor(p, x, sigNow), buf = mm ? mm.buf : this._bufs[x.id].buf, rr = mm ? 1 : ((this.item(x.id) || {}).rate || 1); g.dur = Math.max(g.dur, buf.duration / rr);
       const c = { src: ctx.createBufferSource(), trim: ctx.createGain(), hpf: ctx.createBiquadFilter(), bands: [0, 1, 2, 3].map(() => ctx.createBiquadFilter()), comp: ctx.createDynamicsCompressor(), pan: ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain(), fader: ctx.createGain(), revS: ctx.createGain(), dlyS: ctx.createGain(), buf };
-      c.src.buffer = buf; c.src.playbackRate.value = (this.item(x.id) || {}).rate || 1; c.hpf.type = 'highpass'; c.hpf.Q.value = 0.7;
+      c.src.buffer = buf; c.src.playbackRate.value = rr; c.hpf.type = 'highpass'; c.hpf.Q.value = 0.7;
       ['lowshelf', 'peaking', 'peaking', 'highshelf'].forEach((t, i) => { c.bands[i].type = t; c.bands[i].Q.value = 1; });
       c.comp.knee.value = 6; c.comp.attack.value = 0.005; c.comp.release.value = 0.12;
       let n = c.src; [c.trim, c.hpf].concat(c.bands, [c.comp, c.pan, c.fader]).forEach(nx => { n.connect(nx); n = nx; });
@@ -2614,6 +2799,8 @@ class Component extends DCLogic {
       const [mp, me] = meter('__master', this._g.mAn);
       els.forEach(el => { const v = m[el.getAttribute('data-mtr')]; if (v != null) el.style.height = v; });
       document.querySelectorAll('[data-gr]').forEach(el => { const c = this._g && this._g.chs[el.getAttribute('data-gr')]; const r = el.getAttribute('data-gr') === '__master' ? this._g.glue.reduction + this._g.lim.reduction : c ? c.comp.reduction : 0; el.style.width = Math.min(100, Math.abs(r || 0) * 6) + '%'; });
+      const ezb = document.querySelectorAll('[data-ezbar]');
+      if (ezb.length && this._g.mAn) { const an0 = this._g.mAn[0]; const fd = this._fd && this._fd.length === an0.frequencyBinCount ? this._fd : (this._fd = new Uint8Array(an0.frequencyBinCount)); an0.getByteFrequencyData(fd); ezb.forEach((el, i) => { const lo = 1 + Math.floor(Math.pow(i / ezb.length, 1.8) * fd.length * 0.55); el.style.height = Math.max(6, fd[lo] / 255 * 100).toFixed(0) + '%'; }); }
       const now = performance.now(), pdb = 20 * Math.log10(mp + 1e-9);
       if (pdb > this._pkHold.v || now - this._pkHold.t > 1500) this._pkHold = { v: pdb, t: now };
       this._lufs.push(me); if (this._lufs.length > 180) this._lufs.shift();
@@ -2632,8 +2819,193 @@ class Component extends DCLogic {
     const m = Math.floor(pos / 60), sec = (pos % 60).toFixed(1).padStart(4, '0');
     return String(bar).padStart(3, '0') + '.' + bt + '.' + sub + '   ' + m + ':' + sec;
   }
-  mxPaintIdle() { document.querySelectorAll('[data-mtr]').forEach(el => { el.style.height = '0%'; }); document.querySelectorAll('[data-gr]').forEach(el => { el.style.width = '0%'; }); }
-  async startMix(p) { await this.mxLoad(p); this.mxStart(this.proj(p.id) || p, this._mxPosPid === p.id ? (this._mxPos || 0) : 0); this._mxPosPid = p.id; }
+  mxPaintIdle() { document.querySelectorAll('[data-ezbar]').forEach(el => { el.style.height = '6%'; }); document.querySelectorAll('[data-mtr]').forEach(el => { el.style.height = '0%'; }); document.querySelectorAll('[data-gr]').forEach(el => { el.style.width = '0%'; }); }
+  matchSig(p) { if (!p) return ''; const on = this.mxAudio(p).map(x => x.id + '@' + (this.srcOf(x) || '') + '@' + (x.rate || 1)).join(','); return [p.id, p.mix.__match !== false ? 1 : 0, p.mix.__lead || '', on].join('|'); }
+  matchFor(p, x, sig) { const e = this._match && this._match[x.id]; return e && e.sig === (sig || this.matchSig(p)) && e.buf ? e : null; }
+  leadOf(p, lanes) { const want = p.mix.__lead && lanes.find(x => x.id === p.mix.__lead); return want || lanes.find(x => x.kind === 'instrumental') || lanes.find(x => x.kind === 'melody') || lanes[0]; }
+  mxMeta(x, depth) {
+    const ana = this._ana && this._ana[x.id], rate = x.rate || 1, semis = Math.round(12 * Math.log2(rate));
+    const back = x.syncTo && (depth || 0) < 3 ? this.item(x.syncTo) : null;
+    if (back) { const m = this.mxMeta(back, (depth || 0) + 1); return { bpm: m.bpm, key: m.key, onset: ana ? ana.onset : 0 }; }
+    const bed = !x.url && !x.takeKey && FILES.indexOf(x.file) >= 0;
+    const bpm = bed ? STOCK_BASE_BPM[x.file] : ana && ana.bpmConf >= 1.6 ? ana.bpm : null;
+    const key = bed && BASE_KEY[x.file] ? parseKey(BASE_KEY[x.file]) : ana && ana.key && ana.key.conf >= 0.6 ? ana.key : null;
+    return { bpm: bpm ? bpm * rate : null, key: key ? { pc: (key.pc + semis + 120) % 12, minor: key.minor } : null, onset: ana ? ana.onset / rate : 0 };
+  }
+  mxPrepare(pid) {
+    if (this._prepP) { this._prepAgain = pid; return this._prepP; }
+    this._prepP = this._mxPrepare(pid).catch(() => {}).then(() => {
+      this._prepP = null; const again = this._prepAgain; this._prepAgain = null; this.forceUpdate();
+      if (again) { const q = this.proj(again); if (q && this.matchSig(q) !== this._matchSig) return this.mxPrepare(again); }
+    });
+    return this._prepP;
+  }
+  async _mxPrepare(pid) {
+    let p = this.proj(pid); if (!p) return;
+    const sig0 = this.matchSig(p);
+    this.setState({ mxMatching: true });
+    try {
+      await this.mxLoad(p); p = this.proj(pid); if (!p) return;
+      for (let tries = 0; tries < 3 && this.mxAudio(p).some(x => this.srcOf(x) && !(this._bufs && this._bufs[x.id] && this._bufs[x.id].src === this.srcOf(x))); tries++) { await this.mxLoad(p); p = this.proj(pid); if (!p) return; }
+      const sig = this.matchSig(p);
+      this._ana = this._ana || {}; this._match = this._match || {};
+      const lanes = this.mxAudio(p).filter(x => this._bufs && this._bufs[x.id]);
+      for (const x of lanes) { const src = this._bufs[x.id].src; if (!this._ana[x.id] || this._ana[x.id].src !== src) { this._ana[x.id] = Object.assign({ src }, anaAudio(this._bufs[x.id].buf)); await mxTick(); } }
+      if (!lanes.length || p.mix.__match === false) { this._matchSig = sig; this._matchMeta = lanes.length ? { pid, bpm: this.mxMeta(this.leadOf(p, lanes)).bpm, key: this.mxMeta(this.leadOf(p, lanes)).key, lead: null } : null; return; }
+      const lead = this.leadOf(p, lanes), M = this.mxMeta(lead), ctx = this.ensureCtx();
+      const rel = k => (k.pc + (k.minor ? 3 : 0)) % 12, outs = {};
+      for (const x of lanes) {
+        const raw = this._bufs[x.id].buf, rate = x.rate || 1, E = this.mxMeta(x);
+        const synced = !!(x.syncTo && (x.syncTo === lead.id || x.syncTo === lead.syncTo));
+        let T = 1, d = 0;
+        if (x.id !== lead.id && !synced) {
+          if (M.bpm && E.bpm) { let r = M.bpm / E.bpm; r = [r, r * 2, r / 2].reduce((a, b) => Math.abs(Math.log(b)) < Math.abs(Math.log(a)) ? b : a); if (r > 0.74 && r < 1.35) T = r; }
+          if (M.key && E.key) { d = ((rel(M.key) - rel(E.key)) % 12 + 12) % 12; if (d > 6) d -= 12; }
+        }
+        const Traw = T * rate, Praw = Math.pow(2, d / 12) * rate;
+        let chs = []; for (let c = 0; c < Math.min(2, raw.numberOfChannels); c++) chs.push(raw.getChannelData(c));
+        chs = await wsola(chs, Praw / Traw);
+        if (Math.abs(Praw - 1) > 0.002) { chs = chs.map(c => mxResample(c, Praw)); await mxTick(); }
+        outs[x.id] = { chs, T, d, synced, shift: 0, looped: false, lead: x.id === lead.id, sr: raw.sampleRate, on: (this._ana[x.id].onset || 0) / Traw };
+      }
+      const sr = outs[lead.id].sr, bar = M.bpm ? 240 / M.bpm : 0, leadOn = outs[lead.id].on;
+      for (const x of lanes) {
+        const o = outs[x.id]; if (o.lead || o.synced || !bar) continue;
+        const target = leadOn + Math.max(0, Math.round((o.on - leadOn) / bar)) * bar; let sh = target - o.on; if (Math.abs(sh) > bar * 0.75) sh = 0;
+        const n = Math.round(sh * sr); if (!n) continue; o.shift = sh;
+        o.chs = o.chs.map(c => { if (n > 0) { const z = new Float32Array(c.length + n); z.set(c, n); return z; } return c.slice(Math.min(c.length - 1, -n)); });
+      }
+      const others = lanes.filter(x => x.id !== lead.id).map(x => outs[x.id].chs[0].length);
+      const need = others.length ? Math.max.apply(null, others) : 0, lo = outs[lead.id];
+      if (need > lo.chs[0].length + sr * 0.5) {
+        const dur = lo.chs[0].length / sr, loopN = bar && dur >= bar ? Math.round(Math.floor(dur / bar) * bar * sr) : lo.chs[0].length, fade = Math.round(sr * 0.008);
+        lo.chs = lo.chs.map(c => { const z = new Float32Array(Math.ceil(need / loopN) * loopN + (c.length - loopN)); for (let off = 0; off < z.length; off += loopN) { for (let i = 0; i < c.length && off + i < z.length; i++) { const v = c[i] * (off && i < fade ? i / fade : 1) * (i >= loopN ? Math.max(0, 1 - (i - loopN) / fade) : 1); z[off + i] = i < fade && off ? z[off + i] + v : (i >= loopN ? z[off + i] + v : v); } } return z.subarray(0, Math.max(need, c.length)); });
+        lo.looped = true;
+      }
+      for (const x of lanes) {
+        const o = outs[x.id], b = ctx.createBuffer(o.chs.length, Math.max(1, o.chs[0].length), sr);
+        o.chs.forEach((c, i) => b.copyToChannel(c.length > b.length ? c.subarray(0, b.length) : c, i));
+        this._match[x.id] = { sig, buf: b, info: { lead: o.lead, synced: o.synced, T: o.T, d: o.d, shift: o.shift, looped: o.looped } };
+      }
+      this._matchSig = sig; this._matchMeta = { pid, bpm: M.bpm, key: M.key, lead: lead.id };
+    } finally {
+      if (this._matchSig !== this.matchSig(this.proj(pid))) this._matchSig = this._matchSig || sig0;
+      this.setState(st => ({ mxMatching: false, mxMatchTick: (st.mxMatchTick || 0) + 1 }));
+      const np = this.proj(pid);
+      if (np && this._g && this._gPid === pid) this.mxStart(np, this.mxPos());
+      if (this._ezAuto === pid) { this._ezAuto = null; await this.mxAutoMix(pid, true); const q = this.proj(pid); if (q) this.ezApplyVibe(pid, q.mix.__vibe || 'clean', true); }
+    }
+  }
+  ezApplyVibe(pid, id, silent) {
+    const V = VIBES.find(v => v[0] === id) || VIBES[0], p = this.proj(pid); if (!p || !this.canMix(p)) return;
+    const lanes = this.mxAudio(p, true), oldDecay = this.auxOf(p).rev.decay;
+    this.updProj(pid, z => {
+      lanes.forEach(x => { const name = V[4][x.kind] || 'Flat', cur = z.mix[x.id] || {}; z.mix[x.id] = Object.assign({}, cur, PRESETS[name], { preset: name, fader: cur.fader != null ? cur.fader : 0 }); });
+      z.mix.__rev = Object.assign({}, z.mix.__rev, V[5].rev); z.mix.__dly = Object.assign({}, z.mix.__dly, V[5].dly); z.mix.__master = Object.assign({}, z.mix.__master, V[5].master);
+      z.mix.__vibe = id; if (z.stage === 'built') z.stage = 'draft'; return z;
+    });
+    requestAnimationFrame(() => { const np = this.proj(pid); if (np && this._g && this._gPid === pid) { if (this.auxOf(np).rev.decay !== oldDecay) this.mxStart(np, this.mxPos()); else this.applyLive(pid); } });
+    if (!silent) this.flash(V[2] + ' vibe on');
+  }
+  ezAdd(pid, id) {
+    const p = this.proj(pid); if (!p) return;
+    if (!this.canMix(p)) { this.flash(p.stage === 'published' ? 'This song is released — the mix is locked' : 'Only ' + this.first(p.owner) + ' can change this mix'); return; }
+    if (p.items.indexOf(id) >= 0) { this.flash('That sound is already in your song'); return; }
+    this._ezAuto = pid; this.attach(id, pid, true);
+    const x = this.item(id); this.flash('🎶 ' + (x ? x.title : 'Sound') + ' added — matching it to your song');
+  }
+  ezSetLead(pid, id) { this.updProj(pid, z => { z.mix.__lead = id; if (z.stage === 'built') z.stage = 'draft'; return z; }); this.flash('Everything now follows ' + ((this.item(id) || {}).title || 'this track')); }
+  ezRemove(pid, id) { const p = this.proj(pid); if (!p || !this.canMix(p)) return; const x = this.item(id); this.updProj(pid, z => { z.items = z.items.filter(i => i !== id); delete z.mix[id]; if (z.mix.__lead === id) delete z.mix.__lead; if (z.stage === 'built') z.stage = 'draft'; return z; }); this.flash((x ? x.title : 'Sound') + ' removed'); }
+  uploadFile(f, pid, quiet) {
+    const id = 'n' + Date.now(), nm = f.name.replace(/\.[^.]+$/, '').slice(0, 40);
+    const kind = /voc|vox|acap|sing|verse|hook|rap/i.test(nm) ? 'acapella' : /mel|keys|piano|guitar|synth|chord/i.test(nm) ? 'melody' : 'instrumental';
+    const it = { id, kind, title: nm, owner: 'me', file: FILES[Date.now() % 6], url: null, takeKey: this.keepAudio(id, f), tags: tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
+    this.setState(s => ({ items: s.items.concat([it]) }));
+    if (pid) { if (quiet) this._ezAuto = pid; this.attach(id, pid, true); }
+    if (quiet) this.flash('🎶 ' + nm + ' added as a ' + KIND[kind][0].toLowerCase() + ' — matching it to your song');
+    else this.later(() => this.openTags('item', id, 'Uploaded. Add Sounds like, genre and mood so people can find it.'), 30);
+  }
+  ezVals(p) {
+    const s = this.state, ro = !this.canMix(p), pid = p.id, U = id => this.U(id), w = s.w || 1200;
+    const lanes = this.mxAudio(p);
+    const sig = this.matchSig(p), ready = this._matchSig === sig && !this._prepP && !s.mxMatching;
+    const MM = this._matchMeta && this._matchMeta.pid === pid ? this._matchMeta : null, matchOn = p.mix.__match !== false, playing = s.mixPid === pid;
+    const EMO = { acapella: '🎤', melody: '🎹', instrumental: '🥁' }, COL = { acapella: '#FF8A5C', melody: '#5B8CFF', instrumental: '#00A982' }, KN = { acapella: 'Voice', melody: 'Melody', instrumental: 'Beat' };
+    const tracks = lanes.map(x => {
+      const k = this.chOf(p, x.id), e = ready && this._match && this._match[x.id] && this._match[x.id].sig === sig ? this._match[x.id].info : null, b = [];
+      if (!matchOn) b.push(['As recorded', '#1C262D', '#C9D4DB']);
+      else if (!e) b.push(['✨ Matching…', '#1C262D', '#C9D4DB']);
+      else {
+        const pct = Math.round((e.T - 1) * 100);
+        if (e.lead) b.push(['⭐ The beat · sets the tempo', 'rgba(0,217,166,0.16)', '#7FF0D2']);
+        if (e.synced) b.push(['✓ Recorded in time', 'rgba(0,217,166,0.16)', '#7FF0D2']);
+        if (pct) b.push([(pct > 0 ? '⏩ Sped up ' : '⏪ Slowed down ') + Math.abs(pct) + '%', 'rgba(91,140,255,0.18)', '#B9CCFF']);
+        if (e.d) b.push(['🎵 Moved ' + (e.d > 0 ? 'up ' : 'down ') + Math.abs(e.d) + ' key' + (Math.abs(e.d) > 1 ? 's' : ''), 'rgba(176,124,255,0.18)', '#DCC8FF']);
+        if (Math.abs(e.shift) > 0.02) b.push(['🧲 Snapped to the beat', 'rgba(255,194,75,0.16)', '#FFDD95']);
+        if (e.looped) b.push(['🔁 Looped to fit', 'rgba(255,194,75,0.16)', '#FFDD95']);
+        if (!e.lead && !e.synced && !pct && !e.d && Math.abs(e.shift) <= 0.02) b.push(['✓ Already in sync', 'rgba(0,217,166,0.16)', '#7FF0D2']);
+      }
+      const vol = Math.round(Math.max(0, Math.min(100, (k.fader + 30) / 0.36)));
+      return {
+        title: x.title, by: (KN[x.kind] || 'Sound') + ' · ' + (x.owner === 'me' ? 'You' : U(x.owner).name), emoji: EMO[x.kind] || '♪', color: COL[x.kind] || '#00A982',
+        badges: b.map(([t, bg, fg]) => ({ t, bg, fg })), vol, volLabel: k.mute ? 'Muted' : vol >= 92 ? 'Loudest' : vol >= 70 ? 'Loud' : vol >= 40 ? 'Medium' : vol > 0 ? 'Quiet' : 'Off',
+        onVol: ev => { const v = +ev.target.value; this.setCh(pid, x.id, { fader: Math.round((-30 + v * 0.36) * 10) / 10 }); },
+        soloLabel: k.solo ? '🎧 Hearing only this' : '🎧 Only this', soloBg: k.solo ? '#00D9A6' : '#1C262D', soloFg: k.solo ? '#06231B' : '#E6EDF1', solo: () => this.setCh(pid, x.id, { solo: !k.solo }),
+        muteLabel: k.mute ? '🔈 Unmute' : '🔇 Mute', muteBg: k.mute ? '#FFC24B' : '#1C262D', muteFg: k.mute ? '#1A1405' : '#E6EDF1', mute: () => this.setCh(pid, x.id, { mute: !k.mute }),
+        canLead: !ro && matchOn && !!e && !e.lead && x.kind !== 'acapella', makeLead: () => this.ezSetLead(pid, x.id),
+        canRemove: !ro, remove: () => this.ezRemove(pid, x.id), cardBorder: e && e.lead ? '#00D9A6' : '#1C262D', opacity: k.mute ? '0.55' : '1'
+      };
+    });
+    const chips = [];
+    if (lanes.length) {
+      if (matchOn && !ready) chips.push(['✨', 'Matching your sounds…']);
+      else if (MM) { if (MM.bpm) chips.push(['🥁', Math.round(MM.bpm) + ' BPM']); if (MM.key) chips.push(['🎹', keyName(MM.key)]); chips.push(matchOn ? ['✨', lanes.length > 1 ? 'All ' + lanes.length + ' sounds in sync' : 'Add another sound'] : ['○', 'Magic match off']); }
+    }
+    const tab = s.ezTab || 'Voices', q = (s.ezQ || '').trim().toLowerCase(), want = { Voices: 'acapella', Beats: 'instrumental', Melodies: 'melody' }[tab];
+    let pool = tab === 'Yours' ? s.items.filter(x => x.owner === 'me' && /instrumental|melody|acapella/.test(x.kind)) : s.items.filter(x => x.kind === want && (x.owner === 'me' || x.published)).concat(this.stock.filter(x => x.kind === want));
+    pool = pool.filter(x => p.items.indexOf(x.id) < 0 && (!q || (x.title + ' ' + x.tags.genre.join(' ') + ' ' + x.tags.mood.join(' ') + ' ' + x.tags.like.join(' ') + ' ' + U(x.owner).name).toLowerCase().indexOf(q) >= 0)).slice(0, 60);
+    const vibe = p.mix.__vibe || 'clean', built = p.stage === 'built';
+    return {
+      mxIsPro: !!s.mxPro, mxIsEasy: !s.mxPro,
+      ezCols: w >= 1060 ? 'minmax(0,1fr) 350px' : 'minmax(0,1fr)', ezDrawerH: w >= 1060 ? 'calc(100vh - 150px)' : '520px',
+      ezNoTracks: !lanes.length, ezKicker: !lanes.length ? 'START HERE' : playing ? 'NOW PLAYING' : 'YOUR SONG',
+      ezHeadline: lanes.length ? p.title : 'Drop a voice and a beat — we’ll make them fit',
+      ezChips: chips.map(([icon, text]) => ({ icon, text })), ezBars: Array.from({ length: 24 }, () => ({})),
+      ezPlay: () => { if (lanes.length) this.togglePlay(); }, ezPlayIcon: playing ? '❚❚' : '▶', ezPlayAria: playing ? 'Pause' : 'Play your song',
+      ezPlayBg: lanes.length ? '#00D9A6' : '#1C262D', ezPlayFg: lanes.length ? '#06231B' : '#56646F', ezPlayCursor: lanes.length ? 'pointer' : 'not-allowed',
+      ezMagicSub: matchOn ? 'On — every sound plays at the same speed, in the same key, on the beat.' : 'Off — sounds play exactly as they were recorded.',
+      ezMagic: () => { if (ro) { this.flash('Only ' + this.first(p.owner) + ' can change this'); return; } this.updProj(pid, z => { z.mix.__match = !matchOn; if (z.stage === 'built') z.stage = 'draft'; return z; }); this.flash(matchOn ? 'Magic match off — hear the originals' : 'Magic match on'); },
+      ezMagicTrack: matchOn ? '#00D9A6' : '#3A464F', ezMagicKnob: matchOn ? '27px' : '3px', ezMagicOnStr: matchOn ? 'true' : 'false',
+      ezVibes: VIBES.map(([id, emoji, label, hint]) => ({ emoji, label, hint, border: vibe === id ? '#00D9A6' : '#1C262D', bg: vibe === id ? 'rgba(0,217,166,0.14)' : '#111A20', go: () => ro ? this.flash('Only ' + this.first(p.owner) + ' can change this') : this.ezApplyVibe(pid, id) })),
+      ezTracks: tracks,
+      ezDragOver: e => { e.preventDefault(); try { e.dataTransfer.dropEffect = 'copy'; } catch (er) {} if (!s.ezOver) this.setState({ ezOver: true }); },
+      ezDragLeave: () => this.setState({ ezOver: false }),
+      ezDrop: e => {
+        e.preventDefault(); this.setState({ ezOver: false });
+        if (ro) { this.flash('Only ' + this.first(p.owner) + ' can change this mix'); return; }
+        let id = ''; try { id = e.dataTransfer.getData('text/plain'); } catch (er) {}
+        if (id && this.item(id)) { this.ezAdd(pid, id); return; }
+        const f = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f && (/^audio\//.test(f.type || '') || /\.(wav|mp3|m4a|aac|ogg|flac|webm)$/i.test(f.name))) this.uploadFile(f, pid, true); else this.flash('Drop a sound from the list, or an audio file');
+      },
+      ezPickFile: () => { if (ro) { this.flash('Only ' + this.first(p.owner) + ' can change this mix'); return; } const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'audio/*'; inp.onchange = () => { const f = inp.files && inp.files[0]; if (f) this.uploadFile(f, pid, true); }; inp.click(); },
+      ezDropBorder: s.ezOver ? '#00D9A6' : '#2A363E', ezDropBg: s.ezOver ? 'rgba(0,217,166,0.12)' : 'rgba(255,255,255,0.02)', ezDropIcon: s.ezOver ? '🫳' : '＋',
+      ezDropTitle: s.ezOver ? 'Let go to add it' : lanes.length ? 'Drop another sound here' : 'Drop a voice and a beat here',
+      ezDropSub: 'Drag from the list, or drop an audio file from your computer. Speed, key and timing are matched automatically.',
+      ezMakeLabel: s.mxBouncing ? '✨ Making your song…' : built ? '✓ Song made · make it again' : '✨ Make it a song',
+      ezCanRelease: built && this.canMix(p), ezRelease: () => { this.closeMixer(); this.openPublish(pid); },
+      ezTabs: ['Voices', 'Beats', 'Melodies', 'Yours'].map(l => ({ label: l, go: () => this.setState({ ezTab: l }), bg: tab === l ? '#00D9A6' : 'transparent', fg: tab === l ? '#06231B' : '#C9D4DB' })),
+      ezQ: s.ezQ || '', onEzQ: e => this.setState({ ezQ: e.target.value }),
+      ezNoRows: pool.length === 0, ezNoRowsText: q ? 'Nothing matches “' + s.ezQ.trim() + '”.' : tab === 'Yours' ? 'Record or upload something and it shows up here.' : 'Everything here is already in your song.',
+      ezRows: pool.map(x => ({
+        title: x.title, sub: (x.owner === 'lib' ? 'Ellipsis Sounds' : x.owner === 'me' ? 'You' : U(x.owner).name) + ' · ' + (x.tags.genre[0] || KIND[x.kind][0]) + (x.bpm ? ' · ' + x.bpm + ' BPM' : ''),
+        art: AOF(x), icon: s.curId === x.id && s.playing ? '❚❚' : '▶',
+        preview: () => { this.stopMix(); this.play(x.id); }, add: () => this.ezAdd(pid, x.id),
+        drag: e => { try { e.dataTransfer.setData('text/plain', x.id); e.dataTransfer.effectAllowed = 'copy'; } catch (er) {} }
+      }))
+    };
+  }
+  async startMix(p) { await this.mxLoad(p); if (this.matchSig(this.proj(p.id)) !== this._matchSig) { this.setState({ mxMatching: true }); await this.mxPrepare(p.id); } this.mxStart(this.proj(p.id) || p, this._mxPosPid === p.id ? (this._mxPos || 0) : 0); this._mxPosPid = p.id; }
   dragVal(e, v0, min, max, set, px) {
     if (e.button != null && e.button !== 0) return;
     e.preventDefault(); const y0 = e.clientY;
@@ -2654,7 +3026,7 @@ class Component extends DCLogic {
     this.updProj(pid, z => { z.mix[key] = Object.assign({}, z.mix[key], patch); if (z.stage === 'built') z.stage = 'draft'; return z; });
     requestAnimationFrame(() => { if (rebuild && this._g && this._gPid === pid) { const pos = this.mxPos(); this.mxStart(this.proj(pid), pos); } else this.applyLive(pid); });
   }
-  async mxAutoMix(pid) {
+  async mxAutoMix(pid, silent) {
     const p = this.proj(pid); if (!this.canMix(p)) { this.setCh(pid, '_', { x: 1 }); return; }
     await this.mxLoad(p);
     const lanes = this.mxAudio(p, true).filter(x => this._bufs[x.id]);
@@ -2673,7 +3045,7 @@ class Component extends DCLogic {
       return z;
     });
     requestAnimationFrame(() => this.applyLive(pid));
-    this.flash('Auto-mix balanced ' + lanes.length + ' tracks and picked a sound for each');
+    if (!silent) this.flash('Auto-mix balanced ' + lanes.length + ' tracks and picked a sound for each');
   }
   mxSwitch(pid, slot) {
     const p = this.proj(pid); if (!p) return;
@@ -2702,7 +3074,8 @@ class Component extends DCLogic {
     const lanes = this.mxAudio(p).filter(x => this._bufs[x.id]); if (!lanes.length) { this.flash('Turn on at least one track to bounce'); return; }
     this.setState({ mxBouncing: true });
     try {
-      const sr = 44100, dur = Math.max.apply(null, lanes.map(x => this._bufs[x.id].buf.duration)) + 2.4;
+      if (this.matchSig(p) !== this._matchSig) { await this.mxPrepare(pid); p = this.proj(pid); }
+      const sr = 44100, dur = Math.max.apply(null, lanes.map(x => { const mm = this.matchFor(p, x); return mm ? mm.buf.duration : this._bufs[x.id].buf.duration / (x.rate || 1); })) + 2.4;
       const OC = window.OfflineAudioContext || window.webkitOfflineAudioContext, oc = new OC(2, Math.ceil(dur * sr), sr);
       const g = this.buildGraph(oc, p, false);
       lanes.forEach(x => g.chs[x.id] && g.chs[x.id].src.start(0));
@@ -2722,7 +3095,8 @@ class Component extends DCLogic {
     this.flash('Turn on at least one audio track below, then open the mixer');
   }
   openMixer(pid) { const p = this.proj(pid); if (!p) return; if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
-    this.setState({ mxOpen: true, mxPid: pid, mxFocus: null, playing: false, mxTut: seen ? -1 : 0 }); this.mxLoad(p); }
+    let pro = false; try { pro = localStorage.getItem('ellipsis4.mxMode') === 'pro'; } catch (e) {}
+    this.setState({ mxOpen: true, mxPid: pid, mxFocus: null, playing: false, mxPro: pro, mxTut: seen || !pro ? -1 : 0, ezOver: false }); this.mxLoad(p).then(() => this.mxPrepare(pid)); }
   closeMixer = () => { this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
 
   startMixOld(p) {
@@ -2815,16 +3189,10 @@ class Component extends DCLogic {
   }
   upload(pid) {
     const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'audio/*';
-    inp.onchange = () => {
-      const f = inp.files && inp.files[0]; if (!f) return;
-      const id = 'n' + Date.now();
-      const it = { id, kind: 'instrumental', title: f.name.replace(/\.[^.]+$/, '').slice(0, 40), owner: 'me', file: FILES[Date.now() % 6], url: null, takeKey: this.keepAudio(id, f), tags: tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
-      this.setState(s => ({ items: s.items.concat([it]) }));
-      if (pid) this.attach(id, pid, true);
-      this.later(() => this.openTags('item', id, 'Uploaded. Add Sounds like, genre and mood so people can find it.'), 30);
-    };
+    inp.onchange = () => { const f = inp.files && inp.files[0]; if (f) this.uploadFile(f, pid, false); };
     this.setState({ sheet: null }); inp.click();
   }
+
 
   /* tags */
   openTags(target, id, sub, after) {
@@ -2963,7 +3331,7 @@ class Component extends DCLogic {
   recSave = () => {
     const r = this.state.rec; if (!r) return;
     const id = 'n' + Date.now(); const b = r.backing ? this.item(r.backing) : null;
-    const it = { id, kind: r.kind, title: r.name.trim() || (KIND[r.kind][0] + ' take ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })), owner: 'me', file: b ? b.file : 'ambient', url: null, takeKey: r.blob ? this.keepAudio(id, r.blob, r.url) : undefined, tags: b ? { genre: b.tags.genre.slice(0, 2), mood: [], like: [] } : tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
+    const it = { id, kind: r.kind, title: r.name.trim() || (KIND[r.kind][0] + ' take ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })), owner: 'me', syncTo: b ? b.id : null, file: b ? b.file : 'ambient', url: null, takeKey: r.blob ? this.keepAudio(id, r.blob, r.url) : undefined, tags: b ? { genre: b.tags.genre.slice(0, 2), mood: [], like: [] } : tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99 };
     if (this._take) { this._take.pause(); this._take = null; }
     if (!it.takeKey) it.url = r.url;
     this.setState(s => ({ items: s.items.concat([it]), rec: null }), () => this.persist(true));
@@ -3288,7 +3656,7 @@ class Component extends DCLogic {
       CR = {
         isCrop: true, cropSrc: sh.src, cropPW: g.PW + 'px', cropPH: g.PH + 'px',
         cropL: px(g.PW / 2 - g.cx * sh.iw * g.sc), cropT: px(g.PH / 2 - g.cy * sh.ih * g.sc), cropW: px(sh.iw * g.sc), cropH: px(sh.ih * g.sc),
-        cropFit: !!sh.fit, cropGrid: sh.dragging ? '1' : '0.45',
+        cropHasSrc: !!(sh && sh.type === 'crop' && sh.src), cropFitSrc: !!(sh && sh.type === 'crop' && sh.src && sh.fit), cropFit: !!sh.fit, cropGrid: sh.dragging ? '1' : '0.45',
         cropDown: e => this.cropDrag(e),
         cropFrames: CROP_FRAMES.map(([k, label, a, ratio]) => { const A = a || sh.iw / sh.ih; return Object.assign({ label, ratio, iw: (A >= 1 ? 18 : Math.round(18 * A)) + 'px', ih: (A >= 1 ? Math.round(18 / A) : 18) + 'px', go: () => this.setSheet({ frame: k }) }, chip(sh.frame === k)); }),
         cropZoom: String(Math.round(sh.zoom * 100)), onCropZoom: e => z(+e.target.value / 100), cropIn: () => z(sh.zoom + 0.25), cropOut: () => z(sh.zoom - 0.25), cropZoomText: Math.round(sh.zoom * 100) + '%',
@@ -3524,7 +3892,7 @@ class Component extends DCLogic {
           const TRY = { play: ['▶ Try it: play the mix', () => this.togglePlay()], auto: ['✦ Try it: run Auto-mix', () => this.mxAutoMix(pid)], pro: ['Switch to Pro', () => this.setState({ mxPro: true })], eq: ['Open the EQ on the first track', () => { const f = lanesOn[0]; if (f) this.setState({ mxPro: true, mxFocus: f.id }); }] };
           const tr = st && st.try ? TRY[st.try] : null;
           return {
-            hl: hlv, tutOn: on, tutOpen: () => this.setState({ mxTut: 0 }), tutClose: done, tutSkip: done,
+            hl: hlv, tutOn: on, tutOpen: () => this.setState({ mxTut: 0, mxPro: true }), tutClose: done, tutSkip: done,
             tutTitle: st ? st.t : '', tutLines: st ? st.lines.map(t => ({ bullet: t.indexOf('- ') === 0, t: t.indexOf('- ') === 0 ? t.slice(2) : t })) : [],
             tutStepLabel: on ? (k + 1) + ' / ' + MX_TUT.length : '', tutChapter: st ? st.c.toUpperCase() : '',
             tutChapters: MX_TUT.reduce((acc, x, i) => { if (!acc.some(y => y.c === x.c)) acc.push({ c: x.c, i }); return acc; }, []).map(ch => { const cur = st && st.c === ch.c; return { label: ch.c, go: () => this.setState({ mxTut: ch.i }), bg: cur ? '#0C1318' : '#fff', fg: cur ? '#fff' : '#13202A', border: cur ? '#0C1318' : '#CBD4DB' }; }), tutPct: on ? ((k + 1) / MX_TUT.length * 100).toFixed(1) + '%' : '0%',
@@ -3536,7 +3904,7 @@ class Component extends DCLogic {
         })(),
         mxOpen: true, mxTitle: mp.title + (ro ? ' · listening' : ''), mxCount: String(lanesOn.length), mxBpm: String(mp.bpm || 90), mxKey: mp.key || 'F min',
         mxNote: s.mxLoading ? 'Loading audio…' : s.mxBouncing ? 'Bouncing the mixdown with the master bus…' : ro ? (mp.stage === 'published' ? 'Published — the mix is locked. Solo and mute still work for listening.' : 'You are listening to ' + U(mp.owner).name.split(' ')[0] + "'s mix. Solo and mute work for you; only the owner can change levels and sound.") : '',
-        mxModes: [['Simple', false], ['Pro', true]].map(([l, v]) => ({ label: l, go: () => this.setState({ mxPro: v, mxFocus: v ? s.mxFocus : null }), bg: s.mxPro === v ? '#00D9A6' : 'transparent', fg: s.mxPro === v ? '#06231B' : '#C9D4DB' })),
+        mxModes: [['Easy', false], ['Pro', true]].map(([l, v]) => ({ label: l, go: () => { try { localStorage.setItem('ellipsis4.mxMode', v ? 'pro' : 'easy'); } catch (e) {} this.setState({ mxPro: v, mxFocus: v ? s.mxFocus : null }); }, bg: s.mxPro === v ? '#00D9A6' : 'transparent', fg: s.mxPro === v ? '#06231B' : '#C9D4DB' })),
         mxAB: ['A', 'B'].map(l => ({ label: l, go: () => this.mxSwitch(pid, l), bg: (mp.mix.__ab || 'A') === l ? '#E6EDF1' : 'transparent', fg: (mp.mix.__ab || 'A') === l ? '#0A0F12' : '#C9D4DB' })),
         mxAuto: () => this.mxAutoMix(pid),
         mxShare: () => { this.updProj(pid, z => { z.msgs = z.msgs.concat([{ uid: 'me', text: '🎚 Shared mix ' + (mp.mix.__ab || 'A') + ' · ' + lanesOn.length + ' tracks · ' + lanesOn.map(x => x.title + ' ' + dbT(this.chOf(mp, x.id).fader) + ' dB').join(', ') }]); return z; }); this.flash('Mix posted to the project chat'); },
@@ -3565,9 +3933,10 @@ class Component extends DCLogic {
       };
     }
 
+    if (mp && !this._prepP && this.matchSig(mp) !== this._matchSig) setTimeout(() => this.mxPrepare(mp.id), 0);
     return {
-      ...MX, ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
-      askLogout: () => this.setState({ sheet: { type: 'switch' } }),
+      ...MX, ...(mp ? this.ezVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
+      askLogout: () => this.setState({ sheet: { type: 'switch' } }), signedIn: !!s.acct,
       askLogoutOld: () => this.setState({ sheet: { type: 'confirm', title: 'Log out of Ellipsis?', body: 'Your work is saved' + (s.acct && s.acct.token ? ' to your account — sign back in on any device to pick up where you left off.' : ' on this device and will be here when you sign back in.'), cta: 'Log out', go: () => { this.setState({ sheet: null }); if (this._api && s.acct && s.acct.token) this.api('logout', { body: {} }).catch(() => {}); this.signOut(); this.flash('Logged out'); } } }),
       inviteNote: s.acct && s.acct.refCode ? 'You both get a month of Premium when they release a song' : 'Share Ellipsis with collaborators',
       copyInvite: () => { const url = location.origin + '/app/' + (s.acct && s.acct.refCode ? '?ref=' + s.acct.refCode : ''); (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => this.flash('Invite link copied')).catch(() => this.flash(url)); },

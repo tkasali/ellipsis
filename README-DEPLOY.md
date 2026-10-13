@@ -71,7 +71,6 @@ hPanel → **Advanced → Password Protect Directories** → choose `public_html
 - After updating files: bump `CACHE = 'ellipsis-vNN'` in `app/sw.js`, then hPanel → Performance → **Flush cache**.
 
 ## 8. Fill in the placeholders
-- `robots.txt`, `sitemap.xml`: replace `REPLACE-WITH-YOUR-DOMAIN`.
 - `legal/*.html`: replace every `[bracketed]` value with your real entity, address and DMCA agent.
 
 ## 9. What runs on the server
