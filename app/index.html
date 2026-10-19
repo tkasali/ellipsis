@@ -170,6 +170,18 @@
             <sc-if value="{{ isSongs }}" hint-placeholder-val="{{ true }}">
               <div style="border-radius:20px;background:var(--panel);border:1px solid var(--line);overflow:hidden">
                 <sc-for list="{{ songRows }}" as="r" hint-placeholder-count="8">
+                  <sc-if value="{{ r.isAd }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:13px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--panel2)">
+                      <span style="flex:none;width:26px;text-align:center;font-size:10px;font-weight:800;letter-spacing:0.08em;color:var(--dim)">AD</span>
+                      <span style="flex:none;width:46px;height:46px;border-radius:12px;background:{{ r.adColor }};color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center">◆</span>
+                      <button onClick="{{ r.adGo }}" style="flex:1;min-width:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left">
+                        <span style="display:block;font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.adHead }}</span>
+                        <span style="display:block;font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Sponsored · {{ r.adSponsor }} · {{ r.adBody }}</span>
+                      </button>
+                      <button onClick="{{ r.adGo }}" style="flex:none;padding:9px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--panel);color:var(--ink);font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">{{ r.adCta }}</button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ r.isSong }}" hint-placeholder-val="{{ true }}">
                   <div style="display:flex;align-items:center;gap:13px;padding:11px 18px;border-bottom:1px solid var(--line)" style-hover="background:var(--hover)">
                     <span style="flex:none;width:26px;text-align:center;font-size:17px;font-weight:800;color:{{ r.rankFg }}">{{ r.rank }}</span>
                     <button onClick="{{ r.play }}" style="flex:none;width:46px;height:46px;border-radius:12px;border:0;background:{{ r.art }};color:#fff;font-size:14px;cursor:pointer">{{ r.icon }}</button>
@@ -185,6 +197,7 @@
                     </sc-if>
                     <button onClick="{{ r.spike }}" title="Spike" style="flex:none;padding:9px 13px;border:1px solid {{ r.spBorder }};border-radius:11px;background:{{ r.spBg }};color:{{ r.spFg }};font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">{{ r.spLabel }}</button>
                   </div>
+                  </sc-if>
                 </sc-for>
               </div>
             </sc-if>
@@ -582,6 +595,14 @@
             <sc-if value="{{ libEmpty }}" hint-placeholder-val="{{ false }}">
               <div style="padding:34px;border-radius:20px;background:var(--panel);border:1px solid var(--line);text-align:center;font-size:14.5px;color:var(--dim)">{{ libEmptyText }}</div>
             </sc-if>
+            <sc-if value="{{ showAds }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:18px;background:var(--panel);border:1px solid var(--line);margin-bottom:14px">
+                <span style="flex:none;width:44px;height:44px;border-radius:13px;background:{{ libAdColor }};color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center">◆</span>
+                <div style="flex:1;min-width:200px"><div style="font-size:11px;font-weight:800;letter-spacing:0.09em;color:var(--dim)">SPONSORED · {{ libAdSponsor }}</div><div style="font-size:14.5px;font-weight:800">{{ libAdHead }}</div><div style="font-size:12.5px;color:var(--dim)">{{ libAdBody }}</div></div>
+                <button onClick="{{ libAdGo }}" style="flex:none;padding:9px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:13px;font-weight:800;cursor:pointer">{{ libAdCta }}</button>
+                <button onClick="{{ goPremium }}" title="Remove ads with Premium" style="flex:none;padding:9px 12px;border:0;border-radius:11px;background:transparent;color:var(--mint-ink);font-size:12.5px;font-weight:800;cursor:pointer">Remove ads</button>
+              </div>
+            </sc-if>
             <div style="border-radius:20px;background:var(--panel);border:1px solid var(--line);overflow:hidden">
               <sc-for list="{{ libRows }}" as="r" hint-placeholder-count="6">
                 <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line)" style-hover="background:var(--hover)">
@@ -697,6 +718,14 @@
                 </sc-for>
               </div>
             </div>
+            <sc-if value="{{ showAds }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:18px;background:var(--panel);border:1px solid var(--line);margin-bottom:14px">
+                <span style="flex:none;width:44px;height:44px;border-radius:13px;background:{{ actAdColor }};color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center">◆</span>
+                <div style="flex:1;min-width:200px"><div style="font-size:11px;font-weight:800;letter-spacing:0.09em;color:var(--dim)">SPONSORED · {{ actAdSponsor }}</div><div style="font-size:14.5px;font-weight:800">{{ actAdHead }}</div><div style="font-size:12.5px;color:var(--dim)">{{ actAdBody }}</div></div>
+                <button onClick="{{ actAdGo }}" style="flex:none;padding:9px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:13px;font-weight:800;cursor:pointer">{{ actAdCta }}</button>
+                <button onClick="{{ goPremium }}" title="Remove ads with Premium" style="flex:none;padding:9px 12px;border:0;border-radius:11px;background:transparent;color:var(--mint-ink);font-size:12.5px;font-weight:800;cursor:pointer">Remove ads</button>
+              </div>
+            </sc-if>
             <div style="display:flex;flex-direction:column;gap:10px">
               <sc-for list="{{ acts }}" as="a" hint-placeholder-count="5">
                 <div style="display:flex;gap:13px;align-items:center;flex-wrap:wrap;padding:15px 17px;border-radius:18px;background:var(--panel);border:1px solid {{ a.border }};animation:elIn .3s ease both">
@@ -887,7 +916,7 @@
     </div>
   </main>
 
-  <footer style="grid-row:2;grid-column:1 / span 2;display:grid;grid-template-columns:{{ playerCols }};align-items:center;gap:20px;padding:0 24px;background:var(--panel);border-top:1px solid var(--line);z-index:5">
+  <footer style="position:relative;grid-row:2;grid-column:1 / span 2;display:grid;grid-template-columns:{{ playerCols }};align-items:center;gap:20px;padding:0 24px;background:var(--panel);border-top:1px solid var(--line);z-index:5">
     <div style="display:flex;align-items:center;gap:12px;min-width:0">
       <div style="flex:none;width:52px;height:52px;border-radius:13px;background:{{ nowArt }}"></div>
       <div style="min-width:0"><div style="font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nowTitle }}</div><div style="font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nowSub }}</div></div>
@@ -896,7 +925,11 @@
       </sc-if>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">
-      <button onClick="{{ togglePlay }}" title="Play or pause (space)" style="width:42px;height:42px;border-radius:50%;border:0;background:#0C1318;color:#fff;font-size:15px;cursor:pointer">{{ playIcon }}</button>
+      <div style="display:flex;align-items:center;gap:14px">
+        <button onClick="{{ prevTrack }}" title="Previous song" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--ink);font-size:14px;cursor:pointer">⏮</button>
+        <button onClick="{{ togglePlay }}" title="Play or pause (space)" style="width:42px;height:42px;border-radius:50%;border:0;background:#0C1318;color:#fff;font-size:15px;cursor:pointer">{{ playIcon }}</button>
+        <button onClick="{{ nextTrack }}" title="Next song" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--ink);font-size:14px;cursor:pointer">⏭</button>
+      </div>
       <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:560px">
         <span style="font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:700;color:var(--dim);min-width:34px;text-align:right">{{ elapsed }}</span>
         <div onClick="{{ scrub }}" style="position:relative;flex:1;height:16px;display:flex;align-items:center;cursor:pointer">
@@ -906,6 +939,19 @@
         <span style="font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:700;color:var(--dim);min-width:34px">{{ duration }}</span>
       </div>
     </div>
+    <sc-if value="{{ adOn }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:6;display:flex;align-items:center;gap:16px;padding:0 24px;background:var(--panel)">
+        <span style="flex:none;width:52px;height:52px;border-radius:13px;background:{{ adColor }};color:#fff;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center">◆</span>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:0.09em;color:var(--dim)"><span style="padding:2px 7px;border-radius:6px;background:#F5B800;color:#1A1405">AD</span>{{ adSponsor }} · {{ adLeft }}</div>
+          <div style="font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ adHead }}</div>
+          <div style="height:4px;border-radius:2px;background:var(--line);margin-top:6px;overflow:hidden"><div style="height:100%;width:{{ adProg }};background:#F5B800"></div></div>
+          <div style="font-size:11.5px;color:var(--dim);margin-top:4px">{{ adAfter }} · your music resumes after</div>
+        </div>
+        <button onClick="{{ adGo }}" style="flex:none;padding:10px 15px;border:1px solid var(--line2);border-radius:12px;background:var(--panel2);color:var(--ink);font-size:13px;font-weight:800;cursor:pointer">{{ adCta }}</button>
+        <button onClick="{{ adFree }}" style="flex:none;padding:10px 15px;border:0;border-radius:12px;background:var(--mint);color:var(--on-mint);font-size:13px;font-weight:800;cursor:pointer">Go ad-free</button>
+      </div>
+    </sc-if>
     <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px"><span style="font-size:12.5px;font-weight:700;color:var(--dim)">Vol</span><input type="range" min="0" max="100" value="{{ volume }}" onChange="{{ onVolume }}" style="width:110px;accent-color:#00D9A6;cursor:pointer" /></div>
     </sc-if>
@@ -1028,6 +1074,7 @@
                   <button onClick="{{ pubShare }}" style="margin-top:16px;padding:12px 20px;border:0;border-radius:13px;background:#0C1318;color:#fff;font-size:14.5px;font-weight:800;cursor:pointer">⇪ Share it on social</button>
                 </div>
               </sc-if>
+              <sc-if value="{{ pubWhy }}" hint-placeholder-val="{{ false }}"><div style="margin-top:16px;padding:10px 13px;border-radius:11px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;font-weight:700;line-height:1.45">{{ pubWhy }}</div></sc-if>
               <div style="display:flex;gap:10px;margin-top:20px">
                 <sc-if value="{{ pubCanBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pubBack }}" style="padding:13px 18px;border:1px solid var(--line2);border-radius:13px;background:transparent;color:var(--ink);font-size:14.5px;font-weight:800;cursor:pointer">Back</button></sc-if>
                 <sc-if value="{{ pubHasNext }}" hint-placeholder-val="{{ true }}"><button onClick="{{ pubNext }}" disabled="{{ pubBlocked }}" style="flex:1;padding:13px;border:0;border-radius:13px;background:{{ pubBtnBg }};color:{{ pubBtnFg }};font-size:15px;font-weight:800;cursor:pointer">{{ pubCta }}</button></sc-if>
@@ -1844,6 +1891,18 @@ const ROLES = [['Vocalist','Vocals'],['Producer','Mixing'],['Songwriter','Lyrics
 const ADJ = ['Velvet','Neon','Paper','Golden','Midnight','Quiet','Electric','Salt','Slow','Honey','Glass','Copper','Late','Silver','Wild','Cherry','Low','Blue','Soft','Northern'];
 const NOUN = ['Harbour','Tram','Static','Hours','Motel','Garden','Ferry','Signal','Rooftop','Letters','Weather','Fever','Lanterns','Sunday','Engines','Rain','Frequencies','Avenue','Tides','Postcards'];
 const GRADS = [['#00D9A6','#0B5E7A'],['#FF8A5C','#8C1E4B'],['#B07CFF','#2C4A9E'],['#FFC24B','#B3523E'],['#5B8CFF','#0C1318'],['#3FE6BD','#5B3E9E'],['#FF6B9A','#5B3E9E'],['#7FD6E8','#1F5E78'],['#E0A33A','#3E6B2F'],['#9BE15D','#0A6E58']];
+/* Ad inventory. Sponsors are fictional placeholders until real campaigns are booked in the admin console. */
+const ADS = [
+  { id: 'ad-northwave', sponsor: 'Northwave Audio', head: 'Studio headphones built for late nights', body: 'Flat, honest sound for mixing and long sessions. 30-day trial.', cta: 'See headphones', url: 'https://ellipsismusic.net/', bed: 'house', color: '#0B5E7A', line: 'Northwave Audio. Headphones that tell you the truth about your mix. Try a pair free for thirty days.' },
+  { id: 'ad-loopcraft', sponsor: 'Loopcraft Studios', head: 'Book a real room in 40 cities', body: 'Hourly studio time with an engineer. Ellipsis members get 15% off.', cta: 'Find a studio', url: 'https://ellipsismusic.net/', bed: 'neosoul', color: '#5B3E9E', line: 'Loopcraft Studios. Book a real room, with a real engineer, in forty cities. Ellipsis members save fifteen percent.' },
+  { id: 'ad-tempo', sponsor: 'Tempo Strings', head: 'Strings that stay in tune', body: 'Coated guitar and bass strings, shipped free worldwide.', cta: 'Shop strings', url: 'https://ellipsismusic.net/', bed: 'lofi', color: '#7A5A10', line: 'Tempo Strings. Coated strings that stay in tune, gig after gig. Free shipping, worldwide.' },
+  { id: 'ad-premium', sponsor: 'Ellipsis Premium', head: 'No ads. Lossless bounces. Unlimited projects.', body: '$5.99 a month, 7 days free. Cancel anytime.', cta: 'Go ad-free', url: '', bed: 'ambient', color: '#0A6E58', line: 'You are listening to Ellipsis free. Go Premium for no ads and lossless bounces. Seven days free.', house: true }
+];
+const AD_EVERY = 3;
+const AD_LEN = 15;
+const AD_CPM = { audio: 18, display: 3.5 };
+const AD_CREATOR_SHARE = 0.7;
+
 const FILE_GENRE = { lofi: 'Lo-fi', afrobeats: 'Afrobeats', neosoul: 'Neo-soul', drill: 'Drill', house: 'House', ambient: 'Ambient' };
 /* Starter sample library: 520 royalty-free parts every account can build from.
    Audio comes from the six genre beds, re-pitched per item (playbackRate) so each one plays in its own key and tempo. */
@@ -2118,6 +2177,7 @@ class Component extends DCLogic {
     curId: 'i5', playing: false, time: 0, dur: 0, volume: 80, mixPid: null,
     query: '', searchOpen: false, draft: '', drafts: {},
     sheet: null, rec: null, ctxPid: null, premium: false, toast: '',
+    ad: null, adSince: 0,
     ob: null, myPart: null, myGenres: [], saved: false,
     auth: null, acct: null, sb: {}, sbLog: [], chatWarn: null, strikes: 0, muteUntil: null, deskTab: 'Rising', deskGenre: 'All',
     mxOpen: false, mxTut: -1, mxPid: null, mxPro: false, mxMatching: false, mxMatchTick: 0, ezTab: 'Voices', ezQ: '', ezOver: false, mxFocus: null, mxLoopOn: false, mxLoading: false, mxBouncing: false, mxDl: null
@@ -2609,12 +2669,13 @@ class Component extends DCLogic {
       fetch(src).then(r => r.arrayBuffer()).then(buf => { const C = window.AudioContext || window.webkitAudioContext; if (!C) return; this._ctx = this._ctx || new C(); return this._ctx.decodeAudioData(buf.slice(0)).then(dec => { if (a.src === src) this.setState({ dur: dec.duration }); }); }).catch(() => {});
     };
     a.addEventListener('loadedmetadata', noteDur); a.addEventListener('durationchange', noteDur);
-    a.addEventListener('ended', () => this.setState({ playing: false }));
+    a.addEventListener('ended', () => this.onEnded());
     a.src = 'assets/audio/neosoul.wav';
     this.audio = a;
   }
   componentWillUnmount() {
     clearTimeout(this._saveT); clearTimeout(this._chk); clearInterval(this._evT); clearInterval(this._noteT); this._unmounted = true;
+    clearInterval(this._adT); try { if (this._adBed) this._adBed.pause(); if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (x) {}
     window.removeEventListener('pagehide', this._hide); window.removeEventListener('beforeunload', this._hide);
     window.removeEventListener('resize', this._resize); window.removeEventListener('keydown', this._keys); document.removeEventListener('mousedown', this._down, true);
     this.mxStopNodes();
@@ -2674,8 +2735,68 @@ class Component extends DCLogic {
     if (this.state.playing) { a.pause(); this.setState({ playing: false }); }
     else a.play().then(() => this.setState({ playing: true })).catch(() => this.flash('Press play once more to allow audio'));
   };
+  goPremiumNow() { if (this._goPrem) this._goPrem(); }
+  adsOn() { const a = this.state.acct; return !this.state.premium && !(a && a.type === 'exec'); }
+  adPick(seed) { const pool = ADS.filter(a => !a.house); return (seed % 4 === 3) ? ADS[3] : pool[seed % pool.length]; }
+  adLog(kind, slot, ad, songId) {
+    const rev = AD_CPM[kind] / 1000, it = songId ? this.item(songId) : null;
+    const e = { at: Date.now(), kind, slot, ad: ad.id, sponsor: ad.sponsor, rev, song: songId || null, owner: it ? it.owner : null, creatorShare: kind === 'audio' && it && !ad.house ? rev * AD_CREATOR_SHARE : 0 };
+    try { const L = JSON.parse(localStorage.getItem('ellipsis.ads.log') || '[]'); L.push(e); localStorage.setItem('ellipsis.ads.log', JSON.stringify(L.slice(-2000))); } catch (x) {}
+    this.track('ad_impression', { kind, slot, ad: ad.id, song: songId || null });
+  }
+  adView(slot, ad) { const k = slot + ':' + ad.id; if (this._adV && this._adV[k]) return; (this._adV = this._adV || {})[k] = 1; setTimeout(() => this.adLog('display', slot, ad, null), 1200); }
+  adClick(ad) {
+    this.track('ad_click', { ad: ad.id });
+    if (ad.house) { if (this.state.ad) this.endAd(true); this.goPremiumNow(); return; }
+    if (ad.url) window.open(ad.url, '_blank', 'noopener');
+  }
+  playAd(afterId, then) {
+    const ad = this.adPick((this._adN = (this._adN || 0) + 1));
+    if (this.audio) this.audio.pause();
+    this.setState({ ad: { ad, left: AD_LEN, after: afterId }, playing: false, adSince: 0 });
+    this._adThen = then;
+    this.adLog('audio', 'between-songs', ad, afterId);
+    try { const bed = new Audio('assets/audio/' + ad.bed + '.wav'); bed.volume = 0.22 * (this.state.volume / 100); bed.loop = true; bed.play().catch(() => {}); this._adBed = bed; } catch (x) {}
+    try { if (window.speechSynthesis) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(ad.line); u.volume = Math.min(1, this.state.volume / 80); window.speechSynthesis.speak(u); } } catch (x) {}
+    clearInterval(this._adT);
+    this._adT = setInterval(() => {
+      const st = this.state.ad; if (!st) { clearInterval(this._adT); return; }
+      if (st.left <= 1) { this.endAd(); return; }
+      this.setState({ ad: Object.assign({}, st, { left: st.left - 1 }) });
+    }, 1000);
+  }
+  endAd(noResume) {
+    clearInterval(this._adT);
+    try { if (this._adBed) { this._adBed.pause(); this._adBed = null; } } catch (x) {}
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (x) {}
+    const then = this._adThen; this._adThen = null; this.setState({ ad: null });
+    if (then && !noResume) setTimeout(then, 60);
+  }
+  nextId(dir) {
+    const q = (this._queue && this._queue.length ? this._queue : this.state.items.filter(x => x.published && x.kind === 'song').map(x => x.id));
+    if (!q.length) return null; const i = q.indexOf(this.state.curId);
+    return q[((i < 0 ? -1 : i) + (dir || 1) + q.length) % q.length];
+  }
+  skip(dir) {
+    if (this.state.ad) return;
+    const nid = this.nextId(dir); if (!nid) return;
+    const cnt = (this.state.adSince || 0) + 1;
+    if (dir > 0 && this.adsOn() && cnt >= AD_EVERY) { this.playAd(this.state.curId, () => this.playNow(nid)); return; }
+    this.setState({ adSince: cnt }); this.playNow(nid);
+  }
+  onEnded() {
+    this.setState({ playing: false });
+    if (this.state.mixPid || this.state.mxOpen || this.state.rec) return;
+    const it = this.item(this.state.curId); if (!it || it.kind !== 'song') return;
+    this.skip(1);
+  }
+  playNow(id) { this._forcePlay = true; this.play(id); }
   play(id) {
-    const it = this.item(id); if (!it) return;
+    if (this.state.ad) { this.flash('Your music resumes after this short ad — or go Premium for no ads'); return; }
+    const it = this.item(id); if (!it) { this._forcePlay = false; return; }
+    if (!this._forcePlay && it.kind === 'song' && this.state.curId !== id && this.adsOn() && (this.state.adSince || 0) >= AD_EVERY) { this.playAd(this.state.curId, () => this.playNow(id)); return; }
+    if (!this._forcePlay && it.kind === 'song' && this.state.curId !== id) this.setState(st => ({ adSince: (st.adSince || 0) + 1 }));
+    this._forcePlay = false;
     if (it.kind === 'lyric') { this.openLyric(id); return; }
     this.stopMix();
     if (this.state.curId === id) { this.togglePlay(); return; }
@@ -3443,7 +3564,7 @@ class Component extends DCLogic {
     const mScore = new Map(); let tMax = 1; for (const x of filtered) { const m = metricOf(x); mScore.set(x, m); if (m > tMax) tMax = m; }
     const bScore = new Map(); if (forYou) for (const x of filtered) bScore.set(x, 0.6 * relItem(x) + 0.4 * (mScore.get(x) / tMax));
     const songRows = s.exTab === 'Songs' ? filtered.slice().sort((a, b) => forYou ? bScore.get(b) - bScore.get(a) : mScore.get(b) - mScore.get(a)).slice(0, 40).map((x, i) => Object.assign({
-      rank: i + 1, rankFg: i < 3 ? 'var(--mint-ink)' : 'var(--dim)', art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id),
+      id: x.id, rank: i + 1, rankFg: i < 3 ? 'var(--mint-ink)' : 'var(--dim)', art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id),
       title: x.title, sub: U(x.owner).name + (verOk(x.owner) ? ' ✓' : '') + ' · ' + tagLine(x.tags), metric: num(metricOf(x)), open: () => x.pid ? this.openProject(x.pid) : this.openUser(x.owner)
     }, spStyle(x), favStyle(x), sbStyle(x))) : [];
     const iSp = new Map(); let iMax = 1; if (s.exTab === 'Instrumentals') for (const x of filtered) { const v = spk(x); iSp.set(x, v); if (v > iMax) iMax = v; }
@@ -3463,6 +3584,10 @@ class Component extends DCLogic {
         reqLabel: req ? 'Requested ✓' : 'Request to collaborate', reqBg: req ? 'var(--mint-soft)' : 'var(--mint)', reqFg: req ? 'var(--mint-ink)' : 'var(--on-mint)' };
     });
     const exList = s.exTab === 'Songs' ? songRows : s.exTab === 'Instrumentals' ? instrCards : collabCards;
+    if (s.exTab === 'Songs' && songRows.length) this._queue = songRows.map(r => r.id).filter(Boolean);
+    const adsOn = this.adsOn();
+    const adSlot = (slot, k) => { const ad = this.adPick(k); if (adsOn && s.view === 'explore') this.adView(slot, ad); return { isAd: true, isSong: false, adSponsor: ad.sponsor, adHead: ad.head, adBody: ad.body, adCta: ad.cta, adColor: ad.color, adGo: () => this.adClick(ad) }; };
+    const songRowsAd = []; songRows.forEach((r, i) => { songRowsAd.push(Object.assign({ isSong: true, isAd: false }, r)); if (adsOn && (i === 4 || i === 19)) songRowsAd.push(adSlot('explore-list', i === 4 ? 0 : 1)); });
 
     /* projects */
     const myProj = P.filter(p => p.owner === 'me'); const collabProj = P.filter(p => p.owner !== 'me' && p.collabs.indexOf('me') >= 0);
@@ -3956,7 +4081,7 @@ class Component extends DCLogic {
       searchOpen: s.searchOpen, searchBorder: s.searchOpen ? 'var(--mint)' : 'var(--line)', searchGroups: groups,
       searchHint: !q ? 'Search people, songs, instrumentals, open projects — or an artist it sounds like.' : groups.length ? '' : 'No match for “' + s.query + '”.',
       hasCtx: !!s.ctxPid, ctxName: s.ctxPid ? (this.proj(s.ctxPid) || {}).title : '', ctxOpen: () => { const id = s.ctxPid; this.setState({ ctxPid: null }); this.openProject(id); },
-      showPremium: !s.premium, goPremium: () => { if (s.acct && s.acct.token && this._api) { if (s.premium) { this.api('billing/portal', { body: {} }).then(r => { if (r.url) location.href = r.url; }).catch(e => this.flash(e.message)); return; } this.checkout(s.acct.type === 'exec' ? 'industry' : 'premium').then(went => { if (!went) this.flash('Payments aren\'t switched on yet'); }); return; } if (s.premium) { this.flash('Premium is active — manage it in your app store account'); return; } this.setState({ premium: true }); this.flash('Premium on — no ads, lossless audio, 30 GB'); },
+      showPremium: !s.premium, goPremium: this._goPrem = () => { if (s.acct && s.acct.token && this._api) { if (s.premium) { this.api('billing/portal', { body: {} }).then(r => { if (r.url) location.href = r.url; }).catch(e => this.flash(e.message)); return; } this.checkout(s.acct.type === 'exec' ? 'industry' : 'premium').then(went => { if (!went) this.flash('Payments aren\'t switched on yet'); }); return; } if (s.premium) { this.flash('Premium is active — manage it in your app store account'); return; } this.setState({ premium: true }); this.flash('Premium on — no ads, lossless audio, 30 GB'); },
 
       isExplore: s.view === 'explore', isProjects: s.view === 'projects', isProject: s.view === 'project', isLyric: s.view === 'lyric', isLibrary: s.view === 'library', isActivity: s.view === 'activity', isProfile: s.view === 'profile',
 
@@ -3969,7 +4094,14 @@ class Component extends DCLogic {
       forYouWhy, showWhy: forYou || hasTaste,
       periods: ['This week', 'This year', 'All time'].map(l => Object.assign({ label: l, go: () => this.setState({ period: l }) }, seg2(s.period, l))),
       isSongs: s.exTab === 'Songs', isInstr: s.exTab === 'Instrumentals', isCollab: s.exTab === "Let's collaborate",
-      songRows, instrCards, collabCards, exEmpty: exList.length === 0,
+      songRows: songRowsAd, instrCards, collabCards, exEmpty: exList.length === 0,
+      ...(() => { const libAd = this.adPick(2), actAd = this.adPick(3); if (adsOn && s.view === 'library') this.adView('library-banner', libAd); if (adsOn && s.view === 'activity') this.adView('activity-banner', actAd);
+        return { showAds: adsOn, libAdSponsor: libAd.sponsor, libAdHead: libAd.head, libAdBody: libAd.body, libAdCta: libAd.cta, libAdColor: libAd.color, libAdGo: () => this.adClick(libAd),
+          actAdSponsor: actAd.sponsor, actAdHead: actAd.head, actAdBody: actAd.body, actAdCta: actAd.cta, actAdColor: actAd.color, actAdGo: () => this.adClick(actAd) }; })(),
+      adOn: !!s.ad, adSponsor: s.ad ? s.ad.ad.sponsor : '', adHead: s.ad ? s.ad.ad.head : '', adLeft: s.ad ? '0:' + String(s.ad.left).padStart(2, '0') : '', adProg: s.ad ? ((AD_LEN - s.ad.left) / AD_LEN * 100).toFixed(1) + '%' : '0%',
+      adColor: s.ad ? s.ad.ad.color : '#0A6E58', adCta: s.ad ? s.ad.ad.cta : '', adGo: () => s.ad && this.adClick(s.ad.ad), adFree: () => { this.endAd(true); this.goPremiumNow(); },
+      adAfter: s.ad && s.ad.after && this.item(s.ad.after) ? 'Supports the artists of ' + this.item(s.ad.after).title : 'Supports Ellipsis artists',
+      prevTrack: () => this.skip(-1), nextTrack: () => this.skip(1),
       exEmptyText: exq ? 'Nothing matches “' + s.exQ.trim() + '”. Try an artist, city, genre or who it sounds like.' : s.exTab === "Let's collaborate" ? 'No open requests right now — open your own from any project.' : 'Nothing tagged ' + s.facetVal + ' yet. Try another tag.',
       exQ: s.exQ || '', onExQ: e => { const v = e.target.value; this.setState({ exQ: v }); clearTimeout(this._qT); this._qT = setTimeout(() => { const q = v.trim().toLowerCase(); if (q.length > 2) this.setState(st => ({ exQs: [q].concat((st.exQs || []).filter(x => x !== q)).slice(0, 12) })); }, 900); }, clearExQ: () => this.setState({ exQ: '' }), exHasQ: !!exq,
       exQBorder: exq ? 'var(--mint)' : 'var(--line)',
@@ -4097,6 +4229,7 @@ class Component extends DCLogic {
       tap: this.tap, tapCount: sh && sh.type === 'publish' ? (sh.ok ? '✓' : String(sh.taps.length)) : '0', tapBg: sh && sh.ok ? 'var(--mint-soft)' : 'transparent', tapMsg: sh && sh.type === 'publish' ? sh.msg : '', tapFg: sh && sh.ok ? 'var(--mint-ink)' : 'var(--coral-ink)',
       pubCanBack: !!pubP && sh.step > 0 && sh.step < 3, pubBack: () => this.setSheet({ step: sh.step - 1 }), pubHasNext: !!pubP && sh.step !== 2,
       pubShare: () => { if (pubP) this.openShare(pubP.id); },
+      pubWhy: !pubP || !pubBlocked || sh.step > 1 ? '' : sh.step === 0 ? 'Add at least one Sounds like and one Genre tag to continue — tap Edit next to Tags above.' : 'Splits total ' + splitTotal + '%. They must add up to exactly 100% to continue.',
       pubCta: pubP && sh.step === 3 ? 'Done' : 'Continue', pubBlocked: pubP && sh.step === 3 ? false : pubBlocked,
       pubNext: () => { if (sh.step === 3) { this.setState({ sheet: null }); this.flash(pubP.title + ' is live in Explore'); return; } if (!pubBlocked) this.setSheet({ step: sh.step + 1 }); },
       pubBtnBg: pubP && (sh.step === 3 || !pubBlocked) ? 'var(--mint)' : 'var(--line)', pubBtnFg: pubP && (sh.step === 3 || !pubBlocked) ? 'var(--on-mint)' : 'var(--dim)',
