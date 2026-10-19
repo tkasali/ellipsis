@@ -10,11 +10,15 @@
 <helmet>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Urbanist:wght@300..700&display=swap" rel="stylesheet">
   <style>
-    html,body{margin:0;padding:0;background:#0C1318}
+    :root,[data-theme="dark"]{--bg:#0C1318;--panel:#141F27;--panel2:#0F1820;--ink:#F4F7F9;--dim:#9BA9B4;--dim2:#7E8C97;--accent:#00D9A6;--hdr:rgba(12,19,24,0.82);--cardline:rgba(255,255,255,0.06);--navline:rgba(255,255,255,0.07)}
+    [data-theme="light"]{--bg:#F4F7F9;--panel:#FFFFFF;--panel2:#EAF0F3;--ink:#0F1A20;--dim:#4E5C67;--dim2:#5A6874;--accent:#00806A;--hdr:rgba(244,247,249,0.88);--cardline:#E1E7EB;--navline:#E1E7EB}
+    [data-show]{display:none}[data-theme="light"] [data-show="light"],[data-theme="dark"] [data-show="dark"]{display:inline}
+    [data-theme="dark"] input,[data-theme="dark"] textarea,[data-theme="dark"] select{background-color:var(--panel);color:var(--ink)}
+    html,body{margin:0;padding:0;background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11"}
     *{box-sizing:border-box}
-    a{color:#00D9A6;text-decoration:none}
+    a{color:var(--accent);text-decoration:none}
     a:hover{color:#5CF0C9}
     @keyframes elRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
     @keyframes elFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
@@ -40,35 +44,37 @@
       addEventListener('resize', fit);
     })();
   </script>
+  <script>(function(){var K='ellipsis4.theme',D='dark';function g(){try{return localStorage.getItem(K)||D}catch(e){return D}}function s(t){document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t}s(g());window.addEventListener('storage',function(e){if(e.key===K&&e.newValue)s(e.newValue)});document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('[data-theme-toggle]');if(!b)return;var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';s(t);try{localStorage.setItem(K,t)}catch(x){}},true)})();</script>
 </helmet>
 
-<div style="background:#0C1318;color:#F4F7F9;font-family:Manrope,-apple-system,system-ui,sans-serif;min-height:100vh;overflow-x:hidden">
+<div style="background:var(--bg);color:var(--ink);font-family:Geist,-apple-system,system-ui,sans-serif;min-height:100vh;overflow-x:hidden">
 
-  <header style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 40px;background:rgba(12,19,24,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.07)">
+  <header style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 40px;background:var(--hdr);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--navline)">
     <div style="display:flex;align-items:center;gap:12px">
-      <div style="width:34px;height:34px;border-radius:10px;background:#00D9A6;display:flex;align-items:center;justify-content:center;color:#06231B;font-weight:800;font-size:19px;letter-spacing:-1px">···</div>
-      <span style="font-size:19px;font-weight:800;letter-spacing:-0.5px">Ellipsis</span>
+      <div style="width:34px;height:34px;border-radius:10px;background:#00D9A6;display:flex;align-items:center;justify-content:center;color:#06231B;font-weight:620;font-size:19px;letter-spacing:-1px">···</div>
+      <span style="font-size:19px;font-weight:620;letter-spacing:-0.5px">Ellipsis</span>
     </div>
-    <nav style="display:flex;align-items:center;gap:28px;font-size:15px;font-weight:600;color:#9BA9B4">
-      <a href="#how" style="color:#9BA9B4">How it works</a>
-      <a href="#proof" style="color:#9BA9B4">Provenance</a>
-      <a href="app/index.html" style="display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;background:#00D9A6;color:#06231B;font-weight:700">Open the app</a>
+    <nav style="display:flex;align-items:center;gap:28px;font-size:15px;font-weight:540;color:var(--dim)">
+      <a href="#how" style="color:var(--dim)">How it works</a>
+      <a href="#proof" style="color:var(--dim)">Provenance</a>
+      <button data-theme-toggle="1" title="Switch light / dark" aria-label="Switch light or dark mode" style="padding:9px 14px;border:1px solid var(--navline);border-radius:999px;background:transparent;color:var(--ink);font-size:13.5px;font-weight:540;cursor:pointer;white-space:nowrap"><span data-show="light">☾ Dark</span><span data-show="dark">☀ Light</span></button>
+      <a href="app/index.html" style="display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;background:#00D9A6;color:#06231B;font-weight:580">Open the app</a>
     </nav>
   </header>
 
   <section style="max-width:1280px;margin:0 auto;padding:64px 40px 40px">
    <div class="el-hero" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:56px;align-items:center">
     <div style="animation:elRise .6s ease both">
-      <div style="display:inline-flex;align-items:center;gap:10px;white-space:nowrap;padding:7px 14px;border-radius:999px;border:1px solid rgba(0,217,166,0.35);background:rgba(0,217,166,0.08);font-size:13px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:#00D9A6;margin-bottom:26px">Human-made, verified</div>
-      <h1 style="margin:0 0 22px;font-size:clamp(44px,5.4vw,68px);line-height:1.02;letter-spacing:-2.6px;font-weight:800;text-wrap:balance">Music made by people.<br><span style="color:#00D9A6">Provably.</span></h1>
-      <p style="margin:0 0 34px;max-width:520px;font-size:19px;line-height:1.55;color:#9BA9B4;text-wrap:pretty">Start a track from a hum. Invite the people who finish it. Splits are agreed before anyone hits publish, and every contribution is fingerprinted to a human who made it.</p>
+      <div style="display:inline-flex;align-items:center;gap:10px;white-space:nowrap;padding:7px 14px;border-radius:999px;border:1px solid rgba(0,217,166,0.35);background:rgba(0,217,166,0.08);font-size:13px;font-weight:580;letter-spacing:0.4px;text-transform:uppercase;color:var(--accent);margin-bottom:26px">Human-made, verified</div>
+      <h1 style="font-family:Urbanist,Geist,sans-serif;margin:0 0 22px;font-size:clamp(44px,5.4vw,68px);line-height:1.02;letter-spacing:-2.6px;font-weight:500;text-wrap:balance">Music made by people.<br><span style="color:var(--accent)">Provably.</span></h1>
+      <p style="margin:0 0 34px;max-width:520px;font-size:19px;line-height:1.55;color:var(--dim);text-wrap:pretty">Start a track from a hum. Invite the people who finish it. Splits are agreed before anyone hits publish, and every contribution is fingerprinted to a human who made it.</p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:34px">
-        <a href="app/index.html" style="display:flex;align-items:center;gap:10px;padding:16px 30px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:16px;font-weight:800">Launch Ellipsis</a>
+        <a href="app/index.html" style="display:flex;align-items:center;gap:10px;padding:16px 30px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:16px;font-weight:620">Launch Ellipsis</a>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:32px;padding-top:26px;border-top:1px solid rgba(255,255,255,0.08)">
-        <div><div style="font-size:26px;font-weight:800;letter-spacing:-1px">100%</div><div style="font-size:13px;color:#7E8C97;font-weight:600">splits settled pre-release</div></div>
-        <div><div style="font-size:26px;font-weight:800;letter-spacing:-1px">0</div><div style="font-size:13px;color:#7E8C97;font-weight:600">generated uploads accepted</div></div>
-        <div><div style="font-size:26px;font-weight:800;letter-spacing:-1px">5</div><div style="font-size:13px;color:#7E8C97;font-weight:600">tags per release, ranked live</div></div>
+        <div><div style="font-size:26px;font-weight:620;letter-spacing:-1px">100%</div><div style="font-size:13px;color:var(--dim2);font-weight:540">splits settled pre-release</div></div>
+        <div><div style="font-size:26px;font-weight:620;letter-spacing:-1px">0</div><div style="font-size:13px;color:var(--dim2);font-weight:540">generated uploads accepted</div></div>
+        <div><div style="font-size:26px;font-weight:620;letter-spacing:-1px">5</div><div style="font-size:13px;color:var(--dim2);font-weight:540">tags per release, ranked live</div></div>
       </div>
     </div>
 
@@ -86,8 +92,8 @@
           <button onClick="{{ npToggle }}" aria-label="{{ npAria }}" title="{{ npAria }}" style="position:absolute;inset:5px;padding:0;border:0;border-radius:50%;background:#0C1318;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center">{{ npIcon }}</button>
         </span>
         <span style="min-width:180px">
-          <span style="display:block;font-size:11px;font-weight:800;letter-spacing:0.1em;color:#00D9A6">{{ npLabel }}</span>
-          <span style="display:block;font-size:15px;font-weight:800;color:#fff">{{ npTitle }}</span>
+          <span style="display:block;font-size:11px;font-weight:620;letter-spacing:0.1em;color:#00D9A6">{{ npLabel }}</span>
+          <span style="display:block;font-size:15px;font-weight:620;color:#fff">{{ npTitle }}</span>
           <span style="display:block;font-size:12.5px;color:#9BA9B4">{{ npBy }}</span>
           <span onClick="{{ npSeek }}" title="Jump to a point in the song" style="display:block;margin-top:8px;height:5px;border-radius:3px;background:rgba(255,255,255,0.16);cursor:pointer;overflow:hidden"><span style="display:block;height:100%;width:{{ npProg }};background:#00D9A6;border-radius:3px"></span></span>
         </span>
@@ -95,104 +101,104 @@
       </div>
 
       <div style="position:absolute;right:-6px;bottom:120px;padding:14px 16px;border-radius:20px;background:rgba(14,22,27,0.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.12);box-shadow:0 20px 44px rgba(0,0,0,0.45);animation:elFloat2 5s ease-in-out infinite">
-        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px"><span style="position:relative;width:12px;height:12px"><span style="position:absolute;inset:0;border-radius:50%;background:#FF8A5C"></span><span style="position:absolute;inset:0;border-radius:50%;background:#FF8A5C;animation:elRing 1.6s ease-out infinite"></span></span><span style="font-size:12px;font-weight:800;color:#FFB39A;letter-spacing:0.06em">⚡ SPIKING</span></div>
-        <div style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.8px">+2,481</div>
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px"><span style="position:relative;width:12px;height:12px"><span style="position:absolute;inset:0;border-radius:50%;background:#FF8A5C"></span><span style="position:absolute;inset:0;border-radius:50%;background:#FF8A5C;animation:elRing 1.6s ease-out infinite"></span></span><span style="font-size:12px;font-weight:620;color:#FFB39A;letter-spacing:0.06em">⚡ SPIKING</span></div>
+        <div style="font-size:26px;font-weight:620;color:#fff;letter-spacing:-0.8px">+2,481</div>
         <div style="font-size:12px;color:#9BA9B4">spikes in the last hour</div>
       </div>
 
-      <div style="position:absolute;left:44px;bottom:0;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:#00D9A6;color:#06231B;font-size:13px;font-weight:800;box-shadow:0 18px 40px rgba(0,217,166,0.4);animation:elFloat 7s ease-in-out 1s infinite">
+      <div style="position:absolute;left:44px;bottom:0;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:#00D9A6;color:#06231B;font-size:13px;font-weight:620;box-shadow:0 18px 40px rgba(0,217,166,0.4);animation:elFloat 7s ease-in-out 1s infinite">
         <span style="display:flex"><span style="width:26px;height:26px;border-radius:50%;background:#0A6E58;border:2px solid #00D9A6;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center">AO</span><span style="width:26px;height:26px;margin-left:-8px;border-radius:50%;background:#5B3E9E;border:2px solid #00D9A6;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center">TK</span><span style="width:26px;height:26px;margin-left:-8px;border-radius:50%;background:#B3523E;border:2px solid #00D9A6;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center">MR</span></span>
         3 countries · 1 song · splits signed ✓
       </div>
     </div>
    </div>
     <div style="margin-top:72px;animation:elRise .8s ease both;border-radius:16px;overflow:hidden;background:#1A242B;box-shadow:0 50px 100px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.09)">
-      <div style="display:flex;align-items:center;gap:9px;padding:11px 16px;background:#22303A;border-bottom:1px solid rgba(255,255,255,0.07)">
+      <div style="display:flex;align-items:center;gap:9px;padding:11px 16px;background:#22303A;border-bottom:1px solid var(--navline)">
         <span style="width:11px;height:11px;border-radius:50%;background:#FF5F57"></span>
         <span style="width:11px;height:11px;border-radius:50%;background:#FEBC2E"></span>
         <span style="width:11px;height:11px;border-radius:50%;background:#28C840"></span>
-        <span style="flex:1;max-width:340px;margin-left:14px;padding:5px 14px;border-radius:7px;background:rgba(0,0,0,0.28);color:#8C9AA5;font-size:12.5px;font-weight:600;text-align:center">ellipsismusic.net/app</span>
+        <span style="flex:1;max-width:340px;margin-left:14px;padding:5px 14px;border-radius:7px;background:rgba(0,0,0,0.28);color:#C9D4DB;font-size:12.5px;font-weight:540;text-align:center">ellipsismusic.net/app</span>
         <span style="flex:1"></span>
       </div>
       <a href="app/index.html" title="Open Ellipsis" style="display:block;background:#EFF2F5;line-height:0"><img src="icons/app-preview.jpg" alt="The Ellipsis app: Explore, ranked for you by Sounds like, genre and mood" style="display:block;width:100%;height:auto"></a>
     </div>
   </section>
 
-  <section id="how" style="border-top:1px solid rgba(255,255,255,0.07);background:#0F1820">
+  <section id="how" style="border-top:1px solid var(--navline);background:var(--panel2)">
     <div style="max-width:1240px;margin:0 auto;padding:84px 40px">
-      <h2 style="margin:0 0 12px;font-size:38px;font-weight:800;letter-spacing:-1.4px">Four steps, one finished record</h2>
-      <p style="margin:0 0 48px;font-size:17px;color:#9BA9B4;max-width:600px">Everything below already works in the app above — record it, share it, publish it.</p>
+      <h2 style="font-family:Urbanist,Geist,sans-serif;margin:0 0 12px;font-size:38px;font-weight:400;letter-spacing:-1.4px">Four steps, one finished record</h2>
+      <p style="margin:0 0 48px;font-size:17px;color:var(--dim);max-width:600px">Everything below already works in the app above — record it, share it, publish it.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
-        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">01 · CAPTURE</div>
-          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Record the idea</div>
-          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Live mic capture, a full multitrack mixer, and stems that stay separate all the way to release.</div>
+        <div style="padding:28px;border-radius:20px;background:var(--panel);border:1px solid var(--cardline)">
+          <div style="font-size:13px;font-weight:620;color:var(--accent);letter-spacing:1px;margin-bottom:14px">01 · CAPTURE</div>
+          <div style="font-size:20px;font-weight:580;margin-bottom:10px">Record the idea</div>
+          <div style="font-size:15px;line-height:1.55;color:var(--dim)">Live mic capture, a full multitrack mixer, and stems that stay separate all the way to release.</div>
         </div>
-        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">02 · COLLABORATE</div>
-          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Invite the finishers</div>
-          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Send a project, not a file. Collaborators add stems, comment in time, and message in the same place.</div>
+        <div style="padding:28px;border-radius:20px;background:var(--panel);border:1px solid var(--cardline)">
+          <div style="font-size:13px;font-weight:620;color:var(--accent);letter-spacing:1px;margin-bottom:14px">02 · COLLABORATE</div>
+          <div style="font-size:20px;font-weight:580;margin-bottom:10px">Invite the finishers</div>
+          <div style="font-size:15px;line-height:1.55;color:var(--dim)">Send a project, not a file. Collaborators add stems, comment in time, and message in the same place.</div>
         </div>
-        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">03 · SETTLE</div>
-          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Agree the splits</div>
-          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Percentages must total 100 and every party must sign before the publish button unlocks. No post-hoc disputes.</div>
+        <div style="padding:28px;border-radius:20px;background:var(--panel);border:1px solid var(--cardline)">
+          <div style="font-size:13px;font-weight:620;color:var(--accent);letter-spacing:1px;margin-bottom:14px">03 · SETTLE</div>
+          <div style="font-size:20px;font-weight:580;margin-bottom:10px">Agree the splits</div>
+          <div style="font-size:15px;line-height:1.55;color:var(--dim)">Percentages must total 100 and every party must sign before the publish button unlocks. No post-hoc disputes.</div>
         </div>
-        <div style="padding:28px;border-radius:20px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:13px;font-weight:800;color:#00D9A6;letter-spacing:1px;margin-bottom:14px">04 · RELEASE</div>
-          <div style="font-size:20px;font-weight:700;margin-bottom:10px">Publish and rank</div>
-          <div style="font-size:15px;line-height:1.55;color:#9BA9B4">Five tags put the track on five charts. Spikes move it. Listeners find it by scene, not by algorithm.</div>
+        <div style="padding:28px;border-radius:20px;background:var(--panel);border:1px solid var(--cardline)">
+          <div style="font-size:13px;font-weight:620;color:var(--accent);letter-spacing:1px;margin-bottom:14px">04 · RELEASE</div>
+          <div style="font-size:20px;font-weight:580;margin-bottom:10px">Publish and rank</div>
+          <div style="font-size:15px;line-height:1.55;color:var(--dim)">Five tags put the track on five charts. Spikes move it. Listeners find it by scene, not by algorithm.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="proof" style="border-top:1px solid rgba(255,255,255,0.07)">
+  <section id="proof" style="border-top:1px solid var(--navline)">
     <div style="max-width:1240px;margin:0 auto;padding:84px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px;align-items:start">
       <div>
-        <h2 style="margin:0 0 18px;font-size:38px;font-weight:800;letter-spacing:-1.4px">Provenance is the product</h2>
-        <p style="margin:0 0 22px;font-size:17px;line-height:1.6;color:#9BA9B4;text-wrap:pretty">When a song takes nine seconds to generate, the scarce thing is proof that people made it together. Ellipsis records that proof as the track is built, not after it is uploaded.</p>
-        <a href="legal/dmca.html" style="font-size:15px;font-weight:700">Read the rights &amp; takedown policy →</a>
+        <h2 style="font-family:Urbanist,Geist,sans-serif;margin:0 0 18px;font-size:38px;font-weight:400;letter-spacing:-1.4px">Provenance is the product</h2>
+        <p style="margin:0 0 22px;font-size:17px;line-height:1.6;color:var(--dim);text-wrap:pretty">When a song takes nine seconds to generate, the scarce thing is proof that people made it together. Ellipsis records that proof as the track is built, not after it is uploaded.</p>
+        <a href="legal/dmca.html" style="font-size:15px;font-weight:580">Read the rights &amp; takedown policy →</a>
       </div>
       <div style="display:grid;gap:14px">
-        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
-          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:#00D9A6;display:flex;align-items:center;justify-content:center;font-weight:800">1</div>
-          <div><div style="font-weight:700;margin-bottom:5px">Human verification at capture</div><div style="font-size:15px;color:#9BA9B4;line-height:1.5">A liveness challenge plus device attestation gates every recording session.</div></div>
+        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:var(--panel);border:1px solid var(--cardline)">
+          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:620">1</div>
+          <div><div style="font-weight:580;margin-bottom:5px">Human verification at capture</div><div style="font-size:15px;color:var(--dim);line-height:1.5">A liveness challenge plus device attestation gates every recording session.</div></div>
         </div>
-        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
-          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:#00D9A6;display:flex;align-items:center;justify-content:center;font-weight:800">2</div>
-          <div><div style="font-weight:700;margin-bottom:5px">Fingerprint on every stem</div><div style="font-size:15px;color:#9BA9B4;line-height:1.5">Audio matching flags reuse before release and powers claims after it.</div></div>
+        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:var(--panel);border:1px solid var(--cardline)">
+          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:620">2</div>
+          <div><div style="font-weight:580;margin-bottom:5px">Fingerprint on every stem</div><div style="font-size:15px;color:var(--dim);line-height:1.5">Audio matching flags reuse before release and powers claims after it.</div></div>
         </div>
-        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:#141F27;border:1px solid rgba(255,255,255,0.06)">
-          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:#00D9A6;display:flex;align-items:center;justify-content:center;font-weight:800">3</div>
-          <div><div style="font-weight:700;margin-bottom:5px">A signed split ledger</div><div style="font-size:15px;color:#9BA9B4;line-height:1.5">Every agreement is retained and auditable, and contributors keep their share even if they leave the project.</div></div>
+        <div style="display:flex;gap:16px;padding:22px;border-radius:16px;background:var(--panel);border:1px solid var(--cardline)">
+          <div style="flex:none;width:38px;height:38px;border-radius:11px;background:rgba(0,217,166,0.14);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:620">3</div>
+          <div><div style="font-weight:580;margin-bottom:5px">A signed split ledger</div><div style="font-size:15px;color:var(--dim);line-height:1.5">Every agreement is retained and auditable, and contributors keep their share even if they leave the project.</div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section style="border-top:1px solid rgba(255,255,255,0.07);background:linear-gradient(150deg,#0F2A24,#0C1318 65%)">
+  <section style="border-top:1px solid var(--navline);background:linear-gradient(150deg,#0F2A24,#0C1318 65%)">
     <div style="max-width:1240px;margin:0 auto;padding:76px 40px;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between">
       <div>
-        <h2 style="margin:0 0 10px;font-size:34px;font-weight:800;letter-spacing:-1.2px">Desktop, tablet, phone</h2>
-        <p style="margin:0;font-size:17px;color:#9BA9B4;max-width:560px">The web app runs in any modern browser and installs to the dock or home screen. The mobile build is the same product laid out for one hand. Both work offline and record straight from the microphone.</p>
+        <h2 style="font-family:Urbanist,Geist,sans-serif;margin:0 0 10px;font-size:34px;font-weight:400;letter-spacing:-1.2px">Desktop, tablet, phone</h2>
+        <p style="margin:0;font-size:17px;color:var(--dim);max-width:560px">The web app runs in any modern browser and installs to the dock or home screen. The mobile build is the same product laid out for one hand. Both work offline and record straight from the microphone.</p>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="app/index.html" style="display:flex;align-items:center;gap:10px;padding:17px 32px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:16px;font-weight:800">Open the web app</a></div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px"><a href="app/index.html" style="display:flex;align-items:center;gap:10px;padding:17px 32px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:16px;font-weight:620">Open the web app</a></div>
     </div>
   </section>
 
-  <footer style="border-top:1px solid rgba(255,255,255,0.07);padding:44px 40px 56px">
+  <footer style="border-top:1px solid var(--navline);padding:44px 40px 56px">
     <div style="max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between">
-      <div style="font-size:14px;color:#6C7A85;line-height:1.6">
+      <div style="font-size:14px;color:var(--dim2);line-height:1.6">
         © 2026 Ellipsis. All rights reserved.<br>
         Recordings, compositions and stems remain the property of their creators.
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:22px;font-size:14px;font-weight:600">
-        <a href="legal/privacy.html" style="color:#9BA9B4">Privacy</a>
-        <a href="legal/terms.html" style="color:#9BA9B4">Terms</a>
-        <a href="legal/dmca.html" style="color:#9BA9B4">Copyright &amp; DMCA</a>
-        <a href="help/" style="color:#9BA9B4">Help &amp; FAQ</a>
-        <a href="mailto:support@ellipsismusic.net" style="color:#9BA9B4">Contact</a>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;font-size:14px;font-weight:540">
+        <a href="legal/privacy.html" style="color:var(--dim)">Privacy</a>
+        <a href="legal/terms.html" style="color:var(--dim)">Terms</a>
+        <a href="legal/dmca.html" style="color:var(--dim)">Copyright &amp; DMCA</a>
+        <a href="help/" style="color:var(--dim)">Help &amp; FAQ</a>
+        <a href="mailto:support@ellipsismusic.net" style="color:var(--dim)">Contact</a>
       </div>
     </div>
   </footer>

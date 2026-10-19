@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="../icons/play-512.png" type="image/png">
 <script src="../support.js"></script>
+<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -12,35 +13,41 @@
   <title>Ellipsis Help · How to use everything</title>
   <meta name="description" content="Answers for creators, listeners and music executives on Ellipsis.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Urbanist:wght@300..700&display=swap" rel="stylesheet">
   <style>
-    html,body{margin:0;background:#F3F5F7}
+    :root,[data-theme="light"]{--bg:#F3F5F7;--panel:#FFFFFF;--panel2:#F6F8F9;--soft:#EEF2F4;--ink:#13202A;--ink2:#3C4A54;--dim:#56646F;--line:#E3E8EC;--line2:#CBD4DB;--hdr:rgba(243,245,247,0.92);--mintsoft:#E8FBF5;--mintink:#00806A;--badsoft:#FFE9E4;--badink:#8C2B1E;--warnsoft:#FFF3D6;--warnink:#7A5A10;--dis:#9AA6AE}
+    [data-theme="dark"]{--bg:#0B1115;--panel:#121B21;--panel2:#172229;--soft:#1C2830;--ink:#E8EEF2;--ink2:#C3CDD4;--dim:#9AA8B2;--line:#24323B;--line2:#34444F;--hdr:rgba(11,17,21,0.9);--mintsoft:rgba(0,217,166,0.14);--mintink:#3FE6BD;--badsoft:rgba(255,107,87,0.16);--badink:#FFB3A6;--warnsoft:rgba(245,184,0,0.14);--warnink:#F5C451;--dis:#5E6C77}
+    [data-show]{display:none}[data-theme="light"] [data-show="light"],[data-theme="dark"] [data-show="dark"]{display:inline}
+    [data-theme="dark"] input,[data-theme="dark"] textarea,[data-theme="dark"] select{background-color:var(--panel);color:var(--ink)}
+    html,body{margin:0;background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11"}
     *{box-sizing:border-box}
     a{color:#00806A;text-decoration:none}
     a:hover{color:#005A45;text-decoration:underline}
   </style>
+  <script>(function(){var K='ellipsis4.theme',D='light';function g(){try{return localStorage.getItem(K)||D}catch(e){return D}}function s(t){document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t}s(g());window.addEventListener('storage',function(e){if(e.key===K&&e.newValue)s(e.newValue)});document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('[data-theme-toggle]');if(!b)return;var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';s(t);try{localStorage.setItem(K,t)}catch(x){}},true)})();</script>
 </helmet>
 
-<div style="min-height:100vh;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#13202A;-webkit-font-smoothing:antialiased">
+<div style="min-height:100vh;font-family:Geist,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased">
 
   <header style="background:#0C1318;color:#fff">
     <div style="max-width:1080px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <a href="{{ homeHref }}" style="display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none">
-        <span style="width:36px;height:36px;border-radius:11px;background:#00D9A6;color:#06231B;font-weight:800;font-size:18px;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center">···</span>
-        <span style="font-family:Sora,sans-serif;font-size:18px;font-weight:700">Ellipsis Help</span>
+        <span style="width:36px;height:36px;border-radius:11px;background:#00D9A6;color:#06231B;font-weight:620;font-size:18px;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center">···</span>
+        <span style="font-family:Urbanist,sans-serif;font-size:18px;font-weight:500">Ellipsis Help</span>
       </a>
       <span style="flex:1"></span>
-      <a href="{{ appHref }}" style="padding:10px 16px;border-radius:11px;background:#00D9A6;color:#06231B;font-size:14px;font-weight:800;text-decoration:none">Open the app</a>
+      <button data-theme-toggle="1" title="Switch light / dark" aria-label="Switch light or dark mode" style="padding:9px 13px;border:1px solid rgba(255,255,255,0.22);border-radius:11px;background:transparent;color:#fff;font-size:13.5px;font-weight:580;cursor:pointer;white-space:nowrap"><span data-show="light">☾ Dark</span><span data-show="dark">☀ Light</span></button>
+      <a href="{{ appHref }}" style="padding:10px 16px;border-radius:11px;background:#00D9A6;color:#06231B;font-size:14px;font-weight:620;text-decoration:none">Open the app</a>
     </div>
     <div style="max-width:1080px;margin:0 auto;padding:18px 24px 34px">
-      <h1 style="margin:0 0 8px;font-family:Sora,sans-serif;font-size:40px;font-weight:700;letter-spacing:-1.4px;line-height:1.1">How to use everything</h1>
+      <h1 style="margin:0 0 8px;font-family:Urbanist,sans-serif;font-size:40px;font-weight:400;letter-spacing:-1px;line-height:1.1">How to use everything</h1>
       <p style="margin:0 0 20px;max-width:620px;font-size:16px;line-height:1.6;color:#B9C6D0">Plain answers for creators, listeners and music executives. Search, or pick a topic.</p>
-      <div style="display:flex;align-items:center;gap:10px;max-width:640px;height:54px;padding:0 16px;border-radius:16px;background:#fff">
-        <span style="font-size:18px;color:#56646F">⌕</span>
-        <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Try “record”, “splits”, “Spike Back”, “refund”…" style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:#13202A;font-size:16px;font-family:inherit" />
+      <div style="display:flex;align-items:center;gap:10px;max-width:640px;height:54px;padding:0 16px;border-radius:16px;background:var(--panel)">
+        <span style="font-size:18px;color:var(--dim)">⌕</span>
+        <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Try “record”, “splits”, “Spike Back”, “refund”…" style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font-size:16px;font-family:inherit" />
         <sc-if value="{{ hasQ }}" hint-placeholder-val="{{ false }}">
-          <span style="font-size:13px;font-weight:700;color:#56646F;white-space:nowrap">{{ countText }}</span>
-          <button onClick="{{ clearQ }}" title="Clear search" style="width:30px;height:30px;border-radius:9px;border:0;background:#EEF2F4;color:#13202A;font-size:15px;cursor:pointer">×</button>
+          <span style="font-size:13px;font-weight:580;color:var(--dim);white-space:nowrap">{{ countText }}</span>
+          <button onClick="{{ clearQ }}" title="Clear search" style="width:30px;height:30px;border-radius:9px;border:0;background:var(--soft);color:var(--ink);font-size:15px;cursor:pointer">×</button>
         </sc-if>
       </div>
     </div>
@@ -50,7 +57,7 @@
 
     <nav style="position:{{ navPos }};top:20px;display:flex;flex-direction:{{ navDir }};flex-wrap:wrap;gap:6px">
       <sc-for list="{{ cats }}" as="c" hint-placeholder-count="14">
-        <button onClick="{{ c.go }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid {{ c.border }};border-radius:12px;background:{{ c.bg }};color:{{ c.fg }};font-size:14px;font-weight:700;cursor:pointer;text-align:left">
+        <button onClick="{{ c.go }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid {{ c.border }};border-radius:12px;background:{{ c.bg }};color:{{ c.fg }};font-size:14px;font-weight:580;cursor:pointer;text-align:left">
           <span style="width:20px;text-align:center">{{ c.icon }}</span><span style="flex:1">{{ c.label }}</span><span style="font-size:12px;color:{{ c.nFg }}">{{ c.n }}</span>
         </button>
       </sc-for>
@@ -58,14 +65,14 @@
 
     <main style="min-width:0;display:flex;flex-direction:column;gap:22px">
       <sc-if value="{{ showStart }}" hint-placeholder-val="{{ true }}">
-        <section style="padding:22px;border-radius:22px;background:#fff;border:1px solid #E3E8EC">
-          <div style="font-size:12px;font-weight:800;letter-spacing:0.1em;color:#00806A;margin-bottom:10px">START HERE · 5 MINUTES</div>
+        <section style="padding:22px;border-radius:22px;background:var(--panel);border:1px solid var(--line)">
+          <div style="font-size:12px;font-weight:620;letter-spacing:0.1em;color:var(--mintink);margin-bottom:10px">START HERE · 5 MINUTES</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px">
             <sc-for list="{{ steps }}" as="st" hint-placeholder-count="5">
-              <div style="padding:14px;border-radius:16px;background:#F6F8F9">
-                <div style="width:28px;height:28px;border-radius:50%;background:#00D9A6;color:#06231B;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:9px">{{ st.n }}</div>
-                <div style="font-size:14.5px;font-weight:800;margin-bottom:4px">{{ st.t }}</div>
-                <div style="font-size:13px;line-height:1.5;color:#46545F">{{ st.d }}</div>
+              <div style="padding:14px;border-radius:16px;background:var(--panel2)">
+                <div style="width:28px;height:28px;border-radius:50%;background:#00D9A6;color:#06231B;font-size:13px;font-weight:620;display:flex;align-items:center;justify-content:center;margin-bottom:9px">{{ st.n }}</div>
+                <div style="font-size:14.5px;font-weight:620;margin-bottom:4px">{{ st.t }}</div>
+                <div style="font-size:13px;line-height:1.5;color:var(--ink2)">{{ st.d }}</div>
               </div>
             </sc-for>
           </div>
@@ -73,9 +80,9 @@
       </sc-if>
 
       <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
-        <div style="padding:34px;border-radius:22px;background:#fff;border:1px solid #E3E8EC;text-align:center">
-          <div style="font-size:17px;font-weight:800;margin-bottom:6px">No answers match “{{ q }}”</div>
-          <div style="font-size:14.5px;color:#56646F;line-height:1.55">Try a simpler word like “record”, “mix”, “publish” or “plan”, or email <a href="mailto:support@ellipsismusic.net">support@ellipsismusic.net</a>.</div>
+        <div style="padding:34px;border-radius:22px;background:var(--panel);border:1px solid var(--line);text-align:center">
+          <div style="font-size:17px;font-weight:620;margin-bottom:6px">No answers match “{{ q }}”</div>
+          <div style="font-size:14.5px;color:var(--dim);line-height:1.55">Try a simpler word like “record”, “mix”, “publish” or “plan”, or email <a href="mailto:support@ellipsismusic.net">support@ellipsismusic.net</a>.</div>
         </div>
       </sc-if>
 
@@ -83,20 +90,20 @@
         <section id="{{ sec.id }}">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
             <span style="width:34px;height:34px;border-radius:11px;background:#0C1318;color:#00D9A6;font-size:16px;display:flex;align-items:center;justify-content:center">{{ sec.icon }}</span>
-            <h2 style="margin:0;font-family:Sora,sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.5px">{{ sec.label }}</h2>
+            <h2 style="margin:0;font-family:Urbanist,sans-serif;font-size:22px;font-weight:500;letter-spacing:-0.4px">{{ sec.label }}</h2>
           </div>
-          <div style="border-radius:20px;background:#fff;border:1px solid #E3E8EC;overflow:hidden">
+          <div style="border-radius:20px;background:var(--panel);border:1px solid var(--line);overflow:hidden">
             <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4">
-              <div style="border-top:1px solid #EEF2F4">
-                <button onClick="{{ it.toggle }}" style="display:flex;align-items:center;gap:12px;width:100%;padding:16px 18px;border:0;background:transparent;color:#13202A;font-size:15.5px;font-weight:800;cursor:pointer;text-align:left;font-family:inherit">
+              <div style="border-top:1px solid var(--soft)">
+                <button onClick="{{ it.toggle }}" style="display:flex;align-items:center;gap:12px;width:100%;padding:16px 18px;border:0;background:transparent;color:var(--ink);font-size:15.5px;font-weight:620;cursor:pointer;text-align:left;font-family:inherit">
                   <span style="flex:1">{{ it.q }}</span>
                   <span style="flex:none;width:26px;height:26px;border-radius:8px;background:{{ it.signBg }};color:{{ it.signFg }};font-size:16px;display:flex;align-items:center;justify-content:center">{{ it.sign }}</span>
                 </button>
                 <sc-if value="{{ it.open }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:0 18px 18px;font-size:14.5px;line-height:1.65;color:#2F3D47">
+                  <div style="padding:0 18px 18px;font-size:14.5px;line-height:1.65;color:var(--ink2)">
                     <sc-for list="{{ it.lines }}" as="ln" hint-placeholder-count="2">
                       <div style="display:flex;gap:9px;margin-top:6px">
-                        <sc-if value="{{ ln.bullet }}" hint-placeholder-val="{{ false }}"><span style="flex:none;color:#00A982;font-weight:800">•</span></sc-if>
+                        <sc-if value="{{ ln.bullet }}" hint-placeholder-val="{{ false }}"><span style="flex:none;color:#00A982;font-weight:620">•</span></sc-if>
                         <span style="flex:1;text-wrap:pretty">{{ ln.t }}</span>
                       </div>
                     </sc-for>
@@ -110,12 +117,12 @@
 
       <section style="padding:22px;border-radius:22px;background:#0C1318;color:#fff;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:240px">
-          <div style="font-family:Sora,sans-serif;font-size:20px;font-weight:700;margin-bottom:4px">Still stuck?</div>
+          <div style="font-family:Urbanist,sans-serif;font-size:20px;font-weight:500;margin-bottom:4px">Still stuck?</div>
           <div style="font-size:14px;color:#B9C6D0;line-height:1.55">Email us and a person replies within one working day. Include your account email and what you tapped.</div>
         </div>
-        <a href="mailto:support@ellipsismusic.net" style="padding:12px 18px;border-radius:12px;background:#00D9A6;color:#06231B;font-size:14.5px;font-weight:800;text-decoration:none">support@ellipsismusic.net</a>
+        <a href="mailto:support@ellipsismusic.net" style="padding:12px 18px;border-radius:12px;background:#00D9A6;color:#06231B;font-size:14.5px;font-weight:620;text-decoration:none">support@ellipsismusic.net</a>
       </section>
-      <div style="font-size:12.5px;color:#56646F;line-height:1.6">© 2026 Ellipsis. <a href="{{ legalTerms }}">Terms</a> · <a href="{{ legalPrivacy }}">Privacy</a> · <a href="{{ legalDmca }}">Copyright &amp; DMCA</a></div>
+      <div style="font-size:12.5px;color:var(--dim);line-height:1.6">© 2026 Ellipsis. <a href="{{ legalTerms }}">Terms</a> · <a href="{{ legalPrivacy }}">Privacy</a> · <a href="{{ legalDmca }}">Copyright &amp; DMCA</a></div>
     </main>
   </div>
 </div>
@@ -233,14 +240,14 @@ class Component extends DCLogic {
       items: items.filter(([title, ...lines]) => match(title, lines)).map(([title, ...lines]) => {
         const key = id + ':' + title, open = q ? true : !!s.open[key];
         return {
-          q: title, open, sign: open ? '−' : '+', signBg: open ? '#00D9A6' : '#EEF2F4', signFg: open ? '#06231B' : '#13202A',
+          q: title, open, sign: open ? '−' : '+', signBg: open ? '#00D9A6' : 'var(--soft)', signFg: open ? '#06231B' : 'var(--ink)',
           toggle: () => this.setState(st => ({ open: Object.assign({}, st.open, { [key]: !st.open[key] }) })),
           lines: lines.map(t => ({ bullet: t.indexOf('- ') === 0, t: t.indexOf('- ') === 0 ? t.slice(2) : t }))
         };
       })
     })).filter(sec => sec.items.length);
     const total = sections.reduce((a, x) => a + x.items.length, 0);
-    const chip = on => ({ bg: on ? '#0C1318' : '#fff', fg: on ? '#fff' : '#13202A', border: on ? '#0C1318' : '#E3E8EC', nFg: on ? '#9BA9B4' : '#56646F' });
+    const chip = on => ({ bg: on ? '#0C1318' : 'var(--panel)', fg: on ? '#fff' : 'var(--ink)', border: on ? '#0C1318' : 'var(--line)', nFg: on ? '#9BA9B4' : 'var(--dim)' });
     return {
       q: s.q, onQ: e => this.setState({ q: e.target.value }), clearQ: () => this.setState({ q: '' }), hasQ: !!q,
       countText: total + (total === 1 ? ' answer' : ' answers'),
