@@ -39,7 +39,8 @@
     ::-webkit-scrollbar{width:10px;height:10px}
     ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px;border:3px solid transparent;background-clip:content-box}
     ::-webkit-scrollbar-track{background:transparent}
-    @keyframes elIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @keyframes elIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}
+    @keyframes eqb{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}}
     @keyframes elPulse{0%,100%{opacity:1}50%{opacity:.35}}
     @keyframes elPop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
   </style>
@@ -167,6 +168,16 @@
               <div style="padding:34px;border-radius:20px;background:var(--panel);border:1px solid var(--line);text-align:center;font-size:14.5px;color:var(--dim)">{{ exEmptyText }}</div>
             </sc-if>
 
+                        <sc-if value="{{ showAds }}" hint-placeholder-val="{{ false }}">
+              <div style="position:relative;display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:16px 18px;border-radius:20px;background:linear-gradient(120deg,{{ exAdColor }},#0C1318);color:#fff;margin-bottom:14px;overflow:hidden">
+                <span style="position:absolute;top:10px;right:12px;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.18);font-size:10px;font-weight:620;letter-spacing:0.1em">AD</span>
+                <span style="flex:none;width:52px;height:52px;border-radius:15px;background:rgba(255,255,255,0.14);font-size:22px;display:flex;align-items:center;justify-content:center">◆</span>
+                <div style="flex:1;min-width:220px"><div style="font-size:11px;font-weight:620;letter-spacing:0.1em;opacity:0.8">SPONSORED · {{ exAdSponsor }}</div><div style="font-family:Urbanist,Geist,sans-serif;font-size:20px;font-weight:500;letter-spacing:-0.3px">{{ exAdHead }}</div><div style="font-size:13px;opacity:0.85">{{ exAdBody }}</div></div>
+                <button onClick="{{ exAdGo }}" style="flex:none;padding:10px 16px;border:0;border-radius:12px;background:#fff;color:#0C1318;font-size:13px;font-weight:620;cursor:pointer">{{ exAdCta }}</button>
+                <button onClick="{{ goPremium }}" style="flex:none;padding:10px 12px;border:0;border-radius:12px;background:transparent;color:#fff;font-size:12.5px;font-weight:620;cursor:pointer;opacity:0.85">Remove ads</button>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:0 0 12px;font-size:12px;color:var(--dim)"><span style="font-weight:620">Ring colour = type:</span><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#00D9A6"></span>Song</span><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#5B8CFF"></span>Beat</span><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#B07CFF"></span>Melody</span><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#FF7A59"></span>Voice</span><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#F5B800"></span>Lyrics</span></div>
             <sc-if value="{{ isSongs }}" hint-placeholder-val="{{ true }}">
               <div style="border-radius:20px;background:var(--panel);border:1px solid var(--line);overflow:hidden">
                 <sc-for list="{{ songRows }}" as="r" hint-placeholder-count="8">
@@ -184,7 +195,7 @@
                   <sc-if value="{{ r.isSong }}" hint-placeholder-val="{{ true }}">
                   <div style="display:flex;align-items:center;gap:13px;padding:11px 18px;border-bottom:1px solid var(--line)" style-hover="background:var(--hover)">
                     <span style="flex:none;width:26px;text-align:center;font-size:17px;font-weight:620;color:{{ r.rankFg }}">{{ r.rank }}</span>
-                    <button onClick="{{ r.play }}" style="flex:none;width:46px;height:46px;border-radius:12px;border:0;background:{{ r.art }};color:#fff;font-size:14px;cursor:pointer">{{ r.icon }}</button>
+                    <button onClick="{{ r.play }}" style="flex:none;width:46px;height:46px;border-radius:12px;border:0;background:{{ r.art }};box-shadow:inset 0 0 0 3px {{ r.kc }};color:#fff;font-size:14px;cursor:pointer">{{ r.icon }}</button>
                     <button onClick="{{ r.open }}" style="flex:1;min-width:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left">
                       <span style="display:block;font-size:15px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span>
                       <span style="display:block;font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span>
@@ -207,7 +218,7 @@
                 <sc-for list="{{ instrCards }}" as="c" hint-placeholder-count="6">
                   <article style="border-radius:20px;background:var(--panel);border:1px solid var(--line);overflow:hidden">
                     <div style="position:relative;height:110px;background:{{ c.art }}">
-                      <button onClick="{{ c.play }}" title="Play" style="position:absolute;left:14px;bottom:14px;width:46px;height:46px;border-radius:50%;border:0;background:#fff;color:#0C1318;font-size:15px;cursor:pointer">{{ c.icon }}</button>
+                      <button onClick="{{ c.play }}" title="Play" style="position:absolute;left:14px;bottom:14px;width:46px;height:46px;border-radius:50%;border:0;background:{{ c.kc }};color:{{ c.kcFg }};font-size:15px;cursor:pointer">{{ c.icon }}</button>
                     </div>
                     <div style="padding:13px 15px 15px">
                       <div style="font-size:16px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.title }}</div>
@@ -229,7 +240,7 @@
                 <sc-for list="{{ collabCards }}" as="c" hint-placeholder-count="4">
                   <article style="border-radius:20px;background:var(--panel);border:1px solid var(--line);padding:17px;display:flex;flex-direction:column;gap:12px">
                     <div style="display:flex;align-items:center;gap:12px">
-                      <button onClick="{{ c.play }}" style="flex:none;width:52px;height:52px;border-radius:14px;border:0;background:{{ c.art }};color:#fff;font-size:15px;cursor:pointer">{{ c.icon }}</button>
+                      <button onClick="{{ c.play }}" style="flex:none;width:52px;height:52px;border-radius:14px;border:0;background:{{ c.art }};box-shadow:inset 0 0 0 3px {{ c.kc }};color:#fff;font-size:15px;cursor:pointer">{{ c.icon }}</button>
                       <div style="flex:1;min-width:0">
                         <div style="font-size:16px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.title }}</div>
                         <button onClick="{{ c.openUser }}" style="padding:0;border:0;background:transparent;color:var(--dim);font-size:13px;cursor:pointer">{{ c.sub }}</button>
@@ -662,7 +673,7 @@
                 <sc-for list="{{ deskRows }}" as="r" hint-placeholder-count="8">
                   <div style="display:flex;align-items:center;gap:13px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid var(--line)">
                     <span style="flex:none;width:26px;text-align:center;font-size:16px;font-weight:620;color:{{ r.rankFg }}">{{ r.rank }}</span>
-                    <button onClick="{{ r.play }}" style="flex:none;width:46px;height:46px;border-radius:12px;border:0;background:{{ r.art }};color:#fff;font-size:14px;cursor:pointer">{{ r.icon }}</button>
+                    <button onClick="{{ r.play }}" style="flex:none;width:46px;height:46px;border-radius:12px;border:0;background:{{ r.art }};box-shadow:inset 0 0 0 3px {{ r.kc }};color:#fff;font-size:14px;cursor:pointer">{{ r.icon }}</button>
                     <button onClick="{{ r.openArtist }}" style="flex:1;min-width:180px;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left">
                       <span style="display:block;font-size:15px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span>
                       <span style="display:block;font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span>
@@ -688,7 +699,7 @@
                       <sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="2">
                         <div style="padding:10px;border-radius:14px;background:var(--panel);border:1px solid var(--line)">
                           <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
-                            <button onClick="{{ c.play }}" style="flex:none;width:34px;height:34px;border-radius:9px;border:0;background:{{ c.art }};color:#fff;font-size:11px;cursor:pointer">{{ c.icon }}</button>
+                            <button onClick="{{ c.play }}" style="flex:none;width:34px;height:34px;border-radius:9px;border:0;background:{{ c.art }};box-shadow:inset 0 0 0 3px {{ c.kc }};color:#fff;font-size:11px;cursor:pointer">{{ c.icon }}</button>
                             <span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.title }}</span><span style="display:block;font-size:11.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.sub }}</span></span>
                           </div>
                           <div style="display:flex;gap:5px">
@@ -700,6 +711,91 @@
                     </div>
                   </div>
                 </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isInbox }}" hint-placeholder-val="{{ false }}">
+          <div style="animation:elIn .25s ease both">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px">
+              <div><div style="font-family:Urbanist,Geist,sans-serif;font-size:34px;font-weight:400;letter-spacing:-0.8px">Inbox</div><div style="font-size:14px;color:var(--dim)">{{ ibSub }}</div></div>
+              <div role="tablist" style="display:flex;gap:4px;padding:4px;border-radius:13px;background:var(--panel2);border:1px solid var(--line)">
+                <sc-for list="{{ ibTabs }}" as="t" hint-placeholder-count="2"><button role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.go }}" style="padding:9px 16px;border:0;border-radius:10px;background:{{ t.bg }};color:{{ t.fg }};font-size:13.5px;font-weight:620;cursor:pointer">{{ t.label }}</button></sc-for>
+              </div>
+            </div>
+
+            <sc-if value="{{ ibIsMsgs }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:{{ ibCols }};gap:14px;align-items:start">
+                <section style="border-radius:22px;background:var(--panel);border:1px solid var(--line);overflow:hidden;display:{{ ibListShow }}">
+                  <div style="padding:12px;border-bottom:1px solid var(--line)"><input value="{{ dmQ }}" onChange="{{ onDmQ }}" placeholder="Search people" style="width:100%;padding:10px 12px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:13.5px;font-family:inherit;outline:none" /></div>
+                  <div style="max-height:calc(100vh - 290px);overflow-y:auto">
+                    <sc-for list="{{ ibThreads }}" as="t" hint-placeholder-count="4">
+                      <button onClick="{{ t.go }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:{{ t.bg }};color:var(--ink);cursor:pointer;text-align:left">
+                        <span style="position:relative;flex:none;width:44px;height:44px;border-radius:14px;background:{{ t.av }};color:#fff;font-size:13px;font-weight:620;display:flex;align-items:center;justify-content:center">{{ t.ini }}<sc-if value="{{ t.unread }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;background:#FF5A4E;border:2px solid var(--panel)"></span></sc-if></span>
+                        <span style="flex:1;min-width:0"><span style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:14px;font-weight:{{ t.fw }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</span><span style="flex:none;font-size:11.5px;color:var(--dim)">{{ t.when }}</span></span><span style="display:block;font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.last }}</span></span>
+                      </button>
+                    </sc-for>
+                    <sc-if value="{{ ibHasSuggest }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:12px 14px 6px;font-size:11px;font-weight:620;letter-spacing:0.09em;color:var(--dim)">START A CONVERSATION</div>
+                      <sc-for list="{{ ibSuggest }}" as="t" hint-placeholder-count="3">
+                        <button onClick="{{ t.go }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:9px 14px;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left">
+                          <span style="flex:none;width:34px;height:34px;border-radius:11px;background:{{ t.av }};color:#fff;font-size:11.5px;font-weight:620;display:flex;align-items:center;justify-content:center">{{ t.ini }}</span>
+                          <span style="flex:1;min-width:0;font-size:13.5px;font-weight:540;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</span><span style="font-size:12px;color:var(--mint-ink);font-weight:620">Message</span>
+                        </button>
+                      </sc-for>
+                    </sc-if>
+                  </div>
+                </section>
+
+                <section style="border-radius:22px;background:var(--panel);border:1px solid var(--line);overflow:hidden;display:{{ ibThreadShow }};flex-direction:column;min-height:460px">
+                  <sc-if value="{{ ibNoThread }}" hint-placeholder-val="{{ true }}">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:40px;text-align:center;color:var(--dim)"><span style="font-size:34px">✉</span><span style="font-size:15px;font-weight:620;color:var(--ink)">Pick a conversation</span><span style="font-size:13px">Message collaborators and labels here. Everything stays inside Ellipsis.</span></div>
+                  </sc-if>
+                  <sc-if value="{{ ibHasThread }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap">
+                      <sc-if value="{{ ibNarrow }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ibBack }}" aria-label="Back to conversations" style="width:34px;height:34px;border-radius:10px;border:1px solid var(--line2);background:transparent;color:var(--ink);cursor:pointer">‹</button></sc-if>
+                      <button onClick="{{ ibProfile }}" style="display:flex;align-items:center;gap:11px;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left;flex:1;min-width:180px">
+                        <span style="flex:none;width:44px;height:44px;border-radius:14px;background:{{ ibAv }};color:#fff;font-size:13px;font-weight:620;display:flex;align-items:center;justify-content:center">{{ ibIni }}</span>
+                        <span><span style="display:block;font-size:15px;font-weight:620">{{ ibName }}</span><span style="display:block;font-size:12.5px;color:var(--dim)">{{ ibMeta }}</span></span>
+                      </button>
+                      <button onClick="{{ ibMeetGo }}" style="padding:9px 14px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13px;font-weight:620;cursor:pointer">📅 Schedule meeting</button>
+                    </div>
+                    <sc-for list="{{ ibThreadMeets }}" as="m" hint-placeholder-count="1"><div style="padding:12px 14px 0"><div style="padding:14px 16px;border-radius:18px;background:var(--panel);border:1px solid {{ m.border }};display:flex;flex-direction:column;gap:9px">
+                    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                      <span style="flex:none;width:44px;height:44px;border-radius:13px;background:{{ m.av }};color:#fff;font-size:13px;font-weight:620;display:flex;align-items:center;justify-content:center">{{ m.ini }}</span>
+                      <div style="flex:1;min-width:200px"><div style="font-size:15px;font-weight:620">{{ m.title }}</div><div style="font-size:12.5px;color:var(--dim)">{{ m.when }} · {{ m.mode }} · {{ m.dur }}</div><div style="font-size:12px;color:var(--dim)">{{ m.theirs }}</div></div>
+                      <span style="flex:none;padding:3px 9px;border-radius:999px;background:{{ m.stBg }};color:{{ m.stFg }};font-size:11px;font-weight:620;white-space:nowrap">{{ m.st }}</span>
+                    </div>
+                    <sc-if value="{{ m.agenda }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;line-height:1.5;color:var(--ink);padding:9px 11px;border-radius:11px;background:var(--panel2)">{{ m.agenda }}</div></sc-if>
+                    <div style="display:flex;gap:7px;flex-wrap:wrap"><sc-for list="{{ m.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.go }}" style="padding:8px 13px;border:1px solid {{ a.border }};border-radius:10px;background:{{ a.bg }};color:{{ a.fg }};font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">{{ a.label }}</button></sc-for></div>
+                  </div></div></sc-for>
+                    <div ref="{{ dmRef }}" style="flex:1;min-height:240px;max-height:calc(100vh - 420px);overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:9px">
+                      <sc-for list="{{ ibMsgs }}" as="m" hint-placeholder-count="4">
+                        <div style="display:flex;justify-content:{{ m.align }}"><div style="max-width:78%;padding:10px 13px;border-radius:{{ m.radius }};background:{{ m.bg }};color:{{ m.fg }};font-size:14px;line-height:1.45"><div>{{ m.text }}</div><div style="margin-top:3px;font-size:11px;opacity:0.7;text-align:right">{{ m.when }}</div></div></div>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;gap:8px;padding:11px;border-top:1px solid var(--line)">
+                      <input value="{{ dmDraft }}" onChange="{{ onDmDraft }}" onKeyDown="{{ onDmKey }}" placeholder="{{ ibPlaceholder }}" style="flex:1;min-width:0;padding:12px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--panel2);color:var(--ink);font-size:14px;font-family:inherit;outline:none" />
+                      <button onClick="{{ dmSend }}" style="flex:none;padding:12px 18px;border:0;border-radius:12px;background:var(--mint);color:var(--on-mint);font-size:14px;font-weight:620;cursor:pointer">Send</button>
+                    </div>
+                  </sc-if>
+                </section>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ ibIsMeet }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px;max-width:860px">
+                <sc-if value="{{ ibNoMeets }}" hint-placeholder-val="{{ false }}"><div style="padding:30px;border-radius:20px;background:var(--panel);border:1px dashed var(--line2);text-align:center;color:var(--dim);font-size:14px">No meetings yet. Open a conversation or a profile and tap 📅 to schedule one.</div></sc-if>
+                <sc-for list="{{ ibMeets }}" as="m" hint-placeholder-count="2"><div style="padding:14px 16px;border-radius:18px;background:var(--panel);border:1px solid {{ m.border }};display:flex;flex-direction:column;gap:9px">
+                    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                      <span style="flex:none;width:44px;height:44px;border-radius:13px;background:{{ m.av }};color:#fff;font-size:13px;font-weight:620;display:flex;align-items:center;justify-content:center">{{ m.ini }}</span>
+                      <div style="flex:1;min-width:200px"><div style="font-size:15px;font-weight:620">{{ m.title }}</div><div style="font-size:12.5px;color:var(--dim)">{{ m.when }} · {{ m.mode }} · {{ m.dur }}</div><div style="font-size:12px;color:var(--dim)">{{ m.theirs }}</div></div>
+                      <span style="flex:none;padding:3px 9px;border-radius:999px;background:{{ m.stBg }};color:{{ m.stFg }};font-size:11px;font-weight:620;white-space:nowrap">{{ m.st }}</span>
+                    </div>
+                    <sc-if value="{{ m.agenda }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;line-height:1.5;color:var(--ink);padding:9px 11px;border-radius:11px;background:var(--panel2)">{{ m.agenda }}</div></sc-if>
+                    <div style="display:flex;gap:7px;flex-wrap:wrap"><sc-for list="{{ m.acts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.go }}" style="padding:8px 13px;border:1px solid {{ a.border }};border-radius:10px;background:{{ a.bg }};color:{{ a.fg }};font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">{{ a.label }}</button></sc-for></div>
+                  </div></sc-for>
               </div>
             </sc-if>
           </div>
@@ -756,7 +852,7 @@
                   <sc-if value="{{ prExec }}" hint-placeholder-val="{{ false }}"><span style="padding:6px 12px;border-radius:999px;background:#00D9A6;color:#06231B;font-size:12px;font-weight:620;letter-spacing:0.04em">MUSIC EXECUTIVE</span></sc-if>
                 </div>
                 <div style="display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap">
-                  <div style="flex:none;width:112px;height:112px;border-radius:34px;background:{{ prGrad }};box-shadow:0 0 0 4px rgba(255,255,255,0.9),0 18px 40px rgba(0,0,0,0.35);color:#fff;font-family:Urbanist,sans-serif;font-size:36px;font-weight:400;display:flex;align-items:center;justify-content:center">{{ prInitials }}</div>
+                  <div onClick="{{ prAvatarGo }}" title="{{ prAvatarTip }}" style="position:relative;cursor:{{ prAvatarCursor }};flex:none;width:112px;height:112px;border-radius:34px;background:{{ prGrad }};box-shadow:0 0 0 4px rgba(255,255,255,0.9),0 18px 40px rgba(0,0,0,0.35);color:#fff;font-family:Urbanist,sans-serif;font-size:36px;font-weight:400;display:flex;align-items:center;justify-content:center">{{ prInitials }}<sc-if value="{{ prIsMe }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:-8px;bottom:-8px;width:36px;height:36px;border-radius:50%;background:#00D9A6;color:#06231B;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.3)">📷</span></sc-if></div>
                   <div style="flex:1;min-width:220px">
                     <div style="display:flex;align-items:center;gap:10px;font-family:Urbanist,Geist,sans-serif;font-size:38px;font-weight:400;letter-spacing:-1px;line-height:1.05">{{ prName }}<sc-if value="{{ prVerified }}" hint-placeholder-val="{{ false }}"><span title="{{ prVerTitle }}" style="flex:none;width:30px;height:30px;border-radius:50%;background:#00D9A6;color:#06231B;font-family:Geist,sans-serif;font-size:17px;font-weight:620;letter-spacing:0;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px rgba(255,255,255,0.9)">✓</span></sc-if></div>
                     <div style="font-size:14.5px;font-weight:540;opacity:.92;margin-top:5px">{{ prSub }}</div>
@@ -764,6 +860,12 @@
                   <div style="display:flex;gap:9px;flex-wrap:wrap">
                     <sc-if value="{{ prOther }}" hint-placeholder-val="{{ false }}">
                       <button onClick="{{ prFollow }}" style="padding:12px 24px;border:0;border-radius:14px;background:{{ prFollowBg }};color:{{ prFollowFg }};font-size:14px;font-weight:620;cursor:pointer;min-width:118px">{{ prFollowLabel }}</button>
+                    </sc-if>
+                    <sc-if value="{{ prOther }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ prMessage }}" style="padding:12px 18px;border:1px solid rgba(255,255,255,0.45);border-radius:14px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;font-weight:620;cursor:pointer">✉ Message</button>
+                    </sc-if>
+                    <sc-if value="{{ prOther }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ prMeet }}" style="padding:12px 18px;border:1px solid rgba(255,255,255,0.45);border-radius:14px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;font-weight:620;cursor:pointer">📅 Meet</button>
                     </sc-if>
                     <sc-if value="{{ prOther }}" hint-placeholder-val="{{ false }}">
                       <button onClick="{{ prReport }}" title="Report or block" style="padding:12px 14px;border:1px solid rgba(255,255,255,0.45);border-radius:14px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;font-weight:620;cursor:pointer">⋯</button>
@@ -815,7 +917,7 @@
                     <div style="display:flex;flex-direction:column;gap:8px">
                       <sc-for list="{{ prSpikeBacks }}" as="r" hint-placeholder-count="5">
                         <div style="display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,0.05)">
-                          <button onClick="{{ r.play }}" style="flex:none;width:42px;height:42px;border-radius:11px;border:0;background:{{ r.art }};color:#fff;font-size:13px;cursor:pointer">{{ r.icon }}</button>
+                          <button onClick="{{ r.play }}" style="flex:none;width:42px;height:42px;border-radius:11px;border:0;background:{{ r.art }};box-shadow:inset 0 0 0 3px {{ r.kc }};color:#fff;font-size:13px;cursor:pointer">{{ r.icon }}</button>
                           <span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span><span style="display:block;font-size:12px;color:#9BA9B4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span></span>
                           <button onClick="{{ r.openUser }}" style="flex:none;padding:7px 12px;border:1px solid rgba(0,217,166,0.5);border-radius:9px;background:transparent;color:#3FE6BD;font-size:12px;font-weight:620;cursor:pointer">Artist</button>
                         </div>
@@ -832,7 +934,7 @@
                   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px">
                     <sc-for list="{{ prSongs }}" as="r" hint-placeholder-count="4">
                       <div style="border-radius:18px;background:var(--panel);border:1px solid var(--line);overflow:hidden">
-                        <button onClick="{{ r.play }}" style="position:relative;display:block;width:100%;aspect-ratio:1;border:0;background:{{ r.art }};cursor:pointer"><span style="position:absolute;left:10px;bottom:10px;width:36px;height:36px;border-radius:50%;background:#fff;color:#0C1318;font-size:12px;display:flex;align-items:center;justify-content:center">{{ r.icon }}</span><span style="position:absolute;right:10px;top:10px;padding:4px 8px;border-radius:7px;background:rgba(0,0,0,0.45);color:#fff;font-size:11px;font-weight:620">{{ r.kind }}</span></button>
+                        <button onClick="{{ r.play }}" style="position:relative;display:block;width:100%;aspect-ratio:1;border:0;background:{{ r.art }};box-shadow:inset 0 0 0 3px {{ r.kc }};cursor:pointer"><span style="position:absolute;left:10px;bottom:10px;width:36px;height:36px;border-radius:50%;background:#fff;color:#0C1318;font-size:12px;display:flex;align-items:center;justify-content:center">{{ r.icon }}</span><span style="position:absolute;right:10px;top:10px;padding:4px 8px;border-radius:7px;background:rgba(0,0,0,0.45);color:#fff;font-size:11px;font-weight:620">{{ r.kind }}</span></button>
                         <div style="padding:11px 12px 12px">
                           <div style="font-size:14px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</div>
                           <div style="font-size:12px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:2px 0 9px">{{ r.sub }}</div>
@@ -902,6 +1004,10 @@
                       <button onClick="{{ resetDemo }}" style="padding:8px 14px;border:1px solid var(--line2);border-radius:10px;background:transparent;color:var(--ink);font-size:13px;font-weight:620;cursor:pointer">Reset demo</button>
                     </div>
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--line)">
+                      <span><span style="display:block;font-size:14.5px;font-weight:620">Show ads</span><span style="display:block;font-size:12.5px;color:var(--dim)">{{ adPrevNote }}</span></span>
+                      <button onClick="{{ toggleAdPrev }}" role="switch" aria-checked="{{ adPrevStr }}" style="flex:none;position:relative;width:52px;height:30px;border-radius:15px;border:0;background:{{ adPrevTrack }};cursor:pointer"><span style="position:absolute;top:3px;left:{{ adPrevKnob }};width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></span></button>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--line)">
                       <span><span style="display:block;font-size:14.5px;font-weight:620">Dark mode</span><span style="display:block;font-size:12.5px;color:var(--dim)">Also in the top bar</span></span>
                       <button onClick="{{ toggleTheme }}" title="Dark mode" style="position:relative;width:48px;height:28px;border-radius:14px;border:0;background:{{ darkTrack }};cursor:pointer"><span style="position:absolute;top:3px;left:{{ darkKnob }};width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left .18s"></span></button>
                     </div>
@@ -918,8 +1024,8 @@
 
   <footer style="position:relative;grid-row:2;grid-column:1 / span 2;display:grid;grid-template-columns:{{ playerCols }};align-items:center;gap:20px;padding:0 24px;background:var(--panel);border-top:1px solid var(--line);z-index:5">
     <div style="display:flex;align-items:center;gap:12px;min-width:0">
-      <div style="flex:none;width:52px;height:52px;border-radius:13px;background:{{ nowArt }}"></div>
-      <div style="min-width:0"><div style="font-size:14.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nowTitle }}</div><div style="font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nowSub }}</div></div>
+      <div style="flex:none;width:52px;height:52px;border-radius:13px;background:{{ nowArt }};box-shadow:inset 0 0 0 3px {{ nowKc }}"></div>
+      <div style="min-width:0"><div style="font-size:14.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:7px"><sc-if value="{{ nowPlaying }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;gap:2px;align-items:flex-end;height:12px"><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out infinite"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out .2s infinite"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out .4s infinite"></span></span></sc-if><span style="overflow:hidden;text-overflow:ellipsis">{{ nowTitle }}</span><span style="flex:none;padding:1px 7px;border-radius:999px;background:{{ nowKc }};color:{{ nowKcFg }};font-size:10px;font-weight:620">{{ nowKind }}</span></div><div style="font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nowSub }}</div></div>
       <sc-if value="{{ nowCanSpike }}" hint-placeholder-val="{{ true }}">
         <button onClick="{{ nowSpike }}" title="Spike" style="flex:none;width:38px;height:38px;border-radius:11px;border:1px solid {{ nowSpBorder }};background:{{ nowSpBg }};color:{{ nowSpFg }};font-size:14px;cursor:pointer">⚡</button>
       </sc-if>
@@ -927,7 +1033,7 @@
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">
       <div style="display:flex;align-items:center;gap:14px">
         <button onClick="{{ prevTrack }}" title="Previous song" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--ink);font-size:14px;cursor:pointer">⏮</button>
-        <button onClick="{{ togglePlay }}" title="Play or pause (space)" style="width:42px;height:42px;border-radius:50%;border:0;background:#0C1318;color:#fff;font-size:15px;cursor:pointer">{{ playIcon }}</button>
+        <button onClick="{{ togglePlay }}" title="Play or pause (space) · {{ nowKind }}" style="width:42px;height:42px;border-radius:50%;border:0;background:{{ nowKc }};color:{{ nowKcFg }};font-size:15px;cursor:pointer">{{ playIcon }}</button>
         <button onClick="{{ nextTrack }}" title="Next song" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--ink);font-size:14px;cursor:pointer">⏭</button>
       </div>
       <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:560px">
@@ -1188,6 +1294,21 @@
             </div>
           </sc-if>
 
+          <sc-if value="{{ isMeet }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:13px">
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+                <label><span style="display:block;font-size:12.5px;font-weight:620;color:var(--dim);margin-bottom:5px">Date</span><input type="date" value="{{ mtDate }}" onChange="{{ onMtDate }}" style="width:100%;padding:11px 12px;border:1px solid var(--line2);border-radius:11px;background:var(--panel);color:var(--ink);font-size:14px;font-family:inherit" /></label>
+                <label><span style="display:block;font-size:12.5px;font-weight:620;color:var(--dim);margin-bottom:5px">Time (yours)</span><input type="time" value="{{ mtTime }}" onChange="{{ onMtTime }}" step="900" style="width:100%;padding:11px 12px;border:1px solid var(--line2);border-radius:11px;background:var(--panel);color:var(--ink);font-size:14px;font-family:inherit" /></label>
+              </div>
+              <div style="padding:10px 12px;border-radius:12px;background:var(--mint-soft);color:var(--mint-ink);font-size:13px;font-weight:540">{{ mtTheirs }}</div>
+              <div><div style="font-size:12.5px;font-weight:620;color:var(--dim);margin-bottom:6px">Length</div><div style="display:flex;gap:7px;flex-wrap:wrap"><sc-for list="{{ mtDurs }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.go }}" style="padding:8px 14px;border:1px solid {{ c.border }};border-radius:999px;background:{{ c.bg }};color:{{ c.fg }};font-size:13px;font-weight:620;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+              <div><div style="font-size:12.5px;font-weight:620;color:var(--dim);margin-bottom:6px">How</div><div style="display:flex;gap:7px;flex-wrap:wrap"><sc-for list="{{ mtModes }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.go }}" style="padding:8px 14px;border:1px solid {{ c.border }};border-radius:999px;background:{{ c.bg }};color:{{ c.fg }};font-size:13px;font-weight:620;cursor:pointer">{{ c.label }}</button></sc-for></div><div style="font-size:12px;color:var(--dim);margin-top:6px">{{ mtModeNote }}</div></div>
+              <label><span style="display:block;font-size:12.5px;font-weight:620;color:var(--dim);margin-bottom:5px">Agenda</span><textarea value="{{ mtAgenda }}" onChange="{{ onMtAgenda }}" rows="3" placeholder="What you want to cover" style="width:100%;padding:11px 12px;border:1px solid var(--line2);border-radius:11px;background:var(--panel);color:var(--ink);font-size:14px;font-family:inherit;resize:vertical"></textarea></label>
+              <sc-if value="{{ mtErr }}" hint-placeholder-val="{{ false }}"><div style="padding:9px 12px;border-radius:10px;background:var(--coral-soft);color:var(--coral-ink);font-size:13px;font-weight:620">{{ mtErr }}</div></sc-if>
+              <button onClick="{{ mtSave }}" style="padding:13px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:15px;font-weight:620;cursor:pointer">{{ mtSaveLabel }}</button>
+            </div>
+          </sc-if>
+
           <sc-if value="{{ isProfEdit }}" hint-placeholder-val="{{ false }}">
             <div>
               <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
@@ -1428,7 +1549,7 @@
               <sc-if value="{{ ezNoRows }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 8px;text-align:center;font-size:13px;color:#9BA9B4">{{ ezNoRowsText }}</div></sc-if>
               <sc-for list="{{ ezRows }}" as="r" hint-placeholder-count="8">
                 <div draggable="true" onDragStart="{{ r.drag }}" title="Drag onto your song" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:14px;background:#0D1418;border:1px solid #1C262D;cursor:grab">
-                  <button onClick="{{ r.preview }}" aria-label="Preview {{ r.title }}" style="flex:none;width:40px;height:40px;border-radius:11px;border:0;background:{{ r.art }};color:#fff;font-size:13px;cursor:pointer">{{ r.icon }}</button>
+                  <button onClick="{{ r.preview }}" aria-label="Preview {{ r.title }}" style="flex:none;width:40px;height:40px;border-radius:11px;border:0;background:{{ r.art }};box-shadow:inset 0 0 0 3px {{ r.kc }};color:#fff;font-size:13px;cursor:pointer">{{ r.icon }}</button>
                   <span style="flex:1;min-width:0"><span style="display:flex;align-items:center;gap:6px;min-width:0"><span style="font-size:13.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span><sc-if value="{{ r.fit }}" hint-placeholder-val="{{ false }}"><span style="flex:none;padding:2px 7px;border-radius:999px;background:{{ r.fitBg }};color:{{ r.fitFg }};font-size:10.5px;font-weight:580;white-space:nowrap">{{ r.fit }}</span></sc-if></span><span style="display:block;font-size:11.5px;color:#8C9AA5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span></span>
                   <button onClick="{{ r.add }}" aria-label="Add {{ r.title }}" style="flex:none;padding:8px 11px;border:0;border-radius:10px;background:#00D9A6;color:#06231B;font-size:12.5px;font-weight:620;cursor:pointer">＋ Add</button>
                 </div>
@@ -2027,7 +2148,17 @@ function seedAll(USERS) {
 }
 
 const CROP_FRAMES = [['1:1', 'Square', 1, '1 : 1'], ['4:5', 'Portrait', 0.8, '4 : 5'], ['9:16', 'Story', 9 / 16, '9 : 16'], ['16:9', 'Wide', 16 / 9, '16 : 9'], ['orig', 'Original', null, 'as shot']];
-const AOF = x => x && x.cover ? 'url(' + x.cover + ') center/cover' : ART[x && x.file] || ART.lofi;
+/* 16 painted default covers (assets/covers). Songs and projects get one by hash until an owner uploads their own. */
+const COVERS = Array.from({ length: 16 }, (_, i) => 'assets/covers/c' + String(i + 1).padStart(2, '0') + '.jpg');
+const hashS = t => { t = String(t || ''); let h = 7; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; };
+const COVER_OF = key => 'url(' + COVERS[hashS(key) % COVERS.length] + ') center/cover';
+const AOF = x => x && x.cover ? 'url(' + x.cover + ') center/cover' : x && x.kind === 'song' ? COVER_OF(x.id + (x.title || '')) : ART[x && x.file] || ART.lofi;
+/* One colour per kind of sound, used on every play button ring and the player. */
+const KC = { song: ['#00D9A6', '#06231B', 'Song'], instrumental: ['#5B8CFF', '#FFFFFF', 'Beat'], melody: ['#B07CFF', '#FFFFFF', 'Melody'], acapella: ['#FF7A59', '#FFFFFF', 'Voice'], lyric: ['#F5B800', '#1A1405', 'Lyrics'] };
+const KCX = x => { const k = KC[x && x.kind] || KC.song; return { kc: k[0], kcFg: k[1], kcLabel: k[2] }; };
+const tzTime = (t, tz) => new Date(t + ((tz || 0) * 60 + new Date(t).getTimezoneOffset()) * 60000).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+const whenT = t => new Date(t).toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+const agoT = t => { const m = Math.max(0, Math.round((Date.now() - t) / 60000)); return m < 1 ? 'now' : m < 60 ? m + 'm' : m < 1440 ? Math.round(m / 60) + 'h' : Math.round(m / 1440) + 'd'; };
 const VERIFY_SB = 10;
 /* Chat moderation. Swearing about the music is fine; attacks on people are not.
    Slur terms are maintained by Trust & Safety in the admin console (stored as ellipsis.mod.terms). */
@@ -2174,7 +2305,7 @@ class Component extends DCLogic {
   stock = buildStock();
   stockMap = Object.fromEntries(this.stock.map(x => [x.id, x]));
   blobs = {};
-  scrollRef = React.createRef(); chatRef = React.createRef(); fileRef = React.createRef(); nameRef = React.createRef();
+  scrollRef = React.createRef(); dmRef = React.createRef(); chatRef = React.createRef(); fileRef = React.createRef(); nameRef = React.createRef();
   seeded = seedAll(this.users);
   state = {
     theme: 'light', w: typeof window !== 'undefined' ? window.innerWidth : 1440,
@@ -2185,14 +2316,15 @@ class Component extends DCLogic {
     curId: 'i5', playing: false, time: 0, dur: 0, volume: 80, mixPid: null,
     query: '', searchOpen: false, draft: '', drafts: {},
     sheet: null, rec: null, ctxPid: null, premium: false, toast: '',
-    ad: null, adSince: 0,
+    ad: null, adSince: 0, adPreview: false,
+    dms: {}, dmRead: {}, meetings: [], dmWith: null, dmDraft: '', inboxTab: 'Messages', inboxSeeded: {}, dmQ: '',
     ob: null, myPart: null, myGenres: [], saved: false,
     auth: null, acct: null, sb: {}, sbLog: [], chatWarn: null, strikes: 0, muteUntil: null, deskTab: 'Rising', deskGenre: 'All',
     mxOpen: false, mxTut: -1, mxPid: null, mxPro: false, mxMatching: false, mxMatchTick: 0, ezTab: 'Voices', ezQ: '', ezOver: false, mxFocus: null, mxLoopOn: false, mxLoading: false, mxBouncing: false, mxDl: null
   };
 
   SAVE_KEY = 'ellipsis4.data.v1';
-  PERSIST = ['plays', 'exQs', 'sb', 'sbLog', 'items', 'projects', 'acts', 'spiked', 'favs', 'following', 'requested', 'premium', 'myPart', 'myGenres'];
+  PERSIST = ['dms', 'dmRead', 'meetings', 'inboxSeeded', 'adPreview', 'plays', 'exQs', 'sb', 'sbLog', 'items', 'projects', 'acts', 'spiked', 'favs', 'following', 'requested', 'premium', 'myPart', 'myGenres'];
   idb(mode, fn) {
     return new Promise(res => {
       try {
@@ -2363,7 +2495,7 @@ class Component extends DCLogic {
       obPartUpper: (s.myPart || 'you').toUpperCase(),
       obHasMatch: !!match, obNoMatch: !match,
       obMatchTitle: match ? match.title : '', obMatchSub: match ? U0(this, match.owner).name + ' · ' + U0(this, match.owner).city + ' · ' + this.localTime(U0(this, match.owner).tz) + ' there' : '',
-      obMatchArt: match ? ART[match.art] : ART.lofi, obMatchNeeds: match ? match.open.needs.map(n => ({ label: n })) : [],
+      obMatchArt: match ? (match.cover ? 'url(' + match.cover + ') center/cover' : COVER_OF(match.id + match.title)) : ART.lofi, obMatchNeeds: match ? match.open.needs.map(n => ({ label: n })) : [],
       obMatchIcon: lead && s.curId === lead.id && s.playing ? '❚❚' : '▶', obMatchPlay: () => lead && this.play(lead.id),
       obCanBack: step > 0, obBack: () => this.setState({ ob: { step: step - 1 } }),
       obBlocked: blocked, obNextBg: blocked ? 'var(--panel2)' : 'var(--mint)', obNextFg: blocked ? 'var(--dim)' : 'var(--on-mint)', obNextCursor: blocked ? 'not-allowed' : 'pointer',
@@ -2405,6 +2537,7 @@ class Component extends DCLogic {
       if (pf.bio) me.bio = pf.bio;
       if (pf.skills && pf.skills.length) me.skills = pf.skills;
     }
+    setTimeout(() => this.seedInbox(), 80);
     this.setState({ acct: a, premium: a.plan !== 'free', view: a.type === 'exec' ? 'desk' : this.state.view === 'desk' ? 'explore' : this.state.view });
   }
   finishAuth(a) {
@@ -2412,7 +2545,7 @@ class Component extends DCLogic {
     let last = null; try { last = localStorage.getItem('ellipsis4.lastEmail'); localStorage.setItem('ellipsis4.lastEmail', acct.email.toLowerCase()); } catch (e) {}
     if (last !== acct.email.toLowerCase()) {
       const MARA_FOLLOWS = { u0: true, u1: true, u2: true, u3: true, u5: true, u18: true };
-      this.setState({ sb: {}, sbLog: [], following: acct.demo && acct.type === 'creator' ? MARA_FOLLOWS : {} });
+      this.setState({ sb: {}, sbLog: [], dms: {}, dmRead: {}, meetings: [], inboxSeeded: {}, dmWith: null, following: acct.demo && acct.type === 'creator' ? MARA_FOLLOWS : {} });
     }
     try {
       localStorage.setItem('ellipsis4.account', JSON.stringify(acct));
@@ -2630,12 +2763,135 @@ class Component extends DCLogic {
     if (!on) this.track('spikeback', { id }); 
     if (x) this.flash(on ? 'Removed from your shortlist' : 'Spiked Back · ' + x.title + ' — ' + this.U(x.owner).name.split(' ')[0] + ' has been notified');
   }
-  sbStage(id, d) {
+  /* ═══ Inbox: direct messages and meetings ═══ */
+  inboxVals(s) {
+    const U = id => this.U(id), w = s.w || 1200, narrow = w < 860, me = s.acct || {};
+    const ini = u => u.photo ? '' : u.initials, av = u => u.photo ? 'url(' + u.photo + ') center/cover' : (u.grad || u.avatar);
+    const stOf = m => ({ invited: ['Needs your answer', '#FFF1D6', '#7A5A10'], pending: ['Waiting for them', 'var(--panel2)', 'var(--dim)'], confirmed: [m.at < Date.now() - m.dur * 60000 ? 'Done' : 'Confirmed', 'var(--mint-soft)', 'var(--mint-ink)'], declined: ['Declined', 'var(--coral-soft)', 'var(--coral-ink)'], cancelled: ['Cancelled', 'var(--panel2)', 'var(--dim)'] })[m.status] || ['', 'transparent', 'var(--dim)'];
+    const btn = (label, go, pri) => ({ label, go, bg: pri ? 'var(--mint)' : 'transparent', fg: pri ? 'var(--on-mint)' : 'var(--ink)', border: pri ? 'var(--mint)' : 'var(--line2)' });
+    const meetRow = m => { const o = U(m.with), st = stOf(m), live = m.status === 'confirmed' && m.at - Date.now() < 15 * 60000 && m.at + m.dur * 60000 > Date.now(), open = /invited|pending|confirmed/.test(m.status) && m.at + m.dur * 60000 > Date.now();
+      const acts = m.status === 'invited' ? [btn('Accept', () => this.meetAct(m.id, 'accept'), 1), btn('Propose new time', () => this.meetAct(m.id, 'move')), btn('Decline', () => this.meetAct(m.id, 'decline'))]
+        : open ? [m.mode === 'Video call' ? btn(live ? '● Join now' : 'Join link', () => this.meetAct(m.id, 'join'), live) : null, btn('Add to calendar', () => this.meetAct(m.id, 'ics')), btn('Reschedule', () => this.meetAct(m.id, 'move')), btn('Cancel', () => this.meetAct(m.id, 'cancel'))].filter(Boolean)
+        : [btn('Message', () => this.openDm(m.with))];
+      return { title: m.title, ini: ini(o), av: av(o), when: whenT(m.at), dur: m.dur + ' min', mode: m.mode, theirs: o.name + ' · ' + tzTime(m.at, o.tz) + ' in ' + o.city, agenda: m.agenda || '', st: st[0], stBg: st[1], stFg: st[2], border: m.status === 'invited' ? '#F5B800' : 'var(--line)', acts }; };
+    const meets = (s.meetings || []).slice().sort((a, b) => (/invited/.test(b.status) - /invited/.test(a.status)) || a.at - b.at);
+    const q = (s.dmQ || '').trim().toLowerCase();
+    const ids = Object.keys(s.dms || {}).filter(id => U(id) && (!q || U(id).name.toLowerCase().indexOf(q) >= 0));
+    const lastOf = id => { const L = s.dms[id] || []; return L[L.length - 1] || { at: 0, text: '' }; };
+    ids.sort((a, b) => lastOf(b).at - lastOf(a).at);
+    const threads = ids.map(id => { const u = U(id), l = lastOf(id), unread = l.from !== 'me' && l.at > ((s.dmRead || {})[id] || 0); return { name: u.name + (u.exec ? ' · ' + (u.company || 'Label') : ''), ini: ini(u), av: av(u), last: (l.from === 'me' ? 'You: ' : '') + l.text, when: agoT(l.at), unread, fw: unread ? '700' : '560', bg: s.dmWith === id ? 'var(--mint-soft)' : 'transparent', go: () => this.openDm(id) }; });
+    const sugg = Object.keys(s.following || {}).filter(id => s.following[id] && U(id) && !(s.dms || {})[id] && (!q || U(id).name.toLowerCase().indexOf(q) >= 0)).slice(0, q ? 8 : 5)
+      .concat(q ? this.users.filter(u => u.id !== 'me' && !(s.dms || {})[u.id] && !s.following[u.id] && u.name.toLowerCase().indexOf(q) >= 0).slice(0, 5).map(u => u.id) : [])
+      .map(id => { const u = U(id); return { name: u.name, ini: ini(u), av: av(u), go: () => this.openDm(id) }; });
+    const cur = s.dmWith && U(s.dmWith) ? U(s.dmWith) : null;
+    const msgs = cur ? (s.dms[cur.id] || []).map(m => { const mine = m.from === 'me'; return { text: m.text, when: agoT(m.at), align: mine ? 'flex-end' : 'flex-start', bg: mine ? 'var(--mint)' : 'var(--panel2)', fg: mine ? 'var(--on-mint)' : 'var(--ink)', radius: mine ? '16px 16px 4px 16px' : '16px 16px 16px 4px' }; }) : [];
+    const invited = meets.filter(m => m.status === 'invited').length, upcoming = meets.filter(m => /pending|confirmed/.test(m.status) && m.at > Date.now()).length;
+    const unreadN = threads.filter(t => t.unread).length;
+    const sh = s.sheet && s.sheet.type === 'meet' ? s.sheet : null, mu = sh ? U(sh.uid) : null;
+    const mtAt = sh ? new Date(sh.date + 'T' + sh.time).getTime() : 0;
+    const chip = (label, on, go) => ({ label, go, bg: on ? 'var(--mint-soft)' : 'transparent', fg: on ? 'var(--mint-ink)' : 'var(--ink)', border: on ? 'var(--mint)' : 'var(--line2)' });
+    return {
+      ibSub: unreadN + ' unread · ' + invited + ' meeting invite' + (invited === 1 ? '' : 's') + ' · ' + upcoming + ' upcoming',
+      ibTabs: [['Messages', 'Messages' + (unreadN ? ' · ' + unreadN : '')], ['Meetings', 'Meetings' + (invited ? ' · ' + invited + ' new' : '')]].map(([id, label]) => ({ label, sel: s.inboxTab === id ? 'true' : 'false', go: () => this.setState({ inboxTab: id }), bg: s.inboxTab === id ? 'var(--panel)' : 'transparent', fg: s.inboxTab === id ? 'var(--ink)' : 'var(--dim)' })),
+      ibIsMsgs: s.inboxTab !== 'Meetings', ibIsMeet: s.inboxTab === 'Meetings',
+      ibCols: narrow ? 'minmax(0,1fr)' : '320px minmax(0,1fr)', ibNarrow: narrow, ibListShow: narrow && cur ? 'none' : 'block', ibThreadShow: narrow && !cur ? 'none' : 'flex', ibBack: () => this.setState({ dmWith: null }),
+      dmQ: s.dmQ || '', onDmQ: e => this.setState({ dmQ: e.target.value }),
+      ibThreads: threads, ibHasSuggest: sugg.length > 0, ibSuggest: sugg,
+      ibNoThread: !cur, ibHasThread: !!cur, ibName: cur ? cur.name : '', ibIni: cur ? ini(cur) : '', ibAv: cur ? av(cur) : '',
+      ibMeta: cur ? (cur.exec ? (cur.role || 'A&R') + ' · ' + (cur.company || 'Label') : cur.role) + ' · ' + cur.city + ' · ' + this.localTime(cur.tz) + ' there' : '',
+      ibProfile: () => cur && this.openUser(cur.id), ibMeetGo: () => cur && this.openMeet(cur.id),
+      ibThreadMeets: cur ? meets.filter(m => m.with === cur.id && /invited|pending|confirmed/.test(m.status) && m.at + m.dur * 60000 > Date.now()).map(meetRow) : [],
+      dmRef: this.dmRef, ibMsgs: msgs, ibPlaceholder: cur ? 'Message ' + cur.name.split(' ')[0] : 'Message',
+      dmDraft: s.dmDraft || '', onDmDraft: e => this.setState({ dmDraft: e.target.value }), onDmKey: e => { if (e.key === 'Enter' && cur) this.sendDm(cur.id); }, dmSend: () => cur && this.sendDm(cur.id),
+      ibMeets: meets.map(meetRow), ibNoMeets: meets.length === 0,
+      isMeet: !!sh, mtDate: sh ? sh.date : '', mtTime: sh ? sh.time : '', onMtDate: e => this.setSheet({ date: e.target.value, err: '' }), onMtTime: e => this.setSheet({ time: e.target.value, err: '' }),
+      mtTheirs: sh && isFinite(mtAt) ? 'That’s ' + tzTime(mtAt, mu.tz) + ' for ' + mu.name.split(' ')[0] + ' in ' + mu.city + ' (' + this.localTime(mu.tz) + ' there right now)' : '',
+      mtDurs: sh ? [15, 30, 45, 60].map(d => chip(d + ' min', sh.dur === d, () => this.setSheet({ dur: d }))) : [],
+      mtModes: sh ? ['Video call', 'Phone', 'In person'].map(m => chip(m, sh.mode === m, () => this.setSheet({ mode: m }))) : [],
+      mtModeNote: sh ? (sh.mode === 'Video call' ? 'A private video room link is created and shared with both of you — no app to install.' : sh.mode === 'Phone' ? 'Share your number in messages when it’s confirmed.' : 'Add the address to the agenda.') : '',
+      mtAgenda: sh ? sh.agenda : '', onMtAgenda: e => this.setSheet({ agenda: e.target.value }), mtErr: sh ? sh.err : '', mtSave: () => this.saveMeet(), mtSaveLabel: sh && sh.mid ? 'Send new time' : 'Send invite',
+      adPrevNote: s.premium || (s.acct && s.acct.type === 'exec') ? 'Your plan is ad-free. Turn on to preview the ad slots free listeners see.' : 'Free accounts see sponsored spots. Go Premium to remove them.',
+      toggleAdPrev: () => this.setState(st => ({ adPreview: !st.adPreview })), adPrevStr: s.adPreview || (!s.premium && !(s.acct && s.acct.type === 'exec')) ? 'true' : 'false',
+      adPrevTrack: this.adsOn() ? '#00D9A6' : 'var(--line2)', adPrevKnob: this.adsOn() ? '25px' : '3px'
+    };
+  }
+  seedInbox() {
+    const a = this.state.acct; if (!a) return; const key = (a.email || '').toLowerCase(); if ((this.state.inboxSeeded || {})[key]) return;
+    const now = Date.now(), H = 3600e3, exec = a.type === 'exec', first = (a.name || 'there').split(' ')[0];
+    const ex = this.users.filter(u => u.exec && u.id !== 'me'), cr = this.users.filter(u => !u.exec && /^u\d+$/.test(u.id));
+    const dms = {}, meetings = [], slot = t => Math.ceil(t / 1800e3) * 1800e3;
+    const room = () => 'https://meet.jit.si/Ellipsis-' + Math.random().toString(36).slice(2, 10);
+    if (exec) {
+      const a1 = cr[3], a2 = cr[7];
+      dms[a1.id] = [{ from: a1.id, text: 'Hey! Saw you Spiked Back my track — thank you. Happy to send stems or talk about what you are building.', at: now - 5 * H }];
+      dms[a2.id] = [{ from: 'me', text: 'Loved the hook on your last release. Are you working with anyone on publishing?', at: now - 30 * H }, { from: a2.id, text: 'Not yet, self-released so far. Would love to hear more.', at: now - 26 * H }];
+      meetings.push({ id: 'mt' + now, with: a2.id, by: 'me', title: 'Publishing chat with ' + a2.name.split(' ')[0], at: slot(now + 26 * H), dur: 30, mode: 'Video call', agenda: 'Catalogue, upcoming releases, what a deal could look like.', link: room(), status: 'confirmed' });
+    } else if (ex[0]) {
+      const e1 = ex[0], c1 = cr[2], c2 = cr[9];
+      dms[e1.id] = [{ from: e1.id, text: 'Hi ' + first + ' — I run A&R at ' + (e1.company || 'Northstar Records') + '. Your songs keep landing on our desk. Free for a quick call this week? I sent an invite.', at: now - 3 * H }];
+      meetings.push({ id: 'mt' + now, with: e1.id, by: e1.id, title: 'Intro call with ' + e1.name.split(' ')[0], at: slot(now + 50 * H), dur: 30, mode: 'Video call', agenda: 'Hear what you are working on and talk about a possible single deal.', link: room(), status: 'invited' });
+      dms[c1.id] = [{ from: c1.id, text: 'Your voice on that last demo was crazy. Want to write something together? I have a beat at 92 BPM.', at: now - 20 * H }];
+      dms[c2.id] = [{ from: 'me', text: 'Sent you the stems for Slow Ferry 🙏', at: now - 50 * H }, { from: c2.id, text: 'Got them — adding strings tonight.', at: now - 47 * H }];
+    }
+    this.setState(st => ({ dms: Object.assign({}, dms, st.dms), meetings: (st.meetings || []).concat(meetings), inboxSeeded: Object.assign({}, st.inboxSeeded, { [key]: true }) }));
+  }
+  openDm(uid) { this.dmScroll(); this.go('inbox', { dmWith: uid, inboxTab: 'Messages', dmRead: Object.assign({}, this.state.dmRead, { [uid]: Date.now() }) }); }
+  dmScroll() { setTimeout(() => { const el = this.dmRef.current; if (el) el.scrollTop = el.scrollHeight; }, 40); }
+  pushDm(uid, msg) { this.dmScroll(); this.setState(st => ({ dms: Object.assign({}, st.dms, { [uid]: (st.dms[uid] || []).concat([Object.assign({ at: Date.now() }, msg)]) }), dmRead: st.view === 'inbox' && st.dmWith === uid ? Object.assign({}, st.dmRead, { [uid]: Date.now() + 5 }) : st.dmRead })); }
+  sendDm(uid) {
+    const t = (this.state.dmDraft || '').trim(); if (!t || !uid) return;
+    const hit = modCheck(t); if (hit) { this.flash('Not sent — this message ' + hit.why + '. Keep it about the music.'); return; }
+    this.pushDm(uid, { from: 'me', text: t }); this.setState({ dmDraft: '' }); this.track('dm_sent', {});
+    const a = this.state.acct;
+    if (a && a.type === 'exec') { const id = Object.keys(this.state.sb).find(k => { const x = this.item(k); return x && x.owner === uid && this.state.sb[k].stage === 0; }); if (id) this.sbStage(id, 1); }
+    const o = this.U(uid); if (!o || o.id === 'me') return;
+    clearTimeout(this._dmT);
+    const R = o.exec ? ['Sounds good — I will send a couple of times.', 'Appreciate it. Let us find a slot this week.', 'Great, looping in my team.'] : ['🔥 love it, sending something back tonight', 'Yes! Invite me to the project and I will add a part.', 'Thank you!! What key are you thinking?', 'Bet. I am free after 6 my time.'];
+    this._dmT = setTimeout(() => this.pushDm(uid, { from: uid, text: R[(t.length + uid.length) % R.length] }), 2200 + Math.random() * 1500);
+  }
+  openMeet(uid, mid) {
+    const m = mid ? (this.state.meetings || []).find(x => x.id === mid) : null, t = m ? m.at : Math.ceil((Date.now() + 26 * 3600e3) / 1800e3) * 1800e3, d = new Date(t);
+    const pad = n => String(n).padStart(2, '0');
+    this.setState({ sheet: { type: 'meet', uid, mid: mid || null, date: d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()), time: pad(d.getHours()) + ':' + pad(d.getMinutes()), dur: m ? m.dur : 30, mode: m ? m.mode : 'Video call', agenda: m ? m.agenda : '', err: '' } });
+  }
+  saveMeet() {
+    const sh = this.state.sheet; if (!sh || sh.type !== 'meet') return;
+    const at = new Date(sh.date + 'T' + sh.time).getTime();
+    if (!isFinite(at)) { this.setSheet({ err: 'Pick a date and a time.' }); return; }
+    if (at < Date.now() + 5 * 60e3) { this.setSheet({ err: 'Pick a time in the future.' }); return; }
+    const o = this.U(sh.uid), first = o.name.split(' ')[0];
+    const prev = sh.mid ? this.state.meetings.find(x => x.id === sh.mid) : null;
+    const m = Object.assign({}, prev || { id: 'mt' + Date.now(), with: sh.uid, link: 'https://meet.jit.si/Ellipsis-' + Math.random().toString(36).slice(2, 10), title: (this.state.acct && this.state.acct.type === 'exec' ? 'Call with ' : 'Session with ') + first }, { at, dur: sh.dur, mode: sh.mode, agenda: sh.agenda.trim(), by: 'me', status: 'pending' });
+    this.setState(st => ({ meetings: (st.meetings || []).filter(x => x.id !== m.id).concat([m]), sheet: null }));
+    this.pushDm(sh.uid, { from: 'me', text: (prev ? '📅 New time proposed: ' : '📅 Meeting invite: ') + m.title + ' · ' + whenT(at) + ' (' + tzTime(at, o.tz) + ' for ' + first + ')', meet: m.id });
+    this.flash((prev ? 'New time sent to ' : 'Invite sent to ') + first);
+    this.track('meeting_' + (prev ? 'rescheduled' : 'invited'), {});
+    const a = this.state.acct;
+    if (a && a.type === 'exec') { const id = Object.keys(this.state.sb).find(k => { const x = this.item(k); return x && x.owner === sh.uid && this.state.sb[k].stage < 2; }); if (id) this.sbStage(id, 2 - this.state.sb[id].stage, true); }
+    clearTimeout(this._mtT);
+    this._mtT = setTimeout(() => { this.setState(st => ({ meetings: st.meetings.map(x => x.id === m.id && x.status === 'pending' ? Object.assign({}, x, { status: 'confirmed' }) : x) })); this.pushDm(sh.uid, { from: sh.uid, text: '✓ Accepted — see you ' + whenT(at) + '.', meet: m.id }); }, 2600);
+  }
+  meetAct(id, what) {
+    const m = (this.state.meetings || []).find(x => x.id === id); if (!m) return; const o = this.U(m.with), first = o.name.split(' ')[0];
+    const set = st => this.setState(S => ({ meetings: S.meetings.map(x => x.id === id ? Object.assign({}, x, { status: st }) : x) }));
+    if (what === 'accept') { set('confirmed'); this.pushDm(m.with, { from: 'me', text: '✓ Accepted: ' + m.title + ' · ' + whenT(m.at), meet: id }); this.flash('Accepted — it’s in your Meetings'); }
+    else if (what === 'decline') { set('declined'); this.pushDm(m.with, { from: 'me', text: 'Can’t make ' + whenT(m.at) + ' — sorry.', meet: id }); }
+    else if (what === 'cancel') { set('cancelled'); this.pushDm(m.with, { from: 'me', text: 'Cancelled: ' + m.title + ' · ' + whenT(m.at), meet: id }); this.flash('Meeting cancelled — ' + first + ' was told'); }
+    else if (what === 'move') this.openMeet(m.with, id);
+    else if (what === 'join') { window.open(m.link, '_blank', 'noopener'); this.track('meeting_join', {}); }
+    else if (what === 'ics') {
+      const f = t => new Date(t).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+      const txt = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Ellipsis//EN', 'BEGIN:VEVENT', 'UID:' + m.id + '@ellipsismusic.net', 'DTSTAMP:' + f(Date.now()), 'DTSTART:' + f(m.at), 'DTEND:' + f(m.at + m.dur * 60000), 'SUMMARY:' + m.title, 'DESCRIPTION:' + (m.agenda || '').replace(/\n/g, ' ') + (m.mode === 'Video call' ? ' — Join: ' + m.link : ''), 'LOCATION:' + (m.mode === 'Video call' ? m.link : m.mode), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      const el = document.createElement('a'); el.href = URL.createObjectURL(new Blob([txt], { type: 'text/calendar' })); el.download = m.title.replace(/[^a-z0-9]+/gi, '-') + '.ics'; el.click();
+    }
+  }
+  sbStage(id, d, quiet) {
     const c0 = this.state.sb[id]; if (!c0) return;
+    if (c0.stage + d === 2 && d > 0 && !quiet) { const x2 = this.item(id); if (x2 && !(this.state.meetings || []).some(m => m.with === x2.owner && /pending|confirmed|invited/.test(m.status))) { setTimeout(() => this.openMeet(x2.owner), 120); return; } }
     const n = Math.max(0, Math.min(4, c0.stage + d)); if (n === c0.stage) return;
     this.setState(s => ({ sb: Object.assign({}, s.sb, { [id]: Object.assign({}, s.sb[id], { stage: n }) }), sbLog: s.sbLog.concat([{ type: 'stage', id, stage: n, from: c0.stage, at: Date.now() }]).slice(-200) }));
     if (n === 4) this.track('signed', { id });
-    const x = this.item(id); if (x) this.flash(n === 4 ? 'Signed · ' + this.U(x.owner).name + ' — ' + x.title : x.title + ' → ' + ['Shortlisted', 'Contacted', 'Meeting', 'Offer out', 'Signed'][n]);
+    const x = this.item(id); if (x && !quiet) this.flash(n === 4 ? 'Signed · ' + this.U(x.owner).name + ' — ' + x.title : x.title + ' → ' + ['Shortlisted', 'Contacted', 'Meeting', 'Offer out', 'Signed'][n]);
   }
   resetDemo = () => {
     try { localStorage.removeItem(this.SAVE_KEY); localStorage.removeItem('ellipsis4.onboarded'); } catch (e) {}
@@ -2685,7 +2941,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     if (this._thSync) window.removeEventListener('storage', this._thSync);
-    clearTimeout(this._saveT); clearTimeout(this._chk); clearInterval(this._evT); clearInterval(this._noteT); this._unmounted = true;
+    clearTimeout(this._saveT); clearTimeout(this._chk); clearInterval(this._evT); clearInterval(this._noteT); this._unmounted = true; clearTimeout(this._dmT); clearTimeout(this._mtT);
     clearInterval(this._adT); try { if (this._adBed) this._adBed.pause(); if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (x) {}
     window.removeEventListener('pagehide', this._hide); window.removeEventListener('beforeunload', this._hide);
     window.removeEventListener('resize', this._resize); window.removeEventListener('keydown', this._keys); document.removeEventListener('mousedown', this._down, true);
@@ -2747,7 +3003,7 @@ class Component extends DCLogic {
     else a.play().then(() => this.setState({ playing: true })).catch(() => this.flash('Press play once more to allow audio'));
   };
   goPremiumNow() { if (this._goPrem) this._goPrem(); }
-  adsOn() { const a = this.state.acct; return !this.state.premium && !(a && a.type === 'exec'); }
+  adsOn() { const a = this.state.acct; return !!this.state.adPreview || (!this.state.premium && !(a && a.type === 'exec')); }
   adPick(seed) { const pool = ADS.filter(a => !a.house); return (seed % 4 === 3) ? ADS[3] : pool[seed % pool.length]; }
   adLog(kind, slot, ad, songId) {
     const rev = AD_CPM[kind] / 1000, it = songId ? this.item(songId) : null;
@@ -3164,7 +3420,7 @@ class Component extends DCLogic {
       ezRows: pool.map(x => ({
         fit: ['', 'Good fit', '✓ Fits your beat'][fitMap[x.id] || 0], fitBg: fitMap[x.id] === 2 ? 'rgba(0,217,166,0.18)' : 'rgba(255,255,255,0.08)', fitFg: fitMap[x.id] === 2 ? '#3FE6BD' : '#C9D4DB',
         title: x.title, sub: (x.words ? '“' + x.words.split('\n')[0] + '” · ' : '') + (x.owner === 'lib' ? 'Ellipsis Sounds' : x.owner === 'me' ? 'You' : U(x.owner).name) + ' · ' + (x.tags.genre[0] || KIND[x.kind][0]) + (x.bpm ? ' · ' + x.bpm + ' BPM' : ''),
-        art: AOF(x), icon: s.curId === x.id && s.playing ? '❚❚' : '▶',
+        art: AOF(x), ...KCX(x), icon: s.curId === x.id && s.playing ? '❚❚' : '▶',
         preview: () => { this.stopMix(); this.play(x.id); }, add: () => this.ezAdd(pid, x.id),
         drag: e => { try { e.dataTransfer.setData('text/plain', x.id); e.dataTransfer.effectAllowed = 'copy'; } catch (er) {} }
       }))
@@ -3561,9 +3817,10 @@ class Component extends DCLogic {
 
     const pendingReq = s.acts.filter(a => !a.done && (a.type === 'request' || a.type === 'suggestion')).length;
     const isExec = !!(s.acct && s.acct.type === 'exec');
-    const nav = (isExec ? [['desk', 'A&R Desk', '◆'], ['explore', 'Explore', '◎'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']] : [['explore', 'Explore', '◎'], ['projects', 'Projects', '▦'], ['library', 'Library', '▤'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']]).map(([id, label, icon]) => {
+    const dmUnread = Object.keys(s.dms || {}).filter(uid => { const L = s.dms[uid]; const last = L && L[L.length - 1]; return last && last.from !== 'me' && last.at > ((s.dmRead || {})[uid] || 0); }).length + (s.meetings || []).filter(m => m.status === 'invited').length;
+    const nav = (isExec ? [['desk', 'A&R Desk', '◆'], ['explore', 'Explore', '◎'], ['inbox', 'Inbox', '✉'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']] : [['explore', 'Explore', '◎'], ['projects', 'Projects', '▦'], ['library', 'Library', '▤'], ['inbox', 'Inbox', '✉'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']]).map(([id, label, icon]) => {
       const on = s.view === id || (id === 'projects' && (s.view === 'project' || s.view === 'lyric')) || (id === 'profile' && s.view === 'profile');
-      return { label, icon, isMe: id === 'profile', isIcon: id !== 'profile', badge: id === 'activity' && pendingReq && !isExec ? String(pendingReq) : null, bg: on ? 'rgba(0,217,166,0.16)' : 'transparent', fg: on ? '#00D9A6' : '#9BA9B4', go: () => id === 'profile' ? this.go('profile', { uid: 'me' }) : this.go(id) };
+      return { label, icon, isMe: id === 'profile', isIcon: id !== 'profile', badge: id === 'inbox' ? (dmUnread ? String(dmUnread) : null) : id === 'activity' && pendingReq && !isExec ? String(pendingReq) : null, bg: on ? 'rgba(0,217,166,0.16)' : 'transparent', fg: on ? '#00D9A6' : '#9BA9B4', go: () => id === 'profile' ? this.go('profile', { uid: 'me' }) : this.go(id) };
     });
 
     /* explore */
@@ -3618,13 +3875,13 @@ class Component extends DCLogic {
     const mScore = new Map(); let tMax = 1; for (const x of filtered) { const m = metricOf(x); mScore.set(x, m); if (m > tMax) tMax = m; }
     const bScore = new Map(); if (forYou) for (const x of filtered) bScore.set(x, 0.6 * relItem(x) + 0.4 * (mScore.get(x) / tMax));
     const songRows = s.exTab === 'Songs' ? filtered.slice().sort((a, b) => forYou ? bScore.get(b) - bScore.get(a) : mScore.get(b) - mScore.get(a)).slice(0, 40).map((x, i) => Object.assign({
-      id: x.id, rank: i + 1, rankFg: i < 3 ? 'var(--mint-ink)' : 'var(--dim)', art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id),
+      id: x.id, rank: i + 1, rankFg: i < 3 ? 'var(--mint-ink)' : 'var(--dim)', art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id),
       title: x.title, sub: U(x.owner).name + (verOk(x.owner) ? ' ✓' : '') + ' · ' + tagLine(x.tags), metric: num(metricOf(x)), open: () => x.pid ? this.openProject(x.pid) : this.openUser(x.owner)
     }, spStyle(x), favStyle(x), sbStyle(x))) : [];
     const iSp = new Map(); let iMax = 1; if (s.exTab === 'Instrumentals') for (const x of filtered) { const v = spk(x); iSp.set(x, v); if (v > iMax) iMax = v; }
     const iScore = new Map(); if (s.exTab === 'Instrumentals') for (const x of filtered) iScore.set(x, forYou ? 0.6 * relItem(x) + 0.4 * iSp.get(x) / iMax : iSp.get(x));
     const instrCards = s.exTab === 'Instrumentals' ? filtered.slice().sort((a, b) => iScore.get(b) - iScore.get(a)).slice(0, 36).map(x => Object.assign({
-      art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: U(x.owner).name + ' · ' + U(x.owner).city, openUser: () => this.openUser(x.owner), tagLine: tagLine(x.tags), add: () => this.addToProject(x.id)
+      art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: U(x.owner).name + ' · ' + U(x.owner).city, openUser: () => this.openUser(x.owner), tagLine: tagLine(x.tags), add: () => this.addToProject(x.id)
     }, spStyle(x), favStyle(x))) : [];
     const collabPool = P.filter(p => p.open.on && p.owner !== 'me' && p.collabs.indexOf('me') < 0 && (!exq || [p.title, U(p.owner).name, U(p.owner).city].concat(p.open.needs || [], (p.tags && p.tags.genre) || [], (p.tags && p.tags.like) || []).join(' ').toLowerCase().indexOf(exq) >= 0));
     const myPart = s.myPart || (U('me').skills || [])[0];
@@ -3633,7 +3890,7 @@ class Component extends DCLogic {
     const collabCards = collabPool.slice(0, 30).map(p => {
       const lead = p.items.map(id => I.find(x => x.id === id)).find(x => x && x.kind !== 'lyric');
       const req = !!s.requested[p.id];
-      return { title: p.title, sub: U(p.owner).name + ' · ' + U(p.owner).city + ' · ' + this.localTime(U(p.owner).tz), art: ART[p.art], icon: lead && onNow(lead.id) ? '❚❚' : '▶', play: () => lead && this.play(lead.id), openUser: () => this.openUser(p.owner),
+      return { title: p.title, sub: U(p.owner).name + ' · ' + U(p.owner).city + ' · ' + this.localTime(U(p.owner).tz), art: COVER_OF(p.id + p.title), icon: lead && onNow(lead.id) ? '❚❚' : '▶', play: () => lead && this.play(lead.id), openUser: () => this.openUser(p.owner),
         needs: p.open.needs.map(n => ({ label: n })), contents: countsOf(p) + ' · ' + this.members(p).length + ' in the project', review: () => this.openProject(p.id), request: () => this.request(p.id),
         reqLabel: req ? 'Requested ✓' : 'Request to collaborate', reqBg: req ? 'var(--mint-soft)' : 'var(--mint)', reqFg: req ? 'var(--mint-ink)' : 'var(--on-mint)' };
     });
@@ -3646,7 +3903,7 @@ class Component extends DCLogic {
     /* projects */
     const myProj = P.filter(p => p.owner === 'me'); const collabProj = P.filter(p => p.owner !== 'me' && p.collabs.indexOf('me') >= 0);
     const projList = s.projTab === 'Mine' ? myProj : collabProj;
-    const projCard = p => { const st = statusOf(p); return { title: p.title, art: ART[p.art], dot: st[1], sub: (p.owner === 'me' ? 'Your project' : 'Invited by ' + U(p.owner).name) + ' · ' + st[0].toLowerCase(), counts: countsOf(p), people: this.members(p).slice(0, 4).map(m => ({ initials: U(m).initials, bg: U(m).avatar })), open: () => this.openProject(p.id) }; };
+    const projCard = p => { const st = statusOf(p); return { title: p.title, art: p.cover ? 'url(' + p.cover + ') center/cover' : COVER_OF(p.id + p.title), dot: st[1], sub: (p.owner === 'me' ? 'Your project' : 'Invited by ' + U(p.owner).name) + ' · ' + st[0].toLowerCase(), counts: countsOf(p), people: this.members(p).slice(0, 4).map(m => ({ initials: U(m).initials, bg: U(m).avatar })), open: () => this.openProject(p.id) }; };
 
     /* project page */
     const pp = s.view === 'project' ? (this.proj(s.pid) || P[0]) : P[0];
@@ -3726,7 +3983,7 @@ class Component extends DCLogic {
     const sbAll = isMe ? Object.keys(s.sb).filter(id => this.item(id)) : [];
     const signedRoster = pu.exec ? (isMe ? Array.from(new Set(sbAll.filter(id => s.sb[id].stage === 4).map(id => U(this.item(id).owner).name))) : (pu.roster || [])) : [];
     const feat = pu.exec ? sbList[0] : theirs[0];
-    const prSongs = (pu.exec ? [] : theirs).slice(0, 12).map(x => Object.assign({ art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, kind: KIND[x.kind][0], sub: '⚡ ' + num(spk(x)) + ' · ' + (x.tags.like[0] ? 'Sounds like ' + x.tags.like[0] : x.tags.genre[0] || '') }, spStyle(x)));
+    const prSongs = (pu.exec ? [] : theirs).slice(0, 12).map(x => Object.assign({ art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, kind: KIND[x.kind][0], sub: '⚡ ' + num(spk(x)) + ' · ' + (x.tags.like[0] ? 'Sounds like ' + x.tags.like[0] : x.tags.genre[0] || '') }, spStyle(x)));
     const shared = P.filter(p => this.members(p).indexOf(pu.id) >= 0);
     const crewIds = Array.from(new Set([].concat.apply([], shared.map(p => this.members(p))))).filter(id => id !== pu.id);
     const fill = this.users.filter((u, k) => u.id !== pu.id && u.id !== 'me' && !u.exec && (k * 7 + pu.name.length) % 23 === 0).map(u => u.id);
@@ -3743,9 +4000,9 @@ class Component extends DCLogic {
       const pp2 = this.users.filter(u => u.id !== 'me' && (u.name + ' ' + u.city + ' ' + u.role).toLowerCase().indexOf(q) >= 0).slice(0, 4);
       if (pp2.length) groups.push({ label: 'PEOPLE', items: pp2.map(u => ({ title: u.name, sub: u.role + ' · ' + u.city, badge: u.initials, radius: '50%', art: u.avatar, go: () => { this.setState({ query: '' }); this.openUser(u.id); } })) });
       const it2 = I.filter(x => x.published && (x.title + ' ' + U(x.owner).name + ' ' + x.tags.like.join(' ') + ' ' + x.tags.genre.join(' ') + ' ' + x.tags.mood.join(' ')).toLowerCase().indexOf(q) >= 0).slice(0, 5);
-      if (it2.length) groups.push({ label: 'SONGS & INSTRUMENTALS', items: it2.map(x => ({ title: x.title, sub: KIND[x.kind][0] + ' · ' + U(x.owner).name + ' · ' + tagLine(x.tags), badge: KIND[x.kind][2], radius: '10px', art: AOF(x), go: () => { this.setState({ query: '' }); this.play(x.id); } })) });
+      if (it2.length) groups.push({ label: 'SONGS & INSTRUMENTALS', items: it2.map(x => ({ title: x.title, sub: KIND[x.kind][0] + ' · ' + U(x.owner).name + ' · ' + tagLine(x.tags), badge: KIND[x.kind][2], radius: '10px', art: AOF(x), ...KCX(x), go: () => { this.setState({ query: '' }); this.play(x.id); } })) });
       const pj = P.filter(p => p.open.on && p.owner !== 'me' && (p.title + ' ' + p.open.needs.join(' ')).toLowerCase().indexOf(q) >= 0).slice(0, 3);
-      if (pj.length) groups.push({ label: "LET'S COLLABORATE", items: pj.map(p => ({ title: p.title, sub: 'Looking for ' + p.open.needs.join(', ').toLowerCase(), badge: '▦', radius: '10px', art: ART[p.art], go: () => { this.setState({ query: '' }); this.openProject(p.id); } })) });
+      if (pj.length) groups.push({ label: "LET'S COLLABORATE", items: pj.map(p => ({ title: p.title, sub: 'Looking for ' + p.open.needs.join(', ').toLowerCase(), badge: '▦', radius: '10px', art: COVER_OF(p.id + p.title), go: () => { this.setState({ query: '' }); this.openProject(p.id); } })) });
       const lk = LIKES.filter(l => l.toLowerCase().indexOf(q) >= 0);
       if (lk.length) groups.push({ label: 'SOUNDS LIKE', items: lk.map(l => ({ title: 'Sounds like ' + l, sub: 'Rank songs by this tag', badge: '◎', radius: '10px', art: '#2F3E48', go: () => { this.setState({ query: '' }); this.go('explore', { exTab: 'Songs', facet: 'like', facetVal: l }); } })) });
     }
@@ -3775,7 +4032,7 @@ class Component extends DCLogic {
     const nameBlocked = !nameVal.trim() || !!nameTaken;
     if (sh && sh.type === 'pick') {
       const row = (x, cta, go) => ({ title: x.title, sub: KIND[x.kind][0] + ' · ' + U(x.owner).name + ' · ' + tagLine(x.tags), badge: KIND[x.kind][2], radius: '11px', art: x.kind === 'lyric' ? '#5B3E9E' : AOF(x), cta, go });
-      if (sh.mode === 'toProject') { const x = this.item(sh.itemId); sheetTitle = 'Add to a project'; sheetSub = x.title; pickRows = myProj.concat(collabProj).filter(p => p.stage !== 'published').map(p => ({ title: p.title, sub: countsOf(p), badge: '▦', radius: '11px', art: ART[p.art], cta: p.items.indexOf(x.id) >= 0 ? 'Added ✓' : 'Add', go: () => { this.attach(x.id, p.id); this.setState({ sheet: null }); } })).concat([{ title: 'New project', sub: 'Start one with this in it', badge: '+', radius: '11px', art: '#00806A', cta: 'Create', go: () => this.newProject(pid => { this.attach(x.id, pid, true); this.openProject(pid); }) }]); }
+      if (sh.mode === 'toProject') { const x = this.item(sh.itemId); sheetTitle = 'Add to a project'; sheetSub = x.title; pickRows = myProj.concat(collabProj).filter(p => p.stage !== 'published').map(p => ({ title: p.title, sub: countsOf(p), badge: '▦', radius: '11px', art: COVER_OF(p.id + p.title), cta: p.items.indexOf(x.id) >= 0 ? 'Added ✓' : 'Add', go: () => { this.attach(x.id, p.id); this.setState({ sheet: null }); } })).concat([{ title: 'New project', sub: 'Start one with this in it', badge: '+', radius: '11px', art: '#00806A', cta: 'Create', go: () => this.newProject(pid => { this.attach(x.id, pid, true); this.openProject(pid); }) }]); }
       if (sh.mode === 'library' || sh.mode === 'favs') { const p = this.proj(sh.pid); sheetTitle = sh.mode === 'library' ? 'From your Library' : 'From Favorites'; sheetSub = 'Adding to ' + p.title; pickRows = I.filter(x => x.kind !== 'song' && p.items.indexOf(x.id) < 0 && (sh.mode === 'favs' ? s.favs[x.id] : x.owner === 'me')).map(x => row(x, 'Add', () => { this.attach(x.id, p.id); this.setState({ sheet: null }); })); pickEmpty = pickRows.length ? '' : 'Nothing to add — everything is already in this project.'; }
       if (sh.mode === 'backing' || sh.mode === 'lyricPick') {
         const kind = sh.mode === 'backing' ? 'instrumental' : 'lyric';
@@ -3787,7 +4044,7 @@ class Component extends DCLogic {
       if (sh.mode === 'people') {
         const who = U(sh.uid);
         sheetTitle = sh.kind === 'followers' ? num(who.followers) + ' followers' : sh.kind === 'following' ? 'Following' : 'Spikes';
-        if (sh.kind === 'spikes') pickRows = I.filter(x => x.published && x.owner === sh.uid).map(x => ({ title: x.title, sub: '⚡ ' + num(spk(x)) + ' spikes', badge: '▶', radius: '11px', art: AOF(x), cta: 'Play', go: () => this.play(x.id) }));
+        if (sh.kind === 'spikes') pickRows = I.filter(x => x.published && x.owner === sh.uid).map(x => ({ title: x.title, sub: '⚡ ' + num(spk(x)) + ' spikes', badge: '▶', radius: '11px', art: AOF(x), ...KCX(x), cta: 'Play', go: () => this.play(x.id) }));
         else { const list = sh.kind === 'following' && sh.uid === 'me' ? this.users.filter(u => s.following[u.id]) : this.users.filter((u, i) => u.id !== sh.uid && u.id !== 'me' && (sh.kind === 'followers' || i % 2 === 0)); pickRows = list.map(u => ({ title: u.name, sub: u.role + ' · ' + u.city, badge: u.initials, radius: '50%', art: u.avatar, cta: s.following[u.id] ? 'Following' : 'Follow', go: () => this.follow(u.id) })); }
       }
     }
@@ -3874,10 +4131,11 @@ class Component extends DCLogic {
       };
     }
     const pe = sh && sh.type === 'profile' ? sh : null;
+    if (sh && sh.type === 'meet') { const mu = this.U(sh.uid); sheetTitle = sh.mid ? 'Propose a new time' : 'Schedule a meeting'; sheetSub = 'with ' + mu.name + ' · ' + mu.city; }
     if (pe) { sheetTitle = 'Edit profile'; sheetSub = 'This is what collaborators and labels see.'; }
     const PE = !pe ? { isProfEdit: false } : {
       isProfEdit: true, peAvatar: pe.photo ? 'url(' + pe.photo + ') center/cover' : (pe.grad || '#0A6E58'), peInitials: pe.photo ? '' : pe.name.split(/\s+/).map(x => x[0] || '').join('').slice(0, 2).toUpperCase(),
-      pePhoto: () => pickImage(360, url => this.setSheet({ photo: url })), peHasPhoto: !!pe.photo, peRemovePhoto: () => this.setSheet({ photo: null }),
+      pePhoto: this._pePhoto = () => pickImage(360, url => this.setSheet({ photo: url })), peHasPhoto: !!pe.photo, peRemovePhoto: () => this.setSheet({ photo: null }),
       peGrads: GRADS.map(([a, b]) => { const g = 'linear-gradient(135deg,' + a + ',' + b + ')'; return { bg: g, border: pe.grad === g ? 'var(--ink)' : 'transparent', go: () => this.setSheet({ grad: g, g1: a, g2: b }) }; }),
       peFields: [['name', 'Name', 'Your artist or real name', 40], ['handle', 'Handle', 'yourname', 20], ['city', 'City', 'Where you make music', 30], ['role', s.acct && s.acct.type === 'exec' ? 'Title' : 'What you do', 'e.g. Producer · vocalist', 50], ['skills', s.acct && s.acct.type === 'exec' ? 'Focus' : 'Instruments & skills', 'Comma separated', 120]].map(([k, label, ph, max]) => ({ label, ph, max: String(max), val: pe[k] || '', on: e => this.setSheet({ [k]: e.target.value }) })),
       peBio: pe.bio, onPeBio: e => this.setSheet({ bio: e.target.value }), peBioLeft: String(240 - (pe.bio || '').length), peSave: () => this.saveProfile()
@@ -3901,7 +4159,7 @@ class Component extends DCLogic {
     const deskPool = I.filter(x => x.kind === 'song' && x.published && x.owner !== 'me');
     const gFilter = x => s.deskGenre === 'All' ? (looking.length ? x.tags.genre.some(g => looking.indexOf(g) >= 0) : true) : x.tags.genre.indexOf(s.deskGenre) >= 0;
     const sbIds = Object.keys(s.sb).filter(id => this.item(id));
-    const deskRowOf = (x, i) => { const on = !!s.sb[x.id], c = s.sb[x.id], t = trendOf(x), st = c ? STAGES[c.stage] : null, ow = U(x.owner); return { rank: i + 1, rankFg: i < 3 ? 'var(--mint-ink)' : 'var(--dim)', art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: ow.name + ' · ' + ow.city + ' · ' + (x.tags.genre[0] || '') + (x.tags.like[0] ? ' · sounds like ' + x.tags.like[0] : ''), week: num(x.week) + ' this week', trend: (t >= 0 ? '▲ ' : '▼ ') + Math.abs(t) + '%', trendFg: t >= 0 ? 'var(--mint-ink)' : 'var(--coral-ink)', openArtist: () => this.openUser(x.owner), message: () => { if (c && c.stage === 0) this.sbStage(x.id, 1); this.flash('Message sent to ' + ow.name.split(' ')[0] + ' from ' + ((s.acct && s.acct.company) || 'your label')); }, sback: () => this.sbToggle(x.id), sbLabel: on ? '✓ Spiked Back' : '◆ Spike Back', sbBg: on ? '#0C1318' : 'transparent', sbFg: on ? '#3FE6BD' : 'var(--ink)', sbBorder: on ? '#0C1318' : 'var(--line2)', hasStage: !!c, stageArrow: !c ? '' : c.stage === 4 ? 'Signed ✓' : st[0] + ' →', stage: st ? (c.stage === 4 ? 'Signed ✓' : st[0]) : '', stageBg: st ? st[1] : '', stageFg: st ? st[2] : '', advance: () => this.sbStage(x.id, 1) }; };
+    const deskRowOf = (x, i) => { const on = !!s.sb[x.id], c = s.sb[x.id], t = trendOf(x), st = c ? STAGES[c.stage] : null, ow = U(x.owner); return { rank: i + 1, rankFg: i < 3 ? 'var(--mint-ink)' : 'var(--dim)', art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: ow.name + ' · ' + ow.city + ' · ' + (x.tags.genre[0] || '') + (x.tags.like[0] ? ' · sounds like ' + x.tags.like[0] : ''), week: num(x.week) + ' this week', trend: (t >= 0 ? '▲ ' : '▼ ') + Math.abs(t) + '%', trendFg: t >= 0 ? 'var(--mint-ink)' : 'var(--coral-ink)', openArtist: () => this.openUser(x.owner), message: () => this.openDm(x.owner), sback: () => this.sbToggle(x.id), sbLabel: on ? '✓ Spiked Back' : '◆ Spike Back', sbBg: on ? '#0C1318' : 'transparent', sbFg: on ? '#3FE6BD' : 'var(--ink)', sbBorder: on ? '#0C1318' : 'var(--line2)', hasStage: !!c, stageArrow: !c ? '' : c.stage === 4 ? 'Signed ✓' : st[0] + ' →', stage: st ? (c.stage === 4 ? 'Signed ✓' : st[0]) : '', stageBg: st ? st[1] : '', stageFg: st ? st[2] : '', advance: () => this.sbStage(x.id, 1) }; };
     const rising = deskPool.filter(gFilter).sort((a, b) => (b.week * (100 + trendOf(b))) - (a.week * (100 + trendOf(a)))).slice(0, 30);
     const shortlist = sbIds.map(id => this.item(id)).filter(x => s.deskGenre === 'All' || x.tags.genre.indexOf(s.deskGenre) >= 0);
     const DESK = {
@@ -3915,7 +4173,7 @@ class Component extends DCLogic {
       deskRows: (s.deskTab === 'Shortlist' ? shortlist : rising).map(deskRowOf),
       deskEmpty: s.deskTab === 'Shortlist' ? shortlist.length === 0 : s.deskTab === 'Rising' ? rising.length === 0 : sbIds.length === 0,
       deskEmptyText: s.deskTab === 'Rising' ? 'Nothing rising in that genre this week — try another.' : 'Spike Back a song in Rising or Explore to start your shortlist.',
-      deskBoard: STAGES.map(([label, bg, fg], k) => { const cards = sbIds.filter(id => s.sb[id].stage === k).map(id => this.item(id)); return { label: label.toUpperCase(), fg: k === 4 ? 'var(--mint-ink)' : 'var(--dim)', count: String(cards.length), cards: cards.map(x => ({ art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: U(x.owner).name + ' · ' + U(x.owner).city, canBack: k > 0, back: () => this.sbStage(x.id, -1), canFwd: k < 4, fwd: () => this.sbStage(x.id, 1), fwdLabel: k >= 4 ? '' : k === 3 ? '✓ Sign' : STAGES[k + 1][0] + ' →' })) }; }),
+      deskBoard: STAGES.map(([label, bg, fg], k) => { const cards = sbIds.filter(id => s.sb[id].stage === k).map(id => this.item(id)); return { label: label.toUpperCase(), fg: k === 4 ? 'var(--mint-ink)' : 'var(--dim)', count: String(cards.length), cards: cards.map(x => ({ art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: U(x.owner).name + ' · ' + U(x.owner).city, canBack: k > 0, back: () => this.sbStage(x.id, -1), canFwd: k < 4, fwd: () => this.sbStage(x.id, 1), fwdLabel: k >= 4 ? '' : k === 3 ? '✓ Sign' : STAGES[k + 1][0] + ' →' })) }; }),
       showCreate: !isExec, prMeCreate: !isExec
     };
 
@@ -4114,7 +4372,7 @@ class Component extends DCLogic {
 
     if (mp && !this._prepP && this.matchSig(mp) !== this._matchSig) setTimeout(() => this.mxPrepare(mp.id), 0);
     return {
-      ...MX, ...(mp ? this.ezVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
+      ...this.inboxVals(s), ...MX, ...(mp ? this.ezVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
       askLogout: () => this.setState({ sheet: { type: 'switch' } }), signedIn: !!s.acct,
       askLogoutOld: () => this.setState({ sheet: { type: 'confirm', title: 'Log out of Ellipsis?', body: 'Your work is saved' + (s.acct && s.acct.token ? ' to your account — sign back in on any device to pick up where you left off.' : ' on this device and will be here when you sign back in.'), cta: 'Log out', go: () => { this.setState({ sheet: null }); if (this._api && s.acct && s.acct.token) this.api('logout', { body: {} }).catch(() => {}); this.signOut(); this.flash('Logged out'); } } }),
       inviteNote: s.acct && s.acct.refCode ? 'You both get a month of Premium when they release a song' : 'Share Ellipsis with collaborators',
@@ -4137,7 +4395,7 @@ class Component extends DCLogic {
       hasCtx: !!s.ctxPid, ctxName: s.ctxPid ? (this.proj(s.ctxPid) || {}).title : '', ctxOpen: () => { const id = s.ctxPid; this.setState({ ctxPid: null }); this.openProject(id); },
       showPremium: !s.premium, goPremium: this._goPrem = () => { if (s.acct && s.acct.token && this._api) { if (s.premium) { this.api('billing/portal', { body: {} }).then(r => { if (r.url) location.href = r.url; }).catch(e => this.flash(e.message)); return; } this.checkout(s.acct.type === 'exec' ? 'industry' : 'premium').then(went => { if (!went) this.flash('Payments aren\'t switched on yet'); }); return; } if (s.premium) { this.flash('Premium is active — manage it in your app store account'); return; } this.setState({ premium: true }); this.flash('Premium on — no ads, lossless audio, 30 GB'); },
 
-      isExplore: s.view === 'explore', isProjects: s.view === 'projects', isProject: s.view === 'project', isLyric: s.view === 'lyric', isLibrary: s.view === 'library', isActivity: s.view === 'activity', isProfile: s.view === 'profile',
+      isExplore: s.view === 'explore', isProjects: s.view === 'projects', isProject: s.view === 'project', isLyric: s.view === 'lyric', isLibrary: s.view === 'library', isActivity: s.view === 'activity', isInbox: s.view === 'inbox', isProfile: s.view === 'profile',
 
       exploreSub: I.filter(x => x.kind === 'song' && x.published).length + ' songs ranked by Spikes · ' + collabPool.length + ' projects looking for collaborators',
       exTabs: ['Songs', 'Instrumentals', "Let's collaborate"].map(l => Object.assign({ label: l, go: () => this.setState({ exTab: l, facetVal: 'For you' }) }, seg(s.exTab, l))),
@@ -4149,8 +4407,8 @@ class Component extends DCLogic {
       periods: ['This week', 'This year', 'All time'].map(l => Object.assign({ label: l, go: () => this.setState({ period: l }) }, seg2(s.period, l))),
       isSongs: s.exTab === 'Songs', isInstr: s.exTab === 'Instrumentals', isCollab: s.exTab === "Let's collaborate",
       songRows: songRowsAd, instrCards, collabCards, exEmpty: exList.length === 0,
-      ...(() => { const libAd = this.adPick(2), actAd = this.adPick(3); if (adsOn && s.view === 'library') this.adView('library-banner', libAd); if (adsOn && s.view === 'activity') this.adView('activity-banner', actAd);
-        return { showAds: adsOn, libAdSponsor: libAd.sponsor, libAdHead: libAd.head, libAdBody: libAd.body, libAdCta: libAd.cta, libAdColor: libAd.color, libAdGo: () => this.adClick(libAd),
+      ...(() => { const libAd = this.adPick(2), actAd = this.adPick(3), exAd = this.adPick(1); if (adsOn && s.view === 'explore') this.adView('explore-banner', exAd); if (adsOn && s.view === 'library') this.adView('library-banner', libAd); if (adsOn && s.view === 'activity') this.adView('activity-banner', actAd);
+        return { showAds: adsOn, exAdSponsor: exAd.sponsor, exAdHead: exAd.head, exAdBody: exAd.body, exAdCta: exAd.cta, exAdColor: exAd.color, exAdGo: () => this.adClick(exAd), libAdSponsor: libAd.sponsor, libAdHead: libAd.head, libAdBody: libAd.body, libAdCta: libAd.cta, libAdColor: libAd.color, libAdGo: () => this.adClick(libAd),
           actAdSponsor: actAd.sponsor, actAdHead: actAd.head, actAdBody: actAd.body, actAdCta: actAd.cta, actAdColor: actAd.color, actAdGo: () => this.adClick(actAd) }; })(),
       adOn: !!s.ad, adSponsor: s.ad ? s.ad.ad.sponsor : '', adHead: s.ad ? s.ad.ad.head : '', adLeft: s.ad ? '0:' + String(s.ad.left).padStart(2, '0') : '', adProg: s.ad ? ((AD_LEN - s.ad.left) / AD_LEN * 100).toFixed(1) + '%' : '0%',
       adColor: s.ad ? s.ad.ad.color : '#0A6E58', adCta: s.ad ? s.ad.ad.cta : '', adGo: () => s.ad && this.adClick(s.ad.ad), adFree: () => { this.endAd(true); this.goPremiumNow(); },
@@ -4166,7 +4424,7 @@ class Component extends DCLogic {
       newProject: () => this.newProject(), projCards: projList.map(projCard), projEmpty: projList.length === 0,
       projEmptyText: s.projTab === 'Mine' ? 'No projects yet. Press Create to start one.' : "You're not collaborating on anything yet. Find a project in Explore → Let's collaborate.",
 
-      pArt: pp.cover ? 'url(' + pp.cover + ') center/cover' : ART[pp.art], pCanCover: pMine, pCanShare: pp.stage === 'published', pShare: () => this.openShare(pp.id), pCover: () => this.openCrop({ type: 'project', pid: pp.id }, null), pCoverLabel: pp.cover ? 'Change cover' : 'Add cover art', pDot: st[1], pStatus: st[0], pTitle: pp.title, pSub: (pMine ? 'Your project' : 'Owned by ' + U(pp.owner).name) + ' · ' + countsOf(pp),
+      pArt: pp.cover ? 'url(' + pp.cover + ') center/cover' : COVER_OF(pp.id + pp.title), pCanCover: pMine, pCanShare: pp.stage === 'published', pShare: () => this.openShare(pp.id), pCover: () => this.openCrop({ type: 'project', pid: pp.id }, null), pCoverLabel: pp.cover ? 'Change cover' : 'Add cover art', pDot: st[1], pStatus: st[0], pTitle: pp.title, pSub: (pMine ? 'Your project' : 'Owned by ' + U(pp.owner).name) + ' · ' + countsOf(pp),
       pTagCount: tagCount(pp.tags), pTags: () => pMine ? this.openTags('project', pp.id) : this.flash('Only ' + U(pp.owner).name.split(' ')[0] + ' can edit project tags'),
       pAddLabel: pMember ? (pp.stage === 'published' ? '▶ Play song' : '＋ Add content') : s.requested[pp.id] ? 'Requested ✓' : 'Request to collaborate',
       pAdd: () => pp.stage === 'published' && pMember ? this.play(pp.songId) : pMember ? this.setState({ sheet: { type: 'menu', pid: pp.id } }) : this.request(pp.id), pCounts: countsOf(pp), pNoContent: pItems.length === 0,
@@ -4239,6 +4497,8 @@ class Component extends DCLogic {
       prReport: () => this.setState({ sheet: { type: 'confirm', title: 'Report or block ' + pu.name.split(' ')[0] + '?', body: 'Blocking hides them from you and stops their messages and invites. Reports go to a person on our safety team within 24 hours.', cta: 'Block and report', go: () => { this.setState({ sheet: null }); if (this._api) { this.api('report', { body: { target_type: 'user', target_id: 0, reason: 'profile', note: pu.name + ' ' + pu.handle } }).catch(() => {}); } this.setState(st => ({ following: Object.assign({}, st.following, { [pu.id]: false }) })); this.flash(pu.name.split(' ')[0] + ' blocked · report sent'); } } }), prName: pu.name, prFirst: pu.name.split(' ')[0],
       prSub: pu.handle + ' · ' + pu.role, prLocal: pu.city + ' · ' + this.localTime(pu.tz) + ' local', prBio: pu.bio, prExec: !!pu.exec,
       prOther: !isMe, prIsMe: isMe, prFollowLabel: s.following[pu.id] ? 'Following ✓' : 'Follow', prFollowBg: s.following[pu.id] ? 'rgba(255,255,255,0.2)' : '#00D9A6', prFollowFg: s.following[pu.id] ? '#FFFFFF' : '#06231B', prFollow: () => this.follow(pu.id),
+      prMessage: () => this.openDm(pu.id), prMeet: () => this.openMeet(pu.id),
+      prAvatarGo: isMe ? () => { this.openProfileEdit(); setTimeout(() => this._pePhoto && this._pePhoto(), 60); } : () => {}, prAvatarTip: isMe ? 'Change your photo' : pu.name, prAvatarCursor: isMe ? 'pointer' : 'default',
       prInviteLabel: pu.exec ? 'Send a song' : 'Invite to project',
       prInvite: () => { if (pu.exec) { const song = I.find(x => x.kind === 'song' && x.owner === 'me'); this.flash(song ? song.title + ' sent to ' + pu.name.split(' ')[0] + ' for review' : 'Publish a song first'); return; } const p = myProj.find(x => x.stage !== 'published'); if (p) this.invite(p.id, pu.id); else this.flash('Create a project first'); },
       prStats: [
@@ -4250,7 +4510,7 @@ class Component extends DCLogic {
       prHasFeatured: !!feat, prFeatArt: feat ? AOF(feat) : ART.lofi, prFeatIcon: feat && onNow(feat.id) ? '❚❚' : '▶', prFeatPlay: () => feat && this.play(feat.id),
       prFeatKicker: pu.exec ? 'TOP SPIKE BACK' : 'MOST SPIKED', prFeatTitle: feat ? feat.title : '', prFeatSub: feat ? (pu.exec ? U(feat.owner).name + ' · ' : '') + '⚡ ' + num(spk(feat)) + ' · ' + (feat.tags.like[0] ? 'Sounds like ' + feat.tags.like[0] : '') : '',
       prFeatWave: bars(feat ? feat.title.length * 31 + 7 : 3, 48, 16, 100).map((h, k) => ({ h: Math.round(h) + '%', c: feat && s.curId === feat.id && k / 48 <= prog ? 'var(--mint)' : 'var(--line2)' })),
-      prSbCount: isMe ? sbList.length + ' on your shortlist' : 'Latest ' + sbList.length + ' of ' + (pu.sbTotal || sbList.length), prSpikeBacks: sbList.map(x => ({ art: AOF(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: U(x.owner).name + ' · ' + U(x.owner).city + ' · ' + x.tags.genre[0], openUser: () => this.openUser(x.owner) })),
+      prSbCount: isMe ? sbList.length + ' on your shortlist' : 'Latest ' + sbList.length + ' of ' + (pu.sbTotal || sbList.length), prSpikeBacks: sbList.map(x => ({ art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: U(x.owner).name + ' · ' + U(x.owner).city + ' · ' + x.tags.genre[0], openUser: () => this.openUser(x.owner) })),
       prSongsLabel: pu.exec ? 'Looking for' : 'Published', prSongCount: pu.exec ? '' : theirs.length + ' published', prSongs, prNoSongs: !pu.exec && prSongs.length === 0,
       prChipGroups: (pu.exec
         ? [{ label: 'LOOKING FOR', chips: (pu.looking || []).map(l => ({ label: l })), bg: 'var(--mint-soft)', fg: 'var(--mint-ink)' }, { label: 'ROSTER', chips: (signedRoster.length ? signedRoster : ['None signed yet']).map(l => ({ label: l })), bg: 'var(--panel2)', fg: 'var(--ink)' }, { label: 'FOCUS', chips: pu.skills.map(l => ({ label: l })), bg: 'var(--panel2)', fg: 'var(--ink)' }]
@@ -4303,7 +4563,7 @@ class Component extends DCLogic {
       recSave: this.recSave, recClose: this.recClose, recNote: r ? r.note : '',
       recShowLyrics: !!r && !!rLy, recLyricSecs: rLy && rLy.sections ? rLy.sections.map(z => ({ label: z.type.toUpperCase(), text: z.text || '…' })) : [],
 
-      nowArt: AOF(cur), nowTitle: s.mixPid ? 'Mix preview · ' + (this.proj(s.mixPid) || {}).title : cur.title, nowSub: s.mixPid ? 'All included tracks together' : KIND[cur.kind][0] + ' · ' + U(cur.owner).name,
+      ...(() => { const k = KCX(cur); return { nowKc: k.kc, nowKcFg: k.kcFg, nowKind: cur ? k.kcLabel : '', nowPlaying: !!s.playing }; })(), nowArt: AOF(cur), nowTitle: s.mixPid ? 'Mix preview · ' + (this.proj(s.mixPid) || {}).title : cur.title, nowSub: s.mixPid ? 'All included tracks together' : KIND[cur.kind][0] + ' · ' + U(cur.owner).name,
       nowCanSpike: !s.mixPid && cur.published, nowSpike: () => this.spike(cur.id), nowSpBg: s.spiked[cur.id] ? 'var(--mint-soft)' : 'transparent', nowSpFg: s.spiked[cur.id] ? 'var(--mint-ink)' : 'var(--dim)', nowSpBorder: s.spiked[cur.id] ? 'var(--mint)' : 'var(--line)',
       playIcon: s.playing || s.mixPid ? '❚❚' : '▶', togglePlay: this.togglePlay, elapsed: fmt(s.time), duration: fmt(dur), progW: (prog * 100).toFixed(2) + '%',
       scrub: e => { const b = e.currentTarget.getBoundingClientRect(); const k = Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)); if (this.audio && dur) { this.audio.currentTime = k * dur; this.setState({ time: k * dur }); } },
