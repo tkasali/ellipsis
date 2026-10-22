@@ -2004,8 +2004,11 @@ Object.assign(ART, { rnb: 'linear-gradient(140deg,#FF7AA8,#6B2F5E)', hiphop: 'li
 const LIB = [["lib01","Paper Lanterns","lofi","Lo-fi","Late night","Nujabes",78],["lib02","Tram at Six","lofi","Lo-fi","Rainy","Nujabes",82],["lib03","Polaroid Rain","lofi","Lo-fi","Chill","Nujabes",74],["lib04","Cassette Sunday","lofi","Lo-fi","Warm","Nujabes",86],["lib05","Lagos to Lisbon","afro","Afrobeats","Summer","Burna Boy",104],["lib06","Golden Hour Ferry","afro","Afrobeats","Hopeful","Tems",100],["lib07","Okada Dreams","afro","Afrobeats","Dance","Burna Boy",108],["lib08","Harmattan","afro","Afrobeats","Warm","Tems",98],["lib09","Velvet Hours","neo","Neo-soul","Late night","Cleo Sol",88],["lib10","Honey in the Static","neo","Neo-soul","Warm","Cleo Sol",84],["lib11","Second Chorus","neo","Neo-soul","Heartbreak","Sampha",80],["lib12","Brown Sugar Sunday","neo","Neo-soul","Chill","Frank Ocean",92],["lib13","Southside Lanterns","drill","Drill","Gritty","Central Cee",142],["lib14","Cold Rotation","drill","Drill","Gritty","Central Cee",144],["lib15","Night Bus 47","drill","Drill","Late night","Central Cee",140],["lib16","No Hook","drill","Drill","Gritty","Central Cee",146],["lib17","Warehouse Prayer","house","House","Dance","Kaytranada",124],["lib18","Glass Tram","house","House","Dance","Kaytranada",122],["lib19","Sunrise on Kreuzberg","house","House","Hopeful","Kaytranada",126],["lib20","Last Train Out","house","House","Late night","Kaytranada",120],["lib21","Glacier Pads","amb","Ambient","Cinematic","Ólafur Arnalds",70],["lib22","Low Tide","amb","Ambient","Chill","Nils Frahm",64],["lib23","Fjord Light","amb","Ambient","Hopeful","Ólafur Arnalds",68],["lib24","Room With No Clock","amb","Ambient","Rainy","Nils Frahm",60],["lib25","Slow Burn Satellite","rnb","R&B","Late night","Frank Ocean",70],["lib26","Text Me Back","rnb","R&B","Heartbreak","Sampha",68],["lib27","Silk Receipts","rnb","R&B","Warm","Tems",74],["lib28","Ultraviolet","rnb","R&B","Late night","Frank Ocean",72],["lib29","Boom Bap Psalm","hiphop","Hip-hop","Gritty","Nujabes",90],["lib30","Corner Store Kings","hiphop","Hip-hop","Summer","Nujabes",94],["lib31","Rent Is Due","hiphop","Hip-hop","Gritty","Central Cee",88],["lib32","Big Sky Cypher","hiphop","Hip-hop","Hopeful","Nujabes",92],["lib33","Neon Heartbeat","pop","Pop","Dance","Little Dragon",112],["lib34","Paper Planes Tonight","pop","Pop","Summer","Little Dragon",118],["lib35","Holding Static","pop","Pop","Heartbreak","Sampha",104],["lib36","Wildfire Summer","pop","Pop","Hopeful","Little Dragon",122],["lib37","Blue Note Taxi","jazz","Jazz","Late night","Nujabes",132],["lib38","Smoke & Vibraphone","jazz","Jazz","Chill","Nujabes",120],["lib39","Midnight at Ronnie’s","jazz","Jazz","Warm","Nujabes",140],["lib40","Rain on Lenox Ave","jazz","Jazz","Rainy","Nujabes",116]];
 const LIB_ART = { lofi: 'lofi', afro: 'afrobeats', neo: 'neosoul', drill: 'drill', house: 'house', amb: 'ambient', rnb: 'rnb', hiphop: 'hiphop', pop: 'pop', jazz: 'jazz' };
 LIB.forEach(x => { ART[x[0]] = ART[LIB_ART[x[2]]]; });
+/* Flagship originals — produced in the style of current chart records (no samples, no copied melodies). */
+const HITS = [["hit01","Neon Cathedral","pop","Pop","Dance","Little Dragon",171,"F min"],["hit02","Lagos After Dark","afro","Afrobeats","Summer","Tems",112,"A min"],["hit03","Diamond Fever","hiphop","Hip-hop","Gritty","Central Cee",140,"C# min"],["hit04","Fuego Lento","afro","Latin","Summer","Burna Boy",94,"G min"],["hit05","Salt & Sunlight","house","House","Summer","Kaytranada",120,"D maj"],["hit06","Velvet Hours","rnb","R&B","Late night","Frank Ocean",72,"Eb maj"],["hit07","Afterglow","pop","Pop","Hopeful","Little Dragon",126,"B maj"],["hit08","Dust & Daylight","pop","Pop","Warm","Sampha",100,"G maj"]];
+HITS.forEach(x => { ART[x[0]] = ART[LIB_ART[x[2]]] || ART.pop; });
 const KIND = { instrumental:['Instrumental','Instrumentals','♫'], lyric:['Lyric','Lyrics','✎'], melody:['Melody','Melodies','〰'], acapella:['Acapella','Acapellas','◉'], song:['Song','Songs','▶'] };
-const GENRES = ['Lo-fi','Afrobeats','Neo-soul','Drill','House','Ambient','R&B','Hip-hop','Pop','Jazz'];
+const GENRES = ['Lo-fi','Afrobeats','Neo-soul','Drill','House','Ambient','R&B','Hip-hop','Pop','Jazz','Latin'];
 const MOODS = ['Late night','Warm','Rainy','Summer','Heartbreak','Chill','Dance','Cinematic','Hopeful','Gritty'];
 const LIKES = ['Little Dragon','Sampha','Tems','Cleo Sol','Nujabes','Kaytranada','Burna Boy','Central Cee','Nils Frahm','Ólafur Arnalds','Frank Ocean'];
 const NEEDS = ['Vocals','Lyrics','Melody','Bass','Drums','Keys','Guitar','Cello','Strings','Horns','Mixing','Percussion'];
@@ -2132,7 +2135,8 @@ function seedAll(USERS) {
     .forEach(([t, o, f, g, m, l, sp], k) => add('ip' + k, 'instrumental', t, o, f, tg([g], [m], [l]), { published: true, spikes: sp, week: Math.round(sp * 0.14) + k * 7, year: Math.round(sp * 0.7), created: 10 - k }));
   [['Nightbus','u0','afrobeats','Afrobeats','Late night','Tems',1942],['Lagos Rain','u17','afrobeats','Afrobeats','Rainy','Burna Boy',2710],['Southside Lanterns','u12','drill','Drill','Gritty','Central Cee',2240],['Warm Static','u4','lofi','Lo-fi','Chill','Nujabes',1870],['Glass Tram','u18','house','House','Dance','Kaytranada',1560],['Blue Hour Loop','u21','ambient','Ambient','Cinematic','Ólafur Arnalds',1130],['Tangerine Hour','u10','neosoul','Neo-soul','Warm','Cleo Sol',980],['Low Tide','u13','ambient','Ambient','Chill','Nils Frahm',760],['Sundial','u19','afrobeats','Afrobeats','Summer','Tems',1390]]
     .forEach(([t, o, f, g, m, l, sp], k) => add('is' + k, 'song', t, o, f, tg([g], [m, 'Late night'].slice(0, k % 2 + 1), [l]), { published: true, spikes: sp, week: Math.round(sp * 0.11) + ((k * 37) % 90), year: Math.round(sp * 0.65), created: 20 - k }));
-  LIB.forEach(([file, title, g, genre, mood, like, bpm], k) => { const sp = 300 + ((k * 7919) % 2600); add('lib' + k, 'song', title, 'u' + ((k * 5 + 1) % 22), file, tg([genre], [mood], [like]), { published: true, spikes: sp, week: Math.round(sp * 0.12) + ((k * 53) % 70), year: Math.round(sp * 0.7), created: 40 - k, bpm }); });
+  HITS.forEach(([file, title, g, genre, mood, like, bpm, key], k) => { const sp = 4200 - k * 230; add('hit' + k, 'song', title, 'u' + ((k * 3 + 2) % 22), file, tg([genre], [mood], [like]), { published: true, spikes: sp, week: Math.round(sp * 0.16) + (40 - k * 3), year: Math.round(sp * 0.8), created: 60 - k, bpm, key }); });
+    LIB.forEach(([file, title, g, genre, mood, like, bpm], k) => { const sp = 300 + ((k * 7919) % 2600); add('lib' + k, 'song', title, 'u' + ((k * 5 + 1) % 22), file, tg([genre], [mood], [like]), { published: true, spikes: sp, week: Math.round(sp * 0.12) + ((k * 53) % 70), year: Math.round(sp * 0.7), created: 40 - k, bpm }); });
   const openDefs = [['P10','Four in the Morning','u3','neosoul',['Cello','Bass']],['P11','Cold Kitchen','u7','drill',['Vocals','Strings']],['P12','Paper Radio','u8','lofi',['Keys','Drums']],['P13','Kora for Two','u17','ambient',['Cello','Percussion']],['P14','Midnight Ferrari','u19','afrobeats',['Keys','Horns']],['P15','Istanbul Nights','u11','house',['Vocals','Lyrics']]];
   openDefs.forEach(([pid, t, o, f], k) => add('io' + k, 'instrumental', t + ' — idea', o, f, tg([FILES.indexOf(f) >= 0 ? GENRES[FILES.indexOf(f)] : 'Lo-fi'], [MOODS[k]], [LIKES[k]])));
   const P = [
@@ -2361,7 +2365,13 @@ class Component extends DCLogic {
     let d = null; try { d = JSON.parse(localStorage.getItem(this.SAVE_KEY) || 'null'); } catch (e) {}
     if (!d) return false;
     const patch = {}; this.PERSIST.forEach(k => { if (d[k] !== undefined) patch[k] = d[k]; });
-    if (patch.items) { const have = new Set(patch.items.map(x => x.id)); const fresh = (this.state.items || []).filter(x => !have.has(x.id)); if (fresh.length) patch.items = patch.items.concat(fresh); }
+    if (patch.items) {
+      // Library (stock) sounds always come from the current build, never from an old save,
+      // so new or corrected stock content reaches people who already have saved data.
+      const isStock = x => x && (x.stock === true || /^lib\d+$/.test(x.id));
+      const saved = patch.items.filter(x => !isStock(x)), have = new Set(saved.map(x => x.id));
+      patch.items = saved.concat((this.state.items || []).filter(x => !have.has(x.id)));
+    }
     this.setState(patch);
     this.loadAudio(patch.items);
     (patch.items || []).filter(x => false).forEach(x => {
@@ -2392,7 +2402,7 @@ class Component extends DCLogic {
       if (this._unmounted && !now) return;
       const s = this.state, d = {};
       this.PERSIST.forEach(k => { d[k] = s[k]; });
-      d.items = s.items.map(x => {
+      d.items = s.items.filter(x => !(x.stock === true || /^lib\d+$/.test(x.id))).map(x => {
         if (x.url && x.url.indexOf('blob:') === 0) {
           const key = x.takeKey || ('take-' + x.id);
           if (!x.takeKey) { const u0 = x.url; this.blobs[key] = u0; fetch(u0).then(r => r.blob()).then(b => this.idb('readwrite', st => st.put(b, key))).catch(() => {}); this.setState(st => ({ items: st.items.map(y => y.id === x.id ? Object.assign({}, y, { takeKey: key }) : y) })); }
@@ -2982,10 +2992,11 @@ class Component extends DCLogic {
   proj(id) { return this.state.projects.find(x => x.id === id); }
   members(p) { return [p.owner].concat(p.collabs.filter(c => c !== p.owner)); }
   isMember(p) { return p.owner === 'me' || p.collabs.indexOf('me') >= 0; }
-  updItem(id, fn) { this.setState(s => ({ items: s.items.map(x => x.id === id ? fn(Object.assign({}, x, { sections: x.sections ? x.sections.map(z => Object.assign({}, z)) : null, tags: { genre: x.tags.genre.slice(), mood: x.tags.mood.slice(), like: x.tags.like.slice() } })) : x) })); }
-  updProj(id, fn) { this.setState(s => ({ projects: s.projects.map(p => p.id === id ? fn(Object.assign({}, p, { items: p.items.slice(), collabs: p.collabs.slice(), msgs: p.msgs.slice(), sugs: p.sugs.slice(), mix: Object.assign({}, p.mix), open: { on: p.open.on, needs: p.open.needs.slice() } })) : p) })); }
+  updItem(id, fn) { this.setState(s => ({ items: s.items.map(x => x.id === id ? fn(Object.assign({}, x, { sections: x.sections ? x.sections.map(z => Object.assign({}, z)) : null, tags: { genre: ((x.tags || {}).genre || []).slice(), mood: ((x.tags || {}).mood || []).slice(), like: ((x.tags || {}).like || []).slice() } })) : x) })); }
+  updProj(id, fn) { this.setState(s => ({ projects: s.projects.map(p => p.id === id ? fn(Object.assign({}, p, { items: (p.items || []).slice(), collabs: (p.collabs || []).slice(), msgs: (p.msgs || []).slice(), sugs: (p.sugs || []).slice(), mix: Object.assign({}, p.mix || {}), open: { on: !!(p.open && p.open.on), needs: ((p.open && p.open.needs) || []).slice() } })) : p) })); }
   go(view, extra) {
     const s = this.state;
+    if (view === 'explore' && s.view !== 'explore') this._exVisit = (this._exVisit || 0) + 1;
     this.setState(Object.assign({ view, hist: s.hist.concat([{ view: s.view, pid: s.pid, uid: s.uid, lid: s.lid }]).slice(-30), searchOpen: false }, extra || {}));
     if (this.scrollRef.current) this.scrollRef.current.scrollTop = 0;
   }
@@ -3205,7 +3216,7 @@ class Component extends DCLogic {
   mxStart(p, from) {
     this.mxStopNodes(); if (this.audio) this.audio.pause();
     const ctx = this.ensureCtx(), g = this.buildGraph(ctx, p, true);
-    if (!g.lanes.length) { this.flash('Turn on at least one track to play the mix'); return; }
+    if (!g.lanes.length) { this.flash(this.mxAudio(p, true).length ? 'Turn on at least one track to play the mix' : 'Add a sound first — drag one in, or tap a sound below'); return; }
     from = from >= g.dur ? 0 : (from || 0);
     const at = ctx.currentTime + 0.05;
     g.lanes.forEach(x => { const c = g.chs[x.id]; if (from < c.buf.duration - 0.02) c.src.start(at, from); });
@@ -3940,14 +3951,18 @@ class Component extends DCLogic {
     const sbStyle = x => { const on = !!s.sb[x.id]; return { sback: () => this.sbToggle(x.id), sbLabel: on ? '✓ Spiked Back' : '◆ Spike Back', sbBg: on ? '#0C1318' : 'transparent', sbFg: on ? '#3FE6BD' : 'var(--ink)', sbBorder: on ? '#0C1318' : 'var(--line2)' }; };
     const metricOf = x => s.period === 'This week' ? x.week + (s.spiked[x.id] ? 1 : 0) : s.period === 'This year' ? x.year + (s.spiked[x.id] ? 1 : 0) : spk(x);
     const mScore = new Map(); let tMax = 1; for (const x of filtered) { const m = metricOf(x); mScore.set(x, m); if (m > tMax) tMax = m; }
-    const bScore = new Map(); if (forYou) for (const x of filtered) bScore.set(x, 0.6 * relItem(x) + 0.4 * (mScore.get(x) / tMax));
-    const songRows = s.exTab === 'Songs' ? filtered.slice().sort((a, b) => forYou ? bScore.get(b) - bScore.get(a) : mScore.get(b) - mScore.get(a)).slice(0, 40).map((x, i) => Object.assign({
+    /* Ranking is always by Spikes for the chosen period. "For you" only decides WHICH songs are in the
+       list (a snapshot taken when you open Explore), so playing a song never reshuffles the chart. */
+    const fyKey = [s.exTab, s.period, s.exQ || '', this._exVisit || 0].join('|');
+    if (forYou && this._fyKey !== fyKey) { this._fyKey = fyKey; this._fySet = new Set(filtered.slice().sort((a, b) => relItem(b) - relItem(a) || (a.id < b.id ? -1 : 1)).slice(0, 60).map(x => x.id)); }
+    const inFy = x => !forYou || !this._fySet || this._fySet.has(x.id);
+    const songRows = s.exTab === 'Songs' ? filtered.filter(inFy).sort((a, b) => mScore.get(b) - mScore.get(a) || (a.id < b.id ? -1 : 1)).slice(0, 40).map((x, i) => Object.assign({
       id: x.id, rank: i + 1, rankFg: i < 3 ? 'var(--mint-ink)' : 'var(--dim)', art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id),
       title: x.title, sub: U(x.owner).name + (verOk(x.owner) ? ' ✓' : '') + ' · ' + tagLine(x.tags), metric: num(metricOf(x)), open: () => x.pid ? this.openProject(x.pid) : this.openUser(x.owner)
     }, spStyle(x), favStyle(x), sbStyle(x))) : [];
     const iSp = new Map(); let iMax = 1; if (s.exTab === 'Instrumentals') for (const x of filtered) { const v = spk(x); iSp.set(x, v); if (v > iMax) iMax = v; }
     const iScore = new Map(); if (s.exTab === 'Instrumentals') for (const x of filtered) iScore.set(x, forYou ? 0.6 * relItem(x) + 0.4 * iSp.get(x) / iMax : iSp.get(x));
-    const instrCards = s.exTab === 'Instrumentals' ? filtered.slice().sort((a, b) => iScore.get(b) - iScore.get(a)).slice(0, 36).map(x => Object.assign({
+    const instrCards = s.exTab === 'Instrumentals' ? filtered.filter(inFy).sort((a, b) => mScore.get(b) - mScore.get(a) || (a.id < b.id ? -1 : 1)).slice(0, 36).map(x => Object.assign({
       art: AOF(x), ...KCX(x), icon: onNow(x.id) ? '❚❚' : '▶', play: () => this.play(x.id), title: x.title, sub: U(x.owner).name + ' · ' + U(x.owner).city, openUser: () => this.openUser(x.owner), tagLine: tagLine(x.tags), add: () => this.addToProject(x.id)
     }, spStyle(x), favStyle(x))) : [];
     const collabPool = P.filter(p => p.open.on && p.owner !== 'me' && p.collabs.indexOf('me') < 0 && (!exq || [p.title, U(p.owner).name, U(p.owner).city].concat(p.open.needs || [], (p.tags && p.tags.genre) || [], (p.tags && p.tags.like) || []).join(' ').toLowerCase().indexOf(exq) >= 0));
