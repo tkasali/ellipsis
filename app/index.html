@@ -28,6 +28,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Urbanist:wght@300..700&display=swap" rel="stylesheet">
   <style>
+    @media (pointer:coarse){button:not([data-sw]){min-height:40px}input,textarea,select{font-size:16px !important}}
+    [data-sw]::after{content:"";position:absolute;inset:-8px}
+    html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+    button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     :root,[data-theme="light"]{--bg:#EFF2F5;--panel:#FFFFFF;--panel2:#F7F9FA;--line:#E3E8EC;--line2:#CBD4DB;--ink:#1F2933;--dim:#5A6874;--mint:#00D9A6;--mint-ink:#00806A;--mint-soft:#E4FAF4;--on-mint:#06231B;--coral:#C2402B;--coral-ink:#A8321F;--coral-soft:#FDECE8;--amber:#B7791F;--amber-soft:#FFF4DC;--hover:#F2F5F7;--shadow:0 18px 40px rgba(15,30,40,0.10)}
     [data-theme="dark"]{--bg:#0B1116;--panel:#121A21;--panel2:#17212A;--line:#22303A;--line2:#34434F;--ink:#F2F5F7;--dim:#9BA9B4;--mint:#00D9A6;--mint-ink:#3FE6BD;--mint-soft:rgba(0,217,166,0.13);--on-mint:#06231B;--coral:#E0553F;--coral-ink:#FF9C88;--coral-soft:rgba(224,85,63,0.15);--amber:#F2B64C;--amber-soft:rgba(242,182,76,0.14);--hover:#1A252E;--shadow:0 18px 40px rgba(0,0,0,0.45)}
     html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11"}
@@ -46,18 +50,18 @@
   </style>
 </helmet>
 
-<div data-theme="{{ theme }}" style="height:100vh;display:grid;grid-template-columns:92px minmax(0,1fr);grid-template-rows:minmax(0,1fr) 82px;background:var(--bg);color:var(--ink);font-family:Geist,-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-0.005em">
+<div data-theme="{{ theme }}" style="height:100vh;height:100dvh;display:grid;grid-template-columns:{{ shCols }};grid-template-rows:{{ shRows }};background:var(--bg);color:var(--ink);font-family:Geist,-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-0.005em">
 
-  <aside style="grid-row:1;grid-column:1;background:#0C1318;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;min-height:0;overflow-y:auto;overflow-x:hidden">
-    <div style="width:42px;height:42px;border-radius:13px;background:#00D9A6;color:#06231B;font-size:20px;font-weight:620;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center;flex:none;margin-bottom:4px">···</div>
+  <aside style="grid-row:{{ navRow }};grid-column:1;background:#0C1318;display:flex;flex-direction:{{ navDir }};align-items:center;justify-content:{{ navJust }};gap:{{ navGap }};padding:{{ navPad }};min-height:0;overflow-y:{{ navOy }};overflow-x:hidden;z-index:9">
+    <div style="display:{{ navLogo }};width:42px;height:42px;border-radius:13px;background:#00D9A6;color:#06231B;font-size:20px;font-weight:620;letter-spacing:1px;align-items:center;justify-content:center;flex:none;margin-bottom:4px">···</div>
     <sc-if value="{{ showCreate }}" hint-placeholder-val="{{ true }}">
-    <button onClick="{{ openCreate }}" title="Create" style="width:72px;padding:10px 0 8px;border:0;border-radius:16px;background:#00D9A6;color:#06231B;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;flex:none;margin-bottom:6px;box-shadow:0 8px 20px rgba(0,217,166,0.3)">
+    <button onClick="{{ openCreate }}" title="Create" style="width:{{ navCreateW }};padding:{{ navCreatePad }};border:0;border-radius:16px;background:#00D9A6;color:#06231B;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;flex:none;margin-bottom:6px;box-shadow:0 8px 20px rgba(0,217,166,0.3)">
       <span style="font-size:22px;line-height:1;font-weight:620">+</span><span style="font-size:12px;font-weight:620">Create</span>
     </button>
     </sc-if>
     <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
-      <button onClick="{{ n.go }}" style="position:relative;flex:none;width:72px;padding:8px 0 7px;border:0;border-radius:14px;background:{{ n.bg }};color:{{ n.fg }};cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px" style-hover="background:rgba(255,255,255,0.07)">
-        <sc-if value="{{ n.isMe }}" hint-placeholder-val="{{ false }}"><span style="width:24px;height:24px;border-radius:50%;background:{{ meBg }};color:#fff;font-size:9.5px;font-weight:620;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px {{ n.fg }}">{{ meInitials }}</span></sc-if><sc-if value="{{ n.isIcon }}" hint-placeholder-val="{{ true }}"><span style="font-size:19px;line-height:1">{{ n.icon }}</span></sc-if><span style="font-size:12px;font-weight:620">{{ n.label }}</span>
+      <button onClick="{{ n.go }}" style="position:relative;flex:{{ navBtnFlex }};width:{{ navBtnW }};min-width:0;padding:{{ navBtnPad }};border:0;border-radius:14px;background:{{ n.bg }};color:{{ n.fg }};cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px" style-hover="background:rgba(255,255,255,0.07)">
+        <sc-if value="{{ n.isMe }}" hint-placeholder-val="{{ false }}"><span style="width:24px;height:24px;border-radius:50%;background:{{ meBg }};color:#fff;font-size:9.5px;font-weight:620;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px {{ n.fg }}">{{ meInitials }}</span></sc-if><sc-if value="{{ n.isIcon }}" hint-placeholder-val="{{ true }}"><span style="font-size:19px;line-height:1">{{ n.icon }}</span></sc-if><span style="font-size:{{ navLblFs }};font-weight:620;white-space:nowrap">{{ n.label }}</span>
         <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
           <span style="position:absolute;top:5px;right:11px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#C2402B;color:#fff;font-size:10.5px;font-weight:620;display:flex;align-items:center;justify-content:center">{{ n.badge }}</span>
         </sc-if>
@@ -67,8 +71,8 @@
 
   </aside>
 
-  <main style="grid-row:1;grid-column:2;min-width:0;min-height:0;display:flex;flex-direction:column">
-    <header style="flex:none;display:flex;align-items:center;gap:12px;padding:13px 30px;border-bottom:1px solid var(--line);background:var(--panel)">
+  <main style="grid-row:1;grid-column:{{ mainCol }};min-width:0;min-height:0;display:flex;flex-direction:column">
+    <header style="flex:none;display:flex;align-items:center;gap:{{ hdrGap }};padding:{{ hdrPad }};border-bottom:1px solid var(--line);background:var(--panel)">
       <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ back }}" title="Back" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:17px;cursor:pointer">←</button>
       </sc-if>
@@ -100,20 +104,20 @@
       <sc-if value="{{ hasCtx }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ ctxOpen }}" style="flex:none;display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--mint);border-radius:12px;background:var(--mint-soft);color:var(--mint-ink);font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap">＋ Adding to {{ ctxName }} · Done</button>
       </sc-if>
-      <sc-if value="{{ showPremium }}" hint-placeholder-val="{{ true }}">
+      <sc-if value="{{ showPremiumBtn }}" hint-placeholder-val="{{ true }}">
         <button onClick="{{ goPremium }}" style="flex:none;padding:9px 15px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap">Go Premium</button>
       </sc-if>
-      <button onClick="{{ goHelp }}" title="Help & FAQ" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:var(--ink);font-size:16px;font-weight:620;cursor:pointer">?</button>
+      <sc-if value="{{ notPhone }}" hint-placeholder-val="{{ true }}"><button onClick="{{ goHelp }}" title="Help & FAQ" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:var(--ink);font-size:16px;font-weight:620;cursor:pointer">?</button></sc-if>
       <sc-if value="{{ showAdmin }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ goAdmin }}" title="Open the admin console" style="flex:none;display:flex;align-items:center;gap:7px;padding:9px 14px;border:0;border-radius:12px;background:#0C1318;color:#fff;font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap"><span style="color:#00D9A6">⚙</span>Admin</button>
       </sc-if>
-      <button onClick="{{ toggleTheme }}" title="Switch to {{ themeWord }} mode" style="flex:none;display:flex;align-items:center;gap:7px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap"><span>{{ themeIcon }}</span>{{ themeWord }}</button>
+      <button onClick="{{ toggleTheme }}" title="Switch to {{ themeWord }} mode" style="flex:none;display:{{ hdrThemeD }};align-items:center;gap:7px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap"><span>{{ themeIcon }}</span>{{ themeWord }}</button>
       <button onClick="{{ goMe }}" title="Your profile" style="flex:none;width:40px;height:40px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 2px var(--mint);background:{{ meBg }};color:#fff;font-size:13px;font-weight:620;cursor:pointer">{{ meInitials }}</button>
-      <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ askLogout }}" title="Sign out or switch account" style="flex:none;display:flex;align-items:center;gap:6px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap">⎋ Sign out</button></sc-if>
+      <sc-if value="{{ signedInWide }}" hint-placeholder-val="{{ false }}"><button onClick="{{ askLogout }}" title="Sign out or switch account" style="flex:none;display:flex;align-items:center;gap:6px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap">⎋ Sign out</button></sc-if>
     </header>
 
-    <div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto">
-      <div style="max-width:1200px;margin:0 auto;padding:26px 30px 56px">
+    <div ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden">
+      <div style="max-width:1200px;margin:0 auto;padding:{{ bodyPad }}">
 
         <sc-if value="{{ isExplore }}" hint-placeholder-val="{{ true }}">
           <div style="animation:elIn .25s ease both">
@@ -391,7 +395,7 @@
                   <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
                     <sc-for list="{{ lanes }}" as="l" hint-placeholder-count="3">
                       <div style="display:grid;grid-template-columns:34px minmax(0,1fr) 120px;gap:12px;align-items:center;padding:9px 12px;border-radius:13px;border:1px solid var(--line);opacity:{{ l.opacity }}">
-                        <button onClick="{{ l.toggle }}" title="Include in mix" style="width:30px;height:30px;border-radius:9px;border:2px solid {{ l.boxBorder }};background:{{ l.boxBg }};color:#06231B;font-size:14px;font-weight:620;cursor:pointer">{{ l.tick }}</button>
+                        <button data-sw="1" onClick="{{ l.toggle }}" title="Include in mix" style="width:30px;height:30px;border-radius:9px;border:2px solid {{ l.boxBorder }};background:{{ l.boxBg }};color:#06231B;font-size:14px;font-weight:620;cursor:pointer">{{ l.tick }}</button>
                         <div style="min-width:0">
                           <div style="font-size:13.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.title }}</div>
                           <div style="display:flex;align-items:center;gap:2px;height:20px;margin-top:3px">
@@ -432,7 +436,7 @@
                     <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
                       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
                         <span><span style="display:block;font-size:14px;font-weight:620">Let's collaborate</span><span style="display:block;font-size:12px;color:var(--dim)">{{ openNote }}</span></span>
-                        <button onClick="{{ toggleOpen }}" title="Open to collaborators" style="position:relative;flex:none;width:48px;height:28px;border-radius:14px;border:0;background:{{ openTrack }};cursor:pointer"><span style="position:absolute;top:3px;left:{{ openKnob }};width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left .18s"></span></button>
+                        <button data-sw="1" onClick="{{ toggleOpen }}" title="Open to collaborators" style="position:relative;flex:none;width:48px;height:28px;border-radius:14px;border:0;background:{{ openTrack }};cursor:pointer"><span style="position:absolute;top:3px;left:{{ openKnob }};width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left .18s"></span></button>
                       </div>
                       <sc-if value="{{ pOpenOn }}" hint-placeholder-val="{{ false }}">
                         <div style="display:flex;gap:6px;flex-wrap:wrap">
@@ -1009,7 +1013,7 @@
                     </div>
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--line)">
                       <span><span style="display:block;font-size:14.5px;font-weight:620">Dark mode</span><span style="display:block;font-size:12.5px;color:var(--dim)">Also in the top bar</span></span>
-                      <button onClick="{{ toggleTheme }}" title="Dark mode" style="position:relative;width:48px;height:28px;border-radius:14px;border:0;background:{{ darkTrack }};cursor:pointer"><span style="position:absolute;top:3px;left:{{ darkKnob }};width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left .18s"></span></button>
+                      <button data-sw="1" onClick="{{ toggleTheme }}" title="Dark mode" style="position:relative;width:48px;height:28px;border-radius:14px;border:0;background:{{ darkTrack }};cursor:pointer"><span style="position:absolute;top:3px;left:{{ darkKnob }};width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left .18s"></span></button>
                     </div>
                   </section>
                 </sc-if>
@@ -1022,12 +1026,12 @@
     </div>
   </main>
 
-  <footer style="position:relative;grid-row:2;grid-column:1 / span 2;display:grid;grid-template-columns:{{ playerCols }};align-items:center;gap:20px;padding:0 24px;background:var(--panel);border-top:1px solid var(--line);z-index:5">
+  <footer style="position:relative;grid-row:2;grid-column:{{ footCol }};display:grid;grid-template-columns:{{ playerCols }};align-items:center;gap:{{ footGap }};padding:{{ footPad }};background:var(--panel);border-top:1px solid var(--line);z-index:5">
     <div style="display:flex;align-items:center;gap:12px;min-width:0">
       <div style="flex:none;width:52px;height:52px;border-radius:13px;background:{{ nowArt }};box-shadow:inset 0 0 0 3px {{ nowKc }}"></div>
       <div style="min-width:0"><div style="font-size:14.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:7px"><sc-if value="{{ nowPlaying }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;gap:2px;align-items:flex-end;height:12px"><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out infinite"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out .2s infinite"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out .4s infinite"></span></span></sc-if><span style="overflow:hidden;text-overflow:ellipsis">{{ nowTitle }}</span><span style="flex:none;padding:1px 7px;border-radius:999px;background:{{ nowKc }};color:{{ nowKcFg }};font-size:10px;font-weight:620">{{ nowKind }}</span></div><div style="font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nowSub }}</div></div>
       <sc-if value="{{ nowCanSpike }}" hint-placeholder-val="{{ true }}">
-        <button onClick="{{ nowSpike }}" title="Spike" style="flex:none;width:38px;height:38px;border-radius:11px;border:1px solid {{ nowSpBorder }};background:{{ nowSpBg }};color:{{ nowSpFg }};font-size:14px;cursor:pointer">⚡</button>
+        <sc-if value="{{ notPhone }}" hint-placeholder-val="{{ true }}"><button onClick="{{ nowSpike }}" title="Spike" style="flex:none;width:38px;height:38px;border-radius:11px;border:1px solid {{ nowSpBorder }};background:{{ nowSpBg }};color:{{ nowSpFg }};font-size:14px;cursor:pointer">⚡</button></sc-if>
       </sc-if>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">
@@ -1036,14 +1040,14 @@
         <button onClick="{{ togglePlay }}" title="Play or pause (space) · {{ nowKind }}" style="width:42px;height:42px;border-radius:50%;border:0;background:{{ nowKc }};color:{{ nowKcFg }};font-size:15px;cursor:pointer">{{ playIcon }}</button>
         <button onClick="{{ nextTrack }}" title="Next song" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--ink);font-size:14px;cursor:pointer">⏭</button>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:560px">
+      <sc-if value="{{ notPhone }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:10px;width:100%;max-width:560px">
         <span style="font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:580;color:var(--dim);min-width:34px;text-align:right">{{ elapsed }}</span>
         <div onClick="{{ scrub }}" style="position:relative;flex:1;height:16px;display:flex;align-items:center;cursor:pointer">
           <div style="position:absolute;left:0;right:0;height:5px;border-radius:3px;background:var(--line)"></div>
           <div style="position:absolute;left:0;height:5px;border-radius:3px;background:var(--mint);width:{{ progW }}"></div>
         </div>
         <span style="font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:580;color:var(--dim);min-width:34px">{{ duration }}</span>
-      </div>
+      </div></sc-if>
     </div>
     <sc-if value="{{ adOn }}" hint-placeholder-val="{{ false }}">
       <div style="position:absolute;inset:0;z-index:6;display:flex;align-items:center;gap:16px;padding:0 24px;background:var(--panel)">
@@ -1064,8 +1068,8 @@
   </footer>
 
   <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:96;background:rgba(6,12,16,0.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;animation:elIn .15s ease both">
-      <div onClick="{{ stop }}" style="width:100%;max-width:{{ sheetW }};max-height:84vh;border-radius:24px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden">
+    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:96;background:rgba(6,12,16,0.5);backdrop-filter:blur(4px);display:flex;align-items:{{ shAlign }};justify-content:center;padding:{{ shPad }};animation:elIn .15s ease both">
+      <div onClick="{{ stop }}" style="width:100%;max-width:{{ sheetW }};max-height:{{ shMaxH }};border-radius:{{ shRadius }};background:var(--panel);color:var(--ink);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden">
         <div style="flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 22px 12px">
           <div><div style="font-size:21px;font-weight:620;letter-spacing:-0.6px">{{ sheetTitle }}</div><sc-if value="{{ sheetSub }}" hint-placeholder-val="{{ false }}"><div style="font-size:13.5px;color:var(--dim);margin-top:3px">{{ sheetSub }}</div></sc-if></div>
           <button onClick="{{ closeSheet }}" style="flex:none;width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--dim);font-size:15px;cursor:pointer">×</button>
@@ -1519,6 +1523,24 @@
               </sc-for>
             </div>
 
+            <sc-if value="{{ ezTryOn }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:18px;border-radius:22px;background:linear-gradient(135deg,rgba(0,217,166,0.16),rgba(91,62,158,0.18));border:2px solid #00D9A6;animation:elIn .25s ease both">
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+                  <span style="flex:none;width:56px;height:56px;border-radius:15px;background:{{ ezTryArt }};box-shadow:inset 0 0 0 3px {{ ezTryKc }}"></span>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:11px;font-weight:620;letter-spacing:0.1em;color:#3FE6BD">🎧 DOES IT FIT? · {{ ezTryNow }}</div>
+                    <div style="font-size:19px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ezTryKind }} · {{ ezTryTitle }}</div>
+                    <div style="font-size:12.5px;line-height:1.45;color:#C9D4DB">{{ ezTryHow }}</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button onClick="{{ ezTryKeep }}" style="flex:1;min-width:140px;padding:13px;border:0;border-radius:13px;background:#00D9A6;color:#06231B;font-size:15px;font-weight:620;cursor:pointer">✓ Sounds good · keep it</button>
+                  <button onClick="{{ ezTryToggle }}" style="flex:1;min-width:130px;padding:13px;border:1px solid #2A363E;border-radius:13px;background:#141D23;color:#E6EDF1;font-size:14px;font-weight:620;cursor:pointer">{{ ezTryAB }}</button>
+                  <button onClick="{{ ezTryReplay }}" title="Play from the start" style="flex:none;padding:13px 15px;border:1px solid #2A363E;border-radius:13px;background:#141D23;color:#E6EDF1;font-size:14px;font-weight:620;cursor:pointer">⟲</button>
+                  <button onClick="{{ ezTryDrop }}" style="flex:1;min-width:120px;padding:13px;border:1px solid rgba(255,107,87,0.5);border-radius:13px;background:rgba(255,107,87,0.12);color:#FFB3A6;font-size:14px;font-weight:620;cursor:pointer">✕ Not for this song</button>
+                </div>
+              </div>
+            </sc-if>
             <div onDragOver="{{ ezDragOver }}" onDragLeave="{{ ezDragLeave }}" onDrop="{{ ezDrop }}" onClick="{{ ezPickFile }}" role="button" title="Drop a sound here, or click to choose an audio file" style="padding:26px 20px;border-radius:22px;border:2px dashed {{ ezDropBorder }};background:{{ ezDropBg }};text-align:center;cursor:pointer;transition:background .15s,border-color .15s">
               <div style="font-size:34px;line-height:1;margin-bottom:8px">{{ ezDropIcon }}</div>
               <div style="font-size:17px;font-weight:620;margin-bottom:5px">{{ ezDropTitle }}</div>
@@ -1563,14 +1585,14 @@
       <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}"><div style="flex:1;min-height:0;display:flex;flex-direction:column">
       <div onClick="{{ mxSeek }}" title="Click to move the playhead" style="box-shadow:{{ hl.timeline }};flex:none;position:relative;padding:8px 18px 10px;border-bottom:1px solid #1C262D;cursor:text">
         <sc-for list="{{ mxLanes }}" as="l" hint-placeholder-count="3">
-          <div style="display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center;height:30px;opacity:{{ l.opacity }}">
+          <div style="display:grid;grid-template-columns:{{ mxLabCol }} minmax(0,1fr);gap:10px;align-items:center;height:30px;opacity:{{ l.opacity }}">
             <div style="display:flex;align-items:center;gap:8px;min-width:0"><span style="flex:none;width:4px;height:20px;border-radius:2px;background:{{ l.color }}"></span><span style="font-size:12px;font-weight:580;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span></div>
             <div style="display:flex;align-items:center;gap:1px;height:26px;min-width:0;background:#0F161B;border-radius:5px;padding:0 3px;overflow:hidden">
               <sc-for list="{{ l.peaks }}" as="b" hint-placeholder-count="120"><div style="flex:1;min-width:1px;height:{{ b.h }};background:{{ l.color }};border-radius:1px"></div></sc-for>
             </div>
           </div>
         </sc-for>
-        <div style="position:absolute;top:6px;bottom:6px;left:calc(18px + 160px);right:18px;pointer-events:none">
+        <div style="position:absolute;top:6px;bottom:6px;left:calc(18px + {{ mxLabOff }});right:18px;pointer-events:none">
           <div data-ph="1" style="position:absolute;top:0;bottom:0;left:0%;width:2px;background:#F2F6F8;box-shadow:0 0 8px rgba(255,255,255,0.6)"></div>
         </div>
       </div>
@@ -1737,7 +1759,7 @@
     <div style="position:fixed;inset:0;z-index:100;display:grid;grid-template-columns:{{ authCols }};background:var(--bg);color:var(--ink);animation:elIn .2s ease both">
       <sc-if value="{{ authWide }}" hint-placeholder-val="{{ true }}">
         <div style="position:relative;overflow:hidden;background:radial-gradient(circle at 20% 20%,#00D9A6 0,transparent 42%),radial-gradient(circle at 85% 30%,#5B3E9E 0,transparent 45%),radial-gradient(circle at 50% 95%,#0B5E7A 0,transparent 50%),#0C1318;color:#fff;padding:44px;display:flex;flex-direction:column;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:44px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:22px;font-weight:620;letter-spacing:-2px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Urbanist,sans-serif;font-size:22px;font-weight:500">Ellipsis</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:44px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:22px;font-weight:620;letter-spacing:1px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Urbanist,sans-serif;font-size:22px;font-weight:500">Ellipsis</span></div>
           <div>
             <div style="font-family:Urbanist,Geist,sans-serif;font-size:44px;font-weight:400;letter-spacing:-1.4px;line-height:1.05;margin-bottom:16px;max-width:520px">Finish the song.<br>Together.</div>
             <p style="margin:0 0 26px;font-size:16px;line-height:1.6;opacity:.9;max-width:460px">Post an idea, get the parts it needs from people anywhere, split it fairly, release it — and let the Spikes decide what rises.</p>
@@ -1909,7 +1931,7 @@
 
           <sc-if value="{{ obIs0 }}" hint-placeholder-val="{{ true }}">
             <div>
-              <div style="width:52px;height:52px;border-radius:16px;background:var(--mint);color:var(--on-mint);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:580;letter-spacing:-2px;margin-bottom:16px">···</div>
+              <div style="width:52px;height:52px;border-radius:16px;background:var(--mint);color:var(--on-mint);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:580;letter-spacing:1px;margin-bottom:16px">···</div>
               <div style="font-family:Urbanist,Geist,sans-serif;font-size:27px;font-weight:500;letter-spacing:-0.7px;line-height:1.15;margin-bottom:8px">Finish songs with people anywhere</div>
               <p style="margin:0 0 18px;font-size:14.5px;line-height:1.6;color:var(--dim)">Ellipsis matches what you play with projects that need it. Every part is credited and every split is signed before release.</p>
               <div style="font-size:11.5px;font-weight:620;letter-spacing:0.09em;color:var(--dim);margin-bottom:8px">WHAT DO YOU BRING? · PICK ONE</div>
@@ -2251,12 +2273,12 @@ function mxResample(ch, P) {
   return o;
 }
 const VIBES = [
-  ['clean', '✨', 'Clean', 'Balanced and clear', { acapella: 'Vocal', melody: 'Keys', instrumental: 'Beat' }, { rev: { decay: 2.2, fader: -4 }, dly: { fader: -6 }, master: { glue: true, ceil: -1 } }],
-  ['radio', '📻', 'Radio', 'Loud, punchy, vocal up front', { acapella: 'Vocal', melody: 'Keys', instrumental: 'Beat' }, { rev: { decay: 1.6, fader: -7 }, dly: { fader: -9 }, master: { glue: true, ceil: -0.5 } }],
-  ['lofi', '🌙', 'Lo-fi', 'Dusty, soft, late night', { acapella: 'Lo-fi', melody: 'Lo-fi', instrumental: 'Lo-fi' }, { rev: { decay: 2.6, fader: -3 }, dly: { fader: -6 }, master: { glue: true, ceil: -1.5 } }],
-  ['club', '🪩', 'Club', 'Big low end, echoes', { acapella: 'Vocal', melody: 'Air', instrumental: 'Beat' }, { rev: { decay: 1.8, fader: -5 }, dly: { fader: -3, time: 0.375 }, master: { glue: true, ceil: -0.3 } }],
-  ['dreamy', '☁️', 'Dreamy', 'Floaty and wide', { acapella: 'Air', melody: 'Air', instrumental: 'Air' }, { rev: { decay: 4.2, fader: -1 }, dly: { fader: -3 }, master: { glue: true, ceil: -1 } }],
-  ['warm', '🔥', 'Warm', 'Rich and close', { acapella: 'Warm', melody: 'Warm', instrumental: 'Warm' }, { rev: { decay: 2.0, fader: -5 }, dly: { fader: -8 }, master: { glue: true, ceil: -1 } }]
+  ['clean', '✨', 'Clean', 'Balanced and clear', { acapella: 'Vocal', melody: 'Keys', instrumental: 'Beat', song: 'Warm' }, { rev: { decay: 2.2, fader: -4 }, dly: { fader: -6 }, master: { glue: true, ceil: -1 } }],
+  ['radio', '📻', 'Radio', 'Loud, punchy, vocal up front', { acapella: 'Vocal', melody: 'Keys', instrumental: 'Beat', song: 'Warm' }, { rev: { decay: 1.6, fader: -7 }, dly: { fader: -9 }, master: { glue: true, ceil: -0.5 } }],
+  ['lofi', '🌙', 'Lo-fi', 'Dusty, soft, late night', { acapella: 'Lo-fi', melody: 'Lo-fi', instrumental: 'Lo-fi', song: 'Lo-fi' }, { rev: { decay: 2.6, fader: -3 }, dly: { fader: -6 }, master: { glue: true, ceil: -1.5 } }],
+  ['club', '🪩', 'Club', 'Big low end, echoes', { acapella: 'Vocal', melody: 'Air', instrumental: 'Beat', song: 'Air' }, { rev: { decay: 1.8, fader: -5 }, dly: { fader: -3, time: 0.375 }, master: { glue: true, ceil: -0.3 } }],
+  ['dreamy', '☁️', 'Dreamy', 'Floaty and wide', { acapella: 'Air', melody: 'Air', instrumental: 'Air', song: 'Air' }, { rev: { decay: 4.2, fader: -1 }, dly: { fader: -3 }, master: { glue: true, ceil: -1 } }],
+  ['warm', '🔥', 'Warm', 'Rich and close', { acapella: 'Warm', melody: 'Warm', instrumental: 'Warm', song: 'Warm' }, { rev: { decay: 2.0, fader: -5 }, dly: { fader: -8 }, master: { glue: true, ceil: -1 } }]
 ];
 
 const PRESETS = {
@@ -3071,7 +3093,7 @@ class Component extends DCLogic {
     if (!src0) { this.flash('This recording is saved on the device where you made it. Sign in there, or switch on the live server to sync it everywhere.'); return; }
     const a = this.audio; a.src = src0; a.currentTime = 0;
     try { a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; } catch (e) {}
-    a.playbackRate = it.rate || 1;
+    a.playbackRate = Math.max(0.75, Math.min(1.25, it.rate || 1));
     this.setState(st => ({ curId: id, time: 0, dur: 0, plays: Object.assign({}, st.plays, { [id]: Math.min(20, ((st.plays || {})[id] || 0) + 1) }) }));
     a.play().then(() => this.setState({ playing: true })).catch(() => {});
   }
@@ -3085,7 +3107,7 @@ class Component extends DCLogic {
     return { on: m.on !== false, fader, trim: m.trim || 0, pan: m.pan || 0, mute: !!m.mute, solo: !!m.solo, hpf: !!m.hpf, eq: m.eq || [0, 0, 0, 0], eqf: m.eqf || [100, 350, 2800, 9000], thr: m.thr != null ? m.thr : 0, ratio: m.ratio || 1, rev: m.rev || 0, dly: m.dly || 0, preset: m.preset || 'Flat' };
   }
   auxOf(p) { const m = p.mix || {}; return { master: Object.assign({ fader: 0, glue: true, ceil: -1 }, m.__master), rev: Object.assign({ fader: -4, decay: 2.2 }, m.__rev), dly: Object.assign({ fader: -6, time: 0.375, fb: 35 }, m.__dly) }; }
-  mxAudio(p, all) { return p.items.map(id => this.item(id)).filter(x => x && /instrumental|melody|acapella/.test(x.kind) && (all || this.chOf(p, x.id).on)); }
+  mxAudio(p, all) { return p.items.map(id => this.item(id)).filter(x => x && /instrumental|melody|acapella|song/.test(x.kind) && (all || this.chOf(p, x.id).on)); }
   canMix(p) { return p.owner === 'me' && p.stage !== 'published'; }
   ensureCtx() { const C = window.AudioContext || window.webkitAudioContext; if (!this._ctx) this._ctx = new C(); if (this._ctx.state === 'suspended') { const r = this._ctx.resume(); if (r && r.catch) r.catch(() => {}); } return this._ctx; }
   async mxLoad(p) {
@@ -3129,7 +3151,7 @@ class Component extends DCLogic {
     if (live) { g.mAn = an(g.mg); g.rAn = an(g.rRet); g.dAn = an(g.dRet); }
     const sigNow = this.matchSig(p);
     lanes.forEach(x => {
-      const mm = this.matchFor(p, x, sigNow), buf = mm ? mm.buf : this._bufs[x.id].buf, rr = mm ? 1 : ((this.item(x.id) || {}).rate || 1); g.dur = Math.max(g.dur, buf.duration / rr);
+      const mm = this.matchFor(p, x, sigNow), buf = mm ? mm.buf : this._bufs[x.id].buf, rr = mm ? 1 : Math.max(0.75, Math.min(1.25, (this.item(x.id) || {}).rate || 1)); g.dur = Math.max(g.dur, buf.duration / rr);
       const c = { src: ctx.createBufferSource(), trim: ctx.createGain(), hpf: ctx.createBiquadFilter(), bands: [0, 1, 2, 3].map(() => ctx.createBiquadFilter()), comp: ctx.createDynamicsCompressor(), pan: ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain(), fader: ctx.createGain(), revS: ctx.createGain(), dlyS: ctx.createGain(), buf };
       c.src.buffer = buf; c.src.playbackRate.value = rr; c.hpf.type = 'highpass'; c.hpf.Q.value = 0.7;
       ['lowshelf', 'peaking', 'peaking', 'highshelf'].forEach((t, i) => { c.bands[i].type = t; c.bands[i].Q.value = 1; });
@@ -3227,7 +3249,7 @@ class Component extends DCLogic {
   mxPaintIdle() { document.querySelectorAll('[data-ezbar]').forEach(el => { el.style.height = '6%'; }); document.querySelectorAll('[data-mtr]').forEach(el => { el.style.height = '0%'; }); document.querySelectorAll('[data-gr]').forEach(el => { el.style.width = '0%'; }); }
   matchSig(p) { if (!p) return ''; const on = this.mxAudio(p).map(x => x.id + '@' + (this.srcOf(x) || '') + '@' + (x.rate || 1)).join(','); return [p.id, p.mix.__match !== false ? 1 : 0, p.mix.__lead || '', on].join('|'); }
   matchFor(p, x, sig) { const e = this._match && this._match[x.id]; return e && e.sig === (sig || this.matchSig(p)) && e.buf ? e : null; }
-  leadOf(p, lanes) { const want = p.mix.__lead && lanes.find(x => x.id === p.mix.__lead); return want || lanes.find(x => x.kind === 'instrumental') || lanes.find(x => x.kind === 'melody') || lanes[0]; }
+  leadOf(p, lanes) { const want = p.mix.__lead && lanes.find(x => x.id === p.mix.__lead); return want || lanes.find(x => x.kind === 'instrumental') || lanes.find(x => x.kind === 'song') || lanes.find(x => x.kind === 'melody') || lanes[0]; }
   mxMeta(x, depth) {
     const ana = this._ana && this._ana[x.id], rate = x.rate || 1, semis = Math.round(12 * Math.log2(rate));
     const back = x.syncTo && (depth || 0) < 3 ? this.item(x.syncTo) : null;
@@ -3265,7 +3287,7 @@ class Component extends DCLogic {
         const synced = !!(x.syncTo && (x.syncTo === lead.id || x.syncTo === lead.syncTo));
         let T = 1, d = 0;
         if (x.id !== lead.id && !synced) {
-          if (M.bpm && E.bpm) { let r = M.bpm / E.bpm; r = [r, r * 2, r / 2].reduce((a, b) => Math.abs(Math.log(b)) < Math.abs(Math.log(a)) ? b : a); if (r > 0.74 && r < 1.35) T = r; }
+          if (M.bpm && E.bpm) { let r = M.bpm / E.bpm; r = [r, r * 2, r / 2].reduce((a, b) => Math.abs(Math.log(b)) < Math.abs(Math.log(a)) ? b : a); if (r >= 0.8 && r <= 1.25) T = r; }
           if (M.key && E.key) { d = ((rel(M.key) - rel(E.key)) % 12 + 12) % 12; if (d > 6) d -= 12; }
         }
         const Traw = T * rate, Praw = Math.pow(2, d / 12) * rate;
@@ -3305,7 +3327,7 @@ class Component extends DCLogic {
       this.setState(st => ({ mxMatching: false, mxMatchTick: (st.mxMatchTick || 0) + 1 }));
       const np = this.proj(pid);
       if (np && this._g && this._gPid === pid) this.mxStart(np, this.mxPos());
-      if (this._ezAuto === pid) { this._ezAuto = null; await this.mxAutoMix(pid, true); const q = this.proj(pid); if (q) this.ezApplyVibe(pid, q.mix.__vibe || 'clean', true); }
+      if (this._ezAuto === pid) { this._ezAuto = null; await this.mxAutoMix(pid, true); const q = this.proj(pid); if (q) this.ezApplyVibe(pid, q.mix.__vibe || 'clean', true); this.ezTryStart(pid); }
     }
   }
   ezApplyVibe(pid, id, silent) {
@@ -3323,8 +3345,33 @@ class Component extends DCLogic {
     const p = this.proj(pid); if (!p) return;
     if (!this.canMix(p)) { this.flash(p.stage === 'published' ? 'This song is released — the mix is locked' : 'Only ' + this.first(p.owner) + ' can change this mix'); return; }
     if (p.items.indexOf(id) >= 0) { this.flash('That sound is already in your song'); return; }
-    this._ezAuto = pid; this.attach(id, pid, true);
-    const x = this.item(id); this.flash('🎶 ' + (x ? x.title : 'Sound') + ' added — matching it to your song');
+    this._ezAuto = pid; this._ezTry = { pid, id }; this.attach(id, pid, true);
+    const x = this.item(id); this.flash('🎶 ' + (x ? x.title : 'Sound') + ' added — matching speed and key, then playing it in your song');
+  }
+  ezTryStart(pid) {
+    const t = this._ezTry; if (!t || t.pid !== pid) return; this._ezTry = null;
+    const p = this.proj(pid); if (!p || p.items.indexOf(t.id) < 0) return;
+    this.updProj(pid, z => { z.mix[t.id] = Object.assign({}, z.mix[t.id], { mute: false, solo: false }); return z; });
+    this.setState({ ezTry: { pid, id: t.id, without: false } });
+    requestAnimationFrame(() => { const q = this.proj(pid); if (q) this.mxStart(q, 0); });
+  }
+  ezTryToggle() {
+    const t = this.state.ezTry; if (!t) return; const without = !t.without;
+    this.updProj(t.pid, z => { z.mix[t.id] = Object.assign({}, z.mix[t.id], { mute: without }); return z; });
+    this.setState({ ezTry: Object.assign({}, t, { without }) });
+    requestAnimationFrame(() => { if (this._g) this.applyLive(t.pid); else { const q = this.proj(t.pid); if (q) this.mxStart(q, 0); } });
+  }
+  ezTryKeep() {
+    const t = this.state.ezTry; if (!t) return;
+    this.updProj(t.pid, z => { z.mix[t.id] = Object.assign({}, z.mix[t.id], { mute: false }); return z; });
+    this.setState({ ezTry: null }); requestAnimationFrame(() => this.applyLive(t.pid));
+    this.flash('✓ Kept ' + ((this.item(t.id) || {}).title || 'it') + ' in your song');
+  }
+  ezTryDrop() {
+    const t = this.state.ezTry; if (!t) return; this.setState({ ezTry: null });
+    const wasPlaying = !!this._g, pos = wasPlaying ? this.mxPos() : 0;
+    this.ezRemove(t.pid, t.id);
+    if (wasPlaying) requestAnimationFrame(() => { const q = this.proj(t.pid); if (q && this.mxAudio(q).length) this.mxStart(q, pos); else this.stopMix(); });
   }
   ezSetLead(pid, id) { this.updProj(pid, z => { z.mix.__lead = id; if (z.stage === 'built') z.stage = 'draft'; return z; }); this.flash('Everything now follows ' + ((this.item(id) || {}).title || 'this track')); }
   ezRemove(pid, id) { const p = this.proj(pid); if (!p || !this.canMix(p)) return; const x = this.item(id); this.updProj(pid, z => { z.items = z.items.filter(i => i !== id); delete z.mix[id]; if (z.mix.__lead === id) delete z.mix.__lead; if (z.stage === 'built') z.stage = 'draft'; return z; }); this.flash((x ? x.title : 'Sound') + ' removed'); }
@@ -3342,7 +3389,7 @@ class Component extends DCLogic {
     const lanes = this.mxAudio(p);
     const sig = this.matchSig(p), ready = this._matchSig === sig && !this._prepP && !s.mxMatching;
     const MM = this._matchMeta && this._matchMeta.pid === pid ? this._matchMeta : null, matchOn = p.mix.__match !== false, playing = s.mixPid === pid;
-    const EMO = { acapella: '🎤', melody: '🎹', instrumental: '🥁' }, COL = { acapella: '#FF8A5C', melody: '#5B8CFF', instrumental: '#00A982' }, KN = { acapella: 'Voice', melody: 'Melody', instrumental: 'Beat' };
+    const EMO = { acapella: '🎤', melody: '🎹', instrumental: '🥁', song: '💿' }, COL = { acapella: '#FF8A5C', melody: '#5B8CFF', instrumental: '#00A982', song: '#0A8A6E' }, KN = { acapella: 'Voice', melody: 'Melody', instrumental: 'Beat', song: 'Song' };
     const tracks = lanes.map(x => {
       const k = this.chOf(p, x.id), e = ready && this._match && this._match[x.id] && this._match[x.id].sig === sig ? this._match[x.id].info : null, b = [];
       if (!matchOn) b.push(['As recorded', '#1C262D', '#C9D4DB']);
@@ -3374,8 +3421,8 @@ class Component extends DCLogic {
       else if (MM) { if (MM.bpm) chips.push(['🥁', Math.round(MM.bpm) + ' BPM']); if (MM.key) chips.push(['🎹', keyName(MM.key)]); chips.push(matchOn ? ['✨', lanes.length > 1 ? 'All ' + lanes.length + ' sounds in sync' : 'Add another sound'] : ['○', 'Magic match off']); }
     }
     if (lanes.length > 1 && lanes.some(x => x.kind === 'acapella') && lanes.some(x => x.kind !== 'acapella') && p.mix.__duck !== false) chips.push(['🎤', 'Beat dips under the vocal']);
-    const tab = s.ezTab || 'Voices', q = (s.ezQ || '').trim().toLowerCase(), want = { Voices: 'acapella', Beats: 'instrumental', Melodies: 'melody' }[tab];
-    let pool = tab === 'Yours' ? s.items.filter(x => x.owner === 'me' && /instrumental|melody|acapella/.test(x.kind)) : s.items.filter(x => x.kind === want && (x.owner === 'me' || x.published)).concat(this.stock.filter(x => x.kind === want));
+    const tab = s.ezTab || 'Voices', q = (s.ezQ || '').trim().toLowerCase(), want = { Voices: 'acapella', Beats: 'instrumental', Melodies: 'melody', Songs: 'song' }[tab];
+    let pool = tab === 'Yours' ? s.items.filter(x => x.owner === 'me' && /instrumental|melody|acapella|song/.test(x.kind)) : s.items.filter(x => x.kind === want && (x.owner === 'me' || x.published)).concat(this.stock.filter(x => x.kind === want));
     pool = pool.filter(x => p.items.indexOf(x.id) < 0 && (!q || (x.title + ' ' + x.tags.genre.join(' ') + ' ' + x.tags.mood.join(' ') + ' ' + x.tags.like.join(' ') + ' ' + U(x.owner).name).toLowerCase().indexOf(q) >= 0));
     const LM = this._matchMeta && this._matchMeta.pid === pid && lanes.length ? this._matchMeta : null;
     const relK = k => (k.pc + (k.minor ? 3 : 0)) % 12;
@@ -3410,11 +3457,22 @@ class Component extends DCLogic {
       },
       ezPickFile: () => { if (ro) { this.flash('Only ' + this.first(p.owner) + ' can change this mix'); return; } const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'audio/*'; inp.onchange = () => { const f = inp.files && inp.files[0]; if (f) this.uploadFile(f, pid, true); }; inp.click(); },
       ezDropBorder: s.ezOver ? '#00D9A6' : '#2A363E', ezDropBg: s.ezOver ? 'rgba(0,217,166,0.12)' : 'rgba(255,255,255,0.02)', ezDropIcon: s.ezOver ? '🫳' : '＋',
+      ...(() => {
+        const t = s.ezTry && s.ezTry.pid === pid ? s.ezTry : null, x = t ? this.item(t.id) : null, mi = t && this._match && this._match[t.id] ? this._match[t.id].info : null;
+        if (!t || !x) return { ezTryOn: false };
+        const bits = [];
+        if (mi && !mi.lead) { if (Math.abs(mi.T - 1) > 0.01) bits.push('speed ' + (mi.T > 1 ? '+' : '−') + Math.abs(Math.round((mi.T - 1) * 100)) + '%'); if (mi.d) bits.push('key ' + (mi.d > 0 ? '+' : '') + mi.d + ' semitone' + (Math.abs(mi.d) === 1 ? '' : 's')); if (mi.shift) bits.push('lined up to the beat'); if (mi.looped) bits.push('beat looped to fit'); }
+        return { ezTryOn: true, ezTryTitle: x.title, ezTryKind: KIND[x.kind][0], ezTryArt: AOF(x), ezTryKc: KCX(x).kc,
+          ezTryHow: mi && mi.lead ? 'This is now the track everything follows.' : bits.length ? 'Matched to your song: ' + bits.join(' · ') + '.' : 'Already in time and in key with your song.',
+          ezTryNow: t.without ? 'PLAYING WITHOUT IT' : 'PLAYING WITH IT',
+          ezTryAB: t.without ? '▶ Hear it with it' : '▶ Hear it without', ezTryToggle: () => this.ezTryToggle(), ezTryKeep: () => this.ezTryKeep(), ezTryDrop: () => this.ezTryDrop(),
+          ezTryReplay: () => { const q = this.proj(pid); if (q) this.mxStart(q, 0); } };
+      })(),
       ezDropTitle: s.ezOver ? 'Let go to add it' : lanes.length ? 'Drop another sound here' : 'Drop a voice and a beat here',
       ezDropSub: 'Drag from the list, or drop an audio file from your computer. Speed, key and timing are matched automatically.',
       ezMakeLabel: s.mxBouncing ? '✨ Making your song…' : built ? '✓ Song made · make it again' : '✨ Make it a song',
       ezCanRelease: built && this.canMix(p), ezRelease: () => { this.closeMixer(); this.openPublish(pid); },
-      ezTabs: ['Voices', 'Beats', 'Melodies', 'Yours'].map(l => ({ label: l, go: () => this.setState({ ezTab: l }), bg: tab === l ? '#00D9A6' : 'transparent', fg: tab === l ? '#06231B' : '#C9D4DB' })),
+      ezTabs: ['Voices', 'Beats', 'Melodies', 'Songs', 'Yours'].map(l => ({ label: l, go: () => this.setState({ ezTab: l }), bg: tab === l ? '#00D9A6' : 'transparent', fg: tab === l ? '#06231B' : '#C9D4DB' })),
       ezQ: s.ezQ || '', onEzQ: e => this.setState({ ezQ: e.target.value }),
       ezNoRows: pool.length === 0, ezNoRowsText: q ? 'Nothing matches “' + s.ezQ.trim() + '”.' : tab === 'Yours' ? 'Record or upload something and it shows up here.' : 'Everything here is already in your song.',
       ezRows: pool.map(x => ({
@@ -3451,15 +3509,15 @@ class Component extends DCLogic {
     const p = this.proj(pid); if (!this.canMix(p)) { this.setCh(pid, '_', { x: 1 }); return; }
     await this.mxLoad(p);
     const lanes = this.mxAudio(p, true).filter(x => this._bufs[x.id]);
-    const TARGET = { instrumental: -21, melody: -23, acapella: -18 }, PRE = { instrumental: 'Beat', melody: 'Keys', acapella: 'Vocal' };
-    const pans = { melody: [-22, 22], acapella: [0, 0], instrumental: [0, 0] }, seen = {};
+    const TARGET = { instrumental: -21, melody: -23, acapella: -18, song: -22 }, PRE = { instrumental: 'Beat', melody: 'Keys', acapella: 'Vocal', song: 'Warm' };
+    const pans = { melody: [-22, 22], acapella: [0, 0], instrumental: [0, 0], song: [-12, 12] }, seen = {};
     this.updProj(pid, z => {
       lanes.forEach(x => {
         const b = this._bufs[x.id].buf, d = b.getChannelData(0); let e = 0, n = 0; for (let i = 0; i < d.length; i += 24) { e += d[i] * d[i]; n++; }
         const rms = 10 * Math.log10(e / Math.max(1, n) + 1e-12);
         const k = seen[x.kind] = (seen[x.kind] || 0) + 1;
         const fader = Math.max(-30, Math.min(6, (TARGET[x.kind] || -20) - rms));
-        z.mix[x.id] = Object.assign({}, z.mix[x.id], PRESETS[PRE[x.kind] || 'Flat'], { preset: PRE[x.kind] || 'Flat', fader: Math.round(fader * 10) / 10, pan: k > 1 ? pans[x.kind][k % 2] : 0 });
+        z.mix[x.id] = Object.assign({}, z.mix[x.id], PRESETS[PRE[x.kind] || 'Flat'], { preset: PRE[x.kind] || 'Flat', fader: Math.round(fader * 10) / 10, pan: k > 1 ? (pans[x.kind] || [0, 0])[k % 2] : 0 });
       });
       z.mix.__master = Object.assign({}, z.mix.__master, { glue: true, ceil: -1, fader: 0 });
       if (z.stage === 'built') z.stage = 'draft';
@@ -3519,7 +3577,7 @@ class Component extends DCLogic {
   openMixer(pid) { const p = this.proj(pid); if (!p) return; if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
     let pro = false; try { pro = localStorage.getItem('ellipsis4.mxMode') === 'pro'; } catch (e) {}
     this.setState({ mxOpen: true, mxPid: pid, mxFocus: null, playing: false, mxPro: pro, mxTut: seen || !pro ? -1 : 0, ezOver: false }); this.mxLoad(p).then(() => this.mxPrepare(pid)); }
-  closeMixer = () => { this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
+  closeMixer = () => { this._ezTry = null; if (this.state.ezTry) this.setState({ ezTry: null }); this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
 
   startMixOld(p) {
     this.stopMix(); if (this.audio) this.audio.pause();
@@ -3716,7 +3774,7 @@ class Component extends DCLogic {
       return;
     }
     const b = r.backing ? this.item(r.backing) : null;
-    if (b && this.audio) { const a = this.audio; a.src = this.srcOf(b); a.playbackRate = b.rate || 1; a.currentTime = 0; a.muted = true; a.play().then(() => { a.pause(); a.muted = false; a.currentTime = 0; }).catch(() => { a.muted = false; }); }
+    if (b && this.audio) { const a = this.audio; a.src = this.srcOf(b); a.playbackRate = Math.max(0.75, Math.min(1.25, b.rate || 1)); a.currentTime = 0; a.muted = true; a.play().then(() => { a.pause(); a.muted = false; a.currentTime = 0; }).catch(() => { a.muted = false; }); }
     const buf = new Uint8Array(256);
     const meter = () => { const rr = this.state.rec; if (!rr || rr.phase !== 'count' || !this._an) return; this._an.getByteTimeDomainData(buf); let m = 0; for (let i = 0; i < buf.length; i++) m = Math.max(m, Math.abs(buf[i] - 128)); this.setRec({ inLevel: Math.min(1, m / 70) }); this._raf = requestAnimationFrame(meter); };
     this._raf = requestAnimationFrame(meter);
@@ -3801,7 +3859,16 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state, w = s.w, I = s.items, P = s.projects, U = id => this.U(id);
-    const wide = w >= 1100;
+    const wide = w >= 1100, phone = w < 720;
+    const MOB = phone ? {
+      shCols: 'minmax(0,1fr)', shRows: 'minmax(0,1fr) 70px 64px', navRow: '3', navDir: 'row', navJust: 'space-around', navGap: '0', navPad: '4px 4px calc(4px + env(safe-area-inset-bottom))', navOy: 'hidden', navLogo: 'none',
+      navCreateW: '52px', navCreatePad: '6px 0 5px', navBtnFlex: '1', navBtnW: 'auto', navBtnPad: '6px 0 5px', navLblFs: '10.5px', mainCol: '1', footCol: '1', footGap: '10px', footPad: '0 12px',
+      hdrGap: '8px', hdrPad: '10px 12px', bodyPad: '16px 14px 40px', notPhone: false, hdrThemeD: 'none', showPremiumBtn: false
+    } : {
+      shCols: '92px minmax(0,1fr)', shRows: 'minmax(0,1fr) 82px', navRow: '1', navDir: 'column', navJust: 'flex-start', navGap: '4px', navPad: '12px 0', navOy: 'auto', navLogo: 'flex',
+      navCreateW: '72px', navCreatePad: '10px 0 8px', navBtnFlex: 'none', navBtnW: '72px', navBtnPad: '8px 0 7px', navLblFs: '12px', mainCol: '2', footCol: '1 / span 2', footGap: '20px', footPad: '0 24px',
+      hdrGap: '12px', hdrPad: w < 1000 ? '12px 18px' : '13px 30px', bodyPad: w < 1000 ? '22px 18px 50px' : '26px 30px 56px', notPhone: true, hdrThemeD: 'flex', showPremiumBtn: !s.premium
+    };
     const cur = I.find(x => x.id === s.curId) || I[0];
     const dur = s.dur || 0, prog = dur ? Math.min(1, s.time / dur) : 0;
     const onNow = id => s.curId === id && s.playing;
@@ -4264,7 +4331,7 @@ class Component extends DCLogic {
     let MX = { mxOpen: false };
     if (mp) {
       const ro = !this.canMix(mp), A = this.auxOf(mp), pid = mp.id, pro = s.mxPro;
-      const allLanes = this.mxAudio(mp, true), COLORS = { instrumental: '#00D9A6', melody: '#5B8CFF', acapella: '#FF8A5C' };
+      const allLanes = this.mxAudio(mp, true), COLORS = { instrumental: '#00D9A6', melody: '#5B8CFF', acapella: '#FF8A5C', song: '#00A982' };
       const knob = (label, v, min, max, def, text, set, color) => { const f = Math.max(0, Math.min(1, (v - min) / (max - min))); return { label, text, color: color || '#00D9A6', arc: (f * 270).toFixed(1) + 'deg', rot: (-135 + f * 270).toFixed(1) + 'deg', down: e => this.dragVal(e, v, min, max, set, 160), reset: () => set(def) }; };
       const dbT = d => d <= -59.5 ? '−∞' : (d > 0 ? '+' : '') + d.toFixed(1);
       const panT = v => Math.abs(v) < 1 ? 'C' : (v < 0 ? 'L' : 'R') + Math.round(Math.abs(v));
@@ -4339,6 +4406,7 @@ class Component extends DCLogic {
             tutNextLabel: k >= MX_TUT.length - 1 ? 'Finish' : 'Next', tutSkipLabel: k >= MX_TUT.length - 1 ? '' : 'Skip tutorial'
           };
         })(),
+        mxLabCol: s.w < 640 ? '72px' : '150px', mxLabOff: s.w < 640 ? '82px' : '160px',
         mxOpen: true, mxTitle: mp.title + (ro ? ' · listening' : ''), mxCount: String(lanesOn.length), mxBpm: String(mp.bpm || 90), mxKey: mp.key || 'F min',
         mxNote: s.mxLoading ? 'Loading audio…' : s.mxBouncing ? 'Bouncing the mixdown with the master bus…' : ro ? (mp.stage === 'published' ? 'Published — the mix is locked. Solo and mute still work for listening.' : 'You are listening to ' + U(mp.owner).name.split(' ')[0] + "'s mix. Solo and mute work for you; only the owner can change levels and sound.") : '',
         mxModes: [['Easy', false], ['Pro', true]].map(([l, v]) => ({ label: l, go: () => { try { localStorage.setItem('ellipsis4.mxMode', v ? 'pro' : 'easy'); } catch (e) {} this.setState({ mxPro: v, mxFocus: v ? s.mxFocus : null }); }, bg: s.mxPro === v ? '#00D9A6' : 'transparent', fg: s.mxPro === v ? '#06231B' : '#C9D4DB' })),
@@ -4350,7 +4418,7 @@ class Component extends DCLogic {
         mxPlay: () => this.togglePlay(), mxPlayIcon: s.mixPid === pid ? '■' : '▶', mxPlayBg: s.mixPid === pid ? '#FF5A4E' : '#00D9A6', mxPlayFg: s.mixPid === pid ? '#fff' : '#06231B',
         mxLoop: () => this.setState({ mxLoopOn: !s.mxLoopOn }), mxLoopBg: s.mxLoopOn ? 'rgba(0,217,166,0.18)' : '#141D23', mxLoopFg: s.mxLoopOn ? '#3FE6BD' : '#C9D4DB', mxLoopBorder: s.mxLoopOn ? '#00D9A6' : '#2A363E',
         mxClock: this.mxClockText(mp, s.mixPid === pid ? this.mxPos() : (this._mxPosPid === pid ? this._mxPos || 0 : 0)),
-        mxSeek: e => { const b = e.currentTarget.getBoundingClientRect(), x0 = b.left + 18 + 160, w0 = b.width - 36 - 160; const f = Math.max(0, Math.min(1, (e.clientX - x0) / w0)); const dur = this._mxDur || Math.max.apply(null, [1].concat(lanesOn.map(x => this._bufs && this._bufs[x.id] ? this._bufs[x.id].buf.duration : 0))); const t = f * dur; this._mxPos = t; this._mxPosPid = pid; if (s.mixPid === pid) this.mxStart(mp, t); else { const ph = document.querySelector('[data-ph]'); if (ph) ph.style.left = (f * 100).toFixed(2) + '%'; const ck = document.querySelector('[data-clk]'); if (ck) ck.textContent = this.mxClockText(mp, t); } },
+        mxSeek: e => { const b = e.currentTarget.getBoundingClientRect(), lo = s.w < 640 ? 82 : 160, x0 = b.left + 18 + lo, w0 = b.width - 36 - lo; const f = Math.max(0, Math.min(1, (e.clientX - x0) / w0)); const dur = this._mxDur || Math.max.apply(null, [1].concat(lanesOn.map(x => this._bufs && this._bufs[x.id] ? this._bufs[x.id].buf.duration : 0))); const t = f * dur; this._mxPos = t; this._mxPosPid = pid; if (s.mixPid === pid) this.mxStart(mp, t); else { const ph = document.querySelector('[data-ph]'); if (ph) ph.style.left = (f * 100).toFixed(2) + '%'; const ck = document.querySelector('[data-clk]'); if (ck) ck.textContent = this.mxClockText(mp, t); } },
         mxLanes: allLanes.map(x => { const k = this.chOf(mp, x.id), pk = (this._peaks && this._peaks[x.id]) || bars(x.title.length * 17 + 3, 120, 10, 90).map(v => v / 100); return { name: x.title, color: COLORS[x.kind] || '#00D9A6', opacity: !k.on ? '0.25' : k.mute ? '0.4' : '1', peaks: pk.map(v => ({ h: Math.max(6, Math.round(v * 100)) + '%' })) }; }),
         mxStrips: strips,
         mxHasDl: !!(s.mxDl && s.mxDl.pid === pid), mxDlUrl: s.mxDl && s.mxDl.pid === pid ? s.mxDl.url : '', mxDlName: s.mxDl ? s.mxDl.name : '',
@@ -4372,6 +4440,7 @@ class Component extends DCLogic {
 
     if (mp && !this._prepP && this.matchSig(mp) !== this._matchSig) setTimeout(() => this.mxPrepare(mp.id), 0);
     return {
+      ...MOB, phone, signedInWide: !!s.acct && !phone,
       ...this.inboxVals(s), ...MX, ...(mp ? this.ezVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
       askLogout: () => this.setState({ sheet: { type: 'switch' } }), signedIn: !!s.acct,
       askLogoutOld: () => this.setState({ sheet: { type: 'confirm', title: 'Log out of Ellipsis?', body: 'Your work is saved' + (s.acct && s.acct.token ? ' to your account — sign back in on any device to pick up where you left off.' : ' on this device and will be here when you sign back in.'), cta: 'Log out', go: () => { this.setState({ sheet: null }); if (this._api && s.acct && s.acct.token) this.api('logout', { body: {} }).catch(() => {}); this.signOut(); this.flash('Logged out'); } } }),
@@ -4385,9 +4454,10 @@ class Component extends DCLogic {
       libHasQuick: ['lyric', 'melody', 'acapella', 'instrumental'].indexOf(s.libTab) >= 0,
       libQuickLabel: ({ lyric: '✎ New lyrics', melody: '〰 Record melody', acapella: '◉ Record acapella', instrumental: '♫ Record instrumental' })[s.libTab] || '',
       libQuick: () => { if (s.libTab === 'lyric') this.newLyric(null); else if (['melody', 'acapella', 'instrumental'].indexOf(s.libTab) >= 0) this.openRec(s.libTab, null); }, goMe: () => this.go('profile', { uid: 'me' }),
+      shAlign: s.w < 640 ? 'flex-end' : 'center', shPad: s.w < 640 ? '0' : '24px', shMaxH: s.w < 640 ? '92vh' : '84vh', shRadius: s.w < 640 ? '24px 24px 0 0' : '24px',
       canBack: s.hist.length > 0 && /project|lyric|profile/.test(s.view), back: this.back,
       scrollRef: this.scrollRef, chatRef: this.chatRef, fileRef: this.fileRef, nameRef: this.nameRef, stop: e => e.stopPropagation(),
-      wide, playerCols: wide ? 'minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr)' : 'minmax(0,1fr) minmax(0,1.4fr)', twoCols: w >= 1180 ? 'minmax(0,1.4fr) minmax(0,1fr)' : 'minmax(0,1fr)',
+      wide, playerCols: wide ? 'minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr)' : phone ? 'minmax(0,1fr) auto' : 'minmax(0,1fr) minmax(0,1.4fr)', twoCols: w >= 1180 ? 'minmax(0,1.4fr) minmax(0,1fr)' : 'minmax(0,1fr)',
       query: s.query, onQuery: e => this.setState({ query: e.target.value, searchOpen: true }), onSearchFocus: () => this.setState({ searchOpen: true }),
       onSearchKey: e => { if (e.key === 'Escape') { this.setState({ searchOpen: false }); e.target.blur(); } if (e.key === 'Enter' && groups[0]) groups[0].items[0].go(); },
       searchOpen: s.searchOpen, searchBorder: s.searchOpen ? 'var(--mint)' : 'var(--line)', searchGroups: groups,

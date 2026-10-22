@@ -15,6 +15,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Urbanist:wght@300..700&display=swap" rel="stylesheet">
   <style>
+    @media (pointer:coarse){button{min-height:36px}input,textarea,select{font-size:16px !important}}
+    html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+    button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     :root,[data-theme="light"]{--bg:#F3F5F7;--panel:#FFFFFF;--panel2:#F6F8F9;--soft:#EEF2F4;--ink:#13202A;--ink2:#3C4A54;--dim:#56646F;--line:#E3E8EC;--line2:#CBD4DB;--hdr:rgba(243,245,247,0.92);--mintsoft:#E8FBF5;--mintink:#00806A;--badsoft:#FFE9E4;--badink:#8C2B1E;--warnsoft:#FFF3D6;--warnink:#7A5A10;--dis:#9AA6AE}
     [data-theme="dark"]{--bg:#0B1115;--panel:#121B21;--panel2:#172229;--soft:#1C2830;--ink:#E8EEF2;--ink2:#C3CDD4;--dim:#9AA8B2;--line:#24323B;--line2:#34444F;--hdr:rgba(11,17,21,0.9);--mintsoft:rgba(0,217,166,0.14);--mintink:#3FE6BD;--badsoft:rgba(255,107,87,0.16);--badink:#FFB3A6;--warnsoft:rgba(245,184,0,0.14);--warnink:#F5C451;--dis:#5E6C77}
     [data-show]{display:none}[data-theme="light"] [data-show="light"],[data-theme="dark"] [data-show="dark"]{display:inline}
@@ -27,12 +30,12 @@
   <script>(function(){var K='ellipsis4.theme',D='light';function g(){try{return localStorage.getItem(K)||D}catch(e){return D}}function s(t){document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t}s(g());window.addEventListener('storage',function(e){if(e.key===K&&e.newValue)s(e.newValue)});document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('[data-theme-toggle]');if(!b)return;var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';s(t);try{localStorage.setItem(K,t)}catch(x){}},true)})();</script>
 </helmet>
 
-<div style="height:100vh;display:grid;grid-template-columns:240px minmax(0,1fr);font-family:Geist,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased">
+<div style="height:100vh;display:grid;grid-template-columns:{{ admCols }};grid-template-rows:{{ admRows }};font-family:Geist,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased">
 
   <sc-if value="{{ gate }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 20% 20%,#00D9A6 0,transparent 40%),radial-gradient(circle at 80% 80%,#5B3E9E 0,transparent 45%),#0C1318;display:flex;align-items:center;justify-content:center;padding:24px">
       <div style="width:100%;max-width:440px;background:var(--panel);border-radius:24px;padding:28px">
-        <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px"><span style="width:40px;height:40px;border-radius:12px;background:#00D9A6;color:#06231B;font-weight:620;font-size:19px;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Urbanist,sans-serif;font-size:19px;font-weight:500">Ellipsis Admin</span></div>
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px"><span style="width:40px;height:40px;border-radius:12px;background:#00D9A6;color:#06231B;font-weight:620;font-size:19px;letter-spacing:1px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Urbanist,sans-serif;font-size:19px;font-weight:500">Ellipsis Admin</span></div>
         <div style="font-family:Urbanist,sans-serif;font-size:24px;font-weight:500;letter-spacing:-0.5px;margin-bottom:6px">Staff sign-in</div>
         <p style="margin:0 0 16px;font-size:14px;line-height:1.55;color:var(--dim)">Access is role-based. What you can see and change depends on the role an owner assigned you.</p>
         <sc-if value="{{ liveGate }}" hint-placeholder-val="{{ false }}">
@@ -57,25 +60,25 @@
     </div>
   </sc-if>
 
-  <aside style="background:#0C1318;color:#C9D4DB;display:flex;flex-direction:column;padding:18px 12px;gap:4px;overflow-y:auto">
-    <div style="display:flex;align-items:center;gap:10px;padding:0 8px 16px"><span style="width:34px;height:34px;border-radius:10px;background:#00D9A6;color:#06231B;font-weight:620;font-size:17px;letter-spacing:-1.5px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Urbanist,sans-serif;font-size:16px;font-weight:500;color:#fff">Admin</span><span style="margin-left:auto;padding:3px 7px;border-radius:6px;background:rgba(0,217,166,0.16);color:#3FE6BD;font-size:10px;font-weight:620">{{ envLabel }}</span></div>
+  <aside style="background:#0C1318;color:#C9D4DB;display:flex;flex-direction:{{ asDir }};align-items:{{ asAlign }};padding:{{ asPad }};gap:4px;overflow-x:{{ asOx }};overflow-y:{{ asOy }}">
+    <div style="flex:none;display:flex;align-items:center;gap:10px;padding:{{ asLogoPad }}"><span style="width:34px;height:34px;border-radius:10px;background:#00D9A6;color:#06231B;font-weight:620;font-size:17px;letter-spacing:1px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Urbanist,sans-serif;font-size:16px;font-weight:500;color:#fff">Admin</span><span style="margin-left:auto;padding:3px 7px;border-radius:6px;background:rgba(0,217,166,0.16);color:#3FE6BD;font-size:10px;font-weight:620">{{ envLabel }}</span></div>
     <sc-for list="{{ nav }}" as="n" hint-placeholder-count="9">
-      <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:11px;padding:10px 12px;border:0;border-radius:11px;background:{{ n.bg }};color:{{ n.fg }};font-size:14px;font-weight:580;cursor:pointer;text-align:left">
+      <button onClick="{{ n.go }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:11px;padding:10px 12px;border:0;border-radius:11px;background:{{ n.bg }};color:{{ n.fg }};font-size:14px;font-weight:580;cursor:pointer;text-align:left">
         <span style="width:18px;text-align:center">{{ n.icon }}</span><span style="flex:1">{{ n.label }}</span>
         <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;padding:2px 6px;border-radius:9px;background:#C2402B;color:#fff;font-size:11px;font-weight:620;text-align:center">{{ n.badge }}</span></sc-if>
       </button>
     </sc-for>
     <div style="flex:1"></div>
-    <button onClick="{{ backToApp }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.14);border-radius:11px;background:transparent;color:#E6EDF1;font-size:13.5px;font-weight:620;cursor:pointer;text-align:left"><span style="color:#00D9A6">←</span>Back to the app</button>
-    <div style="padding:12px;border-radius:13px;background:rgba(255,255,255,0.05)">
+    <button onClick="{{ backToApp }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:{{ asGap }};border:1px solid rgba(255,255,255,0.14);border-radius:11px;background:transparent;color:#E6EDF1;font-size:13.5px;font-weight:620;cursor:pointer;text-align:left"><span style="color:#00D9A6">←</span>Back to the app</button>
+    <div style="flex:none;white-space:nowrap;display:{{ asMeDisp }};align-items:center;gap:10px;padding:{{ asMePad }};border-radius:13px;background:rgba(255,255,255,0.05)">
       <div style="font-size:13px;font-weight:620;color:#fff">{{ meName }}</div>
-      <div style="font-size:11.5px;color:#9BA9B4;margin-bottom:9px">{{ meRole }}</div>
-      <button onClick="{{ signOut }}" style="width:100%;padding:7px;border:1px solid rgba(255,255,255,0.18);border-radius:9px;background:transparent;color:#E6EDF1;font-size:12px;font-weight:620;cursor:pointer">Sign out</button>
+      <div style="font-size:11.5px;color:#9BA9B4;margin-bottom:{{ asRoleGap }}">{{ meRole }}</div>
+      <button onClick="{{ signOut }}" style="width:{{ asSoW }};padding:7px 10px;border:1px solid rgba(255,255,255,0.18);border-radius:9px;background:transparent;color:#E6EDF1;font-size:12px;font-weight:620;cursor:pointer">Sign out</button>
     </div>
   </aside>
 
   <main style="min-width:0;overflow-y:auto">
-    <header style="position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 28px;background:var(--hdr);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)">
+    <header style="position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:{{ admHdrPad }};background:var(--hdr);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)">
       <div style="flex:1;min-width:200px">
         <div style="font-family:Urbanist,sans-serif;font-size:24px;font-weight:500;letter-spacing:-0.5px">{{ pageTitle }}</div>
         <div style="font-size:13px;color:var(--dim)">{{ pageSub }}</div>
@@ -87,7 +90,7 @@
       <button onClick="{{ exportCsv }}" disabled="{{ noExport }}" title="{{ exportHint }}" style="padding:9px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:{{ exportFg }};font-size:13px;font-weight:620;cursor:{{ exportCursor }}">⇩ Export CSV</button>
     </header>
 
-    <div style="padding:22px 28px 60px;max-width:1360px">
+    <div style="padding:{{ admPad }};max-width:1360px">
 
       <sc-if value="{{ noAccess }}" hint-placeholder-val="{{ false }}">
         <div style="padding:40px;border-radius:20px;background:var(--panel);border:1px solid var(--line);text-align:center"><div style="font-size:30px;margin-bottom:8px">🔒</div><div style="font-size:16px;font-weight:620;margin-bottom:4px">Your role can't open this section</div><div style="font-size:14px;color:var(--dim)">Ask a Super admin to grant the permission in Roles &amp; rights.</div></div>
@@ -124,7 +127,7 @@
             </sc-for>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px;margin-bottom:14px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:14px;margin-bottom:14px">
             <section style="padding:18px 20px;border-radius:20px;background:var(--panel);border:1px solid var(--line)">
               <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:620">Revenue by stream</span><span style="font-size:13px;font-weight:620;color:var(--mintink)">{{ mrrNow }} MRR</span></div>
               <div style="font-size:12.5px;color:var(--dim);margin-bottom:12px">Monthly, last 12 months</div>
@@ -153,7 +156,7 @@
             </section>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:14px">
             <section style="padding:18px 20px;border-radius:20px;background:var(--panel);border:1px solid var(--line);overflow-x:auto">
               <div style="font-size:15px;font-weight:620;margin-bottom:4px">Retention by signup cohort</div>
               <div style="font-size:12.5px;color:var(--dim);margin-bottom:12px">% of each month's signups still active</div>
@@ -189,7 +192,7 @@
             </svg>
             <div style="display:flex;gap:14px;font-size:12px;font-weight:580;margin-top:6px"><span style="color:var(--mintink)">— DAU</span><span style="color:#5B3E9E">- - 7-day average</span></div>
           </section>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:14px">
             <sc-for list="{{ growthTables }}" as="t" hint-placeholder-count="3">
               <section style="padding:18px 20px;border-radius:20px;background:var(--panel);border:1px solid var(--line)">
                 <div style="font-size:15px;font-weight:620;margin-bottom:12px">{{ t.title }}</div>
@@ -421,15 +424,16 @@ class Component extends DCLogic {
     this.forceUpdate();
   }
   async liveAct(path, body, what) { try { await this.api(path, { body, method: body && body._m ? body._m : undefined }); this.flash(what); this.reload(); } catch (e) { this.flash(e.message); } }
-  state = { lEmail: '', staff: null, pick: 's1', pin: '', gateErr: '', view: 'overview', range: '30d', uq: '', uf: 'All', page: 0, modTab: 'Held', termDraft: '', toast: '', tick: 0 };
+  state = { w: typeof window !== 'undefined' ? window.innerWidth : 1280, lEmail: '', staff: null, pick: 's1', pin: '', gateErr: '', view: 'overview', range: '30d', uq: '', uf: 'All', page: 0, modTab: 'Held', termDraft: '', toast: '', tick: 0 };
 
   componentDidMount() {
+    this._rs = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this._rs);
     this.api('config').then(() => { this.live = true; const t = ls('ellipsis.admin.token', null); if (t) { this._tok = t; this.api('me').then(r => { if (r.me.staffRole === 'user') throw new Error('x'); this._me = r.me; this.setState({ staff: 'live' }); this.reload(); }).catch(() => { lsSet('ellipsis.admin.token', null); this._tok = null; this.forceUpdate(); }); } else this.forceUpdate(); }).catch(() => { this.live = false; });
     const sid = ls('ellipsis.admin.session', null);
     if (sid && this.staffList().some(s => s.id === sid)) this.setState({ staff: sid });
     this._poll = setInterval(() => this.setState(s => ({ tick: s.tick + 1 })), 4000);
   }
-  componentWillUnmount() { clearInterval(this._poll); clearTimeout(this._t); }
+  componentWillUnmount() { window.removeEventListener('resize', this._rs); clearInterval(this._poll); clearTimeout(this._t); }
 
   staffList() { const roles = ls('ellipsis.admin.staffRoles', {}); return STAFF0.map(([id, name, email, role, color]) => ({ id, name, email, role: roles[id] || role, color, initials: name.split(' ').map(x => x[0]).join('') })); }
   roleMatrix() { return Object.assign({}, ROLE_DEFAULT, ls('ellipsis.admin.roles', {})); }
@@ -451,7 +455,12 @@ class Component extends DCLogic {
     if (this.live) { const b = {}; if (patch.status) b.status = patch.status.toLowerCase(); if (patch.plan) b.plan = patch.plan.toLowerCase(); if (patch.verified != null) b.verified = patch.verified; this.liveAct('admin/users/' + id, b, 'Saved on the server'); return; }
     const o = ls('ellipsis.admin.users', {}); o[id] = Object.assign({}, o[id], patch); lsSet('ellipsis.admin.users', o); }
 
-  renderVals() {
+  layoutVals() {
+    const ph = this.state.w < 760;
+    return { admCols: ph ? 'minmax(0,1fr)' : '240px minmax(0,1fr)', admRows: ph ? 'auto minmax(0,1fr)' : 'minmax(0,1fr)', asDir: ph ? 'row' : 'column', asAlign: ph ? 'center' : 'stretch', asPad: ph ? '8px 10px' : '18px 12px', asOx: ph ? 'auto' : 'hidden', asOy: ph ? 'hidden' : 'auto', admPad: ph ? '14px 14px 48px' : '22px 28px 60px', admHdrPad: ph ? '12px 14px' : '16px 28px', asGap: ph ? '0' : '8px', asMeDisp: ph ? 'flex' : 'block', asRoleGap: ph ? '0' : '9px', asSoW: ph ? 'auto' : '100%', asMePad: ph ? '8px 10px' : '12px', asLogoPad: ph ? '0 8px 0 2px' : '0 8px 16px' };
+  }
+  renderVals() { return Object.assign(this.layoutVals(), this.renderVals2()); }
+  renderVals2() {
     const s = this.state, me = this.me();
     if (!me) {
       const st = this.staffList();
@@ -613,7 +622,7 @@ class Component extends DCLogic {
       uq: s.uq, onUq: e => { this.setState({ uq: e.target.value, page: 0 }); if (this.live) { clearTimeout(this._qT); this._qT = setTimeout(() => this.reload(), 350); } },
       uFilters: ['All', 'Creators', 'Execs', 'Premium', 'Flagged', 'Suspended', 'This device'].map(f => ({ label: f, go: () => this.setState({ uf: f, page: 0 }), bg: s.uf === f ? 'var(--mintsoft)' : 'var(--panel)', fg: s.uf === f ? 'var(--mintink)' : 'var(--ink)', border: s.uf === f ? MINT : 'var(--line)' })),
       uRows, uCount: filt.length.toLocaleString() + ' users · page ' + (page + 1) + ' of ' + pages, uPrev: () => this.setState({ page: Math.max(0, page - 1) }), uNext: () => this.setState({ page: Math.min(pages - 1, page + 1) }),
-      modCols: 'minmax(0,1.6fr) minmax(280px,1fr)', modTabs: ['Held', 'Removed', 'Released', 'All'].map(l => ({ label: l + ' · ' + withSt.filter(MT[l]).length, go: () => this.setState({ modTab: l }), bg: s.modTab === l ? '#0C1318' : 'var(--panel)', fg: s.modTab === l ? '#fff' : 'var(--ink)', border: s.modTab === l ? '#0C1318' : 'var(--line)' })),
+      modCols: s.w < 900 ? 'minmax(0,1fr)' : 'minmax(0,1.6fr) minmax(280px,1fr)', modTabs: ['Held', 'Removed', 'Released', 'All'].map(l => ({ label: l + ' · ' + withSt.filter(MT[l]).length, go: () => this.setState({ modTab: l }), bg: s.modTab === l ? '#0C1318' : 'var(--panel)', fg: s.modTab === l ? '#fff' : 'var(--ink)', border: s.modTab === l ? '#0C1318' : 'var(--line)' })),
       modRows, modEmpty: modRows.length === 0,
       termDraft: s.termDraft, onTerm: e => this.setState({ termDraft: e.target.value }), onTermKey: e => { if (e.key === 'Enter') addTerm(); }, addTerm, noTerms: !can('terms'),
       terms: termList.map(w => ({ masked: w[0] + '•'.repeat(Math.max(1, w.length - 2)) + (w.length > 1 ? w[w.length - 1] : ''), remove: () => this.live ? this.liveAct('admin/terms', { term: w, op: 'remove' }, 'Removed a blocked term') : this.act('terms', 'Removed a blocked term', () => lsSet('ellipsis.mod.terms', termList.filter(x => x !== w))) })), noTermList: termList.length === 0,
