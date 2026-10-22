@@ -2367,6 +2367,10 @@ class Component extends DCLogic {
     let d = null; try { d = JSON.parse(localStorage.getItem(this.SAVE_KEY) || 'null'); } catch (e) {}
     if (!d) return false;
     const patch = {}; this.PERSIST.forEach(k => { if (d[k] !== undefined) patch[k] = d[k]; });
+    if (patch.projects && patch.items) {
+      const known = new Set(patch.items.map(x => x.id).concat(this.stock.map(x => x.id), (this.state.items || []).map(x => x.id)));
+      patch.projects = patch.projects.map(p => Object.assign({}, p, { items: (p.items || []).filter(id => known.has(id)) }));
+    }
     if (patch.items) {
       // Library (stock) sounds always come from the current build, never from an old save,
       // so new or corrected stock content reaches people who already have saved data.
@@ -2417,8 +2421,40 @@ class Component extends DCLogic {
     };
     if (now) run(); else this._saveT = setTimeout(run, 500);
   }
+  /* Remember where you are, so a browser refresh lands on the same page. */
+  navHash() {
+    const s = this.state; if (!s.acct) return '';
+    const v = s.view;
+    if (v === 'project' && s.pid) return '#/project/' + encodeURIComponent(s.pid);
+    if (v === 'lyric' && s.lid) return '#/lyric/' + encodeURIComponent(s.lid) + (s.pid ? '/' + encodeURIComponent(s.pid) : '');
+    if (v === 'profile') return '#/profile/' + encodeURIComponent(s.uid || 'me');
+    if (v === 'library') return '#/library/' + encodeURIComponent(s.libTab || 'instrumental');
+    if (v === 'explore') return '#/explore/' + encodeURIComponent(s.exTab || 'Songs');
+    return v ? '#/' + v : '';
+  }
+  syncHash() {
+    clearTimeout(this._hashT);
+    this._hashT = setTimeout(() => { if (!this._navReady) return; const h = this.navHash(); if (h && h !== location.hash) { try { history.replaceState(null, '', h); } catch (e) {} } }, 60);
+  }
+  restoreNav() {
+    this._navReady = true;
+    const parts = (location.hash || '').replace(/^#\/?/, '').split('/').map(x => { try { return decodeURIComponent(x); } catch (e) { return x; } });
+    const v = parts[0], a = parts[1], b = parts[2], s = this.state;
+    if (!v || !s.acct) { this.syncHash(); return; }
+    const VIEWS = ['explore', 'projects', 'library', 'inbox', 'activity', 'profile', 'desk', 'project', 'lyric', 'earnings'];
+    if (VIEWS.indexOf(v) < 0) { this.syncHash(); return; }
+    if (v === 'project') { if (a && this.proj(a)) this.setState({ view: 'project', pid: a }); }
+    else if (v === 'lyric') { if (a && this.item(a)) this.setState({ view: 'lyric', lid: a, pid: b && this.proj(b) ? b : null }); }
+    else if (v === 'profile') this.setState({ view: 'profile', uid: a || 'me' });
+    else if (v === 'library') this.setState({ view: 'library', libTab: a || s.libTab });
+    else if (v === 'explore') this.setState({ view: 'explore', exTab: a || s.exTab });
+    else if (v === 'desk' && !(s.acct && s.acct.type === 'exec')) {}
+    else this.setState({ view: v });
+    this.syncHash();
+  }
   setState(p, cb) {
     super.setState(p, cb);
+    if (this._navReady) this.syncHash();
     if (this._booted) { clearTimeout(this._chk); this._chk = setTimeout(() => { const snap = this._snap || {}; if (this.PERSIST.some(k => snap[k] !== this.state[k])) { this._snap = {}; this.PERSIST.forEach(k => { this._snap[k] = this.state[k]; }); this.persist(); } }, 50); }
   }
   /* ═══ backend (api/v2). Falls back to on-device mode when the API isn't reachable. ═══ */
@@ -2992,6 +3028,7 @@ class Component extends DCLogic {
     a.addEventListener('ended', () => this.onEnded());
     a.src = 'assets/audio/neosoul.wav';
     this.audio = a;
+    setTimeout(() => this.restoreNav(), 350);
   }
   componentWillUnmount() {
     ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.removeEventListener(ev, this.unlockAudio, true)); this.silentOff();
@@ -3605,10 +3642,7 @@ class Component extends DCLogic {
   }
   goMix(pid) {
     const p = this.proj(pid); if (!p) return;
-    if (this.mxAudio(p).length) { this.openMixer(pid); return; }
-    const el = document.querySelector('[data-mix]'), sc = this.scrollRef.current;
-    if (el && sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 20, behavior: 'smooth' });
-    this.flash('Turn on at least one audio track below, then open the mixer');
+    this.openMixer(pid);
   }
   openMixer(pid) { const p = this.proj(pid); if (!p) return; this.unlockAudio(); this.silentOn(); if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
     let pro = false; try { pro = localStorage.getItem('ellipsis4.mxMode') === 'pro'; } catch (e) {}
@@ -3652,7 +3686,7 @@ class Component extends DCLogic {
     const p0 = this.proj(pid);
     if (it0 && it0.words && p0 && !p0.items.some(id => { const y = this.item(id); return y && y.fromVox === itemId; })) {
       const lid = 'w' + Date.now() + Math.floor(Math.random() * 1e3);
-      const ly = { id: lid, kind: 'lyric', title: it0.title.replace(/ — vocal$/, '') + ' — lyrics', owner: 'lib', file: null, url: null, tags: it0.tags, sections: [{ id: lid + '_0', type: 'Chorus', text: it0.words, by: 'lib' }], published: false, spikes: 0, week: 0, year: 0, created: Date.now(), fromVox: itemId };
+      const ly = { id: lid, kind: 'lyric', title: it0.title.replace(/ — vocal$/, '') + ' — lyrics', owner: 'me', file: null, url: null, tags: it0.tags, sections: [{ id: lid + '_0', type: 'Chorus', text: it0.words, by: 'lib' }], published: false, spikes: 0, week: 0, year: 0, created: Date.now(), fromVox: itemId };
       this.setState(st => ({ items: st.items.concat([ly]) }));
       this.updProj(pid, p => { if (p.items.indexOf(lid) < 0) p.items.push(lid); return p; });
     }
@@ -3916,7 +3950,7 @@ class Component extends DCLogic {
     const statusOf = p => p.stage === 'published' ? ['PUBLISHED', '#00D9A6'] : p.collabs.length ? ['COLLABORATING', '#E0A33A'] : ['DRAFT', 'var(--line2)'];
     const seg = (a, b) => ({ bg: a === b ? '#0C1318' : 'transparent', fg: a === b ? '#FFFFFF' : 'var(--ink)' });
     const seg2 = (a, b) => ({ bg: a === b ? 'var(--mint-soft)' : 'transparent', fg: a === b ? 'var(--mint-ink)' : 'var(--ink)', border: a === b ? 'var(--mint)' : 'var(--line)' });
-    const countsOf = p => { const c = {}; p.items.forEach(id => { const it = I.find(x => x.id === id); if (it) c[it.kind] = (c[it.kind] || 0) + 1; }); return ['instrumental', 'lyric', 'melody', 'acapella'].filter(k => c[k]).map(k => c[k] + ' ' + (c[k] > 1 ? KIND[k][1] : KIND[k][0]).toLowerCase()).join(' · ') || 'Empty'; };
+    const countsOf = p => { const c = {}; p.items.forEach(id => { const it = this.item(id); if (it) c[it.kind] = (c[it.kind] || 0) + 1; }); return ['instrumental', 'lyric', 'melody', 'acapella'].filter(k => c[k]).map(k => c[k] + ' ' + (c[k] > 1 ? KIND[k][1] : KIND[k][0]).toLowerCase()).join(' · ') || 'Empty'; };
 
     const pendingReq = s.acts.filter(a => !a.done && (a.type === 'request' || a.type === 'suggestion')).length;
     const isExec = !!(s.acct && s.acct.type === 'exec');
@@ -3996,7 +4030,7 @@ class Component extends DCLogic {
     const mySkills = U('me').skills || [], fset2 = new Set(followedIds), pS = new Map();
     if (s.exTab === "Let's collaborate") { for (const p of collabPool) pS.set(p, (p.open.needs.indexOf(myPart) >= 0 ? 2 : 0) + mySkills.filter(k => p.open.needs.indexOf(k) >= 0).length * 0.6 + (p.tags ? relItem(p) : 0) + (fset2.has(p.owner) ? 0.8 : 0)); collabPool.sort((a, b) => pS.get(b) - pS.get(a)); }
     const collabCards = collabPool.slice(0, 30).map(p => {
-      const lead = p.items.map(id => I.find(x => x.id === id)).find(x => x && x.kind !== 'lyric');
+      const lead = p.items.map(id => this.item(id)).find(x => x && x.kind !== 'lyric');
       const req = !!s.requested[p.id];
       return { title: p.title, sub: U(p.owner).name + ' · ' + U(p.owner).city + ' · ' + this.localTime(U(p.owner).tz), art: COVER_OF(p.id + p.title), icon: lead && onNow(lead.id) ? '❚❚' : '▶', play: () => lead && this.play(lead.id), openUser: () => this.openUser(p.owner),
         needs: p.open.needs.map(n => ({ label: n })), contents: countsOf(p) + ' · ' + this.members(p).length + ' in the project', review: () => this.openProject(p.id), request: () => this.request(p.id),
@@ -4016,7 +4050,7 @@ class Component extends DCLogic {
     /* project page */
     const pp = s.view === 'project' ? (this.proj(s.pid) || P[0]) : P[0];
     const pMine = pp.owner === 'me', pMember = this.isMember(pp);
-    const pItems = pp.items.map(id => I.find(x => x.id === id)).filter(Boolean);
+    const pItems = pp.items.map(id => this.item(id)).filter(Boolean);
     const laneItems = pItems.filter(x => /instrumental|melody|acapella/.test(x.kind));
     const onLanes = laneItems.filter(x => !(pp.mix[x.id] && pp.mix[x.id].on === false));
     const st = statusOf(pp);
