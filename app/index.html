@@ -863,7 +863,8 @@
                   </div>
                   <div style="display:flex;gap:9px;flex-wrap:wrap">
                     <sc-if value="{{ prOther }}" hint-placeholder-val="{{ false }}">
-                      <button onClick="{{ prFollow }}" style="padding:12px 24px;border:0;border-radius:14px;background:{{ prFollowBg }};color:{{ prFollowFg }};font-size:14px;font-weight:620;cursor:pointer;min-width:118px">{{ prFollowLabel }}</button>
+                      <sc-if value="{{ prNotFollowing }}" hint-placeholder-val="{{ true }}"><button title="{{ prFollowTitle }}" onClick="{{ prFollow }}" style="padding:12px 24px;border:0;border-radius:14px;background:#00D9A6;color:#06231B;font-size:14px;font-weight:620;cursor:pointer;min-width:118px">Follow</button></sc-if>
+<sc-if value="{{ prIsFollowing }}" hint-placeholder-val="{{ false }}"><button title="{{ prFollowTitle }}" onClick="{{ prUnfollow }}" aria-label="{{ prFollowTitle }}" style="display:flex;align-items:center;gap:8px;padding:12px 18px;border:1px solid rgba(255,255,255,0.4);border-radius:14px;background:rgba(255,255,255,0.14);color:#FFFFFF;font-size:14px;font-weight:620;cursor:pointer" style-hover="background:#C2402B;border-color:#C2402B">Following ✓<span style="padding:3px 9px;border-radius:8px;background:rgba(0,0,0,0.25);font-size:12.5px">Unfollow</span></button></sc-if>
                     </sc-if>
                     <sc-if value="{{ prOther }}" hint-placeholder-val="{{ false }}">
                       <button onClick="{{ prMessage }}" style="padding:12px 18px;border:1px solid rgba(255,255,255,0.45);border-radius:14px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;font-weight:620;cursor:pointer">✉ Message</button>
@@ -1337,7 +1338,7 @@
               <div style="font-size:14.5px;line-height:1.55;color:var(--dim);margin-bottom:18px">{{ confirmBody }}</div>
               <div style="display:flex;gap:10px">
                 <button onClick="{{ closeSheet }}" style="flex:1;padding:13px;border:1px solid var(--line2);border-radius:13px;background:transparent;color:var(--ink);font-size:14.5px;font-weight:620;cursor:pointer">Cancel</button>
-                <button onClick="{{ confirmGo }}" style="flex:1;padding:13px;border:0;border-radius:13px;background:var(--coral);color:#fff;font-size:14.5px;font-weight:620;cursor:pointer">{{ confirmCta }}</button>
+                <button onClick="{{ confirmGo }}" style="flex:1;padding:13px;border:0;border-radius:13px;background:{{ confirmBg }};color:{{ confirmFg }};font-size:14.5px;font-weight:620;cursor:pointer">{{ confirmCta }}</button>
               </div>
             </div>
           </sc-if>
@@ -2479,7 +2480,36 @@ class Component extends DCLogic {
     else this.setState({ view: v });
     this.syncHash();
   }
-  setState(p, cb) {
+  /* Every project and item that enters state is made complete, whatever its source
+     (old saves, server sync, imports). Missing fields used to crash project pages and the mixer. */
+  normProj(p) {
+    if (!p || typeof p !== 'object') return p;
+    const t = p.tags || {};
+    const ok = Array.isArray(p.items) && p.mix && typeof p.mix === 'object' && Array.isArray(p.msgs) && Array.isArray(p.sugs) && Array.isArray(p.collabs) && p.open && Array.isArray(p.open.needs) && Array.isArray(t.genre) && Array.isArray(t.mood) && Array.isArray(t.like) && p.stage && p.owner;
+    if (ok) return p;
+    return Object.assign({}, p, {
+      items: Array.isArray(p.items) ? p.items : [], mix: p.mix && typeof p.mix === 'object' ? p.mix : {},
+      msgs: Array.isArray(p.msgs) ? p.msgs : [], sugs: Array.isArray(p.sugs) ? p.sugs : [], collabs: Array.isArray(p.collabs) ? p.collabs : [],
+      open: { on: !!(p.open && p.open.on), needs: (p.open && Array.isArray(p.open.needs)) ? p.open.needs : [] },
+      tags: { genre: Array.isArray(t.genre) ? t.genre : [], mood: Array.isArray(t.mood) ? t.mood : [], like: Array.isArray(t.like) ? t.like : [] },
+      stage: p.stage || 'draft', owner: p.owner || 'me', title: p.title || 'Untitled', art: p.art || 'lofi'
+    });
+  }
+  normItem(x) {
+    if (!x || typeof x !== 'object') return x;
+    const t = x.tags || {};
+    if (Array.isArray(t.genre) && Array.isArray(t.mood) && Array.isArray(t.like) && x.kind && x.title != null) return x;
+    return Object.assign({}, x, { kind: x.kind || 'song', title: x.title || 'Untitled', tags: { genre: Array.isArray(t.genre) ? t.genre : [], mood: Array.isArray(t.mood) ? t.mood : [], like: Array.isArray(t.like) ? t.like : [] } });
+  }
+  normPatch(r) {
+    if (!r || typeof r !== 'object') return r;
+    let out = r;
+    if (Array.isArray(r.projects)) { const n = r.projects.map(p => this.normProj(p)); if (n.some((p, i) => p !== r.projects[i])) out = Object.assign({}, out, { projects: n }); }
+    if (Array.isArray(r.items)) { const n = r.items.map(x => this.normItem(x)); if (n.some((x, i) => x !== r.items[i])) out = Object.assign({}, out, { items: n }); }
+    return out;
+  }
+  setState(p0, cb) {
+    const p = typeof p0 === 'function' ? (st, pr) => this.normPatch(p0(st, pr)) : this.normPatch(p0);
     super.setState(p, cb);
     if (this._navReady) this.syncHash();
     if (this._booted) { clearTimeout(this._chk); this._chk = setTimeout(() => { const snap = this._snap || {}; if (this.PERSIST.some(k => snap[k] !== this.state[k])) { this._snap = {}; this.PERSIST.forEach(k => { this._snap[k] = this.state[k]; }); this.persist(); } }, 50); }
@@ -3019,6 +3049,7 @@ class Component extends DCLogic {
   silentOff() { try { if (this._silentEl) this._silentEl.pause(); } catch (e) {} }
   componentDidMount() {
     ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.addEventListener(ev, this.unlockAudio, { capture: true, passive: true }));
+    this.setState(st => ({ projects: st.projects, items: st.items }));
     let th = 'light'; try { th = localStorage.getItem('ellipsis4.theme') || 'light'; } catch (e) {}
     this.setState({ theme: th }); this.applyTheme(th);
     this._thSync = e => { if (e.key === 'ellipsis4.theme' && e.newValue && e.newValue !== this.state.theme) { this.setState({ theme: e.newValue }); this.applyTheme(e.newValue); } };
@@ -3842,7 +3873,17 @@ class Component extends DCLogic {
     if (!on) this.flash('Spiked — it moves up every chart it is tagged in');
   }
   fav(id) { const on = !!this.state.favs[id]; this.setState(s => ({ favs: Object.assign({}, s.favs, { [id]: !on }) })); this.flash(on ? 'Removed from Favorites' : 'Saved to Favorites'); }
-  follow(uid) { const on = !!this.state.following[uid]; this.setState(s => ({ following: Object.assign({}, s.following, { [uid]: !on }) })); this.flash((on ? 'Unfollowed ' : 'Following ') + this.U(uid).name); }
+  follow(uid) {
+    const on = !!this.state.following[uid], u = this.U(uid);
+    if (on) { this.unfollowAsk(uid); return; }
+    this.setState(s => ({ following: Object.assign({}, s.following, { [uid]: true }) }));
+    this.flash('Following ' + u.name);
+  }
+  unfollowAsk(uid) {
+    const u = this.U(uid), first = u.name.split(' ')[0], back = this.state.sheet;
+    this.setState({ sheet: { type: 'confirm', title: 'Unfollow ' + u.name + '?', body: first + '’s releases and open projects will stop showing up first for you. You can follow again any time, and they won’t be told.', cta: 'Unfollow', danger: true,
+      go: () => { this.setState(s => ({ following: Object.assign({}, s.following, { [uid]: false }), sheet: back && back.type !== 'confirm' ? back : null })); this.flash('Unfollowed ' + u.name); } } });
+  }
 
   /* projects */
   newProject(then) { this.setState({ sheet: { type: 'name', mode: 'project', val: '', then } }); setTimeout(() => this.nameRef.current && this.nameRef.current.focus(), 60); }
@@ -4282,7 +4323,7 @@ class Component extends DCLogic {
       const b = (label, kind, go) => ({ label, go, bg: kind === 1 ? 'var(--mint)' : 'transparent', fg: kind === 1 ? 'var(--on-mint)' : 'var(--ink)', border: kind === 1 ? 'var(--mint)' : 'var(--line2)' });
       if (a.type === 'request') actions = a.done ? [b(a.done === 'accept' ? 'Accepted ✓' : 'Declined', 0, () => {})] : [b('Decline', 0, () => this.resolveAct(a.id, 'decline')), b('Review', 0, () => this.openProject(a.pid)), b('Accept', 1, () => this.resolveAct(a.id, 'accept'))];
       else if (a.type === 'suggestion') actions = a.done ? [b(a.done === 'accept' ? 'Accepted ✓' : 'Rejected', 0, () => {})] : [b('Review', 1, () => this.openLyric(a.itemId, a.pid))];
-      else if (a.type === 'follow') actions = [b(s.following[a.uid] ? 'Following' : 'Follow back', s.following[a.uid] ? 0 : 1, () => this.follow(a.uid))];
+      else if (a.type === 'follow') actions = [b(s.following[a.uid] ? 'Unfollow' : 'Follow back', s.following[a.uid] ? 0 : 1, () => this.follow(a.uid))];
       else if (a.type === 'accepted') actions = [b('Open project', 1, () => this.openProject(a.pid))];
       else if (a.itemId) actions = [b('▶ Play', 0, () => this.play(a.itemId))].concat(a.type === 'spikeback' ? [b('View profile', 1, () => this.openUser(a.uid))] : []);
       return { initials: u.initials, bg: u.avatar, openUser: () => this.openUser(a.uid), title: a.title, body: a.body, when: a.when, actions,
@@ -4361,7 +4402,7 @@ class Component extends DCLogic {
         const who = U(sh.uid);
         sheetTitle = sh.kind === 'followers' ? num(who.followers) + ' followers' : sh.kind === 'following' ? 'Following' : 'Spikes';
         if (sh.kind === 'spikes') pickRows = I.filter(x => x.published && x.owner === sh.uid).map(x => ({ title: x.title, sub: '⚡ ' + num(spk(x)) + ' spikes', badge: '▶', radius: '11px', art: AOF(x), ...KCX(x), cta: 'Play', go: () => this.play(x.id) }));
-        else { const list = sh.kind === 'following' && sh.uid === 'me' ? this.users.filter(u => s.following[u.id]) : this.users.filter((u, i) => u.id !== sh.uid && u.id !== 'me' && (sh.kind === 'followers' || i % 2 === 0)); pickRows = list.map(u => ({ title: u.name, sub: u.role + ' · ' + u.city, badge: u.initials, radius: '50%', art: u.avatar, cta: s.following[u.id] ? 'Following' : 'Follow', go: () => this.follow(u.id) })); }
+        else { const list = sh.kind === 'following' && sh.uid === 'me' ? this.users.filter(u => s.following[u.id]) : this.users.filter((u, i) => u.id !== sh.uid && u.id !== 'me' && (sh.kind === 'followers' || i % 2 === 0)); pickRows = list.map(u => ({ title: u.name, sub: u.role + ' · ' + u.city, badge: u.initials, radius: '50%', art: u.avatar, cta: s.following[u.id] ? 'Unfollow' : 'Follow', go: () => this.follow(u.id) })); }
       }
     }
     if (sh && sh.type === 'tags') {
@@ -4821,7 +4862,7 @@ class Component extends DCLogic {
       prCanEdit: isMe, prEdit: () => this.openProfileEdit(),
       prReport: () => this.setState({ sheet: { type: 'confirm', title: 'Report or block ' + pu.name.split(' ')[0] + '?', body: 'Blocking hides them from you and stops their messages and invites. Reports go to a person on our safety team within 24 hours.', cta: 'Block and report', go: () => { this.setState({ sheet: null }); if (this._api) { this.api('report', { body: { target_type: 'user', target_id: 0, reason: 'profile', note: pu.name + ' ' + pu.handle } }).catch(() => {}); } this.setState(st => ({ following: Object.assign({}, st.following, { [pu.id]: false }) })); this.flash(pu.name.split(' ')[0] + ' blocked · report sent'); } } }), prName: pu.name, prFirst: pu.name.split(' ')[0],
       prSub: pu.handle + ' · ' + pu.role, prLocal: pu.city + ' · ' + this.localTime(pu.tz) + ' local', prBio: pu.bio, prExec: !!pu.exec,
-      prOther: !isMe, prIsMe: isMe, prFollowLabel: s.following[pu.id] ? 'Following ✓' : 'Follow', prFollowBg: s.following[pu.id] ? 'rgba(255,255,255,0.2)' : '#00D9A6', prFollowFg: s.following[pu.id] ? '#FFFFFF' : '#06231B', prFollow: () => this.follow(pu.id),
+      prOther: !isMe, prIsMe: isMe, prFollowLabel: s.following[pu.id] ? 'Following ✓' : 'Follow', prFollowHover: s.following[pu.id] ? 'background:#C2402B;color:#FFFFFF' : 'filter:brightness(1.08)', prFollowTitle: s.following[pu.id] ? 'Unfollow ' + pu.name : 'Follow ' + pu.name, prIsFollowing: !isMe && !!s.following[pu.id], prNotFollowing: !isMe && !s.following[pu.id], prUnfollow: () => this.unfollowAsk(pu.id), prFollowBg: s.following[pu.id] ? 'rgba(255,255,255,0.2)' : '#00D9A6', prFollowFg: s.following[pu.id] ? '#FFFFFF' : '#06231B', prFollow: () => this.follow(pu.id),
       prMessage: () => this.openDm(pu.id), prMeet: () => this.openMeet(pu.id),
       prAvatarGo: isMe ? () => { this.openProfileEdit(); setTimeout(() => this._pePhoto && this._pePhoto(), 60); } : () => {}, prAvatarTip: isMe ? 'Change your photo' : pu.name, prAvatarCursor: isMe ? 'pointer' : 'default',
       prInviteLabel: pu.exec ? 'Send a song' : 'Invite to project',
@@ -4872,7 +4913,7 @@ class Component extends DCLogic {
       pubCta: pubP && sh.step === 3 ? 'Done' : 'Continue', pubBlocked: pubP && sh.step === 3 ? false : pubBlocked,
       pubNext: () => { if (sh.step === 3) { this.setState({ sheet: null }); this.flash(pubP.title + ' is live in Explore'); return; } if (!pubBlocked) this.setSheet({ step: sh.step + 1 }); },
       pubBtnBg: pubP && (sh.step === 3 || !pubBlocked) ? 'var(--mint)' : 'var(--line)', pubBtnFg: pubP && (sh.step === 3 || !pubBlocked) ? 'var(--on-mint)' : 'var(--dim)',
-      isConfirm: !!sh && sh.type === 'confirm', confirmBody: sh && sh.type === 'confirm' ? sh.body : '', confirmCta: sh && sh.type === 'confirm' ? sh.cta : '', confirmGo: () => sh && sh.go && sh.go(),
+      isConfirm: !!sh && sh.type === 'confirm', confirmBody: sh && sh.type === 'confirm' ? sh.body : '', confirmCta: sh && sh.type === 'confirm' ? sh.cta : '', confirmBg: sh && sh.danger ? '#C2402B' : 'var(--mint)', confirmFg: sh && sh.danger ? '#FFFFFF' : 'var(--on-mint)', confirmGo: () => sh && sh.go && sh.go(),
 
       recOpen: !!r, recHeading: r ? 'New ' + KIND[r.kind][0].toLowerCase() : '', recDest: rP ? 'Saves to ' + rP.title : 'Saves to your Library', recCols: r && rLy && w >= 1000 ? 'minmax(0,1.2fr) minmax(0,1fr)' : 'minmax(0,1fr)',
       recReady: !!r && r.phase === 'ready', recReadyTitle: r ? 'Record ' + (r.kind === 'acapella' ? 'an acapella' : r.kind === 'melody' ? 'a melody' : 'an instrumental') : '',
