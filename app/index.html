@@ -409,7 +409,7 @@
                     </sc-for>
                   </div>
                   <div style="display:flex;gap:9px;flex-wrap:wrap">
-                    <button onClick="{{ openMixer }}" disabled="{{ noLanes }}" style="padding:11px 17px;border:0;border-radius:12px;background:#0C1318;color:#fff;font-size:14px;font-weight:620;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="display:flex;gap:2px;align-items:flex-end;height:14px"><span style="width:3px;height:9px;background:#00D9A6;border-radius:1px"></span><span style="width:3px;height:14px;background:#00D9A6;border-radius:1px"></span><span style="width:3px;height:6px;background:#00D9A6;border-radius:1px"></span></span>Open mixer</button>
+                    <button onClick="{{ openMixer }}" title="Open the mixer — add, hear and blend sounds" style="padding:11px 17px;border:0;border-radius:12px;background:#0C1318;color:#fff;font-size:14px;font-weight:620;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="display:flex;gap:2px;align-items:flex-end;height:14px"><span style="width:3px;height:9px;background:#00D9A6;border-radius:1px"></span><span style="width:3px;height:14px;background:#00D9A6;border-radius:1px"></span><span style="width:3px;height:6px;background:#00D9A6;border-radius:1px"></span></span>Open mixer</button>
                     <button onClick="{{ previewMix }}" disabled="{{ noLanes }}" style="padding:11px 17px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:14px;font-weight:620;cursor:pointer">{{ mixLabel }}</button>
                     <button onClick="{{ buildGo }}" disabled="{{ buildDisabled }}" style="flex:1;min-width:180px;padding:11px 17px;border:0;border-radius:12px;background:{{ buildBtnBg }};color:{{ buildBtnFg }};font-size:14px;font-weight:620;cursor:{{ buildCursor }}">{{ buildLabel }}</button>
                   </div>
@@ -1123,8 +1123,8 @@
                   </div>
                   <sc-if value="{{ g.custom }}" hint-placeholder-val="{{ false }}">
                     <div style="display:flex;gap:8px;margin-top:9px">
-                      <input value="{{ likeInput }}" onChange="{{ onLikeInput }}" onKeyDown="{{ onLikeKey }}" placeholder="Add an artist it sounds like" style="flex:1;min-width:0;padding:10px 13px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:13.5px;outline:none" />
-                      <button onClick="{{ addLike }}" style="padding:10px 15px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13px;font-weight:620;cursor:pointer">Add</button>
+                      <input value="{{ g.inVal }}" onChange="{{ g.onIn }}" onKeyDown="{{ g.onKey }}" placeholder="{{ g.ph }}" style="flex:1;min-width:0;padding:10px 13px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2);color:var(--ink);font-size:13.5px;outline:none" />
+                      <button onClick="{{ g.add }}" style="padding:10px 15px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13px;font-weight:620;cursor:pointer">Add</button>
                     </div>
                   </sc-if>
                 </div>
@@ -2005,7 +2005,7 @@ const LIB = [["lib01","Paper Lanterns","lofi","Lo-fi","Late night","Nujabes",78]
 const LIB_ART = { lofi: 'lofi', afro: 'afrobeats', neo: 'neosoul', drill: 'drill', house: 'house', amb: 'ambient', rnb: 'rnb', hiphop: 'hiphop', pop: 'pop', jazz: 'jazz' };
 LIB.forEach(x => { ART[x[0]] = ART[LIB_ART[x[2]]]; });
 /* Flagship originals — produced in the style of current chart records (no samples, no copied melodies). */
-const HITS = [["hit01","Neon Cathedral","pop","Pop","Dance","Little Dragon",171,"F min"],["hit02","Lagos After Dark","afro","Afrobeats","Summer","Tems",112,"A min"],["hit03","Diamond Fever","hiphop","Hip-hop","Gritty","Central Cee",140,"C# min"],["hit04","Fuego Lento","afro","Latin","Summer","Burna Boy",94,"G min"],["hit05","Salt & Sunlight","house","House","Summer","Kaytranada",120,"D maj"],["hit06","Velvet Hours","rnb","R&B","Late night","Frank Ocean",72,"Eb maj"],["hit07","Afterglow","pop","Pop","Hopeful","Little Dragon",126,"B maj"],["hit08","Dust & Daylight","pop","Pop","Warm","Sampha",100,"G maj"]];
+const HITS = [["hit01","Neon Cathedral","pop","Pop","Dance","Little Dragon",171,"F min"],["hit02","Lagos After Dark","afro","Afrobeats","Summer","Tems",112,"A min"],["hit03","Diamond Fever","hiphop","Hip-hop","Gritty","Central Cee",140,"C# min"],["hit04","Fuego Lento","afro","Latin","Summer","Burna Boy",94,"G min"],["hit05","Salt & Sunlight","house","House","Summer","Kaytranada",120,"D maj"],["hit06","Velvet Hours","rnb","R&B","Late night","Frank Ocean",72,"Eb maj"],["hit07","Afterglow","pop","Pop","Hopeful","Little Dragon",126,"B maj"],["hit08","Dust & Daylight","pop","Pop","Warm","Sampha",100,"G maj"],["hit09","Midnight Signal","pop","Pop","Night drive","The Weeknd",171,"F min"],["hit10","Gold Teeth Summer","afro","Afrobeats","Sunny","Rema",108,"D dor"],["hit11","Lavender Smoke","rnb","R&B","Late night","SZA",72,"Eb maj"],["hit12","Concrete Halo","drill","Drill","Cold","Central Cee",142,"G min"],["hit13","Pulse in Pesos","afro","Reggaeton","Heat","Bad Bunny",96,"A min"],["hit14","Shiver Theory","house","House","Euphoric","Fred again..",124,"C min"],["hit15","Amber Sirens","afro","Amapiano","Groove","Tyla",113,"E dor"],["hit16","Little Wars","pop","Pop","Bittersweet","Olivia Rodrigo",104,"D maj"],["hit17","Velour","house","Disco","Glam","Dua Lipa",118,"B dor"],["hit18","Glass Mile","house","UK Garage","Rainy","PinkPantheress",132,"F# min"],["hit19","Saint of the Afterparty","hiphop","Trap","Dark","Travis Scott",140,"C# phr"],["hit20","Ocean in a Paper Cup","neo","Ballad","Tender","Adele",76,"Ab maj"],["hit21","Heartbeat Hotline","pop","K-pop","Electric","NewJeans",128,"A min"],["hit22","Backroad Neon","lofi","Country","Open road","Morgan Wallen",96,"G maj"],["hit23","Mirror Talk","hiphop","Jersey Club","Playful","Ice Spice",140,"D min"],["hit24","Sunday Fever","neo","Gospel Pop","Uplifting","Jon Batiste",88,"F maj"],["hit25","Drift King","drill","Phonk","Aggressive","Kordhell",130,"E phr"],["hit26","Salt & Static","house","Indie Dance","Hazy","Tame Impala",120,"G dor"],["hit27","Lagos Velvet","rnb","Afro-R&B","Smooth","Wizkid",100,"B min"],["hit28","Higher Than the Skyline","pop","EDM","Anthem","Calvin Harris",126,"C maj"]];
 HITS.forEach(x => { ART[x[0]] = ART[LIB_ART[x[2]]] || ART.pop; });
 const KIND = { instrumental:['Instrumental','Instrumentals','♫'], lyric:['Lyric','Lyrics','✎'], melody:['Melody','Melodies','〰'], acapella:['Acapella','Acapellas','◉'], song:['Song','Songs','▶'] };
 const GENRES = ['Lo-fi','Afrobeats','Neo-soul','Drill','House','Ambient','R&B','Hip-hop','Pop','Jazz','Latin'];
@@ -2092,6 +2092,8 @@ function buildStock() {
       out.push(it);
     }
   });
+  /* The 28 Ellipsis originals live in every account's Library → Songs. Stock items always come from the current build. */
+  HITS.forEach(([file, title, g, genre, mood, like, bpm, key], k) => out.push({ id: 'hs' + file, kind: 'song', title, owner: 'lib', file, url: null, tags: { genre: [genre], mood: [mood], like: [like] }, sections: null, published: false, spikes: 0, week: 0, year: 0, created: -500 - k, stock: true, rate: 1, bpm, key, original: true, uses: Math.round(900 + (28 - k) * 61) }));
   return out;
 }
 
@@ -2135,7 +2137,7 @@ function seedAll(USERS) {
     .forEach(([t, o, f, g, m, l, sp], k) => add('ip' + k, 'instrumental', t, o, f, tg([g], [m], [l]), { published: true, spikes: sp, week: Math.round(sp * 0.14) + k * 7, year: Math.round(sp * 0.7), created: 10 - k }));
   [['Nightbus','u0','afrobeats','Afrobeats','Late night','Tems',1942],['Lagos Rain','u17','afrobeats','Afrobeats','Rainy','Burna Boy',2710],['Southside Lanterns','u12','drill','Drill','Gritty','Central Cee',2240],['Warm Static','u4','lofi','Lo-fi','Chill','Nujabes',1870],['Glass Tram','u18','house','House','Dance','Kaytranada',1560],['Blue Hour Loop','u21','ambient','Ambient','Cinematic','Ólafur Arnalds',1130],['Tangerine Hour','u10','neosoul','Neo-soul','Warm','Cleo Sol',980],['Low Tide','u13','ambient','Ambient','Chill','Nils Frahm',760],['Sundial','u19','afrobeats','Afrobeats','Summer','Tems',1390]]
     .forEach(([t, o, f, g, m, l, sp], k) => add('is' + k, 'song', t, o, f, tg([g], [m, 'Late night'].slice(0, k % 2 + 1), [l]), { published: true, spikes: sp, week: Math.round(sp * 0.11) + ((k * 37) % 90), year: Math.round(sp * 0.65), created: 20 - k }));
-  HITS.forEach(([file, title, g, genre, mood, like, bpm, key], k) => { const sp = 4200 - k * 230; add('hit' + k, 'song', title, 'u' + ((k * 3 + 2) % 22), file, tg([genre], [mood], [like]), { published: true, spikes: sp, week: Math.round(sp * 0.16) + (40 - k * 3), year: Math.round(sp * 0.8), created: 60 - k, bpm, key }); });
+  HITS.forEach(([file, title, g, genre, mood, like, bpm, key], k) => { const sp = Math.round(4200 - k * 135 - (k % 3) * 40); add('hit' + k, 'song', title, 'u' + ((k * 3 + 2) % 22), file, tg([genre], [mood], [like]), { published: true, spikes: sp, week: Math.round(sp * 0.16) + (40 - k * 3), year: Math.round(sp * 0.8), created: 60 - k, bpm, key }); });
     LIB.forEach(([file, title, g, genre, mood, like, bpm], k) => { const sp = 300 + ((k * 7919) % 2600); add('lib' + k, 'song', title, 'u' + ((k * 5 + 1) % 22), file, tg([genre], [mood], [like]), { published: true, spikes: sp, week: Math.round(sp * 0.12) + ((k * 53) % 70), year: Math.round(sp * 0.7), created: 40 - k, bpm }); });
   const openDefs = [['P10','Four in the Morning','u3','neosoul',['Cello','Bass']],['P11','Cold Kitchen','u7','drill',['Vocals','Strings']],['P12','Paper Radio','u8','lofi',['Keys','Drums']],['P13','Kora for Two','u17','ambient',['Cello','Percussion']],['P14','Midnight Ferrari','u19','afrobeats',['Keys','Horns']],['P15','Istanbul Nights','u11','house',['Vocals','Lyrics']]];
   openDefs.forEach(([pid, t, o, f], k) => add('io' + k, 'instrumental', t + ' — idea', o, f, tg([FILES.indexOf(f) >= 0 ? GENRES[FILES.indexOf(f)] : 'Lo-fi'], [MOODS[k]], [LIKES[k]])));
@@ -2933,7 +2935,27 @@ class Component extends DCLogic {
     this.flash('Demo reset');
   };
 
+  unlockAudio = () => {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    if (!this._ctx) { try { this._ctx = new C(); } catch (e) { return; } }
+    const ctx = this._ctx;
+    if (ctx.state !== 'running') { try { const r = ctx.resume(); if (r && r.catch) r.catch(() => {}); } catch (e) {} }
+    try { const b = ctx.createBuffer(1, 1, 22050), src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination); src.start(0); } catch (e) {}
+  };
+  silentOn() {
+    // iOS mutes Web Audio when the ringer switch is off unless a media element is playing.
+    if (this._silentEl) { const p = this._silentEl.play(); if (p && p.catch) p.catch(() => {}); return; }
+    try {
+      const n = 4000, ab = new ArrayBuffer(44 + n), dv = new DataView(ab), w = (o, t) => { for (let i = 0; i < t.length; i++) dv.setUint8(o + i, t.charCodeAt(i)); };
+      w(0, 'RIFF'); dv.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true); dv.setUint32(24, 8000, true); dv.setUint32(28, 8000, true); dv.setUint16(32, 1, true); dv.setUint16(34, 8, true); w(36, 'data'); dv.setUint32(40, n, true);
+      for (let i = 0; i < n; i++) dv.setUint8(44 + i, 128);
+      const el = new Audio(URL.createObjectURL(new Blob([ab], { type: 'audio/wav' }))); el.loop = true; el.setAttribute('playsinline', ''); this._silentEl = el;
+      const p = el.play(); if (p && p.catch) p.catch(() => {});
+    } catch (e) {}
+  }
+  silentOff() { try { if (this._silentEl) this._silentEl.pause(); } catch (e) {} }
   componentDidMount() {
+    ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.addEventListener(ev, this.unlockAudio, { capture: true, passive: true }));
     let th = 'light'; try { th = localStorage.getItem('ellipsis4.theme') || 'light'; } catch (e) {}
     this.setState({ theme: th }); this.applyTheme(th);
     this._thSync = e => { if (e.key === 'ellipsis4.theme' && e.newValue && e.newValue !== this.state.theme) { this.setState({ theme: e.newValue }); this.applyTheme(e.newValue); } };
@@ -2972,6 +2994,7 @@ class Component extends DCLogic {
     this.audio = a;
   }
   componentWillUnmount() {
+    ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.removeEventListener(ev, this.unlockAudio, true)); this.silentOff();
     if (this._thSync) window.removeEventListener('storage', this._thSync);
     clearTimeout(this._saveT); clearTimeout(this._chk); clearInterval(this._evT); clearInterval(this._noteT); this._unmounted = true; clearTimeout(this._dmT); clearTimeout(this._mtT);
     clearInterval(this._adT); try { if (this._adBed) this._adBed.pause(); if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (x) {}
@@ -3214,6 +3237,8 @@ class Component extends DCLogic {
   mxPos() { if (!this._g) return this._mxPos || 0; return Math.max(0, this._ctx.currentTime - this._t0); }
   mxStopNodes() { cancelAnimationFrame(this._mxRaf); if (this._g) { Object.values(this._g.chs).forEach(c => { try { c.src.stop(); } catch (e) {} }); try { this._g.mg.disconnect(); } catch (e) {} this._g = null; } }
   mxStart(p, from) {
+    this.unlockAudio(); clearTimeout(this._blockT);
+    this._blockT = setTimeout(() => { if (this._g && this._ctx && this._ctx.state !== 'running') this.flash('Your browser paused sound — tap ▶ once more to hear the mix'); }, 900);
     this.mxStopNodes(); if (this.audio) this.audio.pause();
     const ctx = this.ensureCtx(), g = this.buildGraph(ctx, p, true);
     if (!g.lanes.length) { this.flash(this.mxAudio(p, true).length ? 'Turn on at least one track to play the mix' : 'Add a sound first — drag one in, or tap a sound below'); return; }
@@ -3585,10 +3610,10 @@ class Component extends DCLogic {
     if (el && sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 20, behavior: 'smooth' });
     this.flash('Turn on at least one audio track below, then open the mixer');
   }
-  openMixer(pid) { const p = this.proj(pid); if (!p) return; if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
+  openMixer(pid) { const p = this.proj(pid); if (!p) return; this.unlockAudio(); this.silentOn(); if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
     let pro = false; try { pro = localStorage.getItem('ellipsis4.mxMode') === 'pro'; } catch (e) {}
     this.setState({ mxOpen: true, mxPid: pid, mxFocus: null, playing: false, mxPro: pro, mxTut: seen || !pro ? -1 : 0, ezOver: false }); this.mxLoad(p).then(() => this.mxPrepare(pid)); }
-  closeMixer = () => { this._ezTry = null; if (this.state.ezTry) this.setState({ ezTry: null }); this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
+  closeMixer = () => { this.silentOff(); this._ezTry = null; if (this.state.ezTry) this.setState({ ezTry: null }); this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
 
   startMixOld(p) {
     this.stopMix(); if (this.audio) this.audio.pause();
@@ -3896,9 +3921,10 @@ class Component extends DCLogic {
     const pendingReq = s.acts.filter(a => !a.done && (a.type === 'request' || a.type === 'suggestion')).length;
     const isExec = !!(s.acct && s.acct.type === 'exec');
     const dmUnread = Object.keys(s.dms || {}).filter(uid => { const L = s.dms[uid]; const last = L && L[L.length - 1]; return last && last.from !== 'me' && last.at > ((s.dmRead || {})[uid] || 0); }).length + (s.meetings || []).filter(m => m.status === 'invited').length;
-    const nav = (isExec ? [['desk', 'A&R Desk', '◆'], ['explore', 'Explore', '◎'], ['inbox', 'Inbox', '✉'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']] : [['explore', 'Explore', '◎'], ['projects', 'Projects', '▦'], ['library', 'Library', '▤'], ['inbox', 'Inbox', '✉'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']]).map(([id, label, icon]) => {
-      const on = s.view === id || (id === 'projects' && (s.view === 'project' || s.view === 'lyric')) || (id === 'profile' && s.view === 'profile');
-      return { label, icon, isMe: id === 'profile', isIcon: id !== 'profile', badge: id === 'inbox' ? (dmUnread ? String(dmUnread) : null) : id === 'activity' && pendingReq && !isExec ? String(pendingReq) : null, bg: on ? 'rgba(0,217,166,0.16)' : 'transparent', fg: on ? '#00D9A6' : '#9BA9B4', go: () => id === 'profile' ? this.go('profile', { uid: 'me' }) : this.go(id) };
+    const nav = (isExec ? [['desk', 'A&R Desk', '◆'], ['explore', 'Explore', '◎'], ['favorites', 'Favorites', '♥'], ['inbox', 'Inbox', '✉'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']] : [['explore', 'Explore', '◎'], ['projects', 'Projects', '▦'], ['library', 'Library', '▤'], ['favorites', 'Favorites', '♥'], ['inbox', 'Inbox', '✉'], ['activity', 'Activity', '◔'], ['profile', 'Profile', '☺']]).map(([id, label, icon]) => {
+      const favOn = s.view === 'library' && s.libTab === 'favs';
+      const on = id === 'favorites' ? favOn : id === 'library' ? (s.view === 'library' && !favOn) : s.view === id || (id === 'projects' && (s.view === 'project' || s.view === 'lyric')) || (id === 'profile' && s.view === 'profile');
+      return { label, icon, isMe: id === 'profile', isIcon: id !== 'profile', badge: id === 'inbox' ? (dmUnread ? String(dmUnread) : null) : id === 'activity' && pendingReq && !isExec ? String(pendingReq) : null, bg: on ? 'rgba(0,217,166,0.16)' : 'transparent', fg: on ? '#00D9A6' : '#9BA9B4', go: () => id === 'profile' ? this.go('profile', { uid: 'me' }) : id === 'favorites' ? this.go('library', { libTab: 'favs' }) : id === 'library' ? this.go('library', { libTab: s.libTab === 'favs' ? 'instrumental' : s.libTab }) : this.go(id) };
     });
 
     /* explore */
@@ -4026,7 +4052,7 @@ class Component extends DCLogic {
     /* library */
     const libKinds = ['instrumental', 'lyric', 'melody', 'acapella', 'song', 'favs'];
     const stockOn = s.view === 'library' && s.libSrc === 'stock' && s.libTab !== 'favs' && s.libTab !== 'song';
-    const libBase = stockOn ? this.stock.filter(x => x.kind === s.libTab && (s.libGenre === 'All' || x.tags.genre.indexOf(s.libGenre) >= 0)) : s.libTab === 'favs' ? I.filter(x => s.favs[x.id]) : I.filter(x => x.kind === s.libTab && (x.owner === 'me' || P.some(p => this.isMember(p) && p.items.indexOf(x.id) >= 0)));
+    const libBase = stockOn ? this.stock.filter(x => x.kind === s.libTab && (s.libGenre === 'All' || x.tags.genre.indexOf(s.libGenre) >= 0)) : s.libTab === 'favs' ? I.concat(this.stock).filter((x, i, arr) => s.favs[x.id] && arr.findIndex(y => y.id === x.id) === i) : I.filter(x => x.kind === s.libTab && (x.owner === 'me' || P.some(p => this.isMember(p) && p.items.indexOf(x.id) >= 0))).concat(s.libTab === 'song' ? this.stock.filter(x => x.kind === 'song' && !I.some(y => y.id === x.id)) : []);
     const lq = s.libQ.trim().toLowerCase();
     const libAll = libBase.filter(x => !lq || (x.title + ' ' + U(x.owner).name + ' ' + x.tags.genre.join(' ') + ' ' + x.tags.mood.join(' ') + ' ' + x.tags.like.join(' ')).toLowerCase().indexOf(lq) >= 0);
     const libCap = stockOn ? 40 + s.libMore * 40 : 1e9, libList = libAll.slice(0, libCap);
@@ -4133,9 +4159,15 @@ class Component extends DCLogic {
     if (sh && sh.type === 'tags') {
       const target = sh.target === 'item' ? this.item(sh.id) : this.proj(sh.id);
       sheetTitle = 'Tags for ' + target.title; sheetSub = sh.sub || 'Up to 5 in each. Tags decide which rankings it appears in and how people find it.'; sheetW = '600px';
+      const used = key => { const n = {}; s.items.concat(this.stock).forEach(x => { if ((x.published || x.original) && x.tags) (x.tags[key] || []).forEach(v => { n[v] = (n[v] || 0) + 1; }); }); return Object.keys(n).sort((a, b) => n[b] - n[a]); };
       const grp = (key, label, base, custom) => {
-        const sel = sh.tags[key]; const opts = Array.from(new Set(base.concat(sel)));
-        return { label, count: sel.length, countFg: sel.length ? 'var(--mint-ink)' : 'var(--dim)', custom,
+        const sel = sh.tags[key]; const extra = used(key).filter(v => base.indexOf(v) < 0).slice(0, key === 'like' ? 10 : 14);
+        const opts = Array.from(new Set(base.concat(extra, sel)));
+        const inKey = 'in_' + key, inVal = sh[inKey] || '';
+        const addIt = () => { const v = inVal.trim().replace(/\s+/g, ' '); if (!v) return; if (sel.length >= 5 && sel.indexOf(v) < 0) { this.flash('Up to 5 ' + label + ' tags'); return; } const hit = opts.find(o => o.toLowerCase() === v.toLowerCase()) || v; this.setSheet({ [inKey]: '', tags: Object.assign({}, sh.tags, { [key]: sel.indexOf(hit) >= 0 ? sel : sel.concat([hit]) }) }); };
+        return { label, count: sel.length, countFg: sel.length ? 'var(--mint-ink)' : 'var(--dim)', custom: true,
+          inVal, ph: key === 'like' ? 'Add an artist it sounds like' : key === 'genre' ? 'Add another genre' : 'Add another mood',
+          onIn: e => this.setSheet({ [inKey]: e.target.value }), onKey: e => { if (e.key === 'Enter') addIt(); }, add: addIt,
           opts: opts.map(o => { const on = sel.indexOf(o) >= 0, full = sel.length >= 5; return { label: key === 'like' ? o : o, bg: on ? 'var(--mint-soft)' : 'var(--panel)', fg: on ? 'var(--mint-ink)' : full ? 'var(--dim)' : 'var(--ink)', border: on ? 'var(--mint)' : 'var(--line)', go: () => this.setSheet({ tags: Object.assign({}, sh.tags, { [key]: on ? sel.filter(z => z !== o) : full ? sel : sel.concat([o]) }) }) }; }) };
       };
       tagGroups = [grp('like', 'Sounds like', LIKES, true), grp('genre', 'Genre', GENRES, false), grp('mood', 'Mood', MOODS, false)];
