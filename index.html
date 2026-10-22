@@ -60,13 +60,14 @@
     })();
   </script>
   <script>(function(){var K='ellipsis4.theme',D='dark';function g(){try{return localStorage.getItem(K)||D}catch(e){return D}}function s(t){document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t}s(g());window.addEventListener('storage',function(e){if(e.key===K&&e.newValue)s(e.newValue)});document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('[data-theme-toggle]');if(!b)return;var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';s(t);try{localStorage.setItem(K,t)}catch(x){}},true)})();</script>
+  <script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
 </helmet>
 
 <div style="background:var(--bg);color:var(--ink);font-family:Geist,-apple-system,system-ui,sans-serif;min-height:100vh;overflow-x:hidden">
 
   <header style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 40px;background:var(--hdr);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--navline)">
     <div style="display:flex;align-items:center;gap:12px">
-      <div style="width:34px;height:34px;border-radius:10px;background:#00D9A6;display:flex;align-items:center;justify-content:center;color:#06231B;font-weight:620;font-size:19px;letter-spacing:1px">···</div>
+      <span style="flex:none;width:34px;height:34px;border-radius:10px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:inline-flex;align-items:center;justify-content:center;gap:3px"><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span></span>
       <span style="font-size:19px;font-weight:620;letter-spacing:-0.5px">Ellipsis</span>
     </div>
     <nav style="display:flex;align-items:center;gap:28px;font-size:15px;font-weight:540;color:var(--dim)">
@@ -204,10 +205,10 @@
 
   <footer style="border-top:1px solid var(--navline);padding:44px 40px 56px">
     <div style="max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between">
-      <div style="font-size:14px;color:var(--dim2);line-height:1.6">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><a href="https://www.dmca.com/Protection/Status.aspx?ID=f869b572-eb73-46d9-814c-e156ae3195a5" title="DMCA.com Protection Status" class="dmca-badge" target="_blank" rel="noopener" style="display:inline-flex;align-items:center"><img src="https://images.dmca.com/Badges/dmca-badge-w100-2x1-04.png?ID=f869b572-eb73-46d9-814c-e156ae3195a5" alt="DMCA.com Protection Status" width="100" height="50" style="display:block;width:100px;height:50px"></a><div style="font-size:14px;color:var(--dim2);line-height:1.6">
         © 2026 Ellipsis. All rights reserved.<br>
         Recordings, compositions and stems remain the property of their creators.
-      </div>
+      </div></div>
       <div style="display:flex;flex-wrap:wrap;gap:22px;font-size:14px;font-weight:540">
         <a href="legal/privacy.html" style="color:var(--dim)">Privacy</a>
         <a href="legal/terms.html" style="color:var(--dim)">Terms</a>

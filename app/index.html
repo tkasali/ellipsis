@@ -34,6 +34,8 @@
     button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     :root,[data-theme="light"]{--bg:#EFF2F5;--panel:#FFFFFF;--panel2:#F7F9FA;--line:#E3E8EC;--line2:#CBD4DB;--ink:#1F2933;--dim:#5A6874;--mint:#00D9A6;--mint-ink:#00806A;--mint-soft:#E4FAF4;--on-mint:#06231B;--coral:#C2402B;--coral-ink:#A8321F;--coral-soft:#FDECE8;--amber:#B7791F;--amber-soft:#FFF4DC;--hover:#F2F5F7;--shadow:0 18px 40px rgba(15,30,40,0.10)}
     [data-theme="dark"]{--bg:#0B1116;--panel:#121A21;--panel2:#17212A;--line:#22303A;--line2:#34434F;--ink:#F2F5F7;--dim:#9BA9B4;--mint:#00D9A6;--mint-ink:#3FE6BD;--mint-soft:rgba(0,217,166,0.13);--on-mint:#06231B;--coral:#E0553F;--coral-ink:#FF9C88;--coral-soft:rgba(224,85,63,0.15);--amber:#F2B64C;--amber-soft:rgba(242,182,76,0.14);--hover:#1A252E;--shadow:0 18px 40px rgba(0,0,0,0.45)}
+    :root,[data-theme="dark"]{--mx-bg:#0A0F12;--mx-bg2:#0D1418;--mx-well:#05080A;--mx-strip:#111A20;--mx-strip2:#16222A;--mx-grid:#172128;--mx-btn:#141D23;--mx-line:#1C262D;--mx-line2:#2A363E;--mx-ink:#E6EDF1;--mx-ink2:#C9D4DB;--mx-dim:#8C9AA5;--mx-mint:#3FE6BD;--mx-mintbg:#123A33;--mx-rgb:255,255,255}
+    [data-theme="light"]{--mx-bg:#F2F5F7;--mx-bg2:#FFFFFF;--mx-well:#E4E9ED;--mx-strip:#FFFFFF;--mx-strip2:#EEF8F4;--mx-grid:#E3E8EC;--mx-btn:#EEF2F4;--mx-line:#DDE3E8;--mx-line2:#C5CFD6;--mx-ink:#13202A;--mx-ink2:#2F3D47;--mx-dim:#56646F;--mx-mint:#00806A;--mx-mintbg:#DFF5EE;--mx-rgb:19,32,42}
     html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11"}
     *{box-sizing:border-box}
     a{color:var(--mint-ink);text-decoration:none}
@@ -43,8 +45,8 @@
     ::-webkit-scrollbar{width:10px;height:10px}
     ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px;border:3px solid transparent;background-clip:content-box}
     ::-webkit-scrollbar-track{background:transparent}
-    @keyframes elIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}
-    @keyframes eqb{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}}
+    @keyframes elIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @keyframes eqb{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
     @keyframes elPulse{0%,100%{opacity:1}50%{opacity:.35}}
     @keyframes elPop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
   </style>
@@ -52,8 +54,8 @@
 
 <div data-theme="{{ theme }}" style="height:100vh;height:100dvh;display:grid;grid-template-columns:{{ shCols }};grid-template-rows:{{ shRows }};background:var(--bg);color:var(--ink);font-family:Geist,-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-0.005em">
 
-  <aside style="grid-row:{{ navRow }};grid-column:1;background:#0C1318;display:flex;flex-direction:{{ navDir }};align-items:center;justify-content:{{ navJust }};gap:{{ navGap }};padding:{{ navPad }};min-height:0;overflow-y:{{ navOy }};overflow-x:hidden;z-index:9">
-    <div style="display:{{ navLogo }};width:42px;height:42px;border-radius:13px;background:#00D9A6;color:#06231B;font-size:20px;font-weight:620;letter-spacing:1px;align-items:center;justify-content:center;flex:none;margin-bottom:4px">···</div>
+  <aside style="grid-row:{{ navRow }};grid-column:1;background:#0C1318;display:flex;flex-direction:{{ navDir }};position:relative;align-items:center;justify-content:{{ navJust }};gap:{{ navGap }};padding:{{ navPad }};min-height:0;overflow-y:{{ navOy }};overflow-x:hidden;z-index:95">
+    <div style="display:{{ navLogo }};flex:none;margin-bottom:4px"><span style="flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span></span></div>
     <sc-if value="{{ showCreate }}" hint-placeholder-val="{{ true }}">
     <button onClick="{{ openCreate }}" title="Create" style="width:{{ navCreateW }};padding:{{ navCreatePad }};border:0;border-radius:16px;background:#00D9A6;color:#06231B;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;flex:none;margin-bottom:6px;box-shadow:0 8px 20px rgba(0,217,166,0.3)">
       <span style="font-size:22px;line-height:1;font-weight:620">+</span><span style="font-size:12px;font-weight:620">Create</span>
@@ -273,7 +275,7 @@
             <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px">
               <div>
                 <h1 style="margin:0 0 5px;font-family:Urbanist,Geist,sans-serif;font-size:31px;font-weight:400;letter-spacing:-0.8px">Projects</h1>
-                <p style="margin:0;font-size:14.5px;color:var(--dim)">Where lyrics, melodies, acapellas and instrumentals come together into a song.</p>
+                <p style="margin:0 0 4px;font-size:14.5px;line-height:1.5;color:var(--dim);text-wrap:pretty">Where lyrics, melodies, acapellas and instrumentals come together into a song.</p>
               </div>
               <div style="display:flex;gap:10px;align-items:center">
                 <div style="display:flex;gap:4px;padding:4px;border-radius:13px;background:var(--panel);border:1px solid var(--line)">
@@ -297,7 +299,7 @@
                 <button onClick="{{ p.open }}" style="text-align:left;border-radius:20px;background:var(--panel);border:1px solid var(--line);overflow:hidden;cursor:pointer;color:var(--ink);padding:0;transition:transform .15s,box-shadow .15s" style-hover="transform:translateY(-2px);box-shadow:var(--shadow)">
                   <span style="display:block;height:84px;background:{{ p.art }}"></span>
                   <span style="display:block;padding:14px 16px 16px">
-                    <span style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="width:10px;height:10px;border-radius:50%;background:{{ p.dot }}"></span><span style="font-size:16.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.title }}</span></span>
+                    <span style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="width:10px;height:10px;border-radius:50%;background:{{ p.dot }}"></span><span style="font-size:16.5px;font-weight:620;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere">{{ p.title }}</span></span>
                     <span style="display:block;font-size:13px;color:var(--dim);margin-bottom:10px">{{ p.sub }}</span>
                     <span style="display:flex;align-items:center;gap:6px">
                       <sc-for list="{{ p.people }}" as="u" hint-placeholder-count="3">
@@ -323,9 +325,9 @@
               </div>
               <div style="position:relative;display:flex;gap:9px;flex-wrap:wrap">
                 <sc-if value="{{ pCanShare }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pShare }}" style="padding:11px 16px;border:0;border-radius:12px;background:rgba(255,255,255,0.94);color:#1F2933;font-size:13.5px;font-weight:620;cursor:pointer">🔗 Share</button></sc-if>
-                <sc-if value="{{ pCanCover }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pCover }}" style="padding:11px 16px;border:0;border-radius:12px;background:rgba(255,255,255,0.94);color:#1F2933;font-size:13.5px;font-weight:620;cursor:pointer">🖼 {{ pCoverLabel }}</button></sc-if>
-                <button onClick="{{ pTags }}" style="padding:11px 16px;border:0;border-radius:12px;background:rgba(255,255,255,0.94);color:#1F2933;font-size:13.5px;font-weight:620;cursor:pointer">Tags · {{ pTagCount }}</button>
-                <button onClick="{{ pAdd }}" style="padding:11px 16px;border:0;border-radius:12px;background:#00D9A6;color:#06231B;font-size:13.5px;font-weight:620;cursor:pointer">{{ pAddLabel }}</button>
+                <sc-if value="{{ pCanCover }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pCover }}" style="white-space:nowrap;padding:11px 16px;border:0;border-radius:12px;background:rgba(255,255,255,0.94);color:#1F2933;font-size:13.5px;font-weight:620;cursor:pointer">🖼 {{ pCoverLabel }}</button></sc-if>
+                <button onClick="{{ pTags }}" style="white-space:nowrap;padding:11px 16px;border:0;border-radius:12px;background:rgba(255,255,255,0.94);color:#1F2933;font-size:13.5px;font-weight:620;cursor:pointer">Tags · {{ pTagCount }}</button>
+                <button onClick="{{ pAdd }}" style="white-space:nowrap;padding:11px 16px;border:0;border-radius:12px;background:#00D9A6;color:#06231B;font-size:13.5px;font-weight:620;cursor:pointer">{{ pAddLabel }}</button>
               </div>
             </div>
 
@@ -364,7 +366,7 @@
                     <div style="padding:22px;border-radius:14px;border:2px dashed var(--line2);text-align:center">
                       <div style="font-size:15px;font-weight:620;margin-bottom:4px">Nothing here yet</div>
                       <div style="font-size:13.5px;color:var(--dim);margin-bottom:12px">Write lyrics, record a melody, or bring in an instrumental.</div>
-                      <button onClick="{{ pAdd }}" style="padding:10px 16px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13.5px;font-weight:620;cursor:pointer">＋ Add content</button>
+                      <button onClick="{{ pAdd }}" style="white-space:nowrap;padding:10px 16px;border:0;border-radius:11px;background:var(--mint);color:var(--on-mint);font-size:13.5px;font-weight:620;cursor:pointer">＋ Add content</button>
                     </div>
                   </sc-if>
                   <div style="display:flex;flex-direction:column;gap:8px">
@@ -1422,64 +1424,64 @@
   </sc-if>
 
   <sc-if value="{{ mxOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;inset:0;z-index:92;background:radial-gradient(ellipse at 50% -20%,#123A33 0%,#0A0F12 46%,#05080A 100%);color:#E6EDF1;display:flex;flex-direction:column;font-family:Geist,sans-serif;animation:elIn .2s ease both">
+    <div style="position:fixed;top:0;left:{{ mxLeft }};right:0;bottom:{{ mxBottom }};z-index:92;background:radial-gradient(ellipse at 50% -20%,var(--mx-mintbg) 0%,var(--mx-bg) 46%,var(--mx-well) 100%);color:var(--mx-ink);display:flex;flex-direction:column;font-family:Geist,sans-serif;animation:elIn .2s ease both">
 
-      <div style="flex:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid #1C262D;background:#0D1418">
+      <div style="flex:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid var(--mx-line);background:var(--mx-bg2)">
         <div style="min-width:0;flex:1">
           <div style="font-size:10.5px;font-weight:620;letter-spacing:0.14em;color:#00D9A6">MIXER</div>
           <div style="font-family:Urbanist,Geist,sans-serif;font-size:19px;font-weight:500;letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mxTitle }}</div>
         </div>
-        <button onClick="{{ tutOpen }}" title="Mixer tutorial" style="white-space:nowrap;flex:none;padding:9px 14px;border:1px solid #00D9A6;border-radius:10px;background:rgba(0,217,166,0.12);color:#3FE6BD;font-size:12.5px;font-weight:620;cursor:pointer">? Tutorial</button>
-        <div style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23;box-shadow:{{ hl.modes }};">
+        <button onClick="{{ tutOpen }}" title="Mixer tutorial" style="white-space:nowrap;flex:none;padding:9px 14px;border:1px solid #00D9A6;border-radius:10px;background:rgba(0,217,166,0.12);color:var(--mx-mint);font-size:12.5px;font-weight:620;cursor:pointer">? Tutorial</button>
+        <div style="display:flex;gap:3px;padding:3px;border-radius:11px;background:var(--mx-btn);box-shadow:{{ hl.modes }};">
           <sc-for list="{{ mxModes }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="padding:7px 14px;border:0;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ t.label }}</button></sc-for>
         </div>
-        <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:center"><div title="Compare two mixes" style="display:flex;gap:3px;padding:3px;border-radius:11px;background:#141D23;box-shadow:{{ hl.ab }};">
+        <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:center"><div title="Compare two mixes" style="display:flex;gap:3px;padding:3px;border-radius:11px;background:var(--mx-btn);box-shadow:{{ hl.ab }};">
           <sc-for list="{{ mxAB }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="width:34px;padding:7px 0;border:0;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ t.label }}</button></sc-for>
         </div>
-        <button onClick="{{ mxAuto }}" title="Balance levels and pick a starting sound for every track" style="box-shadow:{{ hl.auto }};padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">✦ Auto-mix</button></div></sc-if>
-        <button onClick="{{ mxShare }}" title="Post this mix to the project chat" style="box-shadow:{{ hl.ab }};padding:9px 14px;border:1px solid #2A363E;border-radius:10px;background:#141D23;color:#E6EDF1;font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">Share mix</button>
-        <button onClick="{{ closeMixer }}" title="Close mixer (Esc)" style="width:36px;height:36px;border-radius:10px;border:1px solid #2A363E;background:transparent;color:#E6EDF1;font-size:15px;cursor:pointer">✕</button>
+        <button onClick="{{ mxAuto }}" title="Balance levels and pick a starting sound for every track" style="box-shadow:{{ hl.auto }};padding:9px 14px;border:1px solid var(--mx-line2);border-radius:10px;background:var(--mx-btn);color:var(--mx-ink);font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">✦ Auto-mix</button></div></sc-if>
+        <button onClick="{{ mxShare }}" title="Post this mix to the project chat" style="box-shadow:{{ hl.ab }};padding:9px 14px;border:1px solid var(--mx-line2);border-radius:10px;background:var(--mx-btn);color:var(--mx-ink);font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">Share mix</button>
+        <button onClick="{{ closeMixer }}" title="Close mixer (Esc)" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--mx-line2);background:transparent;color:var(--mx-ink);font-size:15px;cursor:pointer">✕</button>
       </div>
 
       <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}">
-      <div style="flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid #1C262D;box-shadow:{{ hl.transport }};">
-        <button onClick="{{ mxToStart }}" title="Back to start" style="width:36px;height:36px;border-radius:10px;border:1px solid #2A363E;background:#141D23;color:#E6EDF1;font-size:13px;cursor:pointer">⏮</button>
+      <div style="flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--mx-line);box-shadow:{{ hl.transport }};">
+        <button onClick="{{ mxToStart }}" title="Back to start" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--mx-line2);background:var(--mx-btn);color:var(--mx-ink);font-size:13px;cursor:pointer">⏮</button>
         <button onClick="{{ mxPlay }}" title="Play / stop (Space)" style="width:46px;height:36px;border-radius:10px;border:0;background:{{ mxPlayBg }};color:{{ mxPlayFg }};font-size:14px;font-weight:620;cursor:pointer">{{ mxPlayIcon }}</button>
         <button onClick="{{ mxLoop }}" title="Loop" style="width:36px;height:36px;border-radius:10px;border:1px solid {{ mxLoopBorder }};background:{{ mxLoopBg }};color:{{ mxLoopFg }};font-size:15px;cursor:pointer">⟲</button>
-        <div style="padding:6px 14px;border-radius:10px;background:#05080A;border:1px solid #1C262D;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;color:#3FE6BD;letter-spacing:0.04em;min-width:210px" data-clk="1">{{ mxClock }}</div>
-        <div style="display:flex;gap:16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#8C9AA5">
-          <span>BPM <b style="color:#E6EDF1">{{ mxBpm }}</b></span><span>KEY <b style="color:#E6EDF1">{{ mxKey }}</b></span><span>TRACKS <b style="color:#E6EDF1">{{ mxCount }}</b></span>
+        <div style="padding:6px 14px;border-radius:10px;background:var(--mx-well);border:1px solid var(--mx-line);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;color:var(--mx-mint);letter-spacing:0.04em;min-width:210px" data-clk="1">{{ mxClock }}</div>
+        <div style="display:flex;gap:16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--mx-dim)">
+          <span>BPM <b style="color:var(--mx-ink)">{{ mxBpm }}</b></span><span>KEY <b style="color:var(--mx-ink)">{{ mxKey }}</b></span><span>TRACKS <b style="color:var(--mx-ink)">{{ mxCount }}</b></span>
         </div>
         <div style="flex:1"></div>
-        <div style="display:flex;gap:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#8C9AA5">
-          <span>PEAK <b style="color:#E6EDF1" data-pk="1">−∞</b></span><span>LOUDNESS <b style="color:#E6EDF1" data-lufs="1">—</b></span>
+        <div style="display:flex;gap:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--mx-dim)">
+          <span>PEAK <b style="color:var(--mx-ink)" data-pk="1">−∞</b></span><span>LOUDNESS <b style="color:var(--mx-ink)" data-lufs="1">—</b></span>
         </div>
-        <sc-if value="{{ mxHasDl }}" hint-placeholder-val="{{ false }}"><a href="{{ mxDlUrl }}" download="{{ mxDlName }}" style="padding:9px 14px;border:1px solid #2A363E;border-radius:10px;color:#E6EDF1;font-size:12.5px;font-weight:620;text-decoration:none;white-space:nowrap">⇩ WAV</a></sc-if>
+        <sc-if value="{{ mxHasDl }}" hint-placeholder-val="{{ false }}"><a href="{{ mxDlUrl }}" download="{{ mxDlName }}" style="padding:9px 14px;border:1px solid var(--mx-line2);border-radius:10px;color:var(--mx-ink);font-size:12.5px;font-weight:620;text-decoration:none;white-space:nowrap">⇩ WAV</a></sc-if>
         <button onClick="{{ mxBounce }}" disabled="{{ mxBounceOff }}" title="{{ mxBounceHint }}" style="box-shadow:{{ hl.bounce }};padding:10px 16px;border:0;border-radius:10px;background:{{ mxBounceBg }};color:{{ mxBounceFg }};font-size:13px;font-weight:620;cursor:{{ mxBounceCursor }};white-space:nowrap">{{ mxBounceLabel }}</button>
       </div>
       </sc-if>
 
       <sc-if value="{{ mxNote }}" hint-placeholder-val="{{ false }}">
-        <div style="flex:none;padding:8px 18px;background:#1A2328;color:#C9D4DB;font-size:12.5px;font-weight:580;border-bottom:1px solid #1C262D">{{ mxNote }}</div>
+        <div style="flex:none;padding:8px 18px;background:var(--mx-strip2);color:var(--mx-ink2);font-size:12.5px;font-weight:580;border-bottom:1px solid var(--mx-line)">{{ mxNote }}</div>
       </sc-if>
 
-<div style="flex:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid #1C262D;background:linear-gradient(90deg,rgba(0,217,166,0.08),rgba(91,62,158,0.09))">
+<div style="flex:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--mx-line);background:linear-gradient(90deg,rgba(0,217,166,0.08),rgba(91,62,158,0.09))">
 <div title="Mix health — tap a suggestion below to fix it" style="flex:none;position:relative;width:46px;height:46px">
-<svg width="46" height="46" viewBox="0 0 46 46" style="display:block"><circle cx="23" cy="23" r="18" style="fill:none;stroke:#1C262D;stroke-width:4"></circle><circle cx="23" cy="23" r="18" style="fill:none;stroke:{{ fxScoreColor }};stroke-width:4;stroke-linecap:round;stroke-dasharray:{{ fxScoreDash }};transform:rotate(-90deg);transform-origin:23px 23px"></circle></svg>
+<svg width="46" height="46" viewBox="0 0 46 46" style="display:block"><circle cx="23" cy="23" r="18" style="fill:none;stroke:var(--mx-line);stroke-width:4"></circle><circle cx="23" cy="23" r="18" style="fill:none;stroke:{{ fxScoreColor }};stroke-width:4;stroke-linecap:round;stroke-dasharray:{{ fxScoreDash }};transform:rotate(-90deg);transform-origin:23px 23px"></circle></svg>
 <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ fxScore }}</span>
 </div>
-<div style="flex:1;min-width:240px;display:flex;align-items:center;gap:8px;padding:5px 5px 5px 14px;border-radius:14px;background:#05080A;border:1px solid {{ fxCmdBorder }}">
-<span style="color:#3FE6BD;font-size:14px">✦</span>
-<input value="{{ fxCmd }}" onChange="{{ onFxCmd }}" onKeyDown="{{ onFxKey }}" placeholder="Tell the mixer: “vocal louder”, “more space”, “make it punchy”, “fix it”…" aria-label="Tell the mixer what you want" style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:#E6EDF1;font-size:14px;font-family:inherit" />
+<div style="flex:1;min-width:240px;display:flex;align-items:center;gap:8px;padding:5px 5px 5px 14px;border-radius:14px;background:var(--mx-well);border:1px solid {{ fxCmdBorder }}">
+<span style="color:var(--mx-mint);font-size:14px">✦</span>
+<input value="{{ fxCmd }}" onChange="{{ onFxCmd }}" onKeyDown="{{ onFxKey }}" placeholder="Tell the mixer: “vocal louder”, “more space”, “make it punchy”, “fix it”…" aria-label="Tell the mixer what you want" style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:var(--mx-ink);font-size:14px;font-family:inherit" />
 <button onClick="{{ fxMic }}" title="{{ fxMicTitle }}" style="flex:none;width:36px;height:36px;border-radius:10px;border:0;background:{{ fxMicBg }};color:{{ fxMicFg }};font-size:15px;cursor:pointer">🎙</button>
 <button onClick="{{ fxRun }}" style="flex:none;padding:9px 15px;border:0;border-radius:10px;background:#00D9A6;color:#06231B;font-size:13px;font-weight:700;cursor:pointer">Do it</button>
 </div>
-<sc-if value="{{ fxReply }}" hint-placeholder-val="{{ false }}"><span style="max-width:340px;font-size:12.5px;font-weight:600;color:#3FE6BD">{{ fxReply }}</span></sc-if>
+<sc-if value="{{ fxReply }}" hint-placeholder-val="{{ false }}"><span style="max-width:340px;font-size:12.5px;font-weight:600;color:var(--mx-mint)">{{ fxReply }}</span></sc-if>
 </div>
 <sc-if value="{{ fxHasTips }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;display:flex;align-items:center;gap:8px;overflow-x:auto;padding:8px 18px;border-bottom:1px solid #1C262D">
-<span style="flex:none;font-size:10.5px;font-weight:700;letter-spacing:0.14em;color:#9BA9B4">MIX CHECK</span>
-<sc-for list="{{ fxTips }}" as="t" hint-placeholder-count="2"><div style="flex:none;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 11px;border-radius:12px;background:#111A20;border:1px solid {{ t.border }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ t.dot }}"></span><span style="font-size:12.5px;font-weight:550;white-space:nowrap">{{ t.text }}</span><button onClick="{{ t.apply }}" style="padding:5px 10px;border:0;border-radius:8px;background:rgba(0,217,166,0.16);color:#3FE6BD;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ t.label }}</button></div></sc-for>
+<div style="flex:none;display:flex;align-items:center;gap:8px;overflow-x:auto;padding:8px 18px;border-bottom:1px solid var(--mx-line)">
+<span style="flex:none;font-size:10.5px;font-weight:700;letter-spacing:0.14em;color:var(--mx-dim)">MIX CHECK</span>
+<sc-for list="{{ fxTips }}" as="t" hint-placeholder-count="2"><div style="flex:none;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 11px;border-radius:12px;background:var(--mx-strip);border:1px solid {{ t.border }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ t.dot }}"></span><span style="font-size:12.5px;font-weight:550;white-space:nowrap">{{ t.text }}</span><button onClick="{{ t.apply }}" style="padding:5px 10px;border:0;border-radius:8px;background:rgba(0,217,166,0.16);color:var(--mx-mint);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ t.label }}</button></div></sc-for>
 <button onClick="{{ fxApplyAll }}" style="flex:none;padding:7px 13px;border:0;border-radius:10px;background:#00D9A6;color:#06231B;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap">✦ Fix all</button>
 </div>
 </sc-if>
@@ -1489,40 +1491,40 @@
         <div style="max-width:1200px;margin:0 auto;padding:20px 20px 44px;display:grid;grid-template-columns:{{ ezCols }};gap:18px;align-items:start">
           <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
 
-<div onDragOver="{{ ezDragOver }}" onDragLeave="{{ ezDragLeave }}" onDrop="{{ ezDrop }}" style="position:relative;height:{{ fxStageH }};border-radius:28px;overflow:hidden;background:radial-gradient(ellipse at 50% 12%,#15443B 0%,#0C1D21 36%,#070C0F 78%);border:1px solid rgba(0,217,166,0.26);box-shadow:inset 0 0 90px rgba(0,217,166,0.08),0 24px 70px rgba(0,0,0,0.45);touch-action:none;user-select:none">
+<div onDragOver="{{ ezDragOver }}" onDragLeave="{{ ezDragLeave }}" onDrop="{{ ezDrop }}" style="position:relative;height:{{ fxStageH }};border-radius:28px;overflow:hidden;background:radial-gradient(ellipse at 50% 12%,var(--mx-mintbg) 0%,var(--mx-well) 36%,var(--mx-well) 78%);border:1px solid rgba(0,217,166,0.26);box-shadow:inset 0 0 90px rgba(0,217,166,0.08),0 24px 70px rgba(0,0,0,0.45);touch-action:none;user-select:none">
 <canvas data-spec="ring" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></canvas>
 <div style="position:absolute;left:8%;right:8%;top:14%;height:72%;pointer-events:none">
-<div style="position:absolute;inset:0;border:1px dashed rgba(255,255,255,0.07);border-radius:50%"></div>
-<div style="position:absolute;inset:20%;border:1px dashed rgba(255,255,255,0.08);border-radius:50%"></div>
+<div style="position:absolute;inset:0;border:1px dashed rgba(var(--mx-rgb),0.07);border-radius:50%"></div>
+<div style="position:absolute;inset:20%;border:1px dashed rgba(var(--mx-rgb),0.08);border-radius:50%"></div>
 <div style="position:absolute;inset:40%;border:1px solid rgba(0,217,166,0.16);border-radius:50%"></div>
-<div style="position:absolute;left:50%;top:-8%;bottom:-8%;width:1px;background:linear-gradient(transparent,rgba(255,255,255,0.1),transparent)"></div>
+<div style="position:absolute;left:50%;top:-8%;bottom:-8%;width:1px;background:linear-gradient(transparent,rgba(var(--mx-rgb),0.1),transparent)"></div>
 </div>
-<div style="position:absolute;left:0;right:0;top:9px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.16em;color:rgba(230,237,241,0.45);pointer-events:none">BACK · ROOMY</div>
-<div style="position:absolute;left:0;right:0;bottom:9px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.16em;color:rgba(230,237,241,0.45);pointer-events:none">FRONT · CLOSE</div>
-<div style="position:absolute;left:12px;top:50%;font-size:11px;font-weight:700;color:rgba(230,237,241,0.4);pointer-events:none">L</div>
-<div style="position:absolute;right:12px;top:50%;font-size:11px;font-weight:700;color:rgba(230,237,241,0.4);pointer-events:none">R</div>
+<div style="position:absolute;left:0;right:0;top:9px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.16em;color:var(--mx-dim);pointer-events:none">BACK · ROOMY</div>
+<div style="position:absolute;left:0;right:0;bottom:9px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.16em;color:var(--mx-dim);pointer-events:none">FRONT · CLOSE</div>
+<div style="position:absolute;left:12px;top:50%;font-size:11px;font-weight:700;color:var(--mx-dim);pointer-events:none">L</div>
+<div style="position:absolute;right:12px;top:50%;font-size:11px;font-weight:700;color:var(--mx-dim);pointer-events:none">R</div>
 <div style="position:absolute;left:16px;top:26px;max-width:46%;pointer-events:none">
-<div style="font-size:10.5px;font-weight:620;letter-spacing:0.14em;color:#3FE6BD">{{ ezKicker }}</div>
-<div style="font-family:Urbanist,Geist,sans-serif;font-size:18px;font-weight:500;letter-spacing:-0.3px;line-height:1.2;color:#F2F6F8">{{ ezHeadline }}</div>
+<div style="font-size:10.5px;font-weight:620;letter-spacing:0.14em;line-height:1.4;white-space:nowrap;color:var(--mx-mint)">{{ ezKicker }}</div>
+<div style="font-family:Urbanist,Geist,sans-serif;font-size:18px;font-weight:500;letter-spacing:-0.3px;line-height:1.2;color:var(--mx-ink)">{{ ezHeadline }}</div>
 </div>
 <sc-for list="{{ fxOrbs }}" as="o" hint-placeholder-count="3">
 <div onPointerDown="{{ o.down }}" title="{{ o.tip }}" style="position:absolute;left:{{ o.left }};top:{{ o.top }};width:{{ o.size }};height:{{ o.size }};margin-left:{{ o.half }};margin-top:{{ o.half }};cursor:grab;touch-action:none;z-index:{{ o.z }};opacity:{{ o.op }}">
 <div data-orb="{{ o.id }}" style="position:absolute;inset:-18px;border-radius:50%;background:radial-gradient(circle,{{ o.glow }} 0%,transparent 66%);opacity:0.35;pointer-events:none;transition:transform .06s linear"></div>
 <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 28%,#FFFFFF 0%,{{ o.color }} 32%,{{ o.deep }} 100%);border:2px {{ o.ringStyle }} {{ o.ring }};box-shadow:0 0 26px {{ o.glow }};display:flex;align-items:center;justify-content:center;color:#06110E;font-size:16px;font-weight:700">{{ o.icon }}</div>
-<div style="position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:7px;white-space:nowrap;font-size:11.5px;font-weight:600;color:#F2F6F8;text-shadow:0 1px 6px #000;pointer-events:none">{{ o.label }}</div>
+<div style="position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:7px;white-space:nowrap;font-size:12px;font-weight:620;color:var(--mx-ink);padding:2px 8px;border-radius:999px;background:var(--mx-strip);border:1px solid var(--mx-line);pointer-events:none">{{ o.label }}</div>
 </div>
 </sc-for>
 <sc-if value="{{ ezNoTracks }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none;text-align:center;padding:24px">
-<div style="width:74px;height:74px;border-radius:50%;border:2px dashed rgba(0,217,166,0.55);display:flex;align-items:center;justify-content:center;font-size:28px;color:#3FE6BD">＋</div>
+<div style="width:74px;height:74px;border-radius:50%;border:2px dashed rgba(0,217,166,0.55);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--mx-mint)">＋</div>
 <div style="font-size:17px;font-weight:600">Drop a sound into the field</div>
-<div style="font-size:13px;color:#9BA9B4;max-width:340px">Each part becomes a light. Drag it left or right to place it, up to push it back into the room, down to bring it close.</div>
+<div style="font-size:13px;color:var(--mx-dim);max-width:340px">Each part becomes a light. Drag it left or right to place it, up to push it back into the room, down to bring it close.</div>
 </div>
 </sc-if>
 <sc-if value="{{ fxSelOn }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;right:14px;top:14px;z-index:200;width:220px;padding:13px;border-radius:18px;background:rgba(10,16,20,0.86);backdrop-filter:blur(14px);border:1px solid {{ fxSelColor }};box-shadow:0 18px 40px rgba(0,0,0,0.5)">
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px"><span style="width:10px;height:10px;border-radius:50%;background:{{ fxSelColor }}"></span><span style="flex:1;min-width:0;font-size:14px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ fxSelTitle }}</span><button onClick="{{ fxSelClose }}" style="width:24px;height:24px;border:0;border-radius:7px;background:rgba(255,255,255,0.08);color:#E6EDF1;cursor:pointer">✕</button></div>
-<div style="font-size:11.5px;color:#9BA9B4;margin-bottom:10px">{{ fxSelInfo }}</div>
+<div style="position:absolute;right:14px;top:14px;z-index:200;width:236px;padding:13px;border-radius:18px;background:rgba(14,22,27,0.94);backdrop-filter:blur(14px);color:#F2F6F8;border:1.5px solid {{ fxSelColor }};box-shadow:0 18px 44px rgba(0,0,0,0.35)">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px"><span style="width:10px;height:10px;border-radius:50%;background:{{ fxSelColor }}"></span><span style="flex:1;min-width:0;font-size:14px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ fxSelTitle }}</span><button onClick="{{ fxSelClose }}" style="width:24px;height:24px;border:0;border-radius:7px;background:rgba(255,255,255,0.12);color:#F2F6F8;cursor:pointer">✕</button></div>
+<div style="font-size:11.5px;color:#B8C4CC;margin-bottom:10px">{{ fxSelInfo }}</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
 <sc-for list="{{ fxSelActs }}" as="x" hint-placeholder-count="5"><button onClick="{{ x.go }}" style="padding:8px 6px;border:1px solid {{ x.border }};border-radius:10px;background:{{ x.bg }};color:{{ x.fg }};font-size:12px;font-weight:620;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ x.label }}</button></sc-for>
 </div>
@@ -1530,22 +1532,22 @@
 </sc-if>
 <div style="position:absolute;left:16px;bottom:30px;z-index:150;display:flex;align-items:center;gap:12px">
 <button onClick="{{ ezPlay }}" disabled="{{ ezNoTracks }}" aria-label="{{ ezPlayAria }}" title="{{ ezPlayAria }}" style="flex:none;width:62px;height:62px;border-radius:50%;border:0;background:{{ ezPlayBg }};color:{{ ezPlayFg }};font-size:22px;cursor:{{ ezPlayCursor }};box-shadow:0 0 0 6px rgba(0,217,166,0.14),0 0 34px rgba(0,217,166,0.45)">{{ ezPlayIcon }}</button>
-<div data-clk="1" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:#9BE9D4;text-shadow:0 1px 4px #000">{{ mxClock }}</div>
+<div data-clk="1" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--mx-mint);text-shadow:0 1px 4px #000">{{ mxClock }}</div>
 </div>
 </div>
 
 <div style="display:grid;grid-template-columns:{{ fxMacroCols }};gap:10px">
 <sc-for list="{{ fxMacros }}" as="k" hint-placeholder-count="4">
-<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#0E161B;border:1px solid #1C262D">
-<div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.hint }} · drag up or down · double-click to reset" style="flex:none;position:relative;width:58px;height:58px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},#1E2A31 {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none;box-shadow:0 0 20px {{ k.glow }}">
-<div style="position:absolute;inset:6px;border-radius:50%;background:radial-gradient(circle at 40% 30%,#22303A,#0B1216);display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:600;color:#F2F6F8">{{ k.value }}</div>
+<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:var(--mx-well);border:1px solid var(--mx-line)">
+<div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.hint }} · drag up or down · double-click to reset" style="flex:none;position:relative;width:58px;height:58px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},var(--mx-strip2) {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none;box-shadow:0 0 20px {{ k.glow }}">
+<div style="position:absolute;inset:6px;border-radius:50%;background:radial-gradient(circle at 40% 30%,var(--mx-grid),var(--mx-well));display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:600;color:var(--mx-ink)">{{ k.value }}</div>
 </div>
-<div style="min-width:0"><div style="font-size:13.5px;font-weight:620">{{ k.label }}</div><div style="font-size:11.5px;color:#9BA9B4;line-height:1.35">{{ k.hint }}</div></div>
+<div style="min-width:0"><div style="font-size:13.5px;font-weight:620">{{ k.label }}</div><div style="font-size:11.5px;color:var(--mx-dim);line-height:1.35">{{ k.hint }}</div></div>
 </div>
 </sc-for>
 </div>
 <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
-<span style="font-size:10.5px;font-weight:700;letter-spacing:0.14em;color:#9BA9B4;margin-right:4px">LOOKS</span>
+<span style="font-size:10.5px;font-weight:700;letter-spacing:0.14em;color:var(--mx-dim);margin-right:4px">LOOKS</span>
 <sc-for list="{{ fxLooks }}" as="l" hint-placeholder-count="6"><button onClick="{{ l.go }}" style="padding:8px 14px;border:1px solid {{ l.border }};border-radius:999px;background:{{ l.bg }};color:{{ l.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ l.label }}</button></sc-for>
 </div>
 
@@ -1555,15 +1557,15 @@
                 <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
                   <span style="flex:none;width:56px;height:56px;border-radius:15px;background:{{ ezTryArt }};box-shadow:inset 0 0 0 3px {{ ezTryKc }}"></span>
                   <div style="flex:1;min-width:0">
-                    <div style="font-size:11px;font-weight:620;letter-spacing:0.1em;color:#3FE6BD">🎧 DOES IT FIT? · {{ ezTryNow }}</div>
+                    <div style="font-size:11px;font-weight:620;letter-spacing:0.1em;color:var(--mx-mint)">🎧 DOES IT FIT? · {{ ezTryNow }}</div>
                     <div style="font-size:19px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ezTryKind }} · {{ ezTryTitle }}</div>
-                    <div style="font-size:12.5px;line-height:1.45;color:#C9D4DB">{{ ezTryHow }}</div>
+                    <div style="font-size:12.5px;line-height:1.45;color:var(--mx-ink2)">{{ ezTryHow }}</div>
                   </div>
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
                   <button onClick="{{ ezTryKeep }}" style="flex:1;min-width:140px;padding:13px;border:0;border-radius:13px;background:#00D9A6;color:#06231B;font-size:15px;font-weight:620;cursor:pointer">✓ Sounds good · keep it</button>
-                  <button onClick="{{ ezTryToggle }}" style="flex:1;min-width:130px;padding:13px;border:1px solid #2A363E;border-radius:13px;background:#141D23;color:#E6EDF1;font-size:14px;font-weight:620;cursor:pointer">{{ ezTryAB }}</button>
-                  <button onClick="{{ ezTryReplay }}" title="Play from the start" style="flex:none;padding:13px 15px;border:1px solid #2A363E;border-radius:13px;background:#141D23;color:#E6EDF1;font-size:14px;font-weight:620;cursor:pointer">⟲</button>
+                  <button onClick="{{ ezTryToggle }}" style="flex:1;min-width:130px;padding:13px;border:1px solid var(--mx-line2);border-radius:13px;background:var(--mx-btn);color:var(--mx-ink);font-size:14px;font-weight:620;cursor:pointer">{{ ezTryAB }}</button>
+                  <button onClick="{{ ezTryReplay }}" title="Play from the start" style="flex:none;padding:13px 15px;border:1px solid var(--mx-line2);border-radius:13px;background:var(--mx-btn);color:var(--mx-ink);font-size:14px;font-weight:620;cursor:pointer">⟲</button>
                   <button onClick="{{ ezTryDrop }}" style="flex:1;min-width:120px;padding:13px;border:1px solid rgba(255,107,87,0.5);border-radius:13px;background:rgba(255,107,87,0.12);color:#FFB3A6;font-size:14px;font-weight:620;cursor:pointer">✕ Not for this song</button>
                 </div>
               </div>
@@ -1571,11 +1573,11 @@
             <div onDragOver="{{ ezDragOver }}" onDragLeave="{{ ezDragLeave }}" onDrop="{{ ezDrop }}" onClick="{{ ezPickFile }}" role="button" title="Drop a sound here, or click to choose an audio file" style="padding:26px 20px;border-radius:22px;border:2px dashed {{ ezDropBorder }};background:{{ ezDropBg }};text-align:center;cursor:pointer;transition:background .15s,border-color .15s">
               <div style="font-size:34px;line-height:1;margin-bottom:8px">{{ ezDropIcon }}</div>
               <div style="font-size:17px;font-weight:620;margin-bottom:5px">{{ ezDropTitle }}</div>
-              <div style="font-size:13px;line-height:1.5;color:#9BA9B4;max-width:460px;margin:0 auto">{{ ezDropSub }}</div>
+              <div style="font-size:13px;line-height:1.5;color:var(--mx-dim);max-width:460px;margin:0 auto">{{ ezDropSub }}</div>
               <sc-if value="{{ ezNoTracks }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px">
                   <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:620;background:rgba(255,138,92,0.16);color:#FFB9A0">1 · Pick a voice 🎤</span>
-                  <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:620;background:rgba(0,217,166,0.16);color:#7FF0D2">2 · Pick a beat 🥁</span>
+                  <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:620;background:rgba(0,217,166,0.16);color:var(--mx-mint)">2 · Pick a beat 🥁</span>
                   <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:620;background:rgba(91,140,255,0.18);color:#B9CCFF">3 · Press play ▶</span>
                 </div>
               </sc-if>
@@ -1583,24 +1585,24 @@
 
             <div style="display:flex;gap:10px;flex-wrap:wrap">
               <button onClick="{{ mxBounce }}" disabled="{{ mxBounceOff }}" title="{{ mxBounceHint }}" style="flex:1;min-width:230px;padding:18px;border:0;border-radius:18px;background:{{ mxBounceBg }};color:{{ mxBounceFg }};font-size:17px;font-weight:620;cursor:{{ mxBounceCursor }}">{{ ezMakeLabel }}</button>
-              <sc-if value="{{ ezCanRelease }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ezRelease }}" style="padding:18px 22px;border:0;border-radius:18px;background:#fff;color:#0A0F12;font-size:16px;font-weight:620;cursor:pointer">🚀 Release it</button></sc-if>
-              <sc-if value="{{ mxHasDl }}" hint-placeholder-val="{{ false }}"><a href="{{ mxDlUrl }}" download="{{ mxDlName }}" style="display:flex;align-items:center;padding:18px 20px;border:1px solid #2A363E;border-radius:18px;color:#E6EDF1;font-size:15px;font-weight:620;text-decoration:none">⇩ Download</a></sc-if>
+              <sc-if value="{{ ezCanRelease }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ezRelease }}" style="padding:18px 22px;border:0;border-radius:18px;background:#fff;color:var(--mx-bg);font-size:16px;font-weight:620;cursor:pointer">🚀 Release it</button></sc-if>
+              <sc-if value="{{ mxHasDl }}" hint-placeholder-val="{{ false }}"><a href="{{ mxDlUrl }}" download="{{ mxDlName }}" style="display:flex;align-items:center;padding:18px 20px;border:1px solid var(--mx-line2);border-radius:18px;color:var(--mx-ink);font-size:15px;font-weight:620;text-decoration:none">⇩ Download</a></sc-if>
             </div>
           </div>
 
-          <aside style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:22px;background:#111A20;border:1px solid #1C262D;max-height:{{ ezDrawerH }};min-height:0">
-            <div><div style="font-size:16px;font-weight:620">Add sounds</div><div style="font-size:12.5px;line-height:1.45;color:#9BA9B4">Drag onto your song, or tap ＋. We match the speed and key for you.</div></div>
-            <div style="display:flex;gap:4px;padding:3px;border-radius:12px;background:#0A0F12">
+          <aside style="position:sticky;top:0;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:22px;background:var(--mx-strip);border:1px solid var(--mx-line);max-height:{{ ezDrawerH }};min-height:0">
+            <div><div style="font-size:16px;font-weight:620">Add sounds</div><div style="font-size:12.5px;line-height:1.45;color:var(--mx-dim)">Drag onto your song, or tap ＋. We match the speed and key for you.</div></div>
+            <div style="display:flex;gap:4px;padding:3px;border-radius:12px;background:var(--mx-bg)">
               <sc-for list="{{ ezTabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.go }}" style="flex:1;padding:8px 4px;border:0;border-radius:9px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">{{ t.label }}</button></sc-for>
             </div>
-            <input value="{{ ezQ }}" onChange="{{ onEzQ }}" placeholder="Search: chill, afrobeats, sad…" aria-label="Search sounds" style="padding:11px 13px;border:1px solid #2A363E;border-radius:12px;background:#0A0F12;color:#E6EDF1;font-size:14px;font-family:inherit;outline:none" />
-            <div style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:7px">
-              <sc-if value="{{ ezNoRows }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 8px;text-align:center;font-size:13px;color:#9BA9B4">{{ ezNoRowsText }}</div></sc-if>
+            <input value="{{ ezQ }}" onChange="{{ onEzQ }}" placeholder="Search: chill, afrobeats, sad…" aria-label="Search sounds" style="padding:11px 13px;border:1px solid var(--mx-line2);border-radius:12px;background:var(--mx-bg);color:var(--mx-ink);font-size:14px;font-family:inherit;outline:none" />
+            <div style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:7px">
+              <sc-if value="{{ ezNoRows }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 8px;text-align:center;font-size:13px;color:var(--mx-dim)">{{ ezNoRowsText }}</div></sc-if>
               <sc-for list="{{ ezRows }}" as="r" hint-placeholder-count="8">
-                <div draggable="true" onDragStart="{{ r.drag }}" title="Drag onto your song" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:14px;background:#0D1418;border:1px solid #1C262D;cursor:grab">
+                <div draggable="true" onDragStart="{{ r.drag }}" title="Drag onto your song" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:14px;background:var(--mx-bg2);border:1px solid var(--mx-line);cursor:grab">
                   <button onClick="{{ r.preview }}" aria-label="Preview {{ r.title }}" style="flex:none;width:40px;height:40px;border-radius:11px;border:0;background:{{ r.art }};box-shadow:inset 0 0 0 3px {{ r.kc }};color:#fff;font-size:13px;cursor:pointer">{{ r.icon }}</button>
-                  <span style="flex:1;min-width:0"><span style="display:flex;align-items:center;gap:6px;min-width:0"><span style="font-size:13.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span><sc-if value="{{ r.fit }}" hint-placeholder-val="{{ false }}"><span style="flex:none;padding:2px 7px;border-radius:999px;background:{{ r.fitBg }};color:{{ r.fitFg }};font-size:10.5px;font-weight:580;white-space:nowrap">{{ r.fit }}</span></sc-if></span><span style="display:block;font-size:11.5px;color:#8C9AA5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span></span>
-                  <button onClick="{{ r.add }}" aria-label="Add {{ r.title }}" style="flex:none;padding:8px 11px;border:0;border-radius:10px;background:#00D9A6;color:#06231B;font-size:12.5px;font-weight:620;cursor:pointer">＋ Add</button>
+                  <span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:620;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span><span style="display:block;font-size:11.5px;line-height:1.35;color:var(--mx-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span><sc-if value="{{ r.fit }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block;margin-top:4px;padding:2px 7px;border-radius:999px;background:{{ r.fitBg }};color:{{ r.fitFg }};font-size:10.5px;font-weight:580;white-space:nowrap">{{ r.fit }}</span></sc-if></span>
+                  <button onClick="{{ r.add }}" aria-label="Add {{ r.title }}" style="flex:none;padding:8px 11px;border:0;border-radius:10px;background:#00D9A6;color:#06231B;font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">＋ Add</button>
                 </div>
               </sc-for>
             </div>
@@ -1610,18 +1612,18 @@
       </sc-if>
 
       <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}"><div style="flex:1;min-height:0;display:flex;flex-direction:column">
-<canvas data-spec="line" style="flex:none;display:block;width:100%;height:72px;background:linear-gradient(180deg,#05080A,#0A1216);border-bottom:1px solid #1C262D"></canvas>
-      <div onClick="{{ mxSeek }}" title="Click to move the playhead" style="box-shadow:{{ hl.timeline }};flex:none;position:relative;padding:8px 18px 10px;border-bottom:1px solid #1C262D;cursor:text">
+<canvas data-spec="line" style="flex:none;display:block;width:100%;height:72px;background:linear-gradient(180deg,var(--mx-well),var(--mx-well));border-bottom:1px solid var(--mx-line)"></canvas>
+      <div onClick="{{ mxSeek }}" title="Click to move the playhead" style="box-shadow:{{ hl.timeline }};flex:none;position:relative;padding:8px 18px 10px;border-bottom:1px solid var(--mx-line);cursor:text">
         <sc-for list="{{ mxLanes }}" as="l" hint-placeholder-count="3">
           <div style="display:grid;grid-template-columns:{{ mxLabCol }} minmax(0,1fr);gap:10px;align-items:center;height:30px;opacity:{{ l.opacity }}">
             <div style="display:flex;align-items:center;gap:8px;min-width:0"><span style="flex:none;width:4px;height:20px;border-radius:2px;background:{{ l.color }}"></span><span style="font-size:12px;font-weight:580;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span></div>
-            <div style="display:flex;align-items:center;gap:1px;height:26px;min-width:0;background:#0F161B;border-radius:5px;padding:0 3px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:1px;height:26px;min-width:0;background:var(--mx-strip);border-radius:5px;padding:0 3px;overflow:hidden">
               <sc-for list="{{ l.peaks }}" as="b" hint-placeholder-count="120"><div style="flex:1;min-width:1px;height:{{ b.h }};background:{{ l.color }};border-radius:1px"></div></sc-for>
             </div>
           </div>
         </sc-for>
         <div style="position:absolute;top:6px;bottom:6px;left:calc(18px + {{ mxLabOff }});right:18px;pointer-events:none">
-          <div data-ph="1" style="position:absolute;top:0;bottom:0;left:0%;width:2px;background:#F2F6F8;box-shadow:0 0 8px rgba(255,255,255,0.6)"></div>
+          <div data-ph="1" style="position:absolute;top:0;bottom:0;left:0%;width:2px;background:var(--mx-ink);box-shadow:0 0 8px rgba(var(--mx-rgb),0.6)"></div>
         </div>
       </div>
 
@@ -1632,21 +1634,21 @@
             <div style="flex:none;width:100%;height:4px;border-radius:2px;background:{{ st.color }}"></div>
             <div style="flex:none;width:100%;text-align:center;min-width:0">
               <div style="font-size:12px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.name }}</div>
-              <div style="font-size:10.5px;color:#7F8E99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.sub }}</div>
+              <div style="font-size:10.5px;color:var(--mx-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.sub }}</div>
             </div>
 
             <sc-if value="{{ st.hasPreset }}" hint-placeholder-val="{{ false }}">
-              <button onClick="{{ st.cyclePreset }}" title="Sound preset · click to change" style="flex:none;width:100%;padding:6px 4px;border:1px solid #2A363E;border-radius:8px;background:#141D23;color:#E6EDF1;font-size:11px;font-weight:620;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.preset }} ▾</button>
+              <button onClick="{{ st.cyclePreset }}" title="Sound preset · click to change" style="flex:none;width:100%;padding:6px 4px;border:1px solid var(--mx-line2);border-radius:8px;background:var(--mx-btn);color:var(--mx-ink);font-size:11px;font-weight:620;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.preset }} ▾</button>
             </sc-if>
 
             <sc-if value="{{ st.showEq }}" hint-placeholder-val="{{ false }}">
               <div style="flex:none;width:100%;display:flex;flex-direction:column;gap:5px">
                 <div style="display:flex;gap:4px">
                   <button onClick="{{ st.toggleHpf }}" title="High-pass filter at 90 Hz" style="flex:1;padding:4px 0;border:1px solid {{ st.hpfBorder }};border-radius:6px;background:{{ st.hpfBg }};color:{{ st.hpfFg }};font-size:10px;font-weight:620;cursor:pointer">HPF</button>
-                  <button onClick="{{ st.focusEq }}" title="Open the channel EQ" style="flex:1;padding:4px 0;border:1px solid {{ st.eqBorder }};border-radius:6px;background:#141D23;color:#E6EDF1;font-size:10px;font-weight:620;cursor:pointer">EQ</button>
+                  <button onClick="{{ st.focusEq }}" title="Open the channel EQ" style="flex:1;padding:4px 0;border:1px solid {{ st.eqBorder }};border-radius:6px;background:var(--mx-btn);color:var(--mx-ink);font-size:10px;font-weight:620;cursor:pointer">EQ</button>
                 </div>
-                <button onClick="{{ st.focusEq }}" title="Open the channel EQ" style="display:block;width:100%;height:36px;padding:0;border:1px solid #1C262D;border-radius:7px;background:#05080A;cursor:pointer;overflow:hidden">
-                  <svg width="100%" height="34" viewBox="0 0 96 34" preserveAspectRatio="none" style="display:block"><line x1="0" y1="17" x2="96" y2="17" style="stroke:#22303A;stroke-width:1"></line><polyline points="{{ st.eqPts }}" style="fill:none;stroke:{{ st.color }};stroke-width:1.6"></polyline></svg>
+                <button onClick="{{ st.focusEq }}" title="Open the channel EQ" style="display:block;width:100%;height:36px;padding:0;border:1px solid var(--mx-line);border-radius:7px;background:var(--mx-well);cursor:pointer;overflow:hidden">
+                  <svg width="100%" height="34" viewBox="0 0 96 34" preserveAspectRatio="none" style="display:block"><line x1="0" y1="17" x2="96" y2="17" style="stroke:var(--mx-grid);stroke-width:1"></line><polyline points="{{ st.eqPts }}" style="fill:none;stroke:{{ st.color }};stroke-width:1.6"></polyline></svg>
                 </button>
               </div>
             </sc-if>
@@ -1655,27 +1657,27 @@
               <div style="flex:none;width:100%;display:flex;flex-direction:column;align-items:center;gap:4px">
                 <div style="display:flex;justify-content:center;gap:2px"><sc-for list="{{ st.dyn }}" as="k" hint-placeholder-count="2">
                     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:44px">
-                      <div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.label }} {{ k.text }} · drag up/down, Shift for fine, double-click to reset" style="position:relative;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},#25313A {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none">
+                      <div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.label }} {{ k.text }} · drag up/down, Shift for fine, double-click to reset" style="position:relative;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},var(--mx-line2) {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none">
                         <div style="position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 40% 30%,#26313A,#121A20);box-shadow:0 1px 3px rgba(0,0,0,0.6)"></div>
-                        <div style="position:absolute;left:15px;top:5px;width:2px;height:9px;border-radius:1px;background:#F2F6F8;transform-origin:1px 11px;transform:rotate({{ k.rot }})"></div>
+                        <div style="position:absolute;left:15px;top:5px;width:2px;height:9px;border-radius:1px;background:var(--mx-ink);transform-origin:1px 11px;transform:rotate({{ k.rot }})"></div>
                       </div>
-                      <span style="font-size:9px;font-weight:620;letter-spacing:0.07em;color:#7F8E99">{{ k.label }}</span>
-                      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:#D3DCE2;white-space:nowrap">{{ k.text }}</span>
+                      <span style="font-size:9px;font-weight:620;letter-spacing:0.07em;color:var(--mx-dim)">{{ k.label }}</span>
+                      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:var(--mx-ink2);white-space:nowrap">{{ k.text }}</span>
                     </div>
                   </sc-for></div>
-                <div title="Gain reduction" style="width:100%;height:5px;border-radius:3px;background:#05080A;overflow:hidden;display:flex;justify-content:flex-end"><div data-gr="{{ st.id }}" style="height:100%;width:0%;background:#FFC24B"></div></div>
+                <div title="Gain reduction" style="width:100%;height:5px;border-radius:3px;background:var(--mx-well);overflow:hidden;display:flex;justify-content:flex-end"><div data-gr="{{ st.id }}" style="height:100%;width:0%;background:#FFC24B"></div></div>
               </div>
             </sc-if>
 
             <sc-if value="{{ st.hasKnobs }}" hint-placeholder-val="{{ true }}">
               <div style="flex:none;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 2px"><sc-for list="{{ st.knobs }}" as="k" hint-placeholder-count="2">
                     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:44px">
-                      <div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.label }} {{ k.text }} · drag up/down, Shift for fine, double-click to reset" style="position:relative;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},#25313A {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none">
+                      <div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.label }} {{ k.text }} · drag up/down, Shift for fine, double-click to reset" style="position:relative;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},var(--mx-line2) {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none">
                         <div style="position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 40% 30%,#26313A,#121A20);box-shadow:0 1px 3px rgba(0,0,0,0.6)"></div>
-                        <div style="position:absolute;left:15px;top:5px;width:2px;height:9px;border-radius:1px;background:#F2F6F8;transform-origin:1px 11px;transform:rotate({{ k.rot }})"></div>
+                        <div style="position:absolute;left:15px;top:5px;width:2px;height:9px;border-radius:1px;background:var(--mx-ink);transform-origin:1px 11px;transform:rotate({{ k.rot }})"></div>
                       </div>
-                      <span style="font-size:9px;font-weight:620;letter-spacing:0.07em;color:#7F8E99">{{ k.label }}</span>
-                      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:#D3DCE2;white-space:nowrap">{{ k.text }}</span>
+                      <span style="font-size:9px;font-weight:620;letter-spacing:0.07em;color:var(--mx-dim)">{{ k.label }}</span>
+                      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:var(--mx-ink2);white-space:nowrap">{{ k.text }}</span>
                     </div>
                   </sc-for></div>
             </sc-if>
@@ -1690,20 +1692,20 @@
             <div style="flex:1 0 0px"></div>
             <div style="flex:none;position:relative;height:210px;display:flex;gap:4px;justify-content:center">
               <div style="position:relative;width:20px">
-                <sc-for list="{{ st.ticks }}" as="t" hint-placeholder-count="7"><span style="position:absolute;right:0;top:{{ t.top }};transform:translateY(-50%);font-family:ui-monospace,Menlo,monospace;font-size:8.5px;color:#66757F">{{ t.label }}</span></sc-for>
+                <sc-for list="{{ st.ticks }}" as="t" hint-placeholder-count="7"><span style="position:absolute;right:0;top:{{ t.top }};transform:translateY(-50%);font-family:ui-monospace,Menlo,monospace;font-size:8.5px;color:var(--mx-dim)">{{ t.label }}</span></sc-for>
               </div>
               <div style="position:relative;width:26px">
-                <div style="position:absolute;left:11px;top:12px;bottom:12px;width:4px;border-radius:2px;background:#05080A;box-shadow:inset 0 1px 2px rgba(0,0,0,0.8)"></div>
-                <div onPointerDown="{{ st.faderDown }}" onDoubleClick="{{ st.faderReset }}" title="Level · drag, Shift for fine, double-click for 0 dB" style="position:absolute;left:0;top:{{ st.capTop }};width:26px;height:24px;border-radius:5px;background:linear-gradient(180deg,#66737D,#2B353C 55%,#3A454D);box-shadow:0 3px 8px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.28);cursor:ns-resize;touch-action:none">
+                <div style="position:absolute;left:11px;top:12px;bottom:12px;width:4px;border-radius:2px;background:var(--mx-well);box-shadow:inset 0 1px 2px rgba(0,0,0,0.8)"></div>
+                <div onPointerDown="{{ st.faderDown }}" onDoubleClick="{{ st.faderReset }}" title="Level · drag, Shift for fine, double-click for 0 dB" style="position:absolute;left:0;top:{{ st.capTop }};width:26px;height:24px;border-radius:5px;background:linear-gradient(180deg,#66737D,#2B353C 55%,#3A454D);box-shadow:0 3px 8px rgba(0,0,0,0.55),inset 0 1px 0 rgba(var(--mx-rgb),0.28);cursor:ns-resize;touch-action:none">
                   <div style="position:absolute;left:3px;right:3px;top:11px;height:2px;border-radius:1px;background:{{ st.color }}"></div>
                 </div>
               </div>
               <div style="display:flex;gap:2px;padding:12px 0">
-                <div style="position:relative;width:6px;border-radius:2px;background:#05080A;overflow:hidden"><div data-mtr="{{ st.mL }}" style="position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(to top,#00D9A6 0,#00D9A6 120px,#FFC24B 160px,#FF5A4E 186px);background-size:6px 186px;background-position:bottom"></div></div>
-                <div style="position:relative;width:6px;border-radius:2px;background:#05080A;overflow:hidden"><div data-mtr="{{ st.mR }}" style="position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(to top,#00D9A6 0,#00D9A6 120px,#FFC24B 160px,#FF5A4E 186px);background-size:6px 186px;background-position:bottom"></div></div>
+                <div style="position:relative;width:6px;border-radius:2px;background:var(--mx-well);overflow:hidden"><div data-mtr="{{ st.mL }}" style="position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(to top,#00D9A6 0,#00D9A6 120px,#FFC24B 160px,#FF5A4E 186px);background-size:6px 186px;background-position:bottom"></div></div>
+                <div style="position:relative;width:6px;border-radius:2px;background:var(--mx-well);overflow:hidden"><div data-mtr="{{ st.mR }}" style="position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(to top,#00D9A6 0,#00D9A6 120px,#FFC24B 160px,#FF5A4E 186px);background-size:6px 186px;background-position:bottom"></div></div>
               </div>
             </div>
-            <div style="flex:none;padding:3px 8px;border-radius:6px;background:#05080A;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#D3DCE2">{{ st.dbText }}</div>
+            <div style="flex:none;padding:3px 8px;border-radius:6px;background:var(--mx-well);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--mx-ink2)">{{ st.dbText }}</div>
           </div>
         </sc-for>
         </div>
@@ -1743,36 +1745,36 @@
       </sc-if>
 
       <sc-if value="{{ mxFocusOpen }}" hint-placeholder-val="{{ false }}">
-        <div style="flex:none;display:flex;gap:22px;align-items:center;flex-wrap:wrap;padding:14px 18px 16px;border-top:1px solid #1C262D;background:#0D1418">
+        <div style="flex:none;display:flex;gap:22px;align-items:center;flex-wrap:wrap;padding:14px 18px 16px;border-top:1px solid var(--mx-line);background:var(--mx-bg2)">
           <div style="flex:1;min-width:320px;max-width:620px">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
               <span style="font-size:10.5px;font-weight:620;letter-spacing:0.12em;color:#00D9A6">CHANNEL EQ</span>
               <span style="font-size:13px;font-weight:620">{{ mxFocusName }}</span>
               <span style="flex:1"></span>
-              <button onClick="{{ mxFocusFlat }}" style="padding:5px 10px;border:1px solid #2A363E;border-radius:7px;background:transparent;color:#C9D4DB;font-size:11px;font-weight:620;cursor:pointer">Flatten</button>
-              <button onClick="{{ mxFocusClose }}" style="width:26px;height:26px;border-radius:7px;border:1px solid #2A363E;background:transparent;color:#C9D4DB;font-size:12px;cursor:pointer">✕</button>
+              <button onClick="{{ mxFocusFlat }}" style="padding:5px 10px;border:1px solid var(--mx-line2);border-radius:7px;background:transparent;color:var(--mx-ink2);font-size:11px;font-weight:620;cursor:pointer">Flatten</button>
+              <button onClick="{{ mxFocusClose }}" style="width:26px;height:26px;border-radius:7px;border:1px solid var(--mx-line2);background:transparent;color:var(--mx-ink2);font-size:12px;cursor:pointer">✕</button>
             </div>
-            <svg width="100%" height="160" viewBox="0 0 560 160" preserveAspectRatio="none" style="display:block;border-radius:10px;background:#05080A">
-              <sc-for list="{{ mxGridV }}" as="g" hint-placeholder-count="8"><line x1="{{ g.x }}" y1="0" x2="{{ g.x }}" y2="160" style="stroke:#172128;stroke-width:1"></line></sc-for>
+            <svg width="100%" height="160" viewBox="0 0 560 160" preserveAspectRatio="none" style="display:block;border-radius:10px;background:var(--mx-well)">
+              <sc-for list="{{ mxGridV }}" as="g" hint-placeholder-count="8"><line x1="{{ g.x }}" y1="0" x2="{{ g.x }}" y2="160" style="stroke:var(--mx-grid);stroke-width:1"></line></sc-for>
               <sc-for list="{{ mxGridH }}" as="g" hint-placeholder-count="5"><line x1="0" y1="{{ g.y }}" x2="560" y2="{{ g.y }}" style="stroke:{{ g.c }};stroke-width:1"></line></sc-for>
               <polygon points="{{ mxFocusFill }}" style="fill:{{ mxFocusColor }};fill-opacity:0.14"></polygon>
               <polyline points="{{ mxFocusPts }}" style="fill:none;stroke:{{ mxFocusColor }};stroke-width:2.2"></polyline>
-              <sc-for list="{{ mxFocusDots }}" as="d" hint-placeholder-count="4"><circle cx="{{ d.x }}" cy="{{ d.y }}" r="5" style="fill:#0A0F12;stroke:{{ d.c }};stroke-width:2"></circle></sc-for>
+              <sc-for list="{{ mxFocusDots }}" as="d" hint-placeholder-count="4"><circle cx="{{ d.x }}" cy="{{ d.y }}" r="5" style="fill:var(--mx-bg);stroke:{{ d.c }};stroke-width:2"></circle></sc-for>
             </svg>
-            <div style="display:flex;justify-content:space-between;font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#66757F;margin-top:4px"><span>20</span><span>100</span><span>1k</span><span>10k</span><span>20k Hz</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:var(--mx-dim);margin-top:4px"><span>20</span><span>100</span><span>1k</span><span>10k</span><span>20k Hz</span></div>
           </div>
           <div style="display:flex;gap:14px;flex-wrap:wrap">
             <sc-for list="{{ mxBands }}" as="bd" hint-placeholder-count="4">
-              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:12px;background:#121A20;border:1px solid #1C262D">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:12px;background:#121A20;border:1px solid var(--mx-line)">
                 <span style="font-size:10px;font-weight:620;letter-spacing:0.08em;color:{{ bd.c }}">{{ bd.name }}</span>
                 <div style="display:flex;flex-direction:column;gap:6px"><sc-for list="{{ bd.knobs }}" as="k" hint-placeholder-count="2">
                     <div style="display:flex;flex-direction:column;align-items:center;gap:2px;width:44px">
-                      <div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.label }} {{ k.text }} · drag up/down, Shift for fine, double-click to reset" style="position:relative;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},#25313A {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none">
+                      <div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.label }} {{ k.text }} · drag up/down, Shift for fine, double-click to reset" style="position:relative;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},var(--mx-line2) {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none">
                         <div style="position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle at 40% 30%,#26313A,#121A20);box-shadow:0 1px 3px rgba(0,0,0,0.6)"></div>
-                        <div style="position:absolute;left:15px;top:5px;width:2px;height:9px;border-radius:1px;background:#F2F6F8;transform-origin:1px 11px;transform:rotate({{ k.rot }})"></div>
+                        <div style="position:absolute;left:15px;top:5px;width:2px;height:9px;border-radius:1px;background:var(--mx-ink);transform-origin:1px 11px;transform:rotate({{ k.rot }})"></div>
                       </div>
-                      <span style="font-size:9px;font-weight:620;letter-spacing:0.07em;color:#7F8E99">{{ k.label }}</span>
-                      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:#D3DCE2;white-space:nowrap">{{ k.text }}</span>
+                      <span style="font-size:9px;font-weight:620;letter-spacing:0.07em;color:var(--mx-dim)">{{ k.label }}</span>
+                      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:var(--mx-ink2);white-space:nowrap">{{ k.text }}</span>
                     </div>
                   </sc-for></div>
               </div>
@@ -1787,7 +1789,7 @@
     <div style="position:fixed;inset:0;z-index:100;display:grid;grid-template-columns:{{ authCols }};background:var(--bg);color:var(--ink);animation:elIn .2s ease both">
       <sc-if value="{{ authWide }}" hint-placeholder-val="{{ true }}">
         <div style="position:relative;overflow:hidden;background:radial-gradient(circle at 20% 20%,#00D9A6 0,transparent 42%),radial-gradient(circle at 85% 30%,#5B3E9E 0,transparent 45%),radial-gradient(circle at 50% 95%,#0B5E7A 0,transparent 50%),#0C1318;color:#fff;padding:44px;display:flex;flex-direction:column;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:44px;border-radius:14px;background:#00D9A6;color:#06231B;font-size:22px;font-weight:620;letter-spacing:1px;display:flex;align-items:center;justify-content:center">···</span><span style="font-family:Urbanist,sans-serif;font-size:22px;font-weight:500">Ellipsis</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><span style="display:inline-flex"><span style="flex:none;width:44px;height:44px;border-radius:14px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span></span></span><span style="font-family:Urbanist,sans-serif;font-size:22px;font-weight:500">Ellipsis</span></div>
           <div>
             <div style="font-family:Urbanist,Geist,sans-serif;font-size:44px;font-weight:400;letter-spacing:-1.4px;line-height:1.05;margin-bottom:16px;max-width:520px">Finish the song.<br>Together.</div>
             <p style="margin:0 0 26px;font-size:16px;line-height:1.6;opacity:.9;max-width:460px">Post an idea, get the parts it needs from people anywhere, split it fairly, release it — and let the Spikes decide what rises.</p>
@@ -1959,7 +1961,7 @@
 
           <sc-if value="{{ obIs0 }}" hint-placeholder-val="{{ true }}">
             <div>
-              <div style="width:52px;height:52px;border-radius:16px;background:var(--mint);color:var(--on-mint);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:580;letter-spacing:1px;margin-bottom:16px">···</div>
+              <div style="display:inline-flex"><span style="flex:none;width:52px;height:52px;border-radius:16px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:flex;align-items:center;justify-content:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:#06231B"></span><span style="width:7px;height:7px;border-radius:50%;background:#06231B"></span><span style="width:7px;height:7px;border-radius:50%;background:#06231B"></span></span></div>
               <div style="font-family:Urbanist,Geist,sans-serif;font-size:27px;font-weight:500;letter-spacing:-0.7px;line-height:1.15;margin-bottom:8px">Finish songs with people anywhere</div>
               <p style="margin:0 0 18px;font-size:14.5px;line-height:1.6;color:var(--dim)">Ellipsis matches what you play with projects that need it. Every part is credited and every split is signed before release.</p>
               <div style="font-size:11.5px;font-weight:620;letter-spacing:0.09em;color:var(--dim);margin-bottom:8px">WHAT DO YOU BRING? · PICK ONE</div>
@@ -3113,6 +3115,7 @@ class Component extends DCLogic {
   updItem(id, fn) { this.setState(s => ({ items: s.items.map(x => x.id === id ? fn(Object.assign({}, x, { sections: x.sections ? x.sections.map(z => Object.assign({}, z)) : null, tags: { genre: ((x.tags || {}).genre || []).slice(), mood: ((x.tags || {}).mood || []).slice(), like: ((x.tags || {}).like || []).slice() } })) : x) })); }
   updProj(id, fn) { this.setState(s => ({ projects: s.projects.map(p => p.id === id ? fn(Object.assign({}, p, { items: (p.items || []).slice(), collabs: (p.collabs || []).slice(), msgs: (p.msgs || []).slice(), sugs: (p.sugs || []).slice(), mix: Object.assign({}, p.mix || {}), open: { on: !!(p.open && p.open.on), needs: ((p.open && p.open.needs) || []).slice() } })) : p) })); }
   go(view, extra) {
+    if (this.state.mxOpen) this.closeMixer();
     const s = this.state;
     if (view === 'explore' && s.view !== 'explore') this._exVisit = (this._exVisit || 0) + 1;
     this.setState(Object.assign({ view, hist: s.hist.concat([{ view: s.view, pid: s.pid, uid: s.uid, lid: s.lid }]).slice(-30), searchOpen: false }, extra || {}));
@@ -3553,27 +3556,27 @@ class Component extends DCLogic {
     const EMO = { acapella: '🎤', melody: '🎹', instrumental: '🥁', song: '💿' }, COL = { acapella: '#FF8A5C', melody: '#5B8CFF', instrumental: '#00A982', song: '#0A8A6E' }, KN = { acapella: 'Voice', melody: 'Melody', instrumental: 'Beat', song: 'Song' };
     const tracks = lanes.map(x => {
       const k = this.chOf(p, x.id), e = ready && this._match && this._match[x.id] && this._match[x.id].sig === sig ? this._match[x.id].info : null, b = [];
-      if (!matchOn) b.push(['As recorded', '#1C262D', '#C9D4DB']);
-      else if (!e) b.push(['✨ Matching…', '#1C262D', '#C9D4DB']);
+      if (!matchOn) b.push(['As recorded', 'var(--mx-line)', 'var(--mx-ink2)']);
+      else if (!e) b.push(['✨ Matching…', 'var(--mx-line)', 'var(--mx-ink2)']);
       else {
         const pct = Math.round((e.T - 1) * 100);
-        if (e.lead) b.push(['⭐ The beat · sets the tempo', 'rgba(0,217,166,0.16)', '#7FF0D2']);
-        if (e.synced) b.push(['✓ Recorded in time', 'rgba(0,217,166,0.16)', '#7FF0D2']);
+        if (e.lead) b.push(['⭐ The beat · sets the tempo', 'rgba(0,217,166,0.16)', 'var(--mx-mint)']);
+        if (e.synced) b.push(['✓ Recorded in time', 'rgba(0,217,166,0.16)', 'var(--mx-mint)']);
         if (pct) b.push([(pct > 0 ? '⏩ Sped up ' : '⏪ Slowed down ') + Math.abs(pct) + '%', 'rgba(91,140,255,0.18)', '#B9CCFF']);
         if (e.d) b.push(['🎵 Moved ' + (e.d > 0 ? 'up ' : 'down ') + Math.abs(e.d) + ' key' + (Math.abs(e.d) > 1 ? 's' : ''), 'rgba(176,124,255,0.18)', '#DCC8FF']);
         if (Math.abs(e.shift) > 0.02) b.push(['🧲 Snapped to the beat', 'rgba(255,194,75,0.16)', '#FFDD95']);
         if (e.looped) b.push(['🔁 Looped to fit', 'rgba(255,194,75,0.16)', '#FFDD95']);
-        if (!e.lead && !e.synced && !pct && !e.d && Math.abs(e.shift) <= 0.02) b.push(['✓ Already in sync', 'rgba(0,217,166,0.16)', '#7FF0D2']);
+        if (!e.lead && !e.synced && !pct && !e.d && Math.abs(e.shift) <= 0.02) b.push(['✓ Already in sync', 'rgba(0,217,166,0.16)', 'var(--mx-mint)']);
       }
       const vol = Math.round(Math.max(0, Math.min(100, (k.fader + 30) / 0.36)));
       return {
         title: x.title, by: (KN[x.kind] || 'Sound') + ' · ' + (x.owner === 'me' ? 'You' : U(x.owner).name), emoji: EMO[x.kind] || '♪', color: COL[x.kind] || '#00A982',
         badges: b.map(([t, bg, fg]) => ({ t, bg, fg })), vol, volLabel: k.mute ? 'Muted' : vol >= 92 ? 'Loudest' : vol >= 70 ? 'Loud' : vol >= 40 ? 'Medium' : vol > 0 ? 'Quiet' : 'Off',
         onVol: ev => { const v = +ev.target.value; this.setCh(pid, x.id, { fader: Math.round((-30 + v * 0.36) * 10) / 10 }); },
-        soloLabel: k.solo ? '🎧 Hearing only this' : '🎧 Only this', soloBg: k.solo ? '#00D9A6' : '#1C262D', soloFg: k.solo ? '#06231B' : '#E6EDF1', solo: () => this.setCh(pid, x.id, { solo: !k.solo }),
-        muteLabel: k.mute ? '🔈 Unmute' : '🔇 Mute', muteBg: k.mute ? '#FFC24B' : '#1C262D', muteFg: k.mute ? '#1A1405' : '#E6EDF1', mute: () => this.setCh(pid, x.id, { mute: !k.mute }),
+        soloLabel: k.solo ? '🎧 Hearing only this' : '🎧 Only this', soloBg: k.solo ? '#00D9A6' : 'var(--mx-line)', soloFg: k.solo ? '#06231B' : 'var(--mx-ink)', solo: () => this.setCh(pid, x.id, { solo: !k.solo }),
+        muteLabel: k.mute ? '🔈 Unmute' : '🔇 Mute', muteBg: k.mute ? '#FFC24B' : 'var(--mx-line)', muteFg: k.mute ? '#1A1405' : 'var(--mx-ink)', mute: () => this.setCh(pid, x.id, { mute: !k.mute }),
         canLead: !ro && matchOn && !!e && !e.lead && x.kind !== 'acapella', makeLead: () => this.ezSetLead(pid, x.id),
-        canRemove: !ro, remove: () => this.ezRemove(pid, x.id), cardBorder: e && e.lead ? '#00D9A6' : '#1C262D', opacity: k.mute ? '0.55' : '1'
+        canRemove: !ro, remove: () => this.ezRemove(pid, x.id), cardBorder: e && e.lead ? '#00D9A6' : 'var(--mx-line)', opacity: k.mute ? '0.55' : '1'
       };
     });
     const chips = [];
@@ -3595,16 +3598,16 @@ class Component extends DCLogic {
     const vibe = p.mix.__vibe || 'clean', built = p.stage === 'built';
     return {
       mxIsPro: !!s.mxPro, mxIsEasy: !s.mxPro,
-      ezCols: w >= 1060 ? 'minmax(0,1fr) 350px' : 'minmax(0,1fr)', ezDrawerH: w >= 1060 ? 'calc(100vh - 150px)' : '520px',
+      ezCols: ((w > 760 ? w - 92 : w) >= 800) ? 'minmax(0,1fr) 330px' : 'minmax(0,1fr)', ezDrawerH: ((w > 760 ? w - 92 : w) >= 800) ? 'calc(100vh - 150px)' : '520px',
       ezNoTracks: !lanes.length, ezKicker: !lanes.length ? 'START HERE' : playing ? 'NOW PLAYING' : 'YOUR SONG',
       ezHeadline: lanes.length ? p.title : 'Drop a voice and a beat — we’ll make them fit',
       ezChips: chips.map(([icon, text]) => ({ icon, text })), ezBars: Array.from({ length: 24 }, () => ({})),
       ezPlay: () => { if (lanes.length) this.togglePlay(); }, ezPlayIcon: playing ? '❚❚' : '▶', ezPlayAria: playing ? 'Pause' : 'Play your song',
-      ezPlayBg: lanes.length ? '#00D9A6' : '#1C262D', ezPlayFg: lanes.length ? '#06231B' : '#56646F', ezPlayCursor: lanes.length ? 'pointer' : 'not-allowed',
+      ezPlayBg: lanes.length ? '#00D9A6' : 'var(--mx-line)', ezPlayFg: lanes.length ? '#06231B' : '#56646F', ezPlayCursor: lanes.length ? 'pointer' : 'not-allowed',
       ezMagicSub: matchOn ? 'On — every sound plays at the same speed, in the same key, on the beat.' : 'Off — sounds play exactly as they were recorded.',
       ezMagic: () => { if (ro) { this.flash('Only ' + this.first(p.owner) + ' can change this'); return; } this.updProj(pid, z => { z.mix.__match = !matchOn; if (z.stage === 'built') z.stage = 'draft'; return z; }); this.flash(matchOn ? 'Magic match off — hear the originals' : 'Magic match on'); },
-      ezMagicTrack: matchOn ? '#00D9A6' : '#3A464F', ezMagicKnob: matchOn ? '27px' : '3px', ezMagicOnStr: matchOn ? 'true' : 'false',
-      ezVibes: VIBES.map(([id, emoji, label, hint]) => ({ emoji, label, hint, border: vibe === id ? '#00D9A6' : '#1C262D', bg: vibe === id ? 'rgba(0,217,166,0.14)' : '#111A20', go: () => ro ? this.flash('Only ' + this.first(p.owner) + ' can change this') : this.ezApplyVibe(pid, id) })),
+      ezMagicTrack: matchOn ? '#00D9A6' : 'var(--mx-line2)', ezMagicKnob: matchOn ? '27px' : '3px', ezMagicOnStr: matchOn ? 'true' : 'false',
+      ezVibes: VIBES.map(([id, emoji, label, hint]) => ({ emoji, label, hint, border: vibe === id ? '#00D9A6' : 'var(--mx-line)', bg: vibe === id ? 'rgba(0,217,166,0.14)' : 'var(--mx-strip)', go: () => ro ? this.flash('Only ' + this.first(p.owner) + ' can change this') : this.ezApplyVibe(pid, id) })),
       ezTracks: tracks,
       ezDragOver: e => { e.preventDefault(); try { e.dataTransfer.dropEffect = 'copy'; } catch (er) {} if (!s.ezOver) this.setState({ ezOver: true }); },
       ezDragLeave: () => this.setState({ ezOver: false }),
@@ -3617,7 +3620,7 @@ class Component extends DCLogic {
         if (f && (/^audio\//.test(f.type || '') || /\.(wav|mp3|m4a|aac|ogg|flac|webm)$/i.test(f.name))) this.uploadFile(f, pid, true); else this.flash('Drop a sound from the list, or an audio file');
       },
       ezPickFile: () => { if (ro) { this.flash('Only ' + this.first(p.owner) + ' can change this mix'); return; } const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'audio/*'; inp.onchange = () => { const f = inp.files && inp.files[0]; if (f) this.uploadFile(f, pid, true); }; inp.click(); },
-      ezDropBorder: s.ezOver ? '#00D9A6' : '#2A363E', ezDropBg: s.ezOver ? 'rgba(0,217,166,0.12)' : 'rgba(255,255,255,0.02)', ezDropIcon: s.ezOver ? '🫳' : '＋',
+      ezDropBorder: s.ezOver ? '#00D9A6' : 'var(--mx-line2)', ezDropBg: s.ezOver ? 'rgba(0,217,166,0.12)' : 'rgba(var(--mx-rgb),0.02)', ezDropIcon: s.ezOver ? '🫳' : '＋',
       ...(() => {
         const t = s.ezTry && s.ezTry.pid === pid ? s.ezTry : null, x = t ? this.item(t.id) : null, mi = t && this._match && this._match[t.id] ? this._match[t.id].info : null;
         if (!t || !x) return { ezTryOn: false };
@@ -3633,11 +3636,11 @@ class Component extends DCLogic {
       ezDropSub: 'Drag from the list, or drop an audio file from your computer. Speed, key and timing are matched automatically.',
       ezMakeLabel: s.mxBouncing ? '✨ Making your song…' : built ? '✓ Song made · make it again' : '✨ Make it a song',
       ezCanRelease: built && this.canMix(p), ezRelease: () => { this.closeMixer(); this.openPublish(pid); },
-      ezTabs: ['Voices', 'Beats', 'Melodies', 'Songs', 'Yours'].map(l => ({ label: l, go: () => this.setState({ ezTab: l }), bg: tab === l ? '#00D9A6' : 'transparent', fg: tab === l ? '#06231B' : '#C9D4DB' })),
+      ezTabs: ['Voices', 'Beats', 'Melodies', 'Songs', 'Yours'].map(l => ({ label: l, go: () => this.setState({ ezTab: l }), bg: tab === l ? '#00D9A6' : 'transparent', fg: tab === l ? '#06231B' : 'var(--mx-ink2)' })),
       ezQ: s.ezQ || '', onEzQ: e => this.setState({ ezQ: e.target.value }),
       ezNoRows: pool.length === 0, ezNoRowsText: q ? 'Nothing matches “' + s.ezQ.trim() + '”.' : tab === 'Yours' ? 'Record or upload something and it shows up here.' : 'Everything here is already in your song.',
       ezRows: pool.map(x => ({
-        fit: ['', 'Good fit', '✓ Fits your beat'][fitMap[x.id] || 0], fitBg: fitMap[x.id] === 2 ? 'rgba(0,217,166,0.18)' : 'rgba(255,255,255,0.08)', fitFg: fitMap[x.id] === 2 ? '#3FE6BD' : '#C9D4DB',
+        fit: ['', 'Good fit', '✓ Fits your beat'][fitMap[x.id] || 0], fitBg: fitMap[x.id] === 2 ? 'rgba(0,217,166,0.18)' : 'rgba(var(--mx-rgb),0.08)', fitFg: fitMap[x.id] === 2 ? 'var(--mx-mint)' : 'var(--mx-ink2)',
         title: x.title, sub: (x.words ? '“' + x.words.split('\n')[0] + '” · ' : '') + (x.owner === 'lib' ? 'Ellipsis Sounds' : x.owner === 'me' ? 'You' : U(x.owner).name) + ' · ' + (x.tags.genre[0] || KIND[x.kind][0]) + (x.bpm ? ' · ' + x.bpm + ' BPM' : ''),
         art: AOF(x), ...KCX(x), icon: s.curId === x.id && s.playing ? '❚❚' : '▶',
         preview: () => { this.stopMix(); this.play(x.id); }, add: () => this.ezAdd(pid, x.id),
@@ -3763,6 +3766,7 @@ class Component extends DCLogic {
   fxSay(t) { clearTimeout(this._fxSayT); this.setState({ fxReply: t }); this._fxSayT = setTimeout(() => this.setState({ fxReply: '' }), 5000); }
   fxVibe(pid, patch) { this.setAux(pid, '__macro', patch); }
   fxCommand(pid, raw) {
+    if (!String(raw || '').trim()) { this.fxSay('Type what you want — e.g. "vocal louder", "more space", "make it punchy"'); return; }
     const p = this.proj(pid), t = ' ' + String(raw || '').toLowerCase().replace(/[^a-z0-9\s+-]/g, ' ').replace(/\s+/g, ' ') + ' ';
     if (!p || !t.trim()) return;
     const lanes = this.mxAudio(p, true), V = Object.assign({ energy: 50, space: 50, warmth: 50, width: 50 }, p.mix.__macro), lot = / (a lot|way|much|really|super) /.test(t) ? 2 : 1;
@@ -3822,13 +3826,13 @@ class Component extends DCLogic {
   fxVals(p) {
     const s = this.state, pid = p.id, w = s.w || 1200, all = this.mxAudio(p, true), anySolo = all.some(x => this.chOf(p, x.id).solo), V = Object.assign({ energy: 50, space: 50, warmth: 50, width: 50 }, p.mix.__macro);
     const KC = { acapella: ['#FF8A5C', '#8C2B1E', '◉', 'Vocal'], instrumental: ['#00D9A6', '#05523F', '▦', 'Beat'], melody: ['#7B9BFF', '#1E2E7A', '〰', 'Melody'], song: ['#C08BFF', '#4A2E8C', '♫', 'Song'] };
-    const orbs = all.map(x => {
+    const _seen = {}; const orbs = all.map(x => {
       const k = this.chOf(p, x.id), kc = KC[x.kind] || KC.song, d = Math.max(0, Math.min(1, -k.fader / 24)), size = Math.round(62 - d * 20);
       const out = !k.on || k.mute || (anySolo && !k.solo);
-      return { id: x.id, label: (x.title.length > 18 ? x.title.slice(0, 17) + '…' : x.title), tip: x.title + ' · drag to place · tap for options', left: (50 + k.pan / 100 * 42).toFixed(2) + '%', top: (86 - d * 72).toFixed(2) + '%', size: size + 'px', half: (-size / 2) + 'px', z: String(Math.round(120 - d * 60)), op: out ? '0.32' : '1', color: kc[0], deep: kc[1], glow: kc[0] + 'AA', icon: kc[2], ring: s.fxSel === x.id ? '#FFFFFF' : 'rgba(255,255,255,0.35)', ringStyle: k.on ? 'solid' : 'dashed', down: e => this.fxDown(e, pid, x.id) };
+      return { id: x.id, label: (x.title.length > 18 ? x.title.slice(0, 17) + '…' : x.title), tip: x.title + ' · drag to place · tap for options', left: (50 + Math.max(-100, Math.min(100, k.pan + (() => { const key = Math.round(k.pan / 10) + ':' + Math.round(d * 8); const n = _seen[key] = (_seen[key] || 0) + 1; return [0, -38, 38, -70, 70, -20, 20][(n - 1) % 7]; })())) / 100 * 42).toFixed(2) + '%', top: (86 - d * 72).toFixed(2) + '%', size: size + 'px', half: (-size / 2) + 'px', z: String(Math.round(120 - d * 60)), op: out ? '0.32' : '1', color: kc[0], deep: kc[1], glow: kc[0] + 'AA', icon: kc[2], ring: s.fxSel === x.id ? '#FFFFFF' : 'rgba(var(--mx-rgb),0.35)', ringStyle: k.on ? 'solid' : 'dashed', down: e => this.fxDown(e, pid, x.id) };
     });
     const selX = s.fxSel ? all.find(x => x.id === s.fxSel) : null, sk = selX ? this.chOf(p, selX.id) : null;
-    const btn = (label, go, on) => ({ label, go, bg: on ? 'rgba(0,217,166,0.2)' : 'rgba(255,255,255,0.05)', fg: on ? '#3FE6BD' : '#E6EDF1', border: on ? '#00D9A6' : '#2A363E' });
+    const btn = (label, go, on) => ({ label, go, bg: on ? 'rgba(0,217,166,0.22)' : 'rgba(255,255,255,0.06)', fg: on ? '#5CF0CE' : '#F2F6F8', border: on ? '#00D9A6' : 'rgba(255,255,255,0.22)' });
     const cyc = () => { const i = PRESET_ORDER.indexOf(sk.preset), n = PRESET_ORDER[(i + 1) % PRESET_ORDER.length]; this.setCh(pid, selX.id, Object.assign({}, PRESETS[n], { preset: n })); };
     const an = this.fxAnalyze(p), sc = an.score, C = 113.1;
     const looks = [['Chill', { energy: 30, space: 70, warmth: 65, width: 55 }], ['Club', { energy: 88, space: 38, warmth: 45, width: 72 }], ['Radio', { energy: 68, space: 34, warmth: 50, width: 52 }], ['Dreamy', { energy: 34, space: 92, warmth: 40, width: 84 }], ['Raw', { energy: 56, space: 14, warmth: 62, width: 34 }], ['Neutral', { energy: 50, space: 50, warmth: 50, width: 50 }]];
@@ -3840,13 +3844,13 @@ class Component extends DCLogic {
       fxSelClose: () => this.setState({ fxSel: null }),
       fxSelActs: selX ? [btn(sk.solo ? 'Solo on' : 'Solo', () => this.setCh(pid, selX.id, { solo: !sk.solo }), sk.solo), btn(sk.mute ? 'Muted' : 'Mute', () => this.setCh(pid, selX.id, { mute: !sk.mute }), sk.mute), btn('Sound: ' + sk.preset, cyc, false), btn(sk.on ? 'Leave out' : 'Bring in', () => this.setCh(pid, selX.id, { on: !sk.on }), !sk.on), btn('Front & centre', () => this.setCh(pid, selX.id, { pan: 0, fader: 0, rev: 6 }), false), btn('Remove', () => { this.setState({ fxSel: null }); this.ezRemove(pid, selX.id); }, false)] : [],
       fxMacros: M.map(([key, label, hint, color]) => { const v = V[key]; return { label, hint, color, glow: color + '33', value: String(Math.round(v)), arc: (v / 100 * 270).toFixed(1) + 'deg', down: e => this.dragVal(e, v, 0, 100, nv => this.fxVibe(pid, { [key]: Math.round(nv) }), 140), reset: () => this.fxVibe(pid, { [key]: 50 }) }; }),
-      fxLooks: looks.map(([label, v]) => { const on = Object.keys(v).every(k => Math.abs(V[k] - v[k]) < 1); return { label, bg: on ? '#00D9A6' : 'rgba(255,255,255,0.04)', fg: on ? '#06231B' : '#E6EDF1', border: on ? '#00D9A6' : '#2A363E', go: () => { this.fxVibe(pid, v); this.fxSay('✓ ' + label + ' look'); } }; }),
-      fxScore: sc == null ? '—' : String(sc), fxScoreColor: sc == null ? '#2A363E' : sc >= 85 ? '#00D9A6' : sc >= 65 ? '#FFC24B' : '#FF8A5C', fxScoreDash: ((sc || 0) / 100 * C).toFixed(1) + ' ' + C,
-      fxHasTips: an.tips.length > 0, fxTips: an.tips.map(t => ({ text: t.text, label: t.label, dot: t.sev === 2 ? '#FF8A5C' : t.sev === 1 ? '#FFC24B' : '#5B8CFF', border: t.sev === 2 ? 'rgba(255,138,92,0.4)' : '#2A363E', apply: () => { this.fxApply(pid, [t]); this.fxSay('✓ ' + t.label); } })),
+      fxLooks: looks.map(([label, v]) => { const on = Object.keys(v).every(k => Math.abs(V[k] - v[k]) < 1); return { label, bg: on ? '#00D9A6' : 'rgba(var(--mx-rgb),0.04)', fg: on ? '#06231B' : 'var(--mx-ink)', border: on ? '#00D9A6' : 'var(--mx-line2)', go: () => { this.fxVibe(pid, v); this.fxSay('✓ ' + label + ' look'); } }; }),
+      fxScore: sc == null ? '—' : String(sc), fxScoreColor: sc == null ? 'var(--mx-line2)' : sc >= 85 ? '#00D9A6' : sc >= 65 ? '#FFC24B' : '#FF8A5C', fxScoreDash: ((sc || 0) / 100 * C).toFixed(1) + ' ' + C,
+      fxHasTips: an.tips.length > 0, fxTips: an.tips.map(t => ({ text: t.text, label: t.label, dot: t.sev === 2 ? '#FF8A5C' : t.sev === 1 ? '#FFC24B' : '#5B8CFF', border: t.sev === 2 ? 'rgba(255,138,92,0.4)' : 'var(--mx-line2)', apply: () => { this.fxApply(pid, [t]); this.fxSay('✓ ' + t.label); } })),
       fxApplyAll: () => { this.fxApply(pid, an.tips); this.fxSay('✦ Fixed ' + an.tips.length + ' issue' + (an.tips.length === 1 ? '' : 's')); },
       fxCmd: s.fxCmd || '', onFxCmd: e => this.setState({ fxCmd: e.target.value }), onFxKey: e => { if (e.key === 'Enter') { this.fxCommand(pid, s.fxCmd); this.setState({ fxCmd: '' }); } },
-      fxRun: () => { this.fxCommand(pid, s.fxCmd); this.setState({ fxCmd: '' }); }, fxReply: s.fxReply || '', fxCmdBorder: s.fxMicOn ? '#FF8A5C' : '#1C262D',
-      fxMic: () => this.fxListen(pid), fxMicBg: s.fxMicOn ? '#FF8A5C' : 'rgba(255,255,255,0.06)', fxMicFg: s.fxMicOn ? '#1A0A04' : '#E6EDF1', fxMicTitle: s.fxMicOn ? 'Listening — tap to stop' : 'Speak to the mixer'
+      fxRun: () => { this.fxCommand(pid, s.fxCmd); this.setState({ fxCmd: '' }); }, fxReply: s.fxReply || '', fxCmdBorder: s.fxMicOn ? '#FF8A5C' : 'var(--mx-line)',
+      fxMic: () => this.fxListen(pid), fxMicBg: s.fxMicOn ? '#FF8A5C' : 'rgba(var(--mx-rgb),0.06)', fxMicFg: s.fxMicOn ? '#1A0A04' : 'var(--mx-ink)', fxMicTitle: s.fxMicOn ? 'Listening — tap to stop' : 'Speak to the mixer'
     };
   }
   openMixer(pid) { const p = this.proj(pid); if (!p) return; this.unlockAudio(); this.silentOn(); if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
@@ -3934,7 +3938,7 @@ class Component extends DCLogic {
     this.setState(s => ({ acts: s.acts.map(x => x.id === id ? Object.assign({}, x, { done: how }) : x) }));
   }
   sendMsg(pid) {
-    const d = this.state.draft.trim(); if (!d) return;
+    const d = this.state.draft.trim(); if (!d) { this.flash('Type a message first'); return; }
     const p = this.proj(pid);
     if (this.state.muteUntil && Date.now() < this.state.muteUntil) { this.setState({ chatWarn: { cat: 'Cooling off', why: 'Chat is paused for ' + Math.ceil((this.state.muteUntil - Date.now()) / 60000) + ' more minutes after repeated warnings.' } }); return; }
     const hit = modCheck(d);
@@ -4654,28 +4658,28 @@ class Component extends DCLogic {
       const strips = lanesOn.map(x => {
         const k = this.chOf(mp, x.id), set = patch => this.setCh(pid, x.id, patch), col = COLORS[x.kind] || '#00D9A6';
         const nextPre = () => { const i = PRESET_ORDER.indexOf(k.preset); const n = PRESET_ORDER[(i + 1) % PRESET_ORDER.length]; set(Object.assign({}, PRESETS[n], { preset: n })); };
-        const knobs = [].concat(pro ? [knob('TRIM', k.trim, -12, 12, 0, dbT(k.trim), v => set({ trim: Math.round(v * 10) / 10 }), '#8C9AA5')] : [],
+        const knobs = [].concat(pro ? [knob('TRIM', k.trim, -12, 12, 0, dbT(k.trim), v => set({ trim: Math.round(v * 10) / 10 }), 'var(--mx-dim)')] : [],
           [knob('REV', k.rev, 0, 100, 0, Math.round(k.rev) + '%', v => set({ rev: Math.round(v) }), '#B07CFF')],
           pro ? [knob('DLY', k.dly, 0, 100, 0, Math.round(k.dly) + '%', v => set({ dly: Math.round(v) }), '#5B8CFF')] : [],
-          [knob('PAN', k.pan, -100, 100, 0, panT(k.pan), v => set({ pan: Math.round(v) }), '#E6EDF1')]);
+          [knob('PAN', k.pan, -100, 100, 0, panT(k.pan), v => set({ pan: Math.round(v) }), 'var(--mx-ink)')]);
         return Object.assign({
           id: x.id, w: pro ? '118px' : '100px', name: x.title, sub: KIND[x.kind][0] + ' · ' + U(x.owner).name.split(' ')[0], color: col,
-          bg: s.mxFocus === x.id ? '#16222A' : '#111A20', border: s.mxFocus === x.id ? col : '#1C262D',
+          bg: s.mxFocus === x.id ? 'var(--mx-strip2)' : 'var(--mx-strip)', border: s.mxFocus === x.id ? col : 'var(--mx-line)',
           hasPreset: true, preset: k.preset, cyclePreset: nextPre,
-          showEq: pro, toggleHpf: () => set({ hpf: !k.hpf, preset: 'Custom' }), hpfBg: k.hpf ? 'rgba(0,217,166,0.18)' : '#141D23', hpfFg: k.hpf ? '#3FE6BD' : '#8C9AA5', hpfBorder: k.hpf ? '#00D9A6' : '#2A363E',
-          eqBorder: s.mxFocus === x.id ? col : '#2A363E', focusEq: () => this.setState({ mxFocus: s.mxFocus === x.id ? null : x.id }), eqPts: curve(k, 96, 34, 15, N),
+          showEq: pro, toggleHpf: () => set({ hpf: !k.hpf, preset: 'Custom' }), hpfBg: k.hpf ? 'rgba(0,217,166,0.18)' : 'var(--mx-btn)', hpfFg: k.hpf ? 'var(--mx-mint)' : 'var(--mx-dim)', hpfBorder: k.hpf ? '#00D9A6' : 'var(--mx-line2)',
+          eqBorder: s.mxFocus === x.id ? col : 'var(--mx-line2)', focusEq: () => this.setState({ mxFocus: s.mxFocus === x.id ? null : x.id }), eqPts: curve(k, 96, 34, 15, N),
           showDyn: pro, dyn: [knob('THRESH', k.thr, -40, 0, 0, Math.round(k.thr) + ' dB', v => set({ thr: Math.round(v), ratio: k.ratio > 1 ? k.ratio : 3, preset: 'Custom' }), '#FFC24B'), knob('RATIO', k.ratio, 1, 10, 1, k.ratio.toFixed(1) + ':1', v => set({ ratio: Math.round(v * 10) / 10, preset: 'Custom' }), '#FFC24B')],
           hasKnobs: true, knobs,
           hasMS: true, mute: () => set({ mute: !k.mute }), solo: () => set({ solo: !k.solo }),
-          muteBg: k.mute ? '#FFC24B' : '#1C262D', muteFg: k.mute ? '#1A1405' : '#C9D4DB', soloBg: k.solo ? '#00D9A6' : '#1C262D', soloFg: k.solo ? '#06231B' : '#C9D4DB',
+          muteBg: k.mute ? '#FFC24B' : 'var(--mx-line)', muteFg: k.mute ? '#1A1405' : 'var(--mx-ink2)', soloBg: k.solo ? '#00D9A6' : 'var(--mx-line)', soloFg: k.solo ? '#06231B' : 'var(--mx-ink2)',
           mL: x.id + ':L', mR: x.id + ':R'
         }, fader(k.fader, v => set({ fader: v })));
       });
-      const auxStrip = (key, name, sub, col, knobs, fd) => Object.assign({ id: key, w: pro ? '118px' : '100px', name, sub, color: col, bg: '#0F171C', border: '#1C262D', hasPreset: false, showEq: false, showDyn: false, hasKnobs: knobs.length > 0, knobs, hasMS: false, mL: key + ':L', mR: key + ':R' }, fader(fd, v => this.setAux(pid, key, { fader: v })));
+      const auxStrip = (key, name, sub, col, knobs, fd) => Object.assign({ id: key, w: pro ? '118px' : '100px', name, sub, color: col, bg: 'var(--mx-strip)', border: 'var(--mx-line)', hasPreset: false, showEq: false, showDyn: false, hasKnobs: knobs.length > 0, knobs, hasMS: false, mL: key + ':L', mR: key + ':R' }, fader(fd, v => this.setAux(pid, key, { fader: v })));
       strips.push(auxStrip('__rev', 'Plate reverb', 'Return', '#B07CFF', [knob('DECAY', A.rev.decay, 0.6, 6, 2.2, A.rev.decay.toFixed(1) + 's', v => this.setAux(pid, '__rev', { decay: Math.round(v * 10) / 10 }), '#B07CFF')], A.rev.fader));
       strips.push(auxStrip('__dly', 'Tape delay', 'Return', '#5B8CFF', pro ? [knob('TIME', A.dly.time * 1000, 60, 1000, 375, Math.round(A.dly.time * 1000) + 'ms', v => this.setAux(pid, '__dly', { time: Math.round(v) / 1000 }), '#5B8CFF'), knob('FDBK', A.dly.fb, 0, 85, 35, Math.round(A.dly.fb) + '%', v => this.setAux(pid, '__dly', { fb: Math.round(v) }), '#5B8CFF')] : [], A.dly.fader));
-      const ms = auxStrip('__master', 'Master', 'Stereo out', '#F2F6F8', [knob('CEILING', A.master.ceil, -6, 0, -1, A.master.ceil.toFixed(1) + ' dB', v => this.setAux(pid, '__master', { ceil: Math.round(v * 10) / 10 }), '#FF5A4E')], A.master.fader);
-      ms.showDyn = true; ms.dyn = []; ms.hasPreset = true; ms.preset = A.master.glue ? 'Glue comp on' : 'Glue comp off'; ms.cyclePreset = () => this.setAux(pid, '__master', { glue: !A.master.glue }); ms.w = pro ? '128px' : '108px'; ms.bg = '#121C22'; ms.border = '#2A363E';
+      const ms = auxStrip('__master', 'Master', 'Stereo out', 'var(--mx-ink)', [knob('CEILING', A.master.ceil, -6, 0, -1, A.master.ceil.toFixed(1) + ' dB', v => this.setAux(pid, '__master', { ceil: Math.round(v * 10) / 10 }), '#FF5A4E')], A.master.fader);
+      ms.showDyn = true; ms.dyn = []; ms.hasPreset = true; ms.preset = A.master.glue ? 'Glue comp on' : 'Glue comp off'; ms.cyclePreset = () => this.setAux(pid, '__master', { glue: !A.master.glue }); ms.w = pro ? '128px' : '108px'; ms.bg = 'var(--mx-strip2)'; ms.border = 'var(--mx-line2)';
       strips.push(ms);
 
       const fk = s.mxFocus ? this.chOf(mp, s.mxFocus) : null, fItem = s.mxFocus ? this.item(s.mxFocus) : null;
@@ -4705,14 +4709,14 @@ class Component extends DCLogic {
         mxLabCol: s.w < 640 ? '72px' : '150px', mxLabOff: s.w < 640 ? '82px' : '160px',
         mxOpen: true, mxTitle: mp.title + (ro ? ' · listening' : ''), mxCount: String(lanesOn.length), mxBpm: String(mp.bpm || 90), mxKey: mp.key || 'F min',
         mxNote: s.mxLoading ? 'Loading audio…' : s.mxBouncing ? 'Bouncing the mixdown with the master bus…' : ro ? (mp.stage === 'published' ? 'Published — the mix is locked. Solo and mute still work for listening.' : 'You are listening to ' + U(mp.owner).name.split(' ')[0] + "'s mix. Solo and mute work for you; only the owner can change levels and sound.") : '',
-        mxModes: [['Easy', false], ['Pro', true]].map(([l, v]) => ({ label: l, go: () => { try { localStorage.setItem('ellipsis4.mxMode', v ? 'pro' : 'easy'); } catch (e) {} this.setState({ mxPro: v, mxFocus: v ? s.mxFocus : null }); }, bg: s.mxPro === v ? '#00D9A6' : 'transparent', fg: s.mxPro === v ? '#06231B' : '#C9D4DB' })),
-        mxAB: ['A', 'B'].map(l => ({ label: l, go: () => this.mxSwitch(pid, l), bg: (mp.mix.__ab || 'A') === l ? '#E6EDF1' : 'transparent', fg: (mp.mix.__ab || 'A') === l ? '#0A0F12' : '#C9D4DB' })),
+        mxModes: [['Easy', false], ['Pro', true]].map(([l, v]) => ({ label: l, go: () => { try { localStorage.setItem('ellipsis4.mxMode', v ? 'pro' : 'easy'); } catch (e) {} this.setState({ mxPro: v, mxFocus: v ? s.mxFocus : null }); }, bg: s.mxPro === v ? '#00D9A6' : 'transparent', fg: s.mxPro === v ? '#06231B' : 'var(--mx-ink2)' })),
+        mxAB: ['A', 'B'].map(l => ({ label: l, go: () => this.mxSwitch(pid, l), bg: (mp.mix.__ab || 'A') === l ? 'var(--mx-ink)' : 'transparent', fg: (mp.mix.__ab || 'A') === l ? 'var(--mx-bg)' : 'var(--mx-ink2)' })),
         mxAuto: () => this.mxAutoMix(pid),
         mxShare: () => { this.updProj(pid, z => { z.msgs = z.msgs.concat([{ uid: 'me', text: '🎚 Shared mix ' + (mp.mix.__ab || 'A') + ' · ' + lanesOn.length + ' tracks · ' + lanesOn.map(x => x.title + ' ' + dbT(this.chOf(mp, x.id).fader) + ' dB').join(', ') }]); return z; }); this.flash('Mix posted to the project chat'); },
         closeMixer: this.closeMixer,
         mxToStart: () => { this._mxPos = 0; this._mxPosPid = pid; if (s.mixPid) this.mxStart(mp, 0); else { const ph = document.querySelector('[data-ph]'); if (ph) ph.style.left = '0%'; const ck = document.querySelector('[data-clk]'); if (ck) ck.textContent = this.mxClockText(mp, 0); } },
         mxPlay: () => this.togglePlay(), mxPlayIcon: s.mixPid === pid ? '■' : '▶', mxPlayBg: s.mixPid === pid ? '#FF5A4E' : '#00D9A6', mxPlayFg: s.mixPid === pid ? '#fff' : '#06231B',
-        mxLoop: () => this.setState({ mxLoopOn: !s.mxLoopOn }), mxLoopBg: s.mxLoopOn ? 'rgba(0,217,166,0.18)' : '#141D23', mxLoopFg: s.mxLoopOn ? '#3FE6BD' : '#C9D4DB', mxLoopBorder: s.mxLoopOn ? '#00D9A6' : '#2A363E',
+        mxLoop: () => this.setState({ mxLoopOn: !s.mxLoopOn }), mxLoopBg: s.mxLoopOn ? 'rgba(0,217,166,0.18)' : 'var(--mx-btn)', mxLoopFg: s.mxLoopOn ? 'var(--mx-mint)' : 'var(--mx-ink2)', mxLoopBorder: s.mxLoopOn ? '#00D9A6' : 'var(--mx-line2)',
         mxClock: this.mxClockText(mp, s.mixPid === pid ? this.mxPos() : (this._mxPosPid === pid ? this._mxPos || 0 : 0)),
         mxSeek: e => { const b = e.currentTarget.getBoundingClientRect(), lo = s.w < 640 ? 82 : 160, x0 = b.left + 18 + lo, w0 = b.width - 36 - lo; const f = Math.max(0, Math.min(1, (e.clientX - x0) / w0)); const dur = this._mxDur || Math.max.apply(null, [1].concat(lanesOn.map(x => this._bufs && this._bufs[x.id] ? this._bufs[x.id].buf.duration : 0))); const t = f * dur; this._mxPos = t; this._mxPosPid = pid; if (s.mixPid === pid) this.mxStart(mp, t); else { const ph = document.querySelector('[data-ph]'); if (ph) ph.style.left = (f * 100).toFixed(2) + '%'; const ck = document.querySelector('[data-clk]'); if (ck) ck.textContent = this.mxClockText(mp, t); } },
         mxLanes: allLanes.map(x => { const k = this.chOf(mp, x.id), pk = (this._peaks && this._peaks[x.id]) || bars(x.title.length * 17 + 3, 120, 10, 90).map(v => v / 100); return { name: x.title, color: COLORS[x.kind] || '#00D9A6', opacity: !k.on ? '0.25' : k.mute ? '0.4' : '1', peaks: pk.map(v => ({ h: Math.max(6, Math.round(v * 100)) + '%' })) }; }),
@@ -4720,12 +4724,12 @@ class Component extends DCLogic {
         mxHasDl: !!(s.mxDl && s.mxDl.pid === pid), mxDlUrl: s.mxDl && s.mxDl.pid === pid ? s.mxDl.url : '', mxDlName: s.mxDl ? s.mxDl.name : '',
         mxBounce: () => this.mxBounceMix(pid), mxBounceOff: ro || s.mxBouncing || !lanesOn.length,
         mxBounceLabel: s.mxBouncing ? 'Bouncing…' : mp.stage === 'built' ? '✓ Re-bounce' : 'Bounce mix', mxBounceHint: ro ? 'Only the owner can bounce' : 'Render a stereo WAV with every insert, send and the master bus applied',
-        mxBounceBg: ro || !lanesOn.length ? '#1C262D' : '#00D9A6', mxBounceFg: ro || !lanesOn.length ? '#66757F' : '#06231B', mxBounceCursor: ro ? 'not-allowed' : 'pointer',
+        mxBounceBg: ro || !lanesOn.length ? 'var(--mx-line)' : '#00D9A6', mxBounceFg: ro || !lanesOn.length ? 'var(--mx-dim)' : '#06231B', mxBounceCursor: ro ? 'not-allowed' : 'pointer',
         mxFocusOpen: !!(pro && fk && fItem), mxFocusName: fItem ? fItem.title : '', mxFocusColor: fItem ? COLORS[fItem.kind] || '#00D9A6' : '#00D9A6',
         mxFocusPts: fPts, mxFocusFill: fPts ? '0,' + H / 2 + ' ' + fPts + ' ' + W + ',' + H / 2 : '',
         mxFocusClose: () => this.setState({ mxFocus: null }), mxFocusFlat: () => s.mxFocus && this.setCh(pid, s.mxFocus, { eq: [0, 0, 0, 0], hpf: false, preset: 'Custom' }),
         mxGridV: [50, 100, 200, 500, 1000, 2000, 5000, 10000].map(f => ({ x: fx(f) })),
-        mxGridH: [12, 6, 0, -6, -12].map(d => ({ y: fy(d), c: d === 0 ? '#2A363E' : '#141D23' })),
+        mxGridH: [12, 6, 0, -6, -12].map(d => ({ y: fy(d), c: d === 0 ? 'var(--mx-line2)' : 'var(--mx-btn)' })),
         mxFocusDots: fk ? fk.eqf.map((f, i) => ({ x: fx(f), y: fy(fk.eq[i]), c: BANDS[i][3] })) : [],
         mxBands: fk ? BANDS.map(([name, lo, hi, c], i) => ({ name, c, knobs: [
           knob('GAIN', fk.eq[i], -12, 12, 0, dbT(fk.eq[i]) + ' dB', v => { const eq = fk.eq.slice(); eq[i] = Math.round(v * 10) / 10; this.setCh(pid, s.mxFocus, { eq, preset: 'Custom' }); }, c),
@@ -4737,7 +4741,7 @@ class Component extends DCLogic {
     if (mp && !this._prepP && this.matchSig(mp) !== this._matchSig) setTimeout(() => this.mxPrepare(mp.id), 0);
     return {
       ...MOB, phone, signedInWide: !!s.acct && !phone,
-      ...this.inboxVals(s), ...MX, ...(mp ? this.ezVals(mp) : {}), ...(mp ? this.fxVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
+      ...this.inboxVals(s), ...MX, ...(mp ? this.ezVals(mp) : {}), mxBottom: phone ? 'calc(64px + env(safe-area-inset-bottom))' : '0px', mxLeft: phone ? '0px' : '92px', ...(mp ? this.fxVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
       askLogout: () => this.setState({ sheet: { type: 'switch' } }), signedIn: !!s.acct,
       askLogoutOld: () => this.setState({ sheet: { type: 'confirm', title: 'Log out of Ellipsis?', body: 'Your work is saved' + (s.acct && s.acct.token ? ' to your account — sign back in on any device to pick up where you left off.' : ' on this device and will be here when you sign back in.'), cta: 'Log out', go: () => { this.setState({ sheet: null }); if (this._api && s.acct && s.acct.token) this.api('logout', { body: {} }).catch(() => {}); this.signOut(); this.flash('Logged out'); } } }),
       inviteNote: s.acct && s.acct.refCode ? 'You both get a month of Premium when they release a song' : 'Share Ellipsis with collaborators',
@@ -4802,7 +4806,7 @@ class Component extends DCLogic {
       buildBorder: pp.stage === 'built' ? 'var(--mint)' : 'var(--line)', buildMeta: onLanes.length + ' of ' + laneItems.length + ' tracks in the mix', buildHint,
       lanes: laneItems.map(x => { const m = pp.mix[x.id] || {}; const on = m.on !== false; return { title: KIND[x.kind][0] + ' · ' + x.title, color: x.kind === 'instrumental' ? '#00D9A6' : x.kind === 'melody' ? '#5B8CFF' : '#FF8A5C', opacity: on ? '1' : '0.45', tick: on ? '✓' : '', boxBg: on ? 'var(--mint)' : 'transparent', boxBorder: on ? 'var(--mint)' : 'var(--line2)', vol: Math.round(Math.max(0, Math.min(100, 80 * this.dbToGain(this.chOf(pp, x.id).fader)))),
         wave: bars(x.id.length * 97 + x.title.length * 13, 36, 18, 100).map(h => ({ h: Math.round(h) + '%' })),
-        toggle: () => { if (!pMine || pp.stage === 'published') return; this.updProj(pp.id, z => { z.mix[x.id] = Object.assign({}, z.mix[x.id], { on: !on }); if (z.stage === 'built') z.stage = 'draft'; return z; }); if (this._g && this._gPid === pp.id) { const pos = this.mxPos(); requestAnimationFrame(() => this.mxStart(this.proj(pp.id), pos)); } },
+        toggle: () => { if (!pMine || pp.stage === 'published') { this.flash(pp.stage === 'published' ? 'This song is released — the mix is locked' : 'Only ' + U(pp.owner).name.split(' ')[0] + ' can change which tracks are in the mix'); return; } this.updProj(pp.id, z => { z.mix[x.id] = Object.assign({}, z.mix[x.id], { on: !on }); if (z.stage === 'built') z.stage = 'draft'; return z; }); if (this._g && this._gPid === pp.id) { const pos = this.mxPos(); requestAnimationFrame(() => this.mxStart(this.proj(pp.id), pos)); } },
         setVol: e => { const v = +e.target.value; this.setCh(pp.id, x.id, { vol: v, fader: v <= 0 ? -60 : Math.max(-60, Math.round(20 * Math.log10(v / 80) * 10) / 10) }); } }; }),
       openMixer: () => this.openMixer(pp.id),
       noLanes: !onLanes.length, mixLabel: s.mixPid === pp.id ? '■ Stop preview' : '▶ Preview mix', previewMix: () => s.mixPid === pp.id ? this.stopMix() : this.startMix(pp),
