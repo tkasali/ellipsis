@@ -55,7 +55,7 @@
 <div data-theme="{{ theme }}" style="height:100vh;height:100dvh;display:grid;grid-template-columns:{{ shCols }};grid-template-rows:{{ shRows }};background:var(--bg);color:var(--ink);font-family:Geist,-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-0.005em">
 
   <aside style="grid-row:{{ navRow }};grid-column:1;background:#0C1318;display:flex;flex-direction:{{ navDir }};position:relative;align-items:center;justify-content:{{ navJust }};gap:{{ navGap }};padding:{{ navPad }};min-height:0;overflow-y:{{ navOy }};overflow-x:hidden;z-index:95">
-    <div style="display:{{ navLogo }};flex:none;margin-bottom:4px"><span style="flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span></span></div>
+    <button onClick="{{ goHome }}" title="Ellipsis · Home" aria-label="Go to Home" style="display:{{ navLogo }};flex:none;margin-bottom:4px;padding:0;border:0;background:transparent;cursor:pointer;border-radius:13px"><span style="flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:flex;align-items:center;justify-content:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span><span style="width:6px;height:6px;border-radius:50%;background:#06231B"></span></span></button>
     <sc-if value="{{ showCreate }}" hint-placeholder-val="{{ true }}">
     <button onClick="{{ openCreate }}" title="Create" style="width:{{ navCreateW }};padding:{{ navCreatePad }};border:0;border-radius:16px;background:#00D9A6;color:#06231B;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;flex:none;margin-bottom:6px;box-shadow:0 8px 20px rgba(0,217,166,0.3)">
       <span style="font-size:22px;line-height:1;font-weight:620">+</span><span style="font-size:12px;font-weight:620">Create</span>
@@ -75,6 +75,9 @@
 
   <main style="grid-row:1;grid-column:{{ mainCol }};min-width:0;min-height:0;display:flex;flex-direction:column">
     <header style="flex:none;display:flex;align-items:center;gap:{{ hdrGap }};padding:{{ hdrPad }};border-bottom:1px solid var(--line);background:var(--panel)">
+      <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goHome }}" title="Ellipsis · Home" aria-label="Go to Home" style="flex:none;padding:0;border:0;background:transparent;cursor:pointer;border-radius:11px;display:flex"><span style="flex:none;width:36px;height:36px;border-radius:11px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:flex;align-items:center;justify-content:center;gap:3px"><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span></span></button>
+      </sc-if>
       <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ back }}" title="Back" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:17px;cursor:pointer">←</button>
       </sc-if>
@@ -112,6 +115,9 @@
       <sc-if value="{{ notPhone }}" hint-placeholder-val="{{ true }}"><button onClick="{{ goHelp }}" title="Help & FAQ" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:var(--ink);font-size:16px;font-weight:620;cursor:pointer">?</button></sc-if>
       <sc-if value="{{ showAdmin }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ goAdmin }}" title="Open the admin console" style="flex:none;display:flex;align-items:center;gap:7px;padding:9px 14px;border:0;border-radius:12px;background:#0C1318;color:#fff;font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap"><span style="color:#00D9A6">⚙</span>Admin</button>
+      </sc-if>
+      <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ toggleTheme }}" title="Switch to {{ themeWord }} mode" aria-label="Switch to {{ themeWord }} mode" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center">{{ themeIcon }}</button>
       </sc-if>
       <button onClick="{{ toggleTheme }}" title="Switch to {{ themeWord }} mode" style="flex:none;display:{{ hdrThemeD }};align-items:center;gap:7px;padding:9px 13px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:13px;font-weight:620;cursor:pointer;white-space:nowrap"><span>{{ themeIcon }}</span>{{ themeWord }}</button>
       <button onClick="{{ goMe }}" title="Your profile" style="flex:none;width:40px;height:40px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 2px var(--mint);background:{{ meBg }};color:#fff;font-size:13px;font-weight:620;cursor:pointer">{{ meInitials }}</button>
@@ -1024,6 +1030,11 @@
             </div>
           </div>
         </sc-if>
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;line-height:1.5;color:var(--dim);text-align:center">
+          <a href="https://www.dmca.com/Protection/Status.aspx?ID=f869b572-eb73-46d9-814c-e156ae3195a5" title="DMCA.com Protection Status" class="dmca-badge" target="_blank" rel="noopener" style="display:inline-flex;flex:none"><img src="https://images.dmca.com/Badges/dmca-badge-w100-2x1-04.png?ID=f869b572-eb73-46d9-814c-e156ae3195a5" alt="DMCA.com Protection Status" width="100" height="50" style="display:block;width:100px;height:auto" /></a>
+          <span style="max-width:520px">© 2026 RoundTable Ventures, LLC. Recordings, lyrics and stems belong to their creators. Content is protected under the DMCA — report infringement via our <a href="../legal/dmca.html" target="_blank" rel="noopener">Copyright policy</a> · <a href="../legal/terms.html" target="_blank" rel="noopener">Terms</a> · <a href="../legal/privacy.html" target="_blank" rel="noopener">Privacy</a></span>
+        </div>
 
       </div>
     </div>
@@ -4754,6 +4765,7 @@ class Component extends DCLogic {
       libHasQuick: ['lyric', 'melody', 'acapella', 'instrumental'].indexOf(s.libTab) >= 0,
       libQuickLabel: ({ lyric: '✎ New lyrics', melody: '〰 Record melody', acapella: '◉ Record acapella', instrumental: '♫ Record instrumental' })[s.libTab] || '',
       libQuick: () => { if (s.libTab === 'lyric') this.newLyric(null); else if (['melody', 'acapella', 'instrumental'].indexOf(s.libTab) >= 0) this.openRec(s.libTab, null); }, goMe: () => this.go('profile', { uid: 'me' }),
+      isPhone: !!phone, goHome: () => { const ex = s.acct && s.acct.type === 'exec'; if (ex) this.go('desk'); else this.go('explore', { exTab: 'Songs' }); if (this.scrollRef.current) this.scrollRef.current.scrollTop = 0; },
       shAlign: s.w < 640 ? 'flex-end' : 'center', shPad: s.w < 640 ? '0' : '24px', shMaxH: s.w < 640 ? '92vh' : '84vh', shRadius: s.w < 640 ? '24px 24px 0 0' : '24px',
       canBack: s.hist.length > 0 && /project|lyric|profile/.test(s.view), back: this.back,
       scrollRef: this.scrollRef, chatRef: this.chatRef, fileRef: this.fileRef, nameRef: this.nameRef, stop: e => e.stopPropagation(),
