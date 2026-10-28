@@ -1442,6 +1442,14 @@
           <div style="font-size:10.5px;font-weight:620;letter-spacing:0.14em;color:#00D9A6">MIXER</div>
           <div style="font-family:Urbanist,Geist,sans-serif;font-size:19px;font-weight:500;letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mxTitle }}</div>
         </div>
+        <button onClick="{{ lvToggle }}" title="{{ lvTip }}" style="white-space:nowrap;flex:none;display:flex;align-items:center;gap:7px;padding:9px 13px;border:1px solid {{ lvBorder }};border-radius:10px;background:{{ lvBg }};color:{{ lvFg }};font-size:12.5px;font-weight:620;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:{{ lvDot }};animation:{{ lvAnim }}"></span>{{ lvLabel }}</button>
+        <sc-if value="{{ lvOn }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:none;display:flex;align-items:center;padding-left:6px">
+            <sc-for list="{{ lvPeople }}" as="u" hint-placeholder-count="1"><span title="{{ u.tip }}" style="width:28px;height:28px;margin-left:-6px;border-radius:50%;border:2px solid var(--mx-bg2);background:{{ u.color }};color:#06231B;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ u.ini }}</span></sc-for>
+          </div>
+          <button onClick="{{ lvFollow }}" title="When on, pressing play plays for everyone in the session" style="white-space:nowrap;flex:none;padding:9px 12px;border:1px solid var(--mx-line2);border-radius:10px;background:{{ lvFollowBg }};color:{{ lvFollowFg }};font-size:12.5px;font-weight:580;cursor:pointer">{{ lvFollowLabel }}</button>
+          <button onClick="{{ lvInvite }}" title="Copy a link that opens this mix live" style="white-space:nowrap;flex:none;padding:9px 12px;border:1px solid var(--mx-line2);border-radius:10px;background:var(--mx-btn);color:var(--mx-ink);font-size:12.5px;font-weight:580;cursor:pointer">🔗 Invite</button>
+        </sc-if>
         <button onClick="{{ tutOpen }}" title="Mixer tutorial" style="white-space:nowrap;flex:none;padding:9px 14px;border:1px solid #00D9A6;border-radius:10px;background:rgba(0,217,166,0.12);color:var(--mx-mint);font-size:12.5px;font-weight:620;cursor:pointer">? Tutorial</button>
         <div style="display:flex;gap:3px;padding:3px;border-radius:11px;background:var(--mx-btn);box-shadow:{{ hl.modes }};">
           <sc-for list="{{ mxModes }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="padding:7px 14px;border:0;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ t.label }}</button></sc-for>
@@ -1624,17 +1632,62 @@
 
       <sc-if value="{{ mxIsPro }}" hint-placeholder-val="{{ false }}"><div style="flex:1;min-height:0;display:flex;flex-direction:column">
 <canvas data-spec="line" style="flex:none;display:block;width:100%;height:72px;background:linear-gradient(180deg,var(--mx-well),var(--mx-well));border-bottom:1px solid var(--mx-line)"></canvas>
-      <div onClick="{{ mxSeek }}" title="Click to move the playhead" style="box-shadow:{{ hl.timeline }};flex:none;position:relative;padding:8px 18px 10px;border-bottom:1px solid var(--mx-line);cursor:text">
-        <sc-for list="{{ mxLanes }}" as="l" hint-placeholder-count="3">
-          <div style="display:grid;grid-template-columns:{{ mxLabCol }} minmax(0,1fr);gap:10px;align-items:center;height:30px;opacity:{{ l.opacity }}">
-            <div style="display:flex;align-items:center;gap:8px;min-width:0"><span style="flex:none;width:4px;height:20px;border-radius:2px;background:{{ l.color }}"></span><span style="font-size:12px;font-weight:580;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span></div>
-            <div style="display:flex;align-items:center;gap:1px;height:26px;min-width:0;background:var(--mx-strip);border-radius:5px;padding:0 3px;overflow:hidden">
-              <sc-for list="{{ l.peaks }}" as="b" hint-placeholder-count="120"><div style="flex:1;min-width:1px;height:{{ b.h }};background:{{ l.color }};border-radius:1px"></div></sc-for>
+      <div style="box-shadow:{{ hl.timeline }};flex:none;border-bottom:1px solid var(--mx-line)">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 18px;border-bottom:1px solid var(--mx-line);background:var(--mx-bg2)">
+          <span style="font-size:10.5px;font-weight:620;letter-spacing:0.12em;color:var(--mx-mint)">ARRANGE</span>
+          <div style="display:flex;gap:3px;padding:3px;border-radius:9px;background:var(--mx-btn)">
+            <sc-for list="{{ tlSnaps }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.go }}" title="{{ t.hint }}" style="padding:5px 10px;border:0;border-radius:7px;background:{{ t.bg }};color:{{ t.fg }};font-size:11.5px;font-weight:620;cursor:pointer">{{ t.label }}</button></sc-for>
+          </div>
+          <button onClick="{{ tlAutoToggle }}" title="Draw volume changes over time" style="padding:6px 11px;border:1px solid {{ tlAutoBorder }};border-radius:9px;background:{{ tlAutoBg }};color:{{ tlAutoFg }};font-size:11.5px;font-weight:620;cursor:pointer;white-space:nowrap">〰 Automation</button>
+          <sc-if value="{{ tlCanAdd }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ tlNewBeat }}" title="Program a drum pattern" style="padding:6px 11px;border:1px solid var(--mx-line2);border-radius:9px;background:var(--mx-btn);color:var(--mx-ink);font-size:11.5px;font-weight:620;cursor:pointer;white-space:nowrap">＋ 🥁 Beat</button>
+            <button onClick="{{ tlNewKeys }}" title="Write notes in a piano roll" style="padding:6px 11px;border:1px solid var(--mx-line2);border-radius:9px;background:var(--mx-btn);color:var(--mx-ink);font-size:11.5px;font-weight:620;cursor:pointer;white-space:nowrap">＋ 🎹 Keys</button>
+          </sc-if>
+          <div style="flex:1"></div>
+          <sc-if value="{{ tlHasSel }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+              <span style="font-size:12px;font-weight:620;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tlSelName }}</span>
+              <sc-for list="{{ tlActs }}" as="a" hint-placeholder-count="6"><button onClick="{{ a.go }}" title="{{ a.hint }}" disabled="{{ a.off }}" style="padding:5px 9px;border:1px solid var(--mx-line2);border-radius:8px;background:var(--mx-btn);color:var(--mx-ink);font-size:11.5px;font-weight:580;cursor:pointer;white-space:nowrap">{{ a.label }}</button></sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ tlNoSel }}" hint-placeholder-val="{{ true }}"><span style="font-size:11.5px;color:var(--mx-dim)">{{ tlHint }}</span></sc-if>
+        </div>
+        <div style="max-height:{{ tlMaxH }};overflow-y:auto;padding:6px 18px 10px">
+          <div style="position:relative">
+            <div style="display:grid;grid-template-columns:{{ mxLabCol }} minmax(0,1fr);gap:10px;height:22px;align-items:end">
+              <span style="font-size:10px;letter-spacing:0.08em;color:var(--mx-dim);font-family:ui-monospace,Menlo,monospace">BAR</span>
+              <div data-ruler="1" onClick="{{ tlSeek }}" title="Click to move the playhead" style="position:relative;height:20px;cursor:pointer;border-bottom:1px solid var(--mx-line)">
+                <sc-for list="{{ tlBars }}" as="b" hint-placeholder-count="8"><span style="position:absolute;left:{{ b.x }};bottom:2px;padding-left:3px;border-left:1px solid var(--mx-line2);font-size:10px;line-height:1;color:var(--mx-dim);font-family:ui-monospace,Menlo,monospace">{{ b.n }}</span></sc-for>
+              </div>
+            </div>
+            <sc-for list="{{ tlRows }}" as="l" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:{{ mxLabCol }} minmax(0,1fr);gap:10px;align-items:center;height:{{ tlRowH }};margin-top:4px;opacity:{{ l.opacity }}">
+                <button onClick="{{ l.select }}" title="Select {{ l.name }}" style="display:flex;align-items:center;gap:8px;min-width:0;padding:0;border:0;background:transparent;color:var(--mx-ink);cursor:pointer;text-align:left"><span style="flex:none;width:4px;height:20px;border-radius:2px;background:{{ l.color }}"></span><span style="font-size:12px;font-weight:580;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span></button>
+                <div data-trk="1" onPointerDown="{{ l.trackDown }}" style="position:relative;height:100%;min-width:0;border-radius:6px;background-color:var(--mx-strip);background-image:{{ tlGrid }};touch-action:none">
+                  <sc-for list="{{ l.clips }}" as="cp" hint-placeholder-count="1">
+                  <div onPointerDown="{{ cp.clipDown }}" title="{{ cp.tip }}" style="position:absolute;top:2px;bottom:2px;left:{{ cp.x }};width:{{ cp.w }};min-width:10px;border-radius:6px;background:{{ cp.clipBg }};border:2px solid {{ cp.clipBorder }};display:flex;overflow:hidden;cursor:{{ cp.cursor }};touch-action:none">
+                    <sc-for list="{{ cp.segs }}" as="g" hint-placeholder-count="1">
+                      <div style="flex:1;min-width:0;display:flex;align-items:center;gap:1px;padding:0 2px;border-right:{{ g.div }}">
+                        <sc-for list="{{ g.bars }}" as="b" hint-placeholder-count="30"><div style="flex:1;min-width:1px;height:{{ b.h }};background:{{ l.color }};border-radius:1px"></div></sc-for>
+                      </div>
+                    </sc-for>
+                    <span onPointerDown="{{ cp.inDown }}" title="Drag to trim the start" style="position:absolute;left:0;top:0;bottom:0;width:10px;cursor:ew-resize;background:linear-gradient(90deg,rgba(255,255,255,0.38),rgba(255,255,255,0));touch-action:none"></span>
+                    <span onPointerDown="{{ cp.outDown }}" title="Drag to trim the end (or set loops)" style="position:absolute;right:0;top:0;bottom:0;width:10px;cursor:ew-resize;background:linear-gradient(270deg,rgba(255,255,255,0.38),rgba(255,255,255,0));touch-action:none"></span>
+                    <sc-if value="{{ cp.looped }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:13px;top:3px;padding:0 6px;border-radius:5px;background:rgba(0,0,0,0.55);color:#fff;font-size:10px;font-weight:620;pointer-events:none">↻ ×{{ cp.loops }}</span></sc-if>
+                  </div>
+                  </sc-for>
+                  <sc-if value="{{ tlAutoOn }}" hint-placeholder-val="{{ false }}">
+                    <svg viewBox="0 0 1000 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible"><polyline points="{{ l.autoPts }}" style="fill:none;stroke:#FFC24B;stroke-width:2;vector-effect:non-scaling-stroke"></polyline></svg>
+                    <sc-for list="{{ l.autoDots }}" as="d" hint-placeholder-count="2"><span onPointerDown="{{ d.down }}" onDoubleClick="{{ d.del }}" title="{{ d.tip }}" style="position:absolute;left:{{ d.x }};top:{{ d.y }};width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:#FFC24B;border:2px solid var(--mx-bg);cursor:grab;touch-action:none"></span></sc-for>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+            <div style="position:absolute;top:0;bottom:0;left:{{ mxLabOff }};right:0;pointer-events:none">
+              <div data-ph="1" style="position:absolute;top:0;bottom:0;left:0%;width:2px;background:var(--mx-ink);box-shadow:0 0 8px rgba(var(--mx-rgb),0.6)"></div>
+              <sc-for list="{{ tlPeers }}" as="p" hint-placeholder-count="1"><div style="position:absolute;top:0;bottom:0;left:{{ p.x }};width:2px;background:{{ p.color }}"><span style="position:absolute;top:0;left:4px;padding:1px 6px;border-radius:5px;background:{{ p.color }};color:#06231B;font-size:10px;font-weight:700;white-space:nowrap">{{ p.name }}</span></div></sc-for>
             </div>
           </div>
-        </sc-for>
-        <div style="position:absolute;top:6px;bottom:6px;left:calc(18px + {{ mxLabOff }});right:18px;pointer-events:none">
-          <div data-ph="1" style="position:absolute;top:0;bottom:0;left:0%;width:2px;background:var(--mx-ink);box-shadow:0 0 8px rgba(var(--mx-rgb),0.6)"></div>
         </div>
       </div>
 
@@ -1956,6 +2009,51 @@
               <button onClick="{{ auNext }}" style="flex:1;padding:13px;border:0;border-radius:13px;background:var(--mint);color:var(--on-mint);font-size:15px;font-weight:620;cursor:pointer">{{ auNextLabel }}</button>
             </div>
           </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ patOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:97;background:rgba(6,12,16,0.62);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:14px">
+      <div style="width:100%;max-width:1100px;max-height:94vh;display:flex;flex-direction:column;border-radius:24px;background:var(--panel);color:var(--ink);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,0.4);overflow:hidden">
+        <div style="flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line)">
+          <div style="flex:1;min-width:220px">
+            <div style="font-size:11px;font-weight:620;letter-spacing:0.12em;color:var(--mint-ink)">{{ patHead }}</div>
+            <input value="{{ patTitle }}" onChange="{{ onPatTitle }}" maxlength="40" aria-label="Pattern name" style="width:100%;margin-top:3px;padding:4px 0;border:0;border-bottom:1px solid var(--line2);background:transparent;color:var(--ink);font-family:Urbanist,Geist,sans-serif;font-size:21px;font-weight:500;outline:none" />
+            <div style="font-size:12.5px;color:var(--dim);margin-top:5px">{{ patSub }}</div>
+          </div>
+          <button onClick="{{ patClose }}" title="Close" style="flex:none;width:38px;height:38px;border-radius:11px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);font-size:15px;cursor:pointer">✕</button>
+        </div>
+        <div style="flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--line)">
+          <span style="font-size:11px;font-weight:620;letter-spacing:0.08em;color:var(--dim)">STARTERS</span>
+          <sc-for list="{{ patPresets }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.go }}" style="padding:7px 12px;border:1px solid var(--line2);border-radius:999px;background:var(--panel2);color:var(--ink);font-size:12.5px;font-weight:580;cursor:pointer;white-space:nowrap">{{ b.label }}</button></sc-for>
+          <span style="flex:1"></span>
+          <sc-for list="{{ patBars }}" as="b" hint-placeholder-count="3"><button onClick="{{ b.go }}" style="padding:7px 11px;border:0;border-radius:9px;background:{{ b.bg }};color:{{ b.fg }};font-size:12.5px;font-weight:620;cursor:pointer;white-space:nowrap">{{ b.label }}</button></sc-for>
+        </div>
+        <sc-if value="{{ patIsKeys }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--line)">
+            <span style="font-size:11px;font-weight:620;letter-spacing:0.08em;color:var(--dim)">SOUND</span>
+            <sc-for list="{{ patSounds }}" as="b" hint-placeholder-count="5"><button onClick="{{ b.go }}" style="padding:7px 12px;border:0;border-radius:9px;background:{{ b.bg }};color:{{ b.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ b.label }}</button></sc-for>
+          </div>
+        </sc-if>
+        <div style="flex:1;min-height:0;overflow:auto;padding:12px 20px">
+          <div style="min-width:{{ patMinW }};display:flex;flex-direction:column;gap:3px">
+            <sc-for list="{{ patRowsV }}" as="r" hint-placeholder-count="8">
+              <div style="display:grid;grid-template-columns:{{ patCols }};gap:2px;align-items:center">
+                <span style="font-size:11.5px;font-weight:620;color:{{ r.accent }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:6px">{{ r.n }}</span>
+                <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="32"><button data-sw="1" onClick="{{ c.go }}" title="{{ c.tip }}" aria-label="{{ c.tip }}" style="height:26px;min-height:26px;padding:0;border:0;border-left:{{ c.bl }};border-radius:4px;background:{{ c.bg }};cursor:pointer"></button></sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex:none;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line)">
+          <button onClick="{{ patPreview }}" style="padding:11px 18px;border:0;border-radius:12px;background:#0C1318;color:#fff;font-size:14px;font-weight:620;cursor:pointer;white-space:nowrap">{{ patPlayLabel }}</button>
+          <button onClick="{{ patClear }}" style="padding:11px 16px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:14px;font-weight:580;cursor:pointer">Clear</button>
+          <span style="font-size:12.5px;color:var(--dim)">{{ patCount }}</span>
+          <span style="flex:1"></span>
+          <button onClick="{{ patClose }}" style="padding:11px 16px;border:1px solid var(--line2);border-radius:12px;background:transparent;color:var(--ink);font-size:14px;font-weight:580;cursor:pointer">Cancel</button>
+          <button onClick="{{ patSave }}" disabled="{{ patBusy }}" style="padding:11px 20px;border:0;border-radius:12px;background:var(--mint);color:var(--on-mint);font-size:14px;font-weight:620;cursor:pointer;white-space:nowrap">{{ patSaveLabel }}</button>
         </div>
       </div>
     </div>
@@ -2385,7 +2483,7 @@ class Component extends DCLogic {
     curId: 'i5', playing: false, time: 0, dur: 0, volume: 80, mixPid: null,
     query: '', searchOpen: false, draft: '', drafts: {},
     sheet: null, rec: null, ctxPid: null, premium: false, toast: '',
-    ad: null, adSince: 0, fxSel: null, fxCmd: '', fxReply: '', fxMicOn: false, adPreview: false,
+    ad: null, adSince: 0, tlSnap: 'bar', tlAuto: false, clipSel: null, clipIdx: 0, clipDraft: null, pat: null, patBusy: false, patPlaying: false, livePeers: {}, liveFollow: true, lvPrivate: false, fxSel: null, fxCmd: '', fxReply: '', fxMicOn: false, adPreview: false,
     dms: {}, dmRead: {}, meetings: [], dmWith: null, dmDraft: '', inboxTab: 'Messages', inboxSeeded: {}, dmQ: '',
     ob: null, myPart: null, myGenres: [], saved: false,
     auth: null, acct: null, sb: {}, sbLog: [], chatWarn: null, strikes: 0, muteUntil: null, deskTab: 'Rising', deskGenre: 'All',
@@ -2539,13 +2637,13 @@ class Component extends DCLogic {
   }
   async apiBoot() {
     try {
-      const c = await this.api('config'); this._api = true; this._billing = !!c.billing;
+      const c = await this.api('config'); this._api = true; this._billing = !!c.billing; this._rt = c.realtime || null;
       try { localStorage.setItem('ellipsis.mod.terms', JSON.stringify(c.terms || [])); } catch (e) {}
     } catch (e) { this._api = false; return; }
     const a = this.state.acct;
     if (a && a.token) {
       try { const r = await this.api('me'); this.mergeRemote(r.me, a.token, false); } catch (e) { if (e.status === 401 || e.status === 403) { this.flash(e.message); this.signOut(); return; } }
-      this.pullState();
+      this.pullState(); this.pullShared();
     }
     const qs = new URLSearchParams(location.search);
     const rtk = (qs.get('reset') || '').replace(/[^A-Za-z0-9]/g, '');
@@ -3062,6 +3160,25 @@ class Component extends DCLogic {
   silentOff() { try { if (this._silentEl) this._silentEl.pause(); } catch (e) {} }
   componentDidMount() {
     ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.addEventListener(ev, this.unlockAudio, { capture: true, passive: true }));
+    const _up = this.updProj.bind(this);
+    this.updProj = (id, fn) => {
+      if (this._lv && this._lv.pid === id && !this._lvRemote && !this._lvBase) { this._lvBase = this.proj(id); clearTimeout(this._lvDiffT); this._lvDiffT = setTimeout(() => { const a = this._lvBase, b = this.proj(id); this._lvBase = null; if (a && b && this._lv) this.liveDiff(a, b); }, 60); }
+      _up(id, fn);
+      if (!this._lvRemote) { const pp = this.proj(id); if (pp && pp.shared) { clearTimeout(this._shT); this._shT = setTimeout(() => this.sharePush(id), 2500); } }
+    };
+    const joinHash = async (n) => {
+      const m = (location.hash || '').match(/live=([\w-]+)(?:&k=(\w+))?/); if (!m) return;
+      const open = () => { if (this.proj(m[1])) { this.openProject(m[1]); setTimeout(() => this.openMixer(m[1]), 400); return true; } return false; };
+      if (!this.state.acct) { if (n < 8) setTimeout(() => joinHash(n + 1), 900); else this.flash('Sign in to join this live session'); return; }
+      if (m[2] && this.state.acct.token) {
+        if (!this._api) { if (n < 8) setTimeout(() => joinHash(n + 1), 900); return; }
+        try { const r = await this.api('share/join', { body: { pid: m[1], token: m[2] } }); this._myUid = r.you; this.mergeShare(r.share); setTimeout(() => { if (open()) this.flash('You joined ' + ((r.share.project || {}).title || 'the project') + ' — you’re live'); }, 300); }
+        catch (e) { this.flash(e.message || 'That invite link didn’t work'); }
+        return;
+      }
+      if (!open() && m[2]) this.flash('Sign in with your Ellipsis account to join shared projects');
+    };
+    setTimeout(() => joinHash(0), 1500);
     this.setState(st => ({ projects: st.projects, items: st.items }));
     let th = 'light'; try { th = localStorage.getItem('ellipsis4.theme') || 'light'; } catch (e) {}
     this.setState({ theme: th }); this.applyTheme(th);
@@ -3102,7 +3219,7 @@ class Component extends DCLogic {
     setTimeout(() => this.restoreNav(), 350);
   }
   componentWillUnmount() {
-    ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.removeEventListener(ev, this.unlockAudio, true)); this.silentOff();
+    ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.removeEventListener(ev, this.unlockAudio, true)); this.silentOff(); this.liveLeave();
     if (this._thSync) window.removeEventListener('storage', this._thSync);
     clearTimeout(this._saveT); clearTimeout(this._chk); clearInterval(this._evT); clearInterval(this._noteT); this._unmounted = true; clearTimeout(this._dmT); clearTimeout(this._mtT);
     clearInterval(this._adT); try { if (this._adBed) this._adBed.pause(); if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (x) {}
@@ -3247,11 +3364,401 @@ class Component extends DCLogic {
   chOf(p, id) {
     const m = p.mix[id] || {};
     const fader = m.fader != null ? m.fader : (m.vol != null ? (m.vol <= 0 ? -60 : Math.max(-60, 20 * Math.log10(m.vol / 80))) : 0);
-    return { on: m.on !== false, fader, trim: m.trim || 0, pan: m.pan || 0, mute: !!m.mute, solo: !!m.solo, hpf: !!m.hpf, eq: m.eq || [0, 0, 0, 0], eqf: m.eqf || [100, 350, 2800, 9000], thr: m.thr != null ? m.thr : 0, ratio: m.ratio || 1, rev: m.rev || 0, dly: m.dly || 0, preset: m.preset || 'Flat' };
+    return { on: m.on !== false, fader, trim: m.trim || 0, pan: m.pan || 0, mute: !!m.mute, solo: !!m.solo, hpf: !!m.hpf, eq: m.eq || [0, 0, 0, 0], eqf: m.eqf || [100, 350, 2800, 9000], thr: m.thr != null ? m.thr : 0, ratio: m.ratio || 1, rev: m.rev || 0, dly: m.dly || 0, preset: m.preset || 'Flat', start: +m.start || 0, inS: +m.inS || 0, len: m.len != null ? +m.len : null, loops: m.loops || 1, auto: Array.isArray(m.auto) ? m.auto : [], clips: Array.isArray(m.clips) && m.clips.length ? m.clips : null };
   }
   auxOf(p) { const m = p.mix || {}; return { master: Object.assign({ fader: 0, glue: true, ceil: -1 }, m.__master), rev: Object.assign({ fader: -4, decay: 2.2 }, m.__rev), dly: Object.assign({ fader: -6, time: 0.375, fb: 35 }, m.__dly) }; }
   mxAudio(p, all) { return p.items.map(id => this.item(id)).filter(x => x && /instrumental|melody|acapella|song/.test(x.kind) && (all || this.chOf(p, x.id).on)); }
-  canMix(p) { return p.owner === 'me' && p.stage !== 'published'; }
+  liveId() { return this._liveMe || (this._liveMe = 'L' + Math.random().toString(36).slice(2, 9)); }
+  liveColor() { const me = this.U('me') || {}; const P = ['#00D9A6', '#FFC24B', '#7FA8FF', '#FF8A5C', '#C29BFF', '#5BE0F0']; let h = 0; for (const ch of this.liveId()) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return me.g1 || P[h % P.length]; }
+  liveJoin(pid) {
+    if (this._lv && this._lv.pid === pid) return;
+    this.liveLeave(); this._lv = { pid }; this._lvSeen = new Set();
+    try { this._bc = new BroadcastChannel('ellipsis-live-' + pid); this._bc.onmessage = e => this.liveRecv(e.data); } catch (e) { this._bc = null; }
+    this.setState({ livePeers: {} });
+    this.liveSend({ t: 'hello', pid });
+    this._lvT = setInterval(() => this.liveTick(), 1000);
+    if (this._api && this.state.acct && this.state.acct.token) { if (this._rt === 'ably') this.ablyJoin(pid); else this.livePoll(pid); }
+  }
+  ablyJoin(pid) {
+    const go = () => {
+      if (!this._lv || this._lv.pid !== pid) return;
+      try {
+        if (!this._ably) this._ably = new window.Ably.Realtime({ authUrl: new URL(this.apiBase() + 'live/token', location.href).href, authHeaders: { Authorization: 'Bearer ' + this.state.acct.token }, echoMessages: false });
+        const ch = this._ably.channels.get('ellipsis-live-' + pid); ch.subscribe('op', msg => this.liveRecv(msg.data)); this._ablyCh = ch;
+      } catch (e) { this.livePoll(pid); }
+    };
+    if (window.Ably) { go(); return; }
+    const sc = document.createElement('script'); sc.src = 'https://cdn.ably.com/lib/ably.min-1.js'; sc.onload = go; sc.onerror = () => this.livePoll(pid); document.head.appendChild(sc);
+  }
+  async pullShared() { try { const r = await this.api('shared'); this._myUid = r.you; (r.shares || []).forEach(sh => this.mergeShare(sh)); } catch (e) {} }
+  mergeShare(sh) {
+    if (!sh || !sh.project) return;
+    const mine = sh.owner === this._myUid, oid = mine ? 'me' : 'sh' + sh.owner;
+    if (!mine && !this.users.find(u => u.id === oid)) { const nm = sh.ownerName || 'Collaborator', base = this.users.find(u => u.id === 'u1') || this.users[0] || {}; this.users.push(Object.assign({}, base, { id: oid, name: nm, handle: '@' + nm.toLowerCase().replace(/[^a-z0-9]+/g, ''), initials: nm.split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase(), photo: null, exec: false, followers: 0 })); }
+    const collabs = Object.keys(sh.members || {}).map(k => +k === this._myUid ? 'me' : 'sh' + k).filter(u => u !== oid);
+    const proj = Object.assign({ items: [], mix: {}, msgs: [], sugs: [], open: { on: false, needs: [] }, tags: tg([], [], []), stage: 'draft' }, sh.project, { id: sh.pid, owner: oid, collabs, shared: true });
+    const defs = (sh.defs || []).filter(Boolean);
+    this.setState(st => { const have = new Set(st.items.map(x => x.id)), add = defs.filter(x => !have.has(x.id)), ex = st.projects.some(q => q.id === sh.pid);
+      return { items: add.length ? st.items.concat(add) : st.items, projects: ex ? st.projects.map(q => q.id === sh.pid ? (mine ? Object.assign({}, q, { shared: true, collabs: Array.from(new Set((q.collabs || []).concat(collabs))) }) : Object.assign({}, q, proj)) : q) : st.projects.concat([proj]) }; });
+  }
+  async sharePush(pid) {
+    const p = this.proj(pid); if (!p || !(this._api && this.state.acct && this.state.acct.token)) return null;
+    const project = Object.assign({}, p); delete project.owner; delete project.collabs; delete project.shared;
+    const defs = p.items.map(i => this.item(i)).filter(x => x && !x.stock).map(x => Object.assign({}, x, { url: x.remote ? x.url : null }));
+    try { const r = await this.api('share', { body: { pid, project, defs } }); if (!p.shared) this.setState(st => ({ projects: st.projects.map(q => q.id === pid ? Object.assign({}, q, { shared: true }) : q) })); return r.token; }
+    catch (e) { this.flash(e.message || 'Couldn’t share this project'); return null; }
+  }
+  liveLeave() {
+    if (!this._lv) return;
+    this.liveSend({ t: 'bye', pid: this._lv.pid }); this.liveFlush(true);
+    clearInterval(this._lvT); clearTimeout(this._lvPoll); clearTimeout(this._lvDiffT);
+    try { if (this._bc) this._bc.close(); } catch (e) {}
+    if (this._ablyCh) { try { this._ablyCh.unsubscribe(); this._ablyCh.detach(); } catch (e) {} this._ablyCh = null; }
+    this._bc = null; this._lv = null; this._lvSrv = false; this._lvBase = null;
+    if (Object.keys(this.state.livePeers || {}).length) this.setState({ livePeers: {} });
+  }
+  liveSend(op) {
+    if (!this._lv) return; const me = this.U('me') || { name: 'Someone' };
+    const m = Object.assign({ from: this.liveId(), name: me.name, color: this.liveColor(), at: Date.now(), oid: Math.random().toString(36).slice(2) }, op);
+    try { if (this._bc) this._bc.postMessage(m); } catch (e) {}
+    if (this._ablyCh) { try { this._ablyCh.publish('op', m); } catch (e) {} }
+    else if (this._lvSrv) { (this._lvOut = this._lvOut || []).push(m); this.liveFlush(); }
+  }
+  liveFlush(now) {
+    if (!this._lvSrv && !now) return;
+    const go = async () => { this._lvFl = null; const ops = this._lvOut || []; this._lvOut = []; const pid = this._lv ? this._lv.pid : ops.length && ops[0].pid; if (!ops.length || !pid) return; try { await this.api('live', { body: { pid, ops } }); } catch (e) { if (e.status === 404) this._lvSrv = false; } };
+    if (now) { clearTimeout(this._lvFl); go(); return; }
+    if (!this._lvFl) this._lvFl = setTimeout(go, 300);
+  }
+  livePoll(pid) {
+    this._lvSrv = true; this._lvSeq = -1;
+    const tick = async () => {
+      if (!this._lv || this._lv.pid !== pid) return;
+      try { const r = await this.api('live?pid=' + encodeURIComponent(pid) + '&since=' + Math.max(0, this._lvSeq)); if (this._lvSeq < 0) this._lvSeq = r.seq || 0; else (r.ops || []).forEach(o => { this._lvSeq = Math.max(this._lvSeq, o.seq || 0); this.liveRecv(o); }); }
+      catch (e) { if (e.status === 404 || e.message === 'offline') { this._lvSrv = false; return; } }
+      this._lvPoll = setTimeout(tick, 1200);
+    };
+    tick();
+  }
+  liveTick() {
+    if (!this._lv) return; const pid = this._lv.pid;
+    this.liveSend({ t: 'here', pid, pos: this.tlPos(pid), playing: !!(this._g && this._gPid === pid), sel: this.state.clipSel || null });
+    const now = Date.now(), P = Object.assign({}, this.state.livePeers || {}); let ch = false;
+    Object.keys(P).forEach(k => { if (now - P[k].seen > 6000) { delete P[k]; ch = true; } });
+    if (ch) this.setState({ livePeers: P });
+  }
+  liveDiff(a, b) {
+    const ka = a.mix || {}, kb = b.mix || {}, mix = {};
+    new Set(Object.keys(ka).concat(Object.keys(kb))).forEach(k => { if (k === '__snaps') return; if (JSON.stringify(ka[k]) !== JSON.stringify(kb[k])) mix[k] = kb[k] === undefined ? null : kb[k]; });
+    const op = { t: 'diff', pid: b.id };
+    if (Object.keys(mix).length) op.mix = mix;
+    if (JSON.stringify(a.items) !== JSON.stringify(b.items)) { op.items = b.items.slice(); op.defs = b.items.map(i => this.item(i)).filter(x => x && !x.stock).map(x => Object.assign({}, x, { url: x.remote ? x.url : null })); }
+    if ((b.msgs || []).length > (a.msgs || []).length) op.msgs = b.msgs.slice((a.msgs || []).length);
+    if (a.stage !== b.stage) op.stage = b.stage;
+    if (op.mix || op.items || op.msgs || op.stage) this.liveSend(op);
+  }
+  liveRecv(m) {
+    if (!m || !this._lv || m.from === this.liveId() || (m.pid && m.pid !== this._lv.pid)) return;
+    if (m.oid) { if (this._lvSeen.has(m.oid)) return; this._lvSeen.add(m.oid); if (this._lvSeen.size > 600) this._lvSeen = new Set(Array.from(this._lvSeen).slice(-300)); }
+    const P = Object.assign({}, this.state.livePeers || {}), was = !!P[m.from], first = (m.name || 'Someone').split(' ')[0];
+    if (m.t === 'bye') { if (was) { delete P[m.from]; this.setState({ livePeers: P }); this.flash(first + ' left the session'); } return; }
+    P[m.from] = Object.assign({}, P[m.from], { name: m.name || 'Someone', color: m.color || '#7FA8FF', seen: Date.now() }, m.t === 'here' ? { pos: m.pos, playing: m.playing, sel: m.sel, posAt: Date.now() } : {});
+    this.setState({ livePeers: P });
+    if (!was) { this.flash(first + ' joined the session'); const p = this.proj(this._lv.pid); if (p && m.t === 'hello') { const mix = Object.assign({}, p.mix); delete mix.__snaps; this.liveSend({ t: 'diff', pid: p.id, mix, items: p.items.slice(), defs: p.items.map(i => this.item(i)).filter(x => x && !x.stock).map(x => Object.assign({}, x, { url: x.remote ? x.url : null })), stage: p.stage }); } }
+    if (m.t === 'diff') this.liveApply(m, first);
+    if (m.t === 'play' && this.state.liveFollow) { const pp = this.proj(m.pid); if (pp) { const from = Math.max(0, (m.from0 || 0) + (Date.now() - m.at) / 1000); this.mxLoad(pp).then(() => { this._lvQuiet = true; try { this.mxStart(this.proj(m.pid), from); } finally { this._lvQuiet = false; } }); } }
+    if (m.t === 'stop' && this.state.liveFollow && this._g) { this._lvQuiet = true; try { this.stopMix(); } finally { this._lvQuiet = false; } }
+  }
+  liveApply(m, first) {
+    if (m.defs && m.defs.length) {
+      const have = new Set(this.state.items.map(x => x.id)), add = m.defs.filter(x => !have.has(x.id));
+      if (add.length) {
+        this.setState(st => ({ items: st.items.concat(add) }));
+        add.filter(x => x.takeKey).forEach(x => this.idb('readonly', st => st.get(x.takeKey)).then(blob => { if (blob instanceof Blob) { const url = URL.createObjectURL(blob); this.setState(st => ({ items: st.items.map(y => y.id === x.id ? Object.assign({}, y, { url }) : y) })); } }));
+      }
+    }
+    this._lvRemote = true;
+    try { this.updProj(m.pid, z => { if (m.mix) Object.keys(m.mix).forEach(k => { if (m.mix[k] == null) delete z.mix[k]; else z.mix[k] = m.mix[k]; }); if (m.items) z.items = m.items.slice(); if (m.msgs) z.msgs = (z.msgs || []).concat(m.msgs); if (m.stage) z.stage = m.stage; return z; }); }
+    finally { this._lvRemote = false; }
+    if (m.msgs && m.msgs.length) { const last = m.msgs[m.msgs.length - 1]; if (last && last.text) this.flash(first + ': ' + String(last.text).slice(0, 80)); }
+    const clipKeys = m.mix && Object.keys(m.mix).some(k => { const v = m.mix[k]; return v && ('start' in v || 'inS' in v || 'len' in v || 'loops' in v || 'on' in v || 'clips' in v); });
+    setTimeout(() => {
+      if (this._g && this._gPid === m.pid && (m.items || clipKeys)) { const pos = this.mxPos(); this.mxLoad(this.proj(m.pid)).then(() => { this._lvQuiet = true; try { this.mxStart(this.proj(m.pid), pos); } finally { this._lvQuiet = false; } }); }
+      else { this.applyLive(m.pid); this.liveAuto(m.pid); }
+    }, 0);
+  }
+  lvVals(p) {
+    const s = this.state, peers = Object.keys(s.livePeers || {}).map(k => s.livePeers[k]), on = !!this._lv && this._lv.pid === p.id, n = peers.length;
+    const me = this.U('me') || { name: 'You' }, ini = nm => String(nm || '?').split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase();
+    return {
+      lvOn: on, lvLabel: !on ? 'Go live' : n ? 'Live · ' + (n + 1) + ' here' : 'Live · just you',
+      lvTip: on ? (n ? peers.map(u => u.name).join(', ') + ' and you are editing together — changes, playback and notes sync instantly' : 'Anyone who opens this project now joins you live. Tap to go private.') : 'Work on this mix with collaborators in real time',
+      lvBorder: on ? '#00D9A6' : 'var(--mx-line2)', lvBg: on ? 'rgba(0,217,166,0.12)' : 'var(--mx-btn)', lvFg: on ? 'var(--mx-mint)' : 'var(--mx-ink)', lvDot: on ? (n ? '#00D9A6' : '#FFC24B') : 'var(--mx-dim)', lvAnim: on && n ? 'elPulse 1.4s ease-in-out infinite' : 'none',
+      lvToggle: () => { if (on) { this.liveLeave(); this.setState({ lvPrivate: true }); this.flash('Private — others won’t see your changes live'); } else { this.setState({ lvPrivate: false }); this.liveJoin(p.id); this.flash('Live — collaborators who open this project join you'); } },
+      lvPeople: [{ ini: ini(me.name), color: this.liveColor(), tip: me.name + ' (you)' }].concat(peers.map(u => ({ ini: ini(u.name), color: u.color, tip: u.name + (u.playing ? ' · listening' : '') }))),
+      lvFollowLabel: s.liveFollow ? '⇄ Synced play' : '⇄ Play alone', lvFollow: () => this.setState({ liveFollow: !s.liveFollow }),
+      lvFollowBg: s.liveFollow ? 'rgba(0,217,166,0.12)' : 'var(--mx-btn)', lvFollowFg: s.liveFollow ? 'var(--mx-mint)' : 'var(--mx-ink)',
+      lvInvite: async () => {
+        let url = location.origin + location.pathname + '#live=' + p.id, msg = 'Invite link copied — collaborators on this project who open it join you live';
+        if (this._api && s.acct && s.acct.token) { const tok = await this.sharePush(p.id); if (tok) { url += '&k=' + tok; msg = 'Invite link copied — anyone signed in who opens it joins this project and the live session'; } }
+        try { navigator.clipboard.writeText(url).then(() => this.flash(msg), () => this.flash(url)); } catch (e) { this.flash(url); }
+      }
+    };
+  }
+  canMix(p) { return !!p && (p.owner === 'me' || (p.collabs || []).indexOf('me') >= 0) && p.stage !== 'published'; }
+  tlInfo(p, x) {
+    const mm = this.matchFor && this.matchFor(p, x), b = this._bufs && this._bufs[x.id];
+    if (mm) return { full: mm.buf.duration, rr: 1 };
+    const rr = Math.max(0.75, Math.min(1.25, (this.item(x.id) || {}).rate || 1));
+    return { full: b ? b.buf.duration / rr : (x.dur || 24), rr };
+  }
+  clipsRaw(p, id) { const k = this.chOf(p, id); return (k.clips || [{ start: k.start, inS: k.inS, len: k.len, loops: k.loops }]).map(c => Object.assign({}, c)); }
+  clipsOf(p, x, full) {
+    return this.clipsRaw(p, x.id).map(c => {
+      const inS = Math.min(Math.max(0, +c.inS || 0), Math.max(0, full - 0.25)), L = Math.max(0.25, Math.min(c.len != null ? +c.len : full - inS, full - inS));
+      const loops = Math.max(1, Math.min(16, Math.round(c.loops) || 1)), start = Math.max(0, +c.start || 0);
+      return { start, inS, L, loops, end: start + L * loops, full };
+    });
+  }
+  clipOf(p, x, full) { const a = this.clipsOf(p, x, full); return Object.assign({}, a[0], { end: Math.max.apply(null, a.map(c => c.end)) }); }
+  schedClip(c, at, from) {
+    if (!c.clip) { if (from < c.buf.duration - 0.02) c.src.start(at, from); return; }
+    const all = c.clip.all || [c.clip], ctx = c.src.context; let used = false; c.srcs = [c.src];
+    all.forEach(k => {
+      if (from >= k.end - 0.02) return;
+      let src = c.src;
+      if (used) { src = ctx.createBufferSource(); src.buffer = c.buf; src.playbackRate.value = k.rr || 1; src.connect(c.trim); c.srcs.push(src); }
+      used = true;
+      if (k.loops > 1) { src.loop = true; src.loopStart = k.inS * k.rr; src.loopEnd = (k.inS + k.L) * k.rr; }
+      let t0 = at, off;
+      if (from < k.start) { t0 = at + (k.start - from); off = k.inS; } else off = k.inS + ((from - k.start) % k.L);
+      src.start(t0, off * k.rr);
+      try { src.stop(at + (k.end - from)); } catch (e) {}
+    });
+  }
+  schedAuto(c, at, from, pts0) {
+    if (!c.ag) return; const gp = c.ag.gain, pts = (pts0 || []).slice().sort((a, b) => a[0] - b[0]);
+    const lin = d => d <= -59 ? 0 : Math.pow(10, d / 20);
+    try { gp.cancelScheduledValues(0); } catch (e) {}
+    if (!pts.length) { gp.setValueAtTime(1, Math.max(0, at - 0.01)); return; }
+    const val = t => { if (t <= pts[0][0]) return pts[0][1]; for (let i = 1; i < pts.length; i++) if (t <= pts[i][0]) { const [a0, d0] = pts[i - 1], [a1, d1] = pts[i]; return d0 + (d1 - d0) * (t - a0) / ((a1 - a0) || 1); } return pts[pts.length - 1][1]; };
+    gp.setValueAtTime(lin(val(from)), Math.max(0, at - 0.01));
+    pts.forEach(([t, d]) => { if (t > from) gp.linearRampToValueAtTime(lin(d), at + (t - from)); });
+  }
+  liveAuto(pid) { if (!this._g || this._gPid !== pid || !this._ctx) return; const p = this.proj(pid), at = this._ctx.currentTime, from = this.mxPos(); this._g.lanes.forEach(x => { const c = this._g.chs[x.id]; if (c) this.schedAuto(c, at, from, this.chOf(p, x.id).auto); }); }
+  yToDb(y) { return y >= 97 ? -60 : Math.round((6 - y / 100 * 42) * 10) / 10; }
+  dbToY(d) { return d <= -59 ? 100 : Math.max(0, Math.min(100, (6 - d) / 42 * 100)); }
+  mxRestart(pid) { if (this._g && this._gPid === pid) { const pos = this.mxPos(); setTimeout(() => this.mxStart(this.proj(pid), pos), 0); } }
+  setClip(pid, id, patch, ci) {
+    const p = this.proj(pid); if (!p) return;
+    const raw = this.clipsRaw(p, id), i = Math.min(ci || 0, raw.length - 1), fx = {};
+    Object.keys(patch).forEach(k => { fx[k === 'L' ? 'len' : k] = patch[k] == null ? null : Math.round(patch[k] * 1000) / 1000; });
+    raw[i] = Object.assign({}, raw[i], fx);
+    this.setCh(pid, id, { clips: raw });
+    if (this.canMix(p)) this.mxRestart(pid);
+  }
+  setClips(pid, id, raw, sel) { const p = this.proj(pid); if (!p) return; this.setCh(pid, id, { clips: raw }); if (sel != null) this.setState({ clipSel: id, clipIdx: sel }); if (this.canMix(p)) this.mxRestart(pid); }
+  setAuto(pid, id, pts) { this.setCh(pid, id, { auto: pts }); setTimeout(() => this.liveAuto(pid), 0); }
+  tlDrag(e, pid, id, mode, cl, ci) {
+    if (e.button != null && e.button !== 0) return;
+    if (this.state.tlAuto) return;
+    e.stopPropagation(); e.preventDefault();
+    const p = this.proj(pid); if (!this.canMix(p)) { this.setCh(pid, id, { x: 1 }); return; }
+    const trk = e.currentTarget.closest('[data-trk]'); if (!trk) return;
+    const W = trk.getBoundingClientRect().width || 1, TL = this._tlLen || 30, x0 = e.clientX, beat = 60 / (p.bpm || 90), bar = beat * 4;
+    this.setState({ clipSel: id, clipIdx: ci || 0 });
+    const snap = (t, ev) => { const m = this.state.tlSnap; if (ev.shiftKey || m === 'off') return t; const q = m === 'beat' ? beat : bar; return Math.round(t / q) * q; };
+    let patch = null;
+    const move = ev => {
+      const dt = (ev.clientX - x0) / W * TL;
+      if (mode === 'move') patch = { start: Math.max(0, snap(cl.start + dt, ev)) };
+      else if (mode === 'in') { let d = snap(cl.start + dt, ev) - cl.start; d = Math.max(-cl.inS, Math.min(cl.L - 0.25, d)); if (cl.start + d < 0) d = -cl.start; patch = { start: cl.start + d, inS: cl.inS + d, L: cl.L - d }; }
+      else { const tot = Math.max(0.25, snap(cl.end + dt, ev) - cl.start); patch = cl.loops > 1 ? { loops: Math.max(1, Math.min(16, Math.round(tot / cl.L))) } : { L: Math.max(0.25, Math.min(cl.full - cl.inS, tot)) }; }
+      if (!this._pfc) this._pfc = requestAnimationFrame(() => { this._pfc = null; this.setState({ clipDraft: { id, ci: ci || 0, patch } }); });
+    };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); cancelAnimationFrame(this._pfc); this._pfc = null; this.setState({ clipDraft: null }); if (patch) this.setClip(pid, id, patch, ci || 0); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  }
+  autoAdd(e, pid, id) {
+    if (!this.state.tlAuto) { if (this.state.clipSel) this.setState({ clipSel: null }); return; }
+    const p = this.proj(pid); if (!this.canMix(p)) { this.setCh(pid, id, { x: 1 }); return; }
+    const trk = e.currentTarget.closest('[data-trk]') || e.currentTarget, r = trk.getBoundingClientRect(), TL = this._tlLen || 30;
+    const t = Math.max(0, (e.clientX - r.left) / r.width * TL), y = (e.clientY - r.top) / r.height * 100;
+    this.setState({ clipSel: id });
+    this.setAuto(pid, id, this.chOf(p, id).auto.concat([[Math.round(t * 1000) / 1000, this.yToDb(y)]]).sort((a, b) => a[0] - b[0]));
+  }
+  autoDrag(e, pid, id, idx) {
+    e.stopPropagation(); e.preventDefault();
+    const p = this.proj(pid); if (!this.canMix(p)) return;
+    const r = e.currentTarget.closest('[data-trk]').getBoundingClientRect(), TL = this._tlLen || 30;
+    const pts = this.chOf(p, id).auto.map(q => q.slice());
+    const move = ev => { const t = Math.max(0, Math.min(TL, (ev.clientX - r.left) / r.width * TL)), y = Math.max(0, Math.min(100, (ev.clientY - r.top) / r.height * 100)); pts[idx] = [Math.round(t * 1000) / 1000, this.yToDb(y)]; if (!this._pfa) this._pfa = requestAnimationFrame(() => { this._pfa = null; this.setAuto(pid, id, pts.map(q => q.slice())); }); };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); cancelAnimationFrame(this._pfa); this._pfa = null; this.setAuto(pid, id, pts.slice().sort((a, b) => a[0] - b[0])); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  }
+  tlPos(pid) { return this._g && this._gPid === pid ? this.mxPos() : (this._mxPosPid === pid ? this._mxPos || 0 : 0); }
+  tlVals(p, lanes, COLORS, ro) {
+    const s = this.state, pid = p.id, beat = 60 / (p.bpm || 90), bar = beat * 4;
+    const info = lanes.map(x => { const f = this.tlInfo(p, x), cls0 = this.clipsOf(p, x, f.full); const cls = cls0.map((c, ci) => { const d = s.clipDraft && s.clipDraft.id === x.id && s.clipDraft.ci === ci ? Object.assign({}, c, s.clipDraft.patch) : Object.assign({}, c); d.end = d.start + d.L * d.loops; return d; }); return { x, cls, cls0 }; });
+    const TL = Math.max(bar * 4, Math.ceil(Math.max.apply(null, [8].concat(...info.map(i => i.cls0.map(c => c.end)))) * 1.15 / bar) * bar);
+    this._tlLen = TL;
+    const pct = t => Math.max(0, Math.min(100, t / TL * 100)).toFixed(3) + '%';
+    const nb = Math.round(TL / bar), every = nb <= 16 ? 1 : nb <= 32 ? 2 : nb <= 64 ? 4 : 8, tlBars = [];
+    for (let i = 0; i < nb; i += every) tlBars.push({ n: String(i + 1), x: pct(i * bar) });
+    const q = s.tlSnap === 'beat' ? beat : bar;
+    const peers = Object.keys(s.livePeers || {}).map(k => Object.assign({ k }, s.livePeers[k]));
+    const sel = info.find(i => i.x.id === s.clipSel), ci = sel ? Math.min(s.clipIdx || 0, sel.cls0.length - 1) : 0, sc = sel ? sel.cls0[ci] : null;
+    const pos = this.tlPos(pid), act = (label, hint, go, off) => ({ label, hint, go, off: ro || !!off });
+    const raw = sel ? this.clipsRaw(p, sel.x.id) : [], selItem = sel ? this.item(sel.x.id) : null, r3 = v => Math.round(v * 1000) / 1000;
+    const tlActs = !sel ? [] : [
+      act('✂ Split', 'Cut this clip in two at the playhead', () => { const L1 = pos - sc.start, a = Object.assign({}, raw[ci], { len: r3(L1), loops: 1 }), b = Object.assign({}, raw[ci], { start: r3(pos), inS: r3(sc.inS + L1), len: r3(sc.L - L1), loops: 1 }), nr = raw.slice(); nr.splice(ci, 1, a, b); this.setClips(pid, sel.x.id, nr, ci + 1); this.flash('Split at ' + pos.toFixed(1) + 's'); }, !(sc.loops === 1 && pos > sc.start + 0.25 && pos < sc.end - 0.25)),
+      act('⧉ Duplicate', 'Copy this clip right after itself', () => { const nr = raw.slice(); nr.splice(ci + 1, 0, Object.assign({}, raw[ci], { start: r3(sc.end) })); this.setClips(pid, sel.x.id, nr, ci + 1); }),
+      act('🗑 Delete', 'Remove this clip (the track keeps its other clips)', () => this.setClips(pid, sel.x.id, raw.filter((_, j) => j !== ci), Math.max(0, ci - 1)), raw.length <= 1),
+      act('Loop −', 'Play this clip fewer times', () => this.setClip(pid, sel.x.id, { loops: Math.max(1, sc.loops - 1) }, ci), sc.loops <= 1),
+      act('Loop +', 'Repeat this clip again', () => this.setClip(pid, sel.x.id, { loops: Math.min(16, sc.loops + 1) }, ci), sc.loops >= 16),
+      act('◀', 'Move earlier by one ' + (s.tlSnap === 'beat' ? 'beat' : 'bar'), () => this.setClip(pid, sel.x.id, { start: Math.max(0, sc.start - q) }, ci), sc.start <= 0),
+      act('▶', 'Move later by one ' + (s.tlSnap === 'beat' ? 'beat' : 'bar'), () => this.setClip(pid, sel.x.id, { start: sc.start + q }, ci)),
+      act('⇤ To playhead', 'Start this clip at the playhead', () => this.setClip(pid, sel.x.id, { start: pos }, ci)),
+      selItem && selItem.pattern ? act('✎ Edit pattern', 'Change the notes or beat', () => this.openPat(selItem.pattern.type, pid, selItem.id)) : null,
+      act('Reset', 'One clip at its original start and length', () => this.setClips(pid, sel.x.id, [{ start: 0, inS: 0, len: null, loops: 1 }], 0)),
+      act('Clear automation', 'Remove this track’s volume drawing', () => this.setAuto(pid, sel.x.id, []), !this.chOf(p, sel.x.id).auto.length)
+    ].filter(Boolean);
+    const tlRows = info.map(({ x, cls, cls0 }) => {
+      const k = this.chOf(p, x.id), col = COLORS[x.kind] || '#00D9A6';
+      const pk = (this._peaks && this._peaks[x.id]) || bars(x.title.length * 17 + 3, 120, 10, 90).map(v => v / 100), n = pk.length;
+      const peer = peers.find(u => u.sel === x.id);
+      const clips = cls.map((cl, j) => {
+        const on = s.clipSel === x.id && (s.clipIdx || 0) === j;
+        const a = Math.floor(cl.inS / cl.full * n), b = Math.max(a + 1, Math.ceil((cl.inS + cl.L) / cl.full * n)), part = pk.slice(a, b);
+        const per = Math.max(5, Math.min(48, Math.round(96 / cl.loops / cls.length))), res = Array.from({ length: per }, (_, i) => part[Math.floor(i / per * part.length)] || 0);
+        return {
+          x: pct(cl.start), w: pct(Math.min(TL - cl.start, cl.L * cl.loops)), looped: cl.loops > 1, loops: String(cl.loops),
+          segs: Array.from({ length: Math.min(cl.loops, 16) }, (_, i) => ({ div: i < cl.loops - 1 ? '1px dashed rgba(255,255,255,0.55)' : '0', bars: res.map(v => ({ h: Math.max(8, Math.round(v * 100)) + '%' })) })),
+          clipBg: col + '2E', clipBorder: on ? 'var(--mx-ink)' : peer ? peer.color : 'rgba(0,0,0,0)', cursor: ro ? 'default' : s.tlAuto ? 'crosshair' : 'grab',
+          tip: x.title + (cls.length > 1 ? ' · clip ' + (j + 1) + ' of ' + cls.length : '') + ' · starts bar ' + (Math.floor(cl.start / bar) + 1) + (cl.loops > 1 ? ' · loops ×' + cl.loops : '') + (peer ? ' · ' + peer.name.split(' ')[0] + ' is editing' : ''),
+          clipDown: e => this.tlDrag(e, pid, x.id, 'move', cls0[j], j), inDown: e => this.tlDrag(e, pid, x.id, 'in', cls0[j], j), outDown: e => this.tlDrag(e, pid, x.id, 'out', cls0[j], j)
+        };
+      });
+      const pts = k.auto.slice().sort((u, v) => u[0] - v[0]);
+      const autoPts = pts.length ? ['0,' + this.dbToY(pts[0][1]).toFixed(1)].concat(pts.map(([t, d]) => (t / TL * 1000).toFixed(1) + ',' + this.dbToY(d).toFixed(1)), ['1000,' + this.dbToY(pts[pts.length - 1][1]).toFixed(1)]).join(' ') : '0,' + this.dbToY(0).toFixed(1) + ' 1000,' + this.dbToY(0).toFixed(1);
+      return {
+        name: x.title, color: col, opacity: !k.on ? '0.3' : k.mute ? '0.45' : '1', clips,
+        select: () => this.setState({ clipSel: s.clipSel === x.id ? null : x.id, clipIdx: 0 }),
+        trackDown: e => this.autoAdd(e, pid, x.id),
+        autoPts, autoDots: pts.map(([t, d], i) => ({ x: pct(t), y: this.dbToY(d).toFixed(1) + '%', tip: (d <= -59 ? 'Silent' : (d > 0 ? '+' : '') + d.toFixed(1) + ' dB') + ' at ' + t.toFixed(1) + 's · drag to move · double-click to delete', down: e => this.autoDrag(e, pid, x.id, i), del: e => { e.stopPropagation(); this.setAuto(pid, x.id, pts.filter((_, j) => j !== i)); } }))
+      };
+    });
+    const now = Date.now();
+    return {
+      tlSnaps: [['bar', 'Bar', 'Snap to bars'], ['beat', 'Beat', 'Snap to beats'], ['off', 'Free', 'No snapping (or hold Shift)']].map(([v, label, hint]) => ({ label, hint, go: () => this.setState({ tlSnap: v }), bg: s.tlSnap === v ? '#00D9A6' : 'transparent', fg: s.tlSnap === v ? '#06231B' : 'var(--mx-ink)' })),
+      tlAutoOn: !!s.tlAuto, tlAutoToggle: () => this.setState({ tlAuto: !s.tlAuto }),
+      tlAutoBorder: s.tlAuto ? '#FFC24B' : 'var(--mx-line2)', tlAutoBg: s.tlAuto ? 'rgba(255,194,75,0.16)' : 'var(--mx-btn)', tlAutoFg: s.tlAuto ? '#FFC24B' : 'var(--mx-ink)',
+      tlCanAdd: !ro, tlNewBeat: () => this.openPat('drums', pid), tlNewKeys: () => this.openPat('keys', pid),
+      tlHasSel: !!sel, tlNoSel: !sel, tlSelName: sel ? sel.x.title + (sel.cls0.length > 1 ? ' · clip ' + (ci + 1) : '') : '', tlActs,
+      tlHint: ro ? 'Listening only — collaborators on this project can arrange it' : s.tlAuto ? 'Click a track to add a volume point · drag points · double-click to delete' : 'Drag clips to move · drag edges to trim · Shift = no snap',
+      tlMaxH: s.w < 640 ? '34vh' : '42vh', tlRowH: s.tlAuto ? '60px' : '42px', tlBars,
+      tlGrid: s.tlSnap === 'off' ? 'none' : 'repeating-linear-gradient(90deg,rgba(var(--mx-rgb),0.13) 0 1px,transparent 1px ' + (q / TL * 100).toFixed(4) + '%)',
+      tlSeek: e => { const r = e.currentTarget.getBoundingClientRect(), f = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), t = f * TL; this._mxPos = t; this._mxPosPid = pid; if (s.mixPid === pid) this.mxStart(this.proj(pid), t); else { const ph = document.querySelector('[data-ph]'); if (ph) ph.style.left = (f * 100).toFixed(2) + '%'; const ck = document.querySelector('[data-clk]'); if (ck) ck.textContent = this.mxClockText(p, t); this.forceUpdate(); } },
+      tlRows, tlPeers: peers.filter(u => u.pos != null).map(u => ({ name: u.name.split(' ')[0], color: u.color, x: pct((u.pos || 0) + (u.playing ? (now - (u.posAt || now)) / 1000 : 0)) }))
+    };
+  }
+  patRows(pat, p) {
+    if (pat.type === 'drums') return ['Kick', 'Snare', 'Clap', 'Closed hat', 'Open hat', 'Tom', 'Rim', 'Shaker'].map(n => ({ n }));
+    const PC = { C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11 };
+    const m = String((p && p.key) || 'F min').match(/^([A-G][#b]?)\s*(\w*)/) || [0, 'C', 'maj'], root = PC[m[1]] != null ? PC[m[1]] : 0, minor = /^m(in)?$/i.test(m[2] || '');
+    const sc = minor ? [0, 2, 3, 5, 7, 8, 10] : [0, 2, 4, 5, 7, 9, 11], NM = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'], out = [];
+    for (let d = 14; d >= 0; d--) { const midi = 48 + root + sc[d % 7] + 12 * Math.floor(d / 7); out.push({ n: NM[midi % 12] + (Math.floor(midi / 12) - 1), midi, deg: d }); }
+    return out;
+  }
+  patPreset(name) {
+    const pt = this.state.pat; if (!pt) return; const N = pt.bars * 16, c = {}, on = (r, st) => { for (let b = 0; b < pt.bars; b++) st.forEach(x => { c[r + ':' + (b * 16 + x)] = 1; }); };
+    const all16 = [...Array(16).keys()], ev2 = all16.filter(x => x % 2 === 0), off = all16.filter(x => x % 4 === 2);
+    if (pt.type === 'drums') ({ 'Four on the floor': () => { on(0, [0, 4, 8, 12]); on(2, [4, 12]); on(3, ev2); on(4, off); }, 'Trap': () => { on(0, [0, 7, 10]); on(1, [8]); on(2, [8]); on(3, all16); on(4, [14]); }, 'Afrobeat': () => { on(0, [0, 6, 10]); on(2, [4, 12]); on(6, [3, 7, 11, 14]); on(7, all16); }, 'Boom bap': () => { on(0, [0, 7, 10]); on(1, [4, 12]); on(3, ev2); } })[name]();
+    else { const rows = this.patRows(pt, this.proj(pt.pid)), rowOf = d => rows.findIndex(r => r.deg === d), prog = [0, 5, 3, 4];
+      for (let b = 0; b < pt.bars; b++) { const d = prog[b % 4];
+        if (name === 'Chords') [d, d + 2, d + 4].forEach(dd => { const r = rowOf(dd); if (r >= 0) for (let x = 0; x < 6; x++) { c[r + ':' + (b * 16 + x)] = 1; c[r + ':' + (b * 16 + 8 + x)] = 1; } });
+        if (name === 'Bassline') [0, 3, 6, 10, 12].forEach(x => { const r = rowOf(d); if (r >= 0) c[r + ':' + (b * 16 + x)] = 1; });
+        if (name === 'Arpeggio') [0, 2, 4, 7, 4, 2, 0, 2].forEach((dd, i) => { const r = rowOf(d + dd); if (r >= 0) c[r + ':' + (b * 16 + i * 2)] = 1; });
+      } }
+    Object.keys(c).forEach(k => { if (+k.split(':')[1] >= N) delete c[k]; });
+    this.setState({ pat: Object.assign({}, pt, { cells: c }) });
+  }
+  openPat(type, pid, editId) {
+    const ex = editId ? this.item(editId) : null; this.patStop();
+    this.setState({ sheet: null, pat: ex && ex.pattern ? Object.assign({}, ex.pattern, { pid: pid || null, editId, cells: Object.assign({}, ex.pattern.cells) }) : { pid: pid || null, type, bars: 2, sound: type === 'drums' ? 'Kit' : 'Piano', title: type === 'drums' ? 'My beat' : 'My keys', cells: {}, editId: null } });
+  }
+  patVoice(ctx, out, sound, midi, t, d) {
+    const P = ({ Synth: { w: ['sawtooth', 'sawtooth'], det: [-8, 8], cut: 2400, a: 0.01, rel: 0.15, v: 0.17 }, Bass: { w: ['square', 'sine'], det: [0, 0], cut: 650, a: 0.005, rel: 0.1, v: 0.3, oct: -24 }, Pad: { w: ['sawtooth', 'triangle'], det: [-10, 10], cut: 1400, a: 0.14, rel: 0.6, v: 0.15 }, Bell: { w: ['sine', 'sine'], det: [0, 2786], cut: 7000, a: 0.002, rel: 0.9, v: 0.2, dec: 1 } })[sound] || { w: ['triangle', 'sine'], det: [0, 1200], cut: 3200, a: 0.005, rel: 0.45, v: 0.3, dec: 1 };
+    const f = 440 * Math.pow(2, (midi + (P.oct || 0) - 69) / 12), lp = ctx.createBiquadFilter(), g = ctx.createGain(); lp.type = 'lowpass'; lp.frequency.value = P.cut; lp.connect(g); g.connect(out);
+    P.w.forEach((w, i) => { const o = ctx.createOscillator(); o.type = w; o.frequency.value = f; o.detune.value = P.det[i]; const og = ctx.createGain(); og.gain.value = i ? 0.45 : 1; o.connect(og); og.connect(lp); o.start(t); o.stop(t + d + P.rel + 0.05); });
+    const end = t + d; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(P.v, t + P.a);
+    if (P.dec) g.gain.exponentialRampToValueAtTime(P.v * 0.35, Math.max(t + P.a + 0.01, end)); else g.gain.setValueAtTime(P.v, Math.max(t + P.a, end));
+    g.gain.exponentialRampToValueAtTime(0.0001, end + P.rel);
+  }
+  async patRender(pat, p) {
+    const bpm = (p && p.bpm) || 90, step = 60 / bpm / 4, N = pat.bars * 16, len = N * step, sr = 44100;
+    const OC = window.OfflineAudioContext || window.webkitOfflineAudioContext, ctx = new OC(2, Math.ceil(len * sr), sr);
+    const out = ctx.createDynamicsCompressor(); out.threshold.value = -14; out.ratio.value = 3; const mg = ctx.createGain(); mg.gain.value = 0.78; out.connect(mg); mg.connect(ctx.destination);
+    const nb = ctx.createBuffer(1, sr, sr), nd = nb.getChannelData(0); let r = 7; for (let i = 0; i < nd.length; i++) { r = (r * 16807) % 2147483647; nd[i] = r / 1073741823.5 - 1; }
+    const env = (g, t, a, d, v) => { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); };
+    const nz = (t, type, f, q, d, v) => { const sN = ctx.createBufferSource(); sN.buffer = nb; const fl = ctx.createBiquadFilter(); fl.type = type; fl.frequency.value = f; fl.Q.value = q; const g = ctx.createGain(); sN.connect(fl); fl.connect(g); g.connect(out); env(g, t, 0.002, d, v); sN.start(t, (t * 7.3) % 0.5); sN.stop(t + d + 0.05); };
+    const tone = (t, w, f0, f1, d, v) => { const o = ctx.createOscillator(); o.type = w; o.frequency.setValueAtTime(f0, t); if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + d * 0.6); const g = ctx.createGain(); o.connect(g); g.connect(out); env(g, t, 0.003, d, v); o.start(t); o.stop(t + d + 0.05); };
+    const DR = [t => tone(t, 'sine', 150, 42, 0.38, 1), t => { nz(t, 'bandpass', 1900, 0.8, 0.18, 0.7); tone(t, 'triangle', 200, 160, 0.12, 0.35); }, t => [0, 0.012, 0.024].forEach(o => nz(t + o, 'bandpass', 1300, 1.2, 0.09, 0.55)), t => nz(t, 'highpass', 7500, 0.7, 0.05, 0.32), t => nz(t, 'highpass', 7000, 0.7, 0.28, 0.28), t => tone(t, 'sine', 180, 95, 0.3, 0.6), t => tone(t, 'square', 820, 0, 0.035, 0.22), t => nz(t, 'highpass', 5200, 1, 0.07, 0.2)];
+    const cells = Object.keys(pat.cells).filter(k => pat.cells[k]).map(k => k.split(':').map(Number)).filter(([, st]) => st < N);
+    if (pat.type === 'drums') cells.forEach(([rw, st]) => DR[rw] && DR[rw](st * step));
+    else { const rows = this.patRows(pat, p), by = {}; cells.forEach(([rw, st]) => (by[rw] = by[rw] || []).push(st));
+      Object.keys(by).forEach(rw => { const sts = by[rw].sort((a, b) => a - b); let i = 0; while (i < sts.length) { let j = i; while (j + 1 < sts.length && sts[j + 1] === sts[j] + 1) j++; if (rows[rw]) this.patVoice(ctx, out, pat.sound, rows[rw].midi, sts[i] * step, (sts[j] - sts[i] + 1) * step); i = j + 1; } }); }
+    return ctx.startRendering();
+  }
+  patStop() { try { if (this._patSrc) this._patSrc.stop(); } catch (e) {} this._patSrc = null; if (this.state.patPlaying) this.setState({ patPlaying: false }); }
+  async patPreview() {
+    if (this._patSrc) { this.patStop(); return; }
+    const pt = this.state.pat; if (!pt) return;
+    if (!Object.values(pt.cells).some(Boolean)) { this.flash('Tap some squares first — or pick a starter'); return; }
+    this.unlockAudio();
+    try { const buf = await this.patRender(pt, this.proj(pt.pid)), ctx = this.ensureCtx(), src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(ctx.destination); src.start(); this._patSrc = src; this.setState({ patPlaying: true }); }
+    catch (e) { this.flash('Preview isn’t supported in this browser'); }
+  }
+  async patSave() {
+    const pt = this.state.pat; if (!pt) return; const p = pt.pid ? this.proj(pt.pid) : null;
+    if (!Object.values(pt.cells).some(Boolean)) { this.flash('Tap some squares first — or pick a starter'); return; }
+    this.patStop(); this.setState({ patBusy: true });
+    try {
+      const buf = await this.patRender(pt, p), blob = this.encWav(buf), id = pt.editId || ('n' + Date.now()), url = URL.createObjectURL(blob), takeKey = this.keepAudio(id, blob, url);
+      const pattern = { type: pt.type, bars: pt.bars, sound: pt.sound, title: pt.title, cells: pt.cells };
+      const base = { id, kind: pt.type === 'drums' ? 'instrumental' : 'melody', title: String(pt.title || 'Pattern').slice(0, 40), owner: 'me', file: FILES[Date.now() % 6], url, takeKey, tags: tg([], [], []), sections: null, published: false, spikes: 0, week: 0, year: 0, created: 99, bpm: (p && p.bpm) || 90, key: (p && p.key) || 'F min', pattern };
+      if (pt.editId) {
+        if (this._bufs) delete this._bufs[id]; if (this._peaks) delete this._peaks[id];
+        this.setState(st => ({ items: st.items.map(x => x.id === id ? Object.assign({}, x, base) : x), pat: null, patBusy: false }));
+        if (p && this._g && this._gPid === p.id) { const pos = this.mxPos(); setTimeout(() => this.mxLoad(this.proj(p.id)).then(() => this.mxStart(this.proj(p.id), pos)), 60); }
+        this.flash('Pattern updated');
+      } else {
+        this.setState(st => ({ items: st.items.concat([base]), pat: null, patBusy: false }));
+        if (p) { setTimeout(() => this.attach(id, p.id, true), 0); this.flash((pt.type === 'drums' ? '🥁 ' : '🎹 ') + base.title + ' added to ' + p.title); } else this.flash('Saved to your Library');
+      }
+    } catch (e) { this.setState({ patBusy: false }); this.flash('Couldn’t render that pattern in this browser'); }
+  }
+  patVals(s) {
+    const pt = s.pat; if (!pt) return { patOpen: false };
+    const p = pt.pid ? this.proj(pt.pid) : null, rows = this.patRows(pt, p), N = pt.bars * 16, drums = pt.type === 'drums';
+    const RC = ['#FF8A5C', '#FFC24B', '#C29BFF', '#00D9A6', '#5BE0F0', '#7FA8FF', '#FF6FA8', '#B6E35B'];
+    const tog = k => this.setState(st => { const c = Object.assign({}, st.pat.cells); if (c[k]) delete c[k]; else c[k] = 1; return { pat: Object.assign({}, st.pat, { cells: c }) }; });
+    const chip = (label, on, go) => ({ label, go, bg: on ? 'var(--mint)' : 'var(--panel2)', fg: on ? 'var(--on-mint)' : 'var(--ink)' });
+    return {
+      patOpen: true, patTitle: pt.title, onPatTitle: e => { const v = e.target.value; this.setState(st => ({ pat: Object.assign({}, st.pat, { title: v }) })); },
+      patHead: (drums ? 'BEAT MAKER' : 'PIANO ROLL') + (pt.editId ? ' · EDITING' : ''), patSub: (p ? p.title + ' · ' : '') + ((p && p.bpm) || 90) + ' BPM' + (drums ? '' : ' · ' + ((p && p.key) || 'F min')) + ' · tap squares to add ' + (drums ? 'hits' : 'notes — fill neighbours to hold a note'),
+      patBars: [1, 2, 4].map(n => chip(n + (n === 1 ? ' bar' : ' bars'), pt.bars === n, () => this.setState(st => ({ pat: Object.assign({}, st.pat, { bars: n }) })))),
+      patIsKeys: !drums, patSounds: ['Piano', 'Synth', 'Bass', 'Pad', 'Bell'].map(n => chip(n, pt.sound === n, () => this.setState(st => ({ pat: Object.assign({}, st.pat, { sound: n }) })))),
+      patPresets: (drums ? ['Four on the floor', 'Trap', 'Afrobeat', 'Boom bap'] : ['Chords', 'Bassline', 'Arpeggio']).map(n => ({ label: n, go: () => this.patPreset(n) })),
+      patCols: (s.w < 640 ? '58px' : '84px') + ' repeat(' + N + ',minmax(' + (s.w < 640 ? 20 : 16) + 'px,1fr))', patMinW: (N * (s.w < 640 ? 22 : 18) + 90) + 'px',
+      patRowsV: rows.map((r, ri) => ({ n: r.n, accent: drums ? RC[ri] : (r.deg % 7 === 0 ? 'var(--mint-ink)' : 'var(--dim)'),
+        cells: Array.from({ length: N }, (_, st) => { const k = ri + ':' + st, on = !!pt.cells[k]; return { go: () => tog(k), bg: on ? (drums ? RC[ri] : '#00D9A6') : (Math.floor(st / 4) % 2 ? 'var(--panel2)' : 'var(--soft)'), bl: st % 16 === 0 && st ? '2px solid var(--line2)' : '0', tip: r.n + ' · bar ' + (Math.floor(st / 16) + 1) + ' step ' + (st % 16 + 1) }; }) })),
+      patPlayLabel: s.patPlaying ? '■ Stop' : '▶ Preview loop', patPreview: () => this.patPreview(), patClear: () => this.setState(st => ({ pat: Object.assign({}, st.pat, { cells: {} }) })),
+      patClose: () => { this.patStop(); this.setState({ pat: null }); }, patSave: () => this.patSave(),
+      patSaveLabel: s.patBusy ? 'Rendering…' : pt.editId ? 'Update pattern' : p ? 'Add to ' + (p.title.length > 18 ? p.title.slice(0, 17) + '…' : p.title) : 'Save to Library', patBusy: !!s.patBusy,
+      patCount: String(Object.values(pt.cells).filter(Boolean).length) + (drums ? ' hits' : ' steps')
+    };
+  }
   ensureCtx() { const C = window.AudioContext || window.webkitAudioContext; if (!this._ctx) this._ctx = new C(); if (this._ctx.state === 'suspended') { const r = this._ctx.resume(); if (r && r.catch) r.catch(() => {}); } return this._ctx; }
   async mxLoad(p) {
     const ctx = this.ensureCtx(); this._bufs = this._bufs || {}; this._peaks = this._peaks || {};
@@ -3294,13 +3801,13 @@ class Component extends DCLogic {
     if (live) { g.mAn = an(g.mg); g.rAn = an(g.rRet); g.dAn = an(g.dRet); }
     const sigNow = this.matchSig(p);
     lanes.forEach(x => {
-      const mm = this.matchFor(p, x, sigNow), buf = mm ? mm.buf : this._bufs[x.id].buf, rr = mm ? 1 : Math.max(0.75, Math.min(1.25, (this.item(x.id) || {}).rate || 1)); g.dur = Math.max(g.dur, buf.duration / rr);
+      const mm = this.matchFor(p, x, sigNow), buf = mm ? mm.buf : this._bufs[x.id].buf, rr = mm ? 1 : Math.max(0.75, Math.min(1.25, (this.item(x.id) || {}).rate || 1)); const clips = this.clipsOf(p, x, buf.duration / rr); clips.forEach(q => { q.rr = rr; }); const clip = clips[0]; clip.all = clips; g.dur = Math.max(g.dur, Math.max.apply(null, clips.map(q => q.end)));
       const c = { src: ctx.createBufferSource(), trim: ctx.createGain(), hpf: ctx.createBiquadFilter(), bands: [0, 1, 2, 3].map(() => ctx.createBiquadFilter()), comp: ctx.createDynamicsCompressor(), pan: ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain(), fader: ctx.createGain(), revS: ctx.createGain(), dlyS: ctx.createGain(), buf };
       c.src.buffer = buf; c.src.playbackRate.value = rr; c.hpf.type = 'highpass'; c.hpf.Q.value = 0.7;
       ['lowshelf', 'peaking', 'peaking', 'highshelf'].forEach((t, i) => { c.bands[i].type = t; c.bands[i].Q.value = 1; });
       c.comp.knee.value = 6; c.comp.attack.value = 0.005; c.comp.release.value = 0.12;
-      c.duck = ctx.createGain();
-      let n = c.src; [c.trim, c.hpf].concat(c.bands, [c.comp, c.duck, c.pan, c.fader]).forEach(nx => { n.connect(nx); n = nx; });
+      c.duck = ctx.createGain(); c.ag = ctx.createGain(); c.clip = clip;
+      let n = c.src; [c.trim, c.hpf].concat(c.bands, [c.comp, c.duck, c.ag, c.pan, c.fader]).forEach(nx => { n.connect(nx); n = nx; });
       c.fader.connect(g.inG); c.fader.connect(c.revS); c.revS.connect(g.rIn); c.fader.connect(c.dlyS); c.dlyS.connect(g.dIn);
       if (live) c.an = an(c.fader);
       g.chs[x.id] = c;
@@ -3309,7 +3816,7 @@ class Component extends DCLogic {
     if (vox.length && beds.length && p.mix.__duck !== false) {
       const R = 50, n = Math.ceil(g.dur * R) + 2, env = new Float32Array(n);
       vox.forEach(x => { const c = g.chs[x.id], b = c.buf, rr = c.src.playbackRate.value || 1, d = b.getChannelData(0), sr = b.sampleRate;
-        for (let k = 0; k < n; k++) { const s0 = Math.floor(k / R * rr * sr), s1 = Math.min(d.length, Math.floor((k + 1) / R * rr * sr)); let e = 0, m = 0; for (let i = s0; i < s1; i += 8) { e += d[i] * d[i]; m++; } const v = m ? Math.sqrt(e / m) : 0; if (v > env[k]) env[k] = v; } });
+        for (let k = 0; k < n; k++) { const tt = k / R, cls = c.clip ? (c.clip.all || [c.clip]) : null, cl = cls ? cls.find(q => tt >= q.start && tt < q.end) : null; if (cls && !cl) continue; const bt = cl ? cl.inS + ((tt - cl.start) % cl.L) : tt, s0 = Math.floor(bt * rr * sr), s1 = Math.min(d.length, Math.floor((bt + 1 / R) * rr * sr)); let e = 0, m = 0; for (let i = s0; i < s1; i += 8) { e += d[i] * d[i]; m++; } const v = m ? Math.sqrt(e / m) : 0; if (v > env[k]) env[k] = v; } });
       let mx = 0; for (let k = 0; k < n; k++) if (env[k] > mx) mx = env[k];
       const curve = new Float32Array(n); let st = 0;
       for (let k = 0; k < n; k++) { const t = mx ? Math.min(1, Math.max(0, (20 * Math.log10(env[k] / mx + 1e-6) + 30) / 18)) : 0; st += (t - st) * (t > st ? 0.55 : 0.07); curve[k] = 1 - 0.3 * st; }
@@ -3345,7 +3852,7 @@ class Component extends DCLogic {
   }
   applyLive(pid) { const p = this.proj(pid); if (p && this._g && this._gPid === pid) this.applyGraph(this._g, p, false); }
   mxPos() { if (!this._g) return this._mxPos || 0; return Math.max(0, this._ctx.currentTime - this._t0); }
-  mxStopNodes() { cancelAnimationFrame(this._mxRaf); if (this._g) { Object.values(this._g.chs).forEach(c => { try { c.src.stop(); } catch (e) {} }); try { this._g.mg.disconnect(); } catch (e) {} this._g = null; } }
+  mxStopNodes() { cancelAnimationFrame(this._mxRaf); if (this._g) { Object.values(this._g.chs).forEach(c => (c.srcs || [c.src]).forEach(n => { try { n.stop(); } catch (e) {} })); try { this._g.mg.disconnect(); } catch (e) {} this._g = null; } }
   mxStart(p, from) {
     this.unlockAudio(); clearTimeout(this._blockT);
     this._blockT = setTimeout(() => { if (this._g && this._ctx && this._ctx.state !== 'running') this.flash('Your browser paused sound — tap ▶ once more to hear the mix'); }, 900);
@@ -3354,10 +3861,11 @@ class Component extends DCLogic {
     if (!g.lanes.length) { this.flash(this.mxAudio(p, true).length ? 'Turn on at least one track to play the mix' : 'Add a sound first — drag one in, or tap a sound below'); return; }
     from = from >= g.dur ? 0 : (from || 0);
     const at = ctx.currentTime + 0.05;
-    g.lanes.forEach(x => { const c = g.chs[x.id]; if (from < c.buf.duration - 0.02) c.src.start(at, from); });
+    g.lanes.forEach(x => { const c = g.chs[x.id]; this.schedClip(c, at, from); this.schedAuto(c, at, from, this.chOf(p, x.id).auto); });
     this.mxDuckRun(g, at, from);
     this._g = g; this._gPid = p.id; this._t0 = at - from; this._mxDur = g.dur; this._lufs = []; this._pkHold = { v: -99, t: 0 };
     this.setState({ mixPid: p.id, playing: false });
+    if (this._lv && this._lv.pid === p.id && !this._lvQuiet) this.liveSend({ t: 'play', pid: p.id, from0: from });
     const tmp = new Float32Array(1024);
     const pk = a => { a.getFloatTimeDomainData(tmp); let m = 0, e = 0; for (let i = 0; i < tmp.length; i++) { const v = Math.abs(tmp[i]); if (v > m) m = v; e += tmp[i] * tmp[i]; } return [m, e / tmp.length]; };
     const pct = v => Math.max(0, Math.min(100, (20 * Math.log10(v + 1e-9) + 60) / 60 * 100)).toFixed(1) + '%';
@@ -3379,7 +3887,7 @@ class Component extends DCLogic {
       this._lufs.push(me); if (this._lufs.length > 180) this._lufs.shift();
       const ms = this._lufs.reduce((a, b) => a + b, 0) / this._lufs.length, lufs = 10 * Math.log10(ms + 1e-12) - 0.691 + 3;
       const q = sel => document.querySelector(sel);
-      const ph = q('[data-ph]'); if (ph) ph.style.left = (pos / this._mxDur * 100).toFixed(2) + '%';
+      const ph = q('[data-ph]'); if (ph) ph.style.left = (pos / (this._tlLen || this._mxDur) * 100).toFixed(2) + '%';
       const ck = q('[data-clk]'); if (ck) ck.textContent = this.mxClockText(this.proj(this._gPid), pos);
       const pke = q('[data-pk]'); if (pke) { pke.textContent = this._pkHold.v < -60 ? '−∞' : (this._pkHold.v > 0 ? '+' : '') + this._pkHold.v.toFixed(1) + ' dB'; pke.style.color = this._pkHold.v > -0.3 ? '#FF5A4E' : '#E6EDF1'; }
       const lu = q('[data-lufs]'); if (lu) lu.textContent = lufs < -60 ? '—' : lufs.toFixed(1) + ' LUFS';
@@ -3723,16 +4231,17 @@ class Component extends DCLogic {
     return new Blob([dv.buffer], { type: 'audio/wav' });
   }
   async mxBounceMix(pid) {
-    let p = this.proj(pid); if (!p || !this.canMix(p)) { this.setCh(pid, '_', { x: 1 }); return; }
+    let p = this.proj(pid); if (p && p.owner !== 'me') { this.flash('Only ' + this.U(p.owner).name.split(' ')[0] + ' (the owner) can bounce the final mix'); return; }
+    if (!p || !this.canMix(p)) { this.setCh(pid, '_', { x: 1 }); return; }
     await this.mxLoad(p); p = this.proj(pid);
     const lanes = this.mxAudio(p).filter(x => this._bufs[x.id]); if (!lanes.length) { this.flash('Turn on at least one track to bounce'); return; }
     this.setState({ mxBouncing: true });
     try {
       if (this.matchSig(p) !== this._matchSig) { await this.mxPrepare(pid); p = this.proj(pid); }
-      const sr = 44100, dur = Math.max.apply(null, lanes.map(x => { const mm = this.matchFor(p, x); return mm ? mm.buf.duration : this._bufs[x.id].buf.duration / (x.rate || 1); })) + 2.4;
+      const sr = 44100, dur = Math.max.apply(null, lanes.map(x => this.clipOf(p, x, this.tlInfo(p, x).full).end)) + 2.4;
       const OC = window.OfflineAudioContext || window.webkitOfflineAudioContext, oc = new OC(2, Math.ceil(dur * sr), sr);
       const g = this.buildGraph(oc, p, false);
-      lanes.forEach(x => g.chs[x.id] && g.chs[x.id].src.start(0));
+      lanes.forEach(x => { const c = g.chs[x.id]; if (c) { this.schedClip(c, 0, 0); this.schedAuto(c, 0, 0, this.chOf(p, x.id).auto); } });
       this.mxDuckRun(g, 0, 0);
       const out = await oc.startRendering();
       const blob = this.encWav(out), url = URL.createObjectURL(blob), id = 'b' + Date.now(), takeKey = this.keepAudio(id, blob, url);
@@ -3864,10 +4373,10 @@ class Component extends DCLogic {
       fxMic: () => this.fxListen(pid), fxMicBg: s.fxMicOn ? '#FF8A5C' : 'rgba(var(--mx-rgb),0.06)', fxMicFg: s.fxMicOn ? '#1A0A04' : 'var(--mx-ink)', fxMicTitle: s.fxMicOn ? 'Listening — tap to stop' : 'Speak to the mixer'
     };
   }
-  openMixer(pid) { const p = this.proj(pid); if (!p) return; this.unlockAudio(); this.silentOn(); if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
+  openMixer(pid) { const p = this.proj(pid); if (!p) return; this.unlockAudio(); this.silentOn(); if (!this.state.lvPrivate) setTimeout(() => this.liveJoin(pid), 0); if (this.audio) this.audio.pause(); let seen = false; try { seen = localStorage.getItem('ellipsis4.mxTut') === '1'; } catch (e) {}
     let pro = false; try { pro = localStorage.getItem('ellipsis4.mxMode') === 'pro'; } catch (e) {}
     this.setState({ mxOpen: true, mxPid: pid, mxFocus: null, playing: false, mxPro: pro, mxTut: seen || !pro ? -1 : 0, ezOver: false }); this.mxLoad(p).then(() => this.mxPrepare(pid)); }
-  closeMixer = () => { this.silentOff(); if (this._fxRec) { try { this._fxRec.stop(); } catch (e) {} } this.setState({ fxSel: null }); this._ezTry = null; if (this.state.ezTry) this.setState({ ezTry: null }); this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
+  closeMixer = () => { this.patStop(); this.liveLeave(); this.setState({ clipSel: null, clipDraft: null }); this.silentOff(); if (this._fxRec) { try { this._fxRec.stop(); } catch (e) {} } this.setState({ fxSel: null }); this._ezTry = null; if (this.state.ezTry) this.setState({ ezTry: null }); this.stopMix(); this.setState({ mxOpen: false, mxFocus: null }); };
 
   startMixOld(p) {
     this.stopMix(); if (this.audio) this.audio.pause();
@@ -3878,7 +4387,7 @@ class Component extends DCLogic {
     this._mix[0].onended = () => this.stopMix();
     this.setState({ mixPid: p.id, playing: false });
   }
-  stopMix() { if (this._g) { this._mxPos = this.mxPos(); this._mxPosPid = this._gPid; } this.mxStopNodes(); if (this._mix) { this._mix.forEach(au => au.pause()); this._mix = null; } if (this.state.mixPid) this.setState({ mixPid: null }); requestAnimationFrame(() => this.mxPaintIdle()); }
+  stopMix() { if (this._lv && !this._lvQuiet && this._g && this._gPid === this._lv.pid) this.liveSend({ t: 'stop', pid: this._gPid }); if (this._g) { this._mxPos = this.mxPos(); this._mxPosPid = this._gPid; } this.mxStopNodes(); if (this._mix) { this._mix.forEach(au => au.pause()); this._mix = null; } if (this.state.mixPid) this.setState({ mixPid: null }); requestAnimationFrame(() => this.mxPaintIdle()); }
 
   spike(id) {
     const it = this.item(id);
@@ -4392,6 +4901,8 @@ class Component extends DCLogic {
         m('〰', 'Melody', 'Hum or sing over an instrumental', '#0B5E7A', () => this.openRec('melody', pid)),
         m('◉', 'Acapella', 'Record vocals, reading your lyrics', '#B3523E', () => this.openRec('acapella', pid)),
         m('♫', 'Record instrumental', 'Play something live', '#0A6E58', () => this.openRec('instrumental', pid)),
+        m('🥁', 'Beat maker', 'Tap out drums on a grid — starters included', '#7A5A10', () => this.openPat('drums', pid)),
+        m('🎹', 'Piano roll', 'Write a melody, chords or a bassline', '#2C4A9E', () => this.openPat('keys', pid)),
         m('⇪', 'Upload', 'Bring in an audio file', '#2F3E48', () => this.upload(pid)),
         pid ? m('▤', 'From Library', 'Anything you made or saved', '#2C4A9E', () => this.setState({ sheet: { type: 'pick', mode: 'library', pid } })) : m('⦿', 'Collaboration', "Find a project that needs you", '#7A5A10', () => { this.setState({ sheet: null }); this.go('explore', { exTab: "Let's collaborate" }); }),
         pid ? m('♥', 'From Favorites', 'Things you hearted', '#8C1E4B', () => this.setState({ sheet: { type: 'pick', mode: 'favs', pid } })) : null,
@@ -4718,7 +5229,7 @@ class Component extends DCLogic {
           };
         })(),
         mxLabCol: s.w < 640 ? '72px' : '150px', mxLabOff: s.w < 640 ? '82px' : '160px',
-        mxOpen: true, mxTitle: mp.title + (ro ? ' · listening' : ''), mxCount: String(lanesOn.length), mxBpm: String(mp.bpm || 90), mxKey: mp.key || 'F min',
+        ...this.tlVals(mp, allLanes, COLORS, ro), ...this.lvVals(mp), mxOpen: true, mxTitle: mp.title + (ro ? ' · listening' : ''), mxCount: String(lanesOn.length), mxBpm: String(mp.bpm || 90), mxKey: mp.key || 'F min',
         mxNote: s.mxLoading ? 'Loading audio…' : s.mxBouncing ? 'Bouncing the mixdown with the master bus…' : ro ? (mp.stage === 'published' ? 'Published — the mix is locked. Solo and mute still work for listening.' : 'You are listening to ' + U(mp.owner).name.split(' ')[0] + "'s mix. Solo and mute work for you; only the owner can change levels and sound.") : '',
         mxModes: [['Easy', false], ['Pro', true]].map(([l, v]) => ({ label: l, go: () => { try { localStorage.setItem('ellipsis4.mxMode', v ? 'pro' : 'easy'); } catch (e) {} this.setState({ mxPro: v, mxFocus: v ? s.mxFocus : null }); }, bg: s.mxPro === v ? '#00D9A6' : 'transparent', fg: s.mxPro === v ? '#06231B' : 'var(--mx-ink2)' })),
         mxAB: ['A', 'B'].map(l => ({ label: l, go: () => this.mxSwitch(pid, l), bg: (mp.mix.__ab || 'A') === l ? 'var(--mx-ink)' : 'transparent', fg: (mp.mix.__ab || 'A') === l ? 'var(--mx-bg)' : 'var(--mx-ink2)' })),
@@ -4752,7 +5263,7 @@ class Component extends DCLogic {
     if (mp && !this._prepP && this.matchSig(mp) !== this._matchSig) setTimeout(() => this.mxPrepare(mp.id), 0);
     return {
       ...MOB, phone, signedInWide: !!s.acct && !phone,
-      ...this.inboxVals(s), ...MX, ...(mp ? this.ezVals(mp) : {}), mxBottom: phone ? 'calc(64px + env(safe-area-inset-bottom))' : '0px', mxLeft: phone ? '0px' : '92px', ...(mp ? this.fxVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
+      ...this.inboxVals(s), ...MX, ...this.patVals(s), ...(mp ? this.ezVals(mp) : {}), mxBottom: phone ? 'calc(64px + env(safe-area-inset-bottom))' : '0px', mxLeft: phone ? '0px' : '92px', ...(mp ? this.fxVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
       askLogout: () => this.setState({ sheet: { type: 'switch' } }), signedIn: !!s.acct,
       askLogoutOld: () => this.setState({ sheet: { type: 'confirm', title: 'Log out of Ellipsis?', body: 'Your work is saved' + (s.acct && s.acct.token ? ' to your account — sign back in on any device to pick up where you left off.' : ' on this device and will be here when you sign back in.'), cta: 'Log out', go: () => { this.setState({ sheet: null }); if (this._api && s.acct && s.acct.token) this.api('logout', { body: {} }).catch(() => {}); this.signOut(); this.flash('Logged out'); } } }),
       inviteNote: s.acct && s.acct.refCode ? 'You both get a month of Premium when they release a song' : 'Share Ellipsis with collaborators',

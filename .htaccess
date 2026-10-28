@@ -66,7 +66,7 @@ RedirectMatch 404 /(config\.local\.example\.php|README-DEPLOY\.md|htaccess-no-ss
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "microphone=(self), camera=(), geolocation=()"
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://challenges.cloudflare.com https://images.dmca.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.dmca.com https://*.dmca.com; media-src 'self' blob:; connect-src 'self' https://unpkg.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'self'"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.ably.com 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://challenges.cloudflare.com https://images.dmca.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.dmca.com https://*.dmca.com; media-src 'self' blob:; connect-src 'self' https://*.ably.io wss://*.ably.io https://*.ably-realtime.com wss://*.ably-realtime.com https://*.ably.net wss://*.ably.net https://unpkg.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'self'"
 </IfModule>
 
 # Protect /admin/ with hPanel → Advanced → Password Protect Directories (see README step 6).

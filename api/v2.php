@@ -125,11 +125,71 @@ function v2_set_plan(int $uid, string $plan, string $status, array $extra = []):
 $sub = substr($path, 3);
 $r2 = $M . ' ' . preg_replace('/\b\d+\b/', ':id', $sub);
 
+function v2_live_file(string $pid): string { $d = cfg('data_dir') . '/live'; if (!is_dir($d)) @mkdir($d, 0700, true); return $d . '/' . ($pid !== '' ? $pid : 'x') . '.json'; }
+function v2_share_dir(): string { $d = cfg('data_dir') . '/shared'; if (!is_dir($d)) @mkdir($d, 0700, true); return $d; }
+function v2_share_get(string $pid): ?array { $f = v2_share_dir() . '/' . $pid . '.json'; return is_file($f) ? (json_decode((string)file_get_contents($f), true) ?: null) : null; }
+function v2_share_put(string $pid, array $d): void { file_put_contents(v2_share_dir() . '/' . $pid . '.json', (string)json_encode($d), LOCK_EX); }
+function v2_user_shares(int $uid, ?string $add = null): array { $f = v2_share_dir() . '/u' . $uid . '.json'; $l = is_file($f) ? (json_decode((string)file_get_contents($f), true) ?: []) : []; if ($add !== null && !in_array($add, $l, true)) { $l[] = $add; file_put_contents($f, (string)json_encode($l), LOCK_EX); } return $l; }
+function v2_share_view(string $pid, array $d): array { return ['pid' => $pid, 'owner' => (int)$d['owner'], 'ownerName' => (string)($d['ownerName'] ?? ''), 'members' => $d['members'] ?? [], 'project' => $d['project'] ?? null, 'defs' => $d['defs'] ?? [], 'updated' => (int)($d['updated'] ?? 0)]; }
+function v2_live_pid($v): string { return substr(preg_replace('/[^A-Za-z0-9_-]/', '', (string)$v), 0, 64); }
+
 switch ($r2) {
+
+/* ───── realtime token (Ably). Set ably_key in config to switch live sessions from polling to WebSockets ───── */
+case 'GET live/token': {
+  $u = user(); $key = (string)cfg('ably_key'); if ($key === '' || strpos($key, ':') === false) fail('Realtime is not configured', 404);
+  [$kn, $ks] = explode(':', $key, 2); $ttl = 3600000; $cap = (string)json_encode(['ellipsis-live-*' => ['publish', 'subscribe', 'presence']]);
+  $cid = 'u' . $u['id']; $ts = (int)round(microtime(true) * 1000); $nonce = bin2hex(random_bytes(8));
+  $mac = base64_encode(hash_hmac('sha256', "$kn\n$ttl\n$cap\n$cid\n$ts\n$nonce\n", $ks, true));
+  header('Content-Type: application/json'); echo json_encode(['keyName' => $kn, 'ttl' => $ttl, 'capability' => $cap, 'clientId' => $cid, 'timestamp' => $ts, 'nonce' => $nonce, 'mac' => $mac]); exit;
+}
+
+/* ───── shared projects: the owner shares, invitees join with the link token ───── */
+case 'POST share': {
+  $u = user(); limit('share', 600, 3600); $b = body(); $pid = v2_live_pid($b['pid'] ?? ''); if ($pid === '') fail('Missing project', 400);
+  if (strlen((string)json_encode($b['project'] ?? null)) > 3000000) fail('This project is too large to share', 413);
+  $d = v2_share_get($pid); $me = (string)$u['id'];
+  if ($d && (string)$d['owner'] !== $me && !isset($d['members'][$me])) fail('This project belongs to someone else', 403);
+  if (!$d) $d = ['owner' => (int)$u['id'], 'ownerName' => (string)($u['name'] ?? 'Owner'), 'token' => bin2hex(random_bytes(12)), 'members' => []];
+  $d['members'][$me] = (string)($u['name'] ?? 'Member'); $d['project'] = $b['project'] ?? null; $d['defs'] = array_slice((array)($b['defs'] ?? []), 0, 200); $d['updated'] = now();
+  v2_share_put($pid, $d); v2_user_shares((int)$u['id'], $pid);
+  out(['ok' => true, 'token' => (string)$d['token']]);
+}
+case 'POST share/join': {
+  $u = user(); limit('sharejoin', 60, 3600); $b = body(); $pid = v2_live_pid($b['pid'] ?? ''); $d = $pid !== '' ? v2_share_get($pid) : null;
+  if (!$d || !hash_equals((string)$d['token'], (string)($b['token'] ?? ''))) fail('That invite link is invalid or has been replaced', 404);
+  $d['members'][(string)$u['id']] = (string)($u['name'] ?? 'Member'); v2_share_put($pid, $d); v2_user_shares((int)$u['id'], $pid);
+  out(['ok' => true, 'you' => (int)$u['id'], 'share' => v2_share_view($pid, $d)]);
+}
+case 'GET shared': {
+  $u = user(); $list = [];
+  foreach (v2_user_shares((int)$u['id']) as $pid) { $d = v2_share_get((string)$pid); if ($d && isset($d['members'][(string)$u['id']])) $list[] = v2_share_view((string)$pid, $d); }
+  out(['ok' => true, 'you' => (int)$u['id'], 'shares' => $list]);
+}
+
+/* ───── live mixing sessions: a short-lived op relay per project (polling, ~1s) ───── */
+case 'GET live': {
+  user(); $pid = v2_live_pid($_GET['pid'] ?? ''); if ($pid === '') fail('Missing project', 400);
+  $since = (int)($_GET['since'] ?? 0); $f = v2_live_file($pid);
+  $d = is_file($f) ? (json_decode((string)file_get_contents($f), true) ?: []) : [];
+  $ops = array_values(array_filter($d['ops'] ?? [], fn($o) => (int)($o['seq'] ?? 0) > $since));
+  out(['ok' => true, 'seq' => (int)($d['seq'] ?? 0), 'ops' => $ops]);
+}
+case 'POST live': {
+  $u = user(); limit('live', 4000, 3600); $b = body(); $pid = v2_live_pid($b['pid'] ?? ''); if ($pid === '') fail('Missing project', 400);
+  $fh = fopen(v2_live_file($pid), 'c+'); if (!$fh) fail('Live relay unavailable', 500);
+  flock($fh, LOCK_EX); $raw = stream_get_contents($fh); $d = $raw ? (json_decode($raw, true) ?: []) : [];
+  $seq = (int)($d['seq'] ?? 0); $ops = $d['ops'] ?? []; $cut = microtime(true) * 1000 - 120000;
+  foreach (array_slice((array)($b['ops'] ?? []), 0, 40) as $o) { if (!is_array($o) || strlen((string)json_encode($o)) > 250000) continue; $o['seq'] = ++$seq; $o['uid'] = (int)$u['id']; $ops[] = $o; }
+  $ops = array_slice(array_values(array_filter($ops, fn($o) => (float)($o['at'] ?? 0) > $cut)), -300);
+  ftruncate($fh, 0); rewind($fh); fwrite($fh, (string)json_encode(['seq' => $seq, 'ops' => $ops])); fflush($fh); flock($fh, LOCK_UN); fclose($fh);
+  out(['ok' => true, 'seq' => $seq]);
+}
+
 
 /* ───── config the client needs ───── */
 case 'GET config':
-  out(['ok' => true, 'billing' => (bool)cfg('stripe_secret'), 'mail' => (bool)cfg('mail_from'), 'terms' => array_column(all('SELECT term FROM mod_terms'), 'term')]);
+  out(['ok' => true, 'billing' => (bool)cfg('stripe_secret'), 'mail' => (bool)cfg('mail_from'), 'realtime' => cfg('ably_key') ? 'ably' : null, 'terms' => array_column(all('SELECT term FROM mod_terms'), 'term')]);
 
 /* ───── accounts ───── */
 case 'POST register': {

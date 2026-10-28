@@ -53,3 +53,15 @@ Give teammates roles from Admin → Users (role changes are recorded in the audi
 - Register a DMCA agent (copyright.gov/dmca-directory) and put the details in `legal/dmca.html`
 - Join a PRO / CMO and a distributor before paying royalties at scale; release codes start with QZ-ELP and are placeholders until you get a real ISRC registrant code
 - iOS / Android store builds must use Apple / Google in-app purchase instead of Stripe
+
+
+## Live sessions (optional, recommended)
+
+Live mixing works out of the box: the app relays edits through `/api/v2/live` about once a second.
+For instant (WebSocket) sync across devices:
+
+1. Create a free account at ably.com → your app → **API keys** → copy the root key (it looks like `abc123.def456:xyz…`).
+2. In `public_html/api/config.local.php` (or config.php) set `'ably_key' => 'PASTE_KEY'`.
+3. Reload the app. The mixer's Live badge now syncs instantly; nothing else changes.
+
+Shared projects are stored as small JSON files in your data folder under `shared/`. Invite links contain a secret token; anyone signed in who opens one joins the project.

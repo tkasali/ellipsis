@@ -14,6 +14,7 @@ return array_replace([
   'db_user' => $env('ELLIPSIS_DB_USER', null),
   'db_pass' => $env('ELLIPSIS_DB_PASS', null),
 
+  'ably_key'    => getenv('ABLY_KEY') ?: '',     // optional: Ably API key (name:secret) for instant live sessions
   'data_dir'    => $data,
   'upload_dir'  => $data . '/stems',
   'max_upload'  => 60 * 1024 * 1024,           // 60 MB per stem
