@@ -150,7 +150,7 @@
                   <span style="font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b style="color:var(--ink);font-weight:620">{{ liveWho }}</b> {{ liveVerb }} <b style="color:var(--ink);font-weight:620">{{ liveWhat }}</b> · {{ liveAgo }}</span>
                 </span>
               </span>
-              <button onClick="{{ liveGo }}" style="flex:none;padding:7px 12px;border:1px solid var(--line2);border-radius:10px;background:transparent;color:var(--ink);font-size:12.5px;font-weight:620;cursor:pointer">▶ Listen</button>
+              <button onClick="{{ liveGo }}" style="flex:none;white-space:nowrap;padding:7px 12px;border:1px solid var(--line2);border-radius:10px;background:transparent;color:var(--ink);font-size:12.5px;font-weight:620;cursor:pointer">▶ Listen</button>
             </div>
 
             <div style="display:flex;align-items:center;gap:10px;padding:0 16px;height:50px;border-radius:16px;background:var(--panel);border:1px solid {{ exQBorder }};margin-bottom:12px">
@@ -165,9 +165,9 @@
             <sc-if value="{{ showFilter }}" hint-placeholder-val="{{ true }}">
               <div style="padding:14px 16px;border-radius:18px;background:var(--panel);border:1px solid var(--line);margin-bottom:16px">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-                  <span style="font-size:11.5px;font-weight:620;letter-spacing:0.08em;color:var(--dim);margin-right:4px">RANK BY TAG</span>
+                  <span style="font-size:11.5px;font-weight:620;letter-spacing:0.08em;color:var(--dim);margin-right:4px;white-space:nowrap">RANK BY TAG</span>
                   <sc-for list="{{ facetTabs }}" as="f" hint-placeholder-count="3">
-                    <button onClick="{{ f.go }}" style="padding:6px 12px;border:0;border-radius:8px;background:{{ f.bg }};color:{{ f.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ f.label }}</button>
+                    <button onClick="{{ f.go }}" style="white-space:nowrap;padding:6px 12px;border:0;border-radius:8px;background:{{ f.bg }};color:{{ f.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ f.label }}</button>
                   </sc-for>
                   <div style="flex:1"></div>
                   <sc-if value="{{ showPeriods }}" hint-placeholder-val="{{ true }}">
