@@ -73,7 +73,7 @@
 
   </aside>
 
-  <main style="grid-row:1;grid-column:{{ mainCol }};min-width:0;min-height:0;display:flex;flex-direction:column">
+  <main style="grid-row:1;grid-column:{{ mainCol }};min-width:0;min-height:0;display:flex;flex-direction:column;position:relative;background:radial-gradient(1000px 520px at 88% -14%, {{ glowA }}, transparent 62%),radial-gradient(820px 480px at -8% 114%, {{ glowB }}, transparent 60%),var(--bg)">
     <header style="flex:none;display:flex;align-items:center;gap:{{ hdrGap }};padding:{{ hdrPad }};border-bottom:1px solid var(--line);background:var(--panel)">
       <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ goHome }}" title="Ellipsis · Home" aria-label="Go to Home" style="flex:none;padding:0;border:0;background:transparent;cursor:pointer;border-radius:11px;display:flex"><span style="flex:none;width:36px;height:36px;border-radius:11px;background:linear-gradient(150deg,#3DF5CB 0%,#00D9A6 48%,#00B489 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),inset 0 -1px 0 rgba(0,0,0,0.12),0 6px 18px rgba(0,217,166,0.30);display:flex;align-items:center;justify-content:center;gap:3px"><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span><span style="width:5px;height:5px;border-radius:50%;background:#06231B"></span></span></button>
@@ -141,6 +141,18 @@
               </div>
             </div>
 
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:16px;background:var(--panel);border:1px solid var(--line);margin-bottom:12px;min-height:50px">
+              <span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;background:rgba(255,90,78,0.12);color:#E5483B;font-size:11px;font-weight:700;letter-spacing:0.1em"><span style="width:7px;height:7px;border-radius:50%;background:#FF5A4E;animation:elPulse 1.2s ease-in-out infinite"></span>LIVE</span>
+              <span style="flex:none;font-size:13px;font-weight:620;color:var(--ink);font-variant-numeric:tabular-nums">{{ liveOnline }} online · {{ liveSessions }} sessions open</span>
+              <span style="flex:1;min-width:200px;display:flex;align-items:center;gap:9px;min-height:28px">
+                <span data-live-evt="1" style="display:flex;align-items:center;gap:9px;min-width:0">
+                  <span style="flex:none;width:26px;height:26px;border-radius:50%;background:{{ liveAv }};color:#fff;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ liveIn }}</span>
+                  <span style="font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b style="color:var(--ink);font-weight:620">{{ liveWho }}</b> {{ liveVerb }} <b style="color:var(--ink);font-weight:620">{{ liveWhat }}</b> · {{ liveAgo }}</span>
+                </span>
+              </span>
+              <button onClick="{{ liveGo }}" style="flex:none;padding:7px 12px;border:1px solid var(--line2);border-radius:10px;background:transparent;color:var(--ink);font-size:12.5px;font-weight:620;cursor:pointer">▶ Listen</button>
+            </div>
+
             <div style="display:flex;align-items:center;gap:10px;padding:0 16px;height:50px;border-radius:16px;background:var(--panel);border:1px solid {{ exQBorder }};margin-bottom:12px">
               <span style="font-size:17px;color:var(--dim)">⌕</span>
               <input value="{{ exQ }}" onChange="{{ onExQ }}" placeholder="{{ exQPlaceholder }}" style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font-size:15px;font-family:inherit" />
@@ -205,7 +217,7 @@
                     </div>
                   </sc-if>
                   <sc-if value="{{ r.isSong }}" hint-placeholder-val="{{ true }}">
-                  <div style="display:flex;align-items:center;gap:13px;padding:11px 18px;border-bottom:1px solid var(--line)" style-hover="background:var(--hover)">
+                  <div style="display:flex;align-items:center;gap:13px;padding:11px 18px;border-bottom:1px solid var(--line);transition:background .18s,transform .18s" style-hover="background:var(--hover);transform:translateX(4px)">
                     <span style="flex:none;width:26px;text-align:center;font-size:17px;font-weight:620;color:{{ r.rankFg }}">{{ r.rank }}</span>
                     <button onClick="{{ r.play }}" style="flex:none;width:46px;height:46px;border-radius:12px;border:0;background:{{ r.art }};box-shadow:inset 0 0 0 3px {{ r.kc }};color:#fff;font-size:14px;cursor:pointer">{{ r.icon }}</button>
                     <button onClick="{{ r.open }}" style="flex:1;min-width:0;padding:0;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left">
@@ -1032,7 +1044,7 @@
         </sc-if>
 
         <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;line-height:1.5;color:var(--dim);text-align:center">
-          <a href="https://www.dmca.com/Protection/Status.aspx?ID=f869b572-eb73-46d9-814c-e156ae3195a5" title="DMCA.com Protection Status" class="dmca-badge" target="_blank" rel="noopener" style="display:inline-flex;flex:none"><img src="https://images.dmca.com/Badges/dmca-badge-w100-2x1-04.png?ID=f869b572-eb73-46d9-814c-e156ae3195a5" alt="DMCA.com Protection Status" width="100" height="50" style="display:block;width:100px;height:auto" /></a>
+          <a href="https://www.dmca.com/Protection/Status.aspx?ID=f869b572-eb73-46d9-814c-e156ae3195a5" title="DMCA.com Protection Status" class="dmca-badge" target="_blank" rel="noopener" style="flex:none;position:relative;display:inline-flex;flex:none;width:100px;height:50px;border-radius:6px;overflow:hidden"><span aria-hidden="true" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:6px;background:#0C1318;border:1px solid #2A363E;font-family:Arial,Helvetica,sans-serif;line-height:1"><span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:0.2px">DMCA<span style="color:#00D9A6">.com</span></span><span style="font-size:8px;font-weight:700;letter-spacing:0.9px;white-space:nowrap;color:#00D9A6">✓ PROTECTED</span></span><img src="https://images.dmca.com/Badges/dmca-badge-w100-2x1-04.png?ID=f869b572-eb73-46d9-814c-e156ae3195a5" alt="" width="100" height="50" style="position:relative;display:block;width:100px;height:50px" /></a>
           <span style="max-width:520px">© 2026 RoundTable Ventures, LLC. Recordings, lyrics and stems belong to their creators. Content is protected under the DMCA — report infringement via our <a href="../legal/dmca.html" target="_blank" rel="noopener">Copyright policy</a> · <a href="../legal/terms.html" target="_blank" rel="noopener">Terms</a> · <a href="../legal/privacy.html" target="_blank" rel="noopener">Privacy</a></span>
         </div>
 
@@ -1041,6 +1053,7 @@
   </main>
 
   <footer style="position:relative;grid-row:2;grid-column:{{ footCol }};display:grid;grid-template-columns:{{ playerCols }};align-items:center;gap:{{ footGap }};padding:{{ footPad }};background:var(--panel);border-top:1px solid var(--line);z-index:5">
+    <canvas ref="{{ vizRef }}" aria-hidden="true" style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:-1"></canvas>
     <div style="display:flex;align-items:center;gap:12px;min-width:0">
       <div style="flex:none;width:52px;height:52px;border-radius:13px;background:{{ nowArt }};box-shadow:inset 0 0 0 3px {{ nowKc }}"></div>
       <div style="min-width:0"><div style="font-size:14.5px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:7px"><sc-if value="{{ nowPlaying }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;gap:2px;align-items:flex-end;height:12px"><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out infinite"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out .2s infinite"></span><span style="width:3px;height:12px;border-radius:1px;background:{{ nowKc }};transform-origin:bottom;animation:eqb .8s ease-in-out .4s infinite"></span></span></sc-if><span style="overflow:hidden;text-overflow:ellipsis">{{ nowTitle }}</span><span style="flex:none;padding:1px 7px;border-radius:999px;background:{{ nowKc }};color:{{ nowKcFg }};font-size:10px;font-weight:620">{{ nowKind }}</span></div><div style="font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nowSub }}</div></div>
@@ -2319,6 +2332,9 @@ const CROP_FRAMES = [['1:1', 'Square', 1, '1 : 1'], ['4:5', 'Portrait', 0.8, '4 
 const COVERS = Array.from({ length: 16 }, (_, i) => 'assets/covers/c' + String(i + 1).padStart(2, '0') + '.jpg');
 const hashS = t => { t = String(t || ''); let h = 7; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return h; };
 const COVER_OF = key => 'url(' + COVERS[hashS(key) % COVERS.length] + ') center/cover';
+const hexA = (h, a) => { const m = /^#([0-9a-f]{6})$/i.exec(String(h || '')); if (!m) return 'transparent'; const n = parseInt(m[1], 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+const LIVE_VERBS = ['spiked', 'jumped into a session on', 'added a vocal to', 'saved', 'started a remix of', 'dropped a verse on', 'is mixing', 'shared'];
+const reduceMotion = () => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
 const AOF = x => x && x.cover ? 'url(' + x.cover + ') center/cover' : x && x.kind === 'song' ? COVER_OF(x.id + (x.title || '')) : ART[x && x.file] || ART.lofi;
 /* One colour per kind of sound, used on every play button ring and the player. */
 const KC = { song: ['#00D9A6', '#06231B', 'Song'], instrumental: ['#5B8CFF', '#FFFFFF', 'Beat'], melody: ['#B07CFF', '#FFFFFF', 'Melody'], acapella: ['#FF7A59', '#FFFFFF', 'Voice'], lyric: ['#F5B800', '#1A1405', 'Lyrics'] };
@@ -2472,7 +2488,8 @@ class Component extends DCLogic {
   stock = buildStock();
   stockMap = Object.fromEntries(this.stock.map(x => [x.id, x]));
   blobs = {};
-  scrollRef = React.createRef(); dmRef = React.createRef(); chatRef = React.createRef(); fileRef = React.createRef(); nameRef = React.createRef();
+  scrollRef = React.createRef();
+  vizRef = React.createRef(); dmRef = React.createRef(); chatRef = React.createRef(); fileRef = React.createRef(); nameRef = React.createRef();
   seeded = seedAll(this.users);
   state = {
     theme: 'light', w: typeof window !== 'undefined' ? window.innerWidth : 1440,
@@ -2483,7 +2500,7 @@ class Component extends DCLogic {
     curId: 'i5', playing: false, time: 0, dur: 0, volume: 80, mixPid: null,
     query: '', searchOpen: false, draft: '', drafts: {},
     sheet: null, rec: null, ctxPid: null, premium: false, toast: '',
-    ad: null, adSince: 0, tlSnap: 'bar', tlAuto: false, clipSel: null, clipIdx: 0, clipDraft: null, pat: null, patBusy: false, patPlaying: false, livePeers: {}, liveFollow: true, lvPrivate: false, fxSel: null, fxCmd: '', fxReply: '', fxMicOn: false, adPreview: false,
+    ad: null, adSince: 0, liveN: 0, tlSnap: 'bar', tlAuto: false, clipSel: null, clipIdx: 0, clipDraft: null, pat: null, patBusy: false, patPlaying: false, livePeers: {}, liveFollow: true, lvPrivate: false, fxSel: null, fxCmd: '', fxReply: '', fxMicOn: false, adPreview: false,
     dms: {}, dmRead: {}, meetings: [], dmWith: null, dmDraft: '', inboxTab: 'Messages', inboxSeeded: {}, dmQ: '',
     ob: null, myPart: null, myGenres: [], saved: false,
     auth: null, acct: null, sb: {}, sbLog: [], chatWarn: null, strikes: 0, muteUntil: null, deskTab: 'Rising', deskGenre: 'All',
@@ -3158,7 +3175,56 @@ class Component extends DCLogic {
     } catch (e) {}
   }
   silentOff() { try { if (this._silentEl) this._silentEl.pause(); } catch (e) {} }
+  burst(x, y, colors, n, label) {
+    if (reduceMotion()) return;
+    try {
+      const box = document.createElement('div'); box.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:200';
+      document.body.appendChild(box);
+      for (let i = 0; i < n; i++) {
+        const d = document.createElement('span'), sz = 5 + Math.random() * 7, ang = Math.random() * Math.PI * 2, dist = 50 + Math.random() * (n > 30 ? 260 : 110), c = colors[i % colors.length];
+        d.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;width:' + sz + 'px;height:' + (Math.random() < 0.5 ? sz : sz * 0.45) + 'px;border-radius:' + (Math.random() < 0.5 ? '50%' : '2px') + ';background:' + c + ';box-shadow:0 0 10px ' + c;
+        box.appendChild(d);
+        d.animate([{ transform: 'translate(-50%,-50%) scale(0.4) rotate(0deg)', opacity: 1 }, { transform: 'translate(calc(-50% + ' + Math.cos(ang) * dist + 'px), calc(-50% + ' + (Math.sin(ang) * dist + 40) + 'px)) scale(1) rotate(' + (Math.random() * 540 - 270) + 'deg)', opacity: 0 }], { duration: 700 + Math.random() * 600, easing: 'cubic-bezier(.15,.7,.3,1)', fill: 'forwards' });
+      }
+      if (label) { const t = document.createElement('span'); t.textContent = label; t.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;font:700 ' + (n > 30 ? 34 : 16) + 'px Urbanist,Geist,sans-serif;color:#00D9A6;text-shadow:0 2px 14px rgba(0,217,166,.55);white-space:nowrap'; box.appendChild(t); t.animate([{ transform: 'translate(-50%,-50%) scale(.6)', opacity: 0 }, { transform: 'translate(-50%,-110%) scale(1.08)', opacity: 1, offset: 0.25 }, { transform: 'translate(-50%,-220%) scale(1)', opacity: 0 }], { duration: n > 30 ? 1500 : 950, easing: 'ease-out', fill: 'forwards' }); }
+      setTimeout(() => box.remove(), 1700);
+    } catch (e) {}
+  }
+  vizStart() {
+    const N = 96, vz = new Float32Array(N); let fq = null;
+    const loop = () => {
+      this._vizRaf = requestAnimationFrame(loop);
+      const cv = this.vizRef.current; if (!cv || document.hidden) return;
+      const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; if (!W || !H) return;
+      if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+      const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      const st = this.state, on = !!(st.playing || st.mixPid) && !reduceMotion();
+      let real = null;
+      if (this._g && this._g.mAn && st.mixPid) { const a = this._g.mAn[0]; if (!fq || fq.length !== a.frequencyBinCount) fq = new Uint8Array(a.frequencyBinCount); a.getByteFrequencyData(fq); real = fq; }
+      const it = this.item(st.curId), bpm = (it && it.bpm) || 100, t = this.audio ? this.audio.currentTime : performance.now() / 1000;
+      const beat = (t * bpm / 60) % 1, env = Math.exp(-beat * 5);
+      for (let i = 0; i < N; i++) {
+        const f = i / N; let v = 0;
+        if (on && real) v = real[Math.floor(Math.pow(f, 1.6) * real.length * 0.7)] / 255;
+        else if (on) { const nz = 0.5 + 0.5 * Math.sin(i * 1.71 + t * 6.3 + Math.sin(i * 0.37 + t * 2.1) * 2); v = Math.pow(1 - f, 0.7) * (0.22 + 0.78 * env) * (0.35 + 0.65 * nz); }
+        vz[i] += (v - vz[i]) * (v > vz[i] ? 0.45 : 0.12);
+      }
+      const kc = this._vizKc || '#00D9A6', bw = W / N;
+      ctx.fillStyle = kc;
+      for (let i = 0; i < N; i++) { const h = vz[i] * H * 0.92; if (h < 0.5) continue; ctx.globalAlpha = 0.07 + vz[i] * 0.16; ctx.fillRect(i * bw + 1, H - h, Math.max(1, bw - 2), h); }
+      ctx.globalAlpha = 1;
+    };
+    this._vizRaf = requestAnimationFrame(loop);
+  }
   componentDidMount() {
+    this._ptr = e => { this._lastXY = [e.clientX, e.clientY]; };
+    window.addEventListener('pointerdown', this._ptr, { capture: true, passive: true });
+    this.vizStart();
+    this._liveT = setInterval(() => {
+      if (document.hidden || this.state.view !== 'explore') return;
+      this.setState(st => ({ liveN: st.liveN + 1 }));
+      if (!reduceMotion()) setTimeout(() => { const el = document.querySelector('[data-live-evt]'); if (el && el.animate) el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'ease-out' }); }, 20);
+    }, 3800);
     ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.addEventListener(ev, this.unlockAudio, { capture: true, passive: true }));
     const _up = this.updProj.bind(this);
     this.updProj = (id, fn) => {
@@ -3219,6 +3285,7 @@ class Component extends DCLogic {
     setTimeout(() => this.restoreNav(), 350);
   }
   componentWillUnmount() {
+    cancelAnimationFrame(this._vizRaf); clearInterval(this._liveT); window.removeEventListener('pointerdown', this._ptr, true);
     ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.removeEventListener(ev, this.unlockAudio, true)); this.silentOff(); this.liveLeave();
     if (this._thSync) window.removeEventListener('storage', this._thSync);
     clearTimeout(this._saveT); clearTimeout(this._chk); clearInterval(this._evT); clearInterval(this._noteT); this._unmounted = true; clearTimeout(this._dmT); clearTimeout(this._mtT);
@@ -4394,7 +4461,7 @@ class Component extends DCLogic {
     if (it && it.owner === 'me') { this.flash('You can\'t Spike your own work — share it instead'); return; }
     const on = !!this.state.spiked[id];
     this.setState(s => ({ spiked: Object.assign({}, s.spiked, { [id]: !on }) }));
-    if (!on) this.flash('Spiked — it moves up every chart it is tagged in');
+    if (!on) { this.flash('Spiked — it moves up every chart it is tagged in'); const p = this._lastXY || [innerWidth / 2, innerHeight / 2]; this.burst(p[0], p[1], ['#00D9A6', '#3FE6BD', '#F5B800', '#FFFFFF'], 18, '+1 ⚡'); }
   }
   fav(id) { const on = !!this.state.favs[id]; this.setState(s => ({ favs: Object.assign({}, s.favs, { [id]: !on }) })); this.flash(on ? 'Removed from Favorites' : 'Saved to Favorites'); }
   follow(uid) {
@@ -4532,7 +4599,7 @@ class Component extends DCLogic {
     this.setState(s => ({ items: bnc ? s.items.map(x => x.id === bnc.id ? song : x) : s.items.concat([song]) }));
     this.track('release', { id: song.id });
     if (this._api) this.api('publish', { body: { id: song.id, title: song.title, artist: this.U(p.owner).name, genre: (p.tags.genre || [])[0] || '', like: (p.tags.like || [])[0] || '', art: sh.art } }).catch(() => {});
-    this.updProj(p.id, x => { x.stage = 'published'; x.songId = song.id; x.shareUrl = '/s/?id=' + song.id; x.art = sh.art; x.cover = sh.useCover && sh.cover ? sh.cover : null; x.open = { on: false, needs: [] }; return x; });
+    this.burst(innerWidth / 2, innerHeight * 0.42, ['#00D9A6', '#5B8CFF', '#FF8A5C', '#F5B800', '#B07CFF'], 70, 'Live!'); this.updProj(p.id, x => { x.stage = 'published'; x.songId = song.id; x.shareUrl = '/s/?id=' + song.id; x.art = sh.art; x.cover = sh.useCover && sh.cover ? sh.cover : null; x.open = { on: false, needs: [] }; return x; });
     this.setSheet({ step: 3 });
     this.later(() => {
       this.setState(s => ({ items: s.items.map(x => x.id === sid ? Object.assign({}, x, { spikes: x.spikes + 36, week: x.week + 36, year: x.year + 36 }) : x), acts: [{ id: 'a' + Date.now(), type: 'spikeback', uid: 'u23', itemId: sid, title: 'Kofi Mensah spiked back ' + p.title, body: 'Music Executive · Harbour Music', when: 'now', done: false }].concat(s.acts) }));
@@ -5276,6 +5343,14 @@ class Component extends DCLogic {
       libHasQuick: ['lyric', 'melody', 'acapella', 'instrumental'].indexOf(s.libTab) >= 0,
       libQuickLabel: ({ lyric: '✎ New lyrics', melody: '〰 Record melody', acapella: '◉ Record acapella', instrumental: '♫ Record instrumental' })[s.libTab] || '',
       libQuick: () => { if (s.libTab === 'lyric') this.newLyric(null); else if (['melody', 'acapella', 'instrumental'].indexOf(s.libTab) >= 0) this.openRec(s.libTab, null); }, goMe: () => this.go('profile', { uid: 'me' }),
+      vizRef: this.vizRef,
+      ...(() => {
+        const n = s.liveN || 0, us = this.users.filter(u => u.id !== 'me' && !u.exec), songs = s.items.filter(x => x.published && x.kind === 'song');
+        const u = us[(n * 7 + 3) % us.length] || this.U('me'), it = songs[(n * 13 + 5) % Math.max(1, songs.length)];
+        return { liveOnline: (1180 + ((n * 37) % 170) + Math.round(40 * Math.sin(n / 3))).toLocaleString(), liveSessions: String(42 + ((n * 11) % 19)),
+          liveAv: u.photo ? 'url(' + u.photo + ') center/cover' : (u.grad || u.avatar || '#0A6E58'), liveIn: u.photo ? '' : u.initials, liveWho: u.name.split(' ')[0] + ' in ' + u.city, liveVerb: LIVE_VERBS[(n * 5) % LIVE_VERBS.length], liveWhat: it ? it.title : 'a new track', liveAgo: ['just now', '2s ago', '5s ago', '9s ago'][n % 4],
+          liveGo: () => it && this.play(it.id) };
+      })(),
       isPhone: !!phone, goHome: () => { const ex = s.acct && s.acct.type === 'exec'; if (ex) this.go('desk'); else this.go('explore', { exTab: 'Songs' }); if (this.scrollRef.current) this.scrollRef.current.scrollTop = 0; },
       shAlign: s.w < 640 ? 'flex-end' : 'center', shPad: s.w < 640 ? '0' : '24px', shMaxH: s.w < 640 ? '92vh' : '84vh', shRadius: s.w < 640 ? '24px 24px 0 0' : '24px',
       canBack: s.hist.length > 0 && /project|lyric|profile/.test(s.view), back: this.back,
@@ -5456,7 +5531,7 @@ class Component extends DCLogic {
       recSave: this.recSave, recClose: this.recClose, recNote: r ? r.note : '',
       recShowLyrics: !!r && !!rLy, recLyricSecs: rLy && rLy.sections ? rLy.sections.map(z => ({ label: z.type.toUpperCase(), text: z.text || '…' })) : [],
 
-      ...(() => { const k = KCX(cur); return { nowKc: k.kc, nowKcFg: k.kcFg, nowKind: cur ? k.kcLabel : '', nowPlaying: !!s.playing }; })(), nowArt: AOF(cur), nowTitle: s.mixPid ? 'Mix preview · ' + (this.proj(s.mixPid) || {}).title : cur.title, nowSub: s.mixPid ? 'All included tracks together' : KIND[cur.kind][0] + ' · ' + U(cur.owner).name,
+      ...(() => { const k = KCX(cur); return { nowKc: (this._vizKc = k.kc), nowKcFg: k.kcFg, nowKind: cur ? k.kcLabel : '', nowPlaying: !!s.playing, glowA: hexA(k.kc, s.playing || s.mixPid ? 0.2 : 0.08), glowB: hexA('#5B3E9E', s.playing || s.mixPid ? 0.14 : 0.06) }; })(), nowArt: AOF(cur), nowTitle: s.mixPid ? 'Mix preview · ' + (this.proj(s.mixPid) || {}).title : cur.title, nowSub: s.mixPid ? 'All included tracks together' : KIND[cur.kind][0] + ' · ' + U(cur.owner).name,
       nowCanSpike: !s.mixPid && cur.published, nowSpike: () => this.spike(cur.id), nowSpBg: s.spiked[cur.id] ? 'var(--mint-soft)' : 'transparent', nowSpFg: s.spiked[cur.id] ? 'var(--mint-ink)' : 'var(--dim)', nowSpBorder: s.spiked[cur.id] ? 'var(--mint)' : 'var(--line)',
       playIcon: s.playing || s.mixPid ? '❚❚' : '▶', togglePlay: this.togglePlay, elapsed: fmt(s.time), duration: fmt(dur), progW: (prog * 100).toFixed(2) + '%',
       scrub: e => { const b = e.currentTarget.getBoundingClientRect(); const k = Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)); if (this.audio && dur) { this.audio.currentTime = k * dur; this.setState({ time: k * dur }); } },
