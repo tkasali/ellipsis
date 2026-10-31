@@ -1125,6 +1125,16 @@
 
           <sc-if value="{{ isPick }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-if value="{{ pickSearch }}" hint-placeholder-val="{{ false }}">
+                <div style="position:sticky;top:-2px;z-index:2;background:var(--panel);padding-bottom:6px">
+                  <div style="display:flex;align-items:center;gap:10px;padding:0 14px;height:48px;border-radius:14px;background:var(--panel2);border:1px solid var(--line2)">
+                    <span style="font-size:16px;color:var(--dim)">⌕</span>
+                    <input value="{{ pickQ }}" onChange="{{ onPickQ }}" placeholder="{{ pickPh }}" autofocus style="flex:1;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font-size:15px;font-family:inherit" />
+                    <sc-if value="{{ pickHasQ }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearPickQ }}" title="Clear search" style="width:28px;height:28px;border-radius:8px;border:0;background:var(--soft);color:var(--ink);font-size:14px;cursor:pointer">×</button></sc-if>
+                  </div>
+                  <div style="margin-top:6px;font-size:12px;font-weight:580;color:var(--dim)">{{ pickCount }}</div>
+                </div>
+              </sc-if>
               <sc-if value="{{ pickEmpty }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:20px;text-align:center;font-size:14px;color:var(--dim)">{{ pickEmpty }}</div>
               </sc-if>
@@ -4957,7 +4967,7 @@ class Component extends DCLogic {
 
     /* sheet */
     const sh = s.sheet;
-    let sheetTitle = '', sheetSub = '', sheetW = '520px', menuItems = [], pickRows = [], pickEmpty = '', tagGroups = [];
+    let sheetTitle = '', sheetSub = '', sheetW = '520px', menuItems = [], pickRows = [], pickEmpty = '', tagGroups = [], pickSearch = false, pickCount = '';
     if (sh && sh.type === 'menu') {
       const pid = sh.pid; const pn = pid ? this.proj(pid).title : null;
       sheetTitle = pid ? 'Add to ' + pn : 'Create'; sheetSub = pid ? 'Make something new or bring in what you already have.' : 'Start with anything. It all comes together in a Project.'; sheetW = '640px';
@@ -4990,12 +5000,21 @@ class Component extends DCLogic {
         pickRows = [{ title: 'None', sub: sh.mode === 'backing' ? 'Record without backing' : 'No lyrics on screen', badge: '—', radius: '11px', art: '#34434F', cta: 'Use', go: () => { this.setRec(sh.mode === 'backing' ? { backing: null } : { lyric: null }); this.setState({ sheet: null }); } }]
           .concat(I.filter(x => x.kind === kind && (x.owner === 'me' || x.published || s.favs[x.id] || P.some(p => this.isMember(p) && p.items.indexOf(x.id) >= 0))).map(x => row(x, 'Use', () => { this.setRec(sh.mode === 'backing' ? { backing: x.id } : { lyric: x.id }); this.setState({ sheet: null }); })));
       }
-      if (sh.mode === 'invite') { const p = this.proj(sh.pid); sheetTitle = 'Invite collaborators'; sheetSub = 'Looking for: ' + (p.open.needs.join(', ') || 'anyone'); pickRows = this.users.filter(u => u.id !== 'me' && !u.exec && this.members(p).indexOf(u.id) < 0).map(u => ({ title: u.name, sub: u.role + ' · ' + u.city, badge: u.initials, radius: '50%', art: u.avatar, cta: 'Invite', go: () => this.invite(p.id, u.id) })); }
+      if (sh.mode === 'invite') { const p = this.proj(sh.pid); sheetTitle = 'Invite collaborators'; sheetSub = 'Looking for: ' + (p.open.needs.join(', ') || 'anyone'); const needs = (p.open.needs || []).map(n => n.toLowerCase()), fits = u => (u.skills || []).some(k => needs.some(n => k.toLowerCase().indexOf(n) >= 0 || n.indexOf(k.toLowerCase()) >= 0));
+        pickRows = this.users.filter(u => u.id !== 'me' && !u.exec && this.members(p).indexOf(u.id) < 0).sort((a, b) => (fits(b) - fits(a)) || (b.followers - a.followers)).map(u => ({ title: u.name, sub: (fits(u) ? '✓ Plays what you need · ' : '') + u.role + ' · ' + u.city + ((u.skills || []).length ? ' · ' + u.skills.slice(0, 3).join(', ') : ''), hay: [u.name, u.handle, u.role, u.city].concat(u.skills || []).join(' '), badge: u.initials, radius: '50%', art: u.avatar, cta: 'Invite', go: () => this.invite(p.id, u.id) })); }
       if (sh.mode === 'people') {
         const who = U(sh.uid);
         sheetTitle = sh.kind === 'followers' ? num(who.followers) + ' followers' : sh.kind === 'following' ? 'Following' : 'Spikes';
         if (sh.kind === 'spikes') pickRows = I.filter(x => x.published && x.owner === sh.uid).map(x => ({ title: x.title, sub: '⚡ ' + num(spk(x)) + ' spikes', badge: '▶', radius: '11px', art: AOF(x), ...KCX(x), cta: 'Play', go: () => this.play(x.id) }));
-        else { const list = sh.kind === 'following' && sh.uid === 'me' ? this.users.filter(u => s.following[u.id]) : this.users.filter((u, i) => u.id !== sh.uid && u.id !== 'me' && (sh.kind === 'followers' || i % 2 === 0)); pickRows = list.map(u => ({ title: u.name, sub: u.role + ' · ' + u.city, badge: u.initials, radius: '50%', art: u.avatar, cta: s.following[u.id] ? 'Unfollow' : 'Follow', go: () => this.follow(u.id) })); }
+        else { const list = sh.kind === 'following' && sh.uid === 'me' ? this.users.filter(u => s.following[u.id]) : this.users.filter((u, i) => u.id !== sh.uid && u.id !== 'me' && (sh.kind === 'followers' || i % 2 === 0)); pickRows = list.map(u => ({ title: u.name, sub: u.role + ' · ' + u.city, hay: [u.name, u.handle, u.role, u.city].concat(u.skills || []).join(' '), badge: u.initials, radius: '50%', art: u.avatar, cta: s.following[u.id] ? 'Unfollow' : 'Follow', go: () => this.follow(u.id) })); }
+      }
+      if (sh.mode === 'invite' || (sh.mode === 'people' && sh.kind !== 'spikes')) {
+        pickSearch = true;
+        const total = pickRows.length, q = (sh.q || '').trim().toLowerCase();
+        if (q) pickRows = pickRows.filter(r => ((r.hay || '') + ' ' + r.title + ' ' + r.sub).toLowerCase().indexOf(q) >= 0);
+        pickCount = q ? pickRows.length + ' of ' + total : total + ' people';
+        if (q && !pickRows.length) pickEmpty = 'Nobody matches “' + sh.q.trim() + '”. Try a name, city or instrument.';
+        pickRows = pickRows.slice(0, 80);
       }
     }
     if (sh && sh.type === 'tags') {
@@ -5492,6 +5511,7 @@ class Component extends DCLogic {
       isName: !!sh && sh.type === 'name', nameVal, onName: e => this.setSheet({ val: e.target.value }), namePh: 'e.g. Home Is With You', nameBorder: nameTaken ? 'var(--coral)' : 'var(--line2)',
       nameErr: nameTaken ? 'You already have a project with that name.' : '', nameBlocked, nameBtnBg: nameBlocked ? 'var(--line)' : 'var(--mint)', nameBtnFg: nameBlocked ? 'var(--dim)' : 'var(--on-mint)', nameCta: 'Create project',
       nameSave: () => { if (!nameBlocked) this.createProject(nameVal.trim(), sh.then); }, onNameKey: e => { if (e.key === 'Enter' && !nameBlocked) this.createProject(nameVal.trim(), sh.then); },
+      pickSearch, pickCount, pickQ: (sh && sh.q) || '', onPickQ: e => this.setSheet({ q: e.target.value }), clearPickQ: () => this.setSheet({ q: '' }), pickHasQ: !!(sh && sh.q), pickPh: sh && sh.mode === 'invite' ? 'Search by name, city, instrument…' : 'Search people…',
       isPick: !!sh && sh.type === 'pick', pickRows, pickEmpty,
       isTags: !!sh && sh.type === 'tags', tagGroups, likeInput: sh && sh.type === 'tags' ? sh.likeInput : '', onLikeInput: e => this.setSheet({ likeInput: e.target.value }),
       addLike: () => { const v = (sh.likeInput || '').trim(); if (!v) return; if (sh.tags.like.length >= 5) { this.flash('Up to 5 Sounds like tags'); return; } this.setSheet({ likeInput: '', tags: Object.assign({}, sh.tags, { like: sh.tags.like.indexOf(v) >= 0 ? sh.tags.like : sh.tags.like.concat([v]) }) }); },

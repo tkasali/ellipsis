@@ -60,7 +60,7 @@
       addEventListener('resize', fit);
     })();
   </script>
-  <script>(function(){var K='ellipsis4.theme',D='dark';function g(){try{return localStorage.getItem(K)||D}catch(e){return D}}function s(t){document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t}s(g());window.addEventListener('storage',function(e){if(e.key===K&&e.newValue)s(e.newValue)});document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('[data-theme-toggle]');if(!b)return;var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';s(t);try{localStorage.setItem(K,t)}catch(x){}},true)})();</script>
+  <script>(function(){if(window.__elTheme)return;window.__elTheme=1;var K='ellipsis4.theme',D='dark';function g(){try{return localStorage.getItem(K)||D}catch(e){return D}}function s(t){document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t}s(g());window.addEventListener('storage',function(e){if(e.key===K&&e.newValue)s(e.newValue)});document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('[data-theme-toggle]');if(!b)return;var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';s(t);try{localStorage.setItem(K,t)}catch(x){}},true)})();</script>
   <script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
 </helmet>
 
