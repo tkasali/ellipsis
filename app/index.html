@@ -45,6 +45,7 @@
     ::-webkit-scrollbar{width:10px;height:10px}
     ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px;border:3px solid transparent;background-clip:content-box}
     ::-webkit-scrollbar-track{background:transparent}
+    @keyframes kdSpin{to{transform:rotate(360deg)}}
     @keyframes elIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
     @keyframes eqb{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
     @keyframes elPulse{0%,100%{opacity:1}50%{opacity:.35}}
@@ -1533,64 +1534,75 @@
         <div style="max-width:1200px;margin:0 auto;padding:20px 20px 44px;display:grid;grid-template-columns:{{ ezCols }};gap:18px;align-items:start">
           <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
 
-<div onDragOver="{{ ezDragOver }}" onDragLeave="{{ ezDragLeave }}" onDrop="{{ ezDrop }}" style="position:relative;height:{{ fxStageH }};border-radius:28px;overflow:hidden;background:radial-gradient(ellipse at 50% 12%,var(--mx-mintbg) 0%,var(--mx-well) 36%,var(--mx-well) 78%);border:1px solid rgba(0,217,166,0.26);box-shadow:inset 0 0 90px rgba(0,217,166,0.08),0 24px 70px rgba(0,0,0,0.45);touch-action:none;user-select:none">
-<canvas data-spec="ring" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></canvas>
-<div style="position:absolute;left:8%;right:8%;top:14%;height:72%;pointer-events:none">
-<div style="position:absolute;inset:0;border:1px dashed rgba(var(--mx-rgb),0.07);border-radius:50%"></div>
-<div style="position:absolute;inset:20%;border:1px dashed rgba(var(--mx-rgb),0.08);border-radius:50%"></div>
-<div style="position:absolute;inset:40%;border:1px solid rgba(0,217,166,0.16);border-radius:50%"></div>
-<div style="position:absolute;left:50%;top:-8%;bottom:-8%;width:1px;background:linear-gradient(transparent,rgba(var(--mx-rgb),0.1),transparent)"></div>
-</div>
-<div style="position:absolute;left:0;right:0;top:9px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.16em;color:var(--mx-dim);pointer-events:none">BACK · ROOMY</div>
-<div style="position:absolute;left:0;right:0;bottom:9px;text-align:center;font-size:10px;font-weight:600;letter-spacing:0.16em;color:var(--mx-dim);pointer-events:none">FRONT · CLOSE</div>
-<div style="position:absolute;left:12px;top:50%;font-size:11px;font-weight:700;color:var(--mx-dim);pointer-events:none">L</div>
-<div style="position:absolute;right:12px;top:50%;font-size:11px;font-weight:700;color:var(--mx-dim);pointer-events:none">R</div>
-<div style="position:absolute;left:16px;top:26px;max-width:46%;pointer-events:none">
-<div style="font-size:10.5px;font-weight:620;letter-spacing:0.14em;line-height:1.4;white-space:nowrap;color:var(--mx-mint)">{{ ezKicker }}</div>
-<div style="font-family:Urbanist,Geist,sans-serif;font-size:18px;font-weight:500;letter-spacing:-0.3px;line-height:1.2;color:var(--mx-ink)">{{ ezHeadline }}</div>
-</div>
-<sc-for list="{{ fxOrbs }}" as="o" hint-placeholder-count="3">
-<div onPointerDown="{{ o.down }}" title="{{ o.tip }}" style="position:absolute;left:{{ o.left }};top:{{ o.top }};width:{{ o.size }};height:{{ o.size }};margin-left:{{ o.half }};margin-top:{{ o.half }};cursor:grab;touch-action:none;z-index:{{ o.z }};opacity:{{ o.op }}">
-<div data-orb="{{ o.id }}" style="position:absolute;inset:-18px;border-radius:50%;background:radial-gradient(circle,{{ o.glow }} 0%,transparent 66%);opacity:0.35;pointer-events:none;transition:transform .06s linear"></div>
-<div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 28%,#FFFFFF 0%,{{ o.color }} 32%,{{ o.deep }} 100%);border:2px {{ o.ringStyle }} {{ o.ring }};box-shadow:0 0 26px {{ o.glow }};display:flex;align-items:center;justify-content:center;color:#06110E;font-size:16px;font-weight:700">{{ o.icon }}</div>
-<div style="position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:7px;white-space:nowrap;font-size:12px;font-weight:620;color:var(--mx-ink);padding:2px 8px;border-radius:999px;background:var(--mx-strip);border:1px solid var(--mx-line);pointer-events:none">{{ o.label }}</div>
-</div>
-</sc-for>
-<sc-if value="{{ ezNoTracks }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none;text-align:center;padding:24px">
-<div style="width:74px;height:74px;border-radius:50%;border:2px dashed rgba(0,217,166,0.55);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--mx-mint)">＋</div>
-<div style="font-size:17px;font-weight:600">Drop a sound into the field</div>
-<div style="font-size:13px;color:var(--mx-dim);max-width:340px">Each part becomes a light. Drag it left or right to place it, up to push it back into the room, down to bring it close.</div>
-</div>
-</sc-if>
-<sc-if value="{{ fxSelOn }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;right:14px;top:14px;z-index:200;width:236px;padding:13px;border-radius:18px;background:rgba(14,22,27,0.94);backdrop-filter:blur(14px);color:#F2F6F8;border:1.5px solid {{ fxSelColor }};box-shadow:0 18px 44px rgba(0,0,0,0.35)">
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px"><span style="width:10px;height:10px;border-radius:50%;background:{{ fxSelColor }}"></span><span style="flex:1;min-width:0;font-size:14px;font-weight:620;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ fxSelTitle }}</span><button onClick="{{ fxSelClose }}" style="width:24px;height:24px;border:0;border-radius:7px;background:rgba(255,255,255,0.12);color:#F2F6F8;cursor:pointer">✕</button></div>
-<div style="font-size:11.5px;color:#B8C4CC;margin-bottom:10px">{{ fxSelInfo }}</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-<sc-for list="{{ fxSelActs }}" as="x" hint-placeholder-count="5"><button onClick="{{ x.go }}" style="padding:8px 6px;border:1px solid {{ x.border }};border-radius:10px;background:{{ x.bg }};color:{{ x.fg }};font-size:12px;font-weight:620;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ x.label }}</button></sc-for>
-</div>
-</div>
-</sc-if>
-<div style="position:absolute;left:16px;bottom:30px;z-index:150;display:flex;align-items:center;gap:12px">
-<button onClick="{{ ezPlay }}" disabled="{{ ezNoTracks }}" aria-label="{{ ezPlayAria }}" title="{{ ezPlayAria }}" style="flex:none;width:62px;height:62px;border-radius:50%;border:0;background:{{ ezPlayBg }};color:{{ ezPlayFg }};font-size:22px;cursor:{{ ezPlayCursor }};box-shadow:0 0 0 6px rgba(0,217,166,0.14),0 0 34px rgba(0,217,166,0.45)">{{ ezPlayIcon }}</button>
-<div data-clk="1" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--mx-mint);text-shadow:0 1px 4px #000">{{ mxClock }}</div>
-</div>
-</div>
+<div onDragOver="{{ ezDragOver }}" onDragLeave="{{ ezDragLeave }}" onDrop="{{ ezDrop }}" style="position:relative;border-radius:30px;padding:22px 22px 20px;overflow:hidden;background:radial-gradient(120% 90% at 0% 0%,rgba(0,217,166,0.16),transparent 55%),radial-gradient(90% 80% at 100% 100%,rgba(123,92,255,0.15),transparent 60%),rgba(var(--mx-rgb),0.03);border:1px solid var(--mx-line2)">
+  <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+    <div style="position:relative;flex:none;width:104px;height:104px">
+      <div style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,#00D9A6,#7B5CFF,#FF5C8A,#FFC24B,#00D9A6);animation:{{ kdSpin }};box-shadow:{{ kdGlow }}"></div>
+      <button onClick="{{ kdPlay }}" title="Play or stop the mix (Space)" style="position:absolute;inset:6px;border-radius:50%;border:0;background:var(--mx-bg);color:var(--mx-ink);font-size:36px;cursor:pointer;display:flex;align-items:center;justify-content:center">{{ kdIcon }}</button>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div style="font-size:11px;font-weight:660;letter-spacing:0.16em;color:var(--mx-mint)">{{ kdStatus }}</div>
+      <div style="font-family:Urbanist,Geist,sans-serif;font-size:28px;font-weight:640;letter-spacing:-0.6px;color:var(--mx-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ kdTitle }}</div>
+      <div style="font-size:13px;color:var(--mx-dim)">{{ kdMeta }}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div title="How balanced your mix sounds" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:16px;background:rgba(var(--mx-rgb),0.05);border:1px solid var(--mx-line2)">
+        <span style="font-size:11px;font-weight:660;letter-spacing:0.1em;color:var(--mx-dim)">MIX SCORE</span>
+        <span style="font-family:Urbanist,Geist,sans-serif;font-size:24px;font-weight:700;color:{{ fxScoreColor }}">{{ fxScore }}</span>
+      </div>
+      <button onClick="{{ kdMagic }}" title="Balance every sound automatically" style="padding:15px 20px;border:0;border-radius:16px;background:linear-gradient(135deg,#00D9A6,#7B5CFF);color:#fff;font-size:15px;font-weight:660;cursor:pointer;box-shadow:0 8px 26px rgba(123,92,255,0.35)">✦ Magic fix</button>
+    </div>
+  </div>
 
-<div style="display:grid;grid-template-columns:{{ fxMacroCols }};gap:10px">
-<sc-for list="{{ fxMacros }}" as="k" hint-placeholder-count="4">
-<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:var(--mx-well);border:1px solid var(--mx-line)">
-<div onPointerDown="{{ k.down }}" onDoubleClick="{{ k.reset }}" title="{{ k.hint }} · drag up or down · double-click to reset" style="flex:none;position:relative;width:58px;height:58px;border-radius:50%;background:conic-gradient(from 225deg,{{ k.color }} 0deg {{ k.arc }},var(--mx-strip2) {{ k.arc }} 270deg,transparent 270deg);cursor:ns-resize;touch-action:none;box-shadow:0 0 20px {{ k.glow }}">
-<div style="position:absolute;inset:6px;border-radius:50%;background:radial-gradient(circle at 40% 30%,var(--mx-grid),var(--mx-well));display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:600;color:var(--mx-ink)">{{ k.value }}</div>
-</div>
-<div style="min-width:0"><div style="font-size:13.5px;font-weight:620">{{ k.label }}</div><div style="font-size:11.5px;color:var(--mx-dim);line-height:1.35">{{ k.hint }}</div></div>
-</div>
-</sc-for>
-</div>
-<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
-<span style="font-size:10.5px;font-weight:700;letter-spacing:0.14em;color:var(--mx-dim);margin-right:4px">LOOKS</span>
-<sc-for list="{{ fxLooks }}" as="l" hint-placeholder-count="6"><button onClick="{{ l.go }}" style="padding:8px 14px;border:1px solid {{ l.border }};border-radius:999px;background:{{ l.bg }};color:{{ l.fg }};font-size:12.5px;font-weight:620;cursor:pointer">{{ l.label }}</button></sc-for>
+  <sc-if value="{{ kdNoPods }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:20px;padding:30px 16px;border-radius:22px;border:2px dashed var(--mx-line2);text-align:center;color:var(--mx-dim);font-size:14.5px;line-height:1.5">Your stage is empty.<br>Tap a sound on the right — or drop an audio file here.</div>
+  </sc-if>
+
+  <sc-if value="{{ kdHasPods }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:12px;margin-top:20px">
+      <sc-for list="{{ kdPods }}" as="d" hint-placeholder-count="3">
+        <div style="opacity:{{ d.op }};display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 10px 12px;border-radius:24px;background:linear-gradient(180deg,{{ d.glow }},rgba(var(--mx-rgb),0.02));border:1px solid {{ d.border }};box-shadow:0 12px 30px {{ d.shadow }};transition:opacity .2s">
+          <div style="position:relative;width:64px;height:64px;border-radius:50%;background:{{ d.glow }};border:2px solid {{ d.color }};display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden">
+            <div data-mtr="{{ d.mtr }}" style="position:absolute;left:0;right:0;bottom:0;height:0%;background:{{ d.color }};opacity:0.35"></div>
+            <span style="position:relative">{{ d.icon }}</span>
+          </div>
+          <div style="width:100%;text-align:center;min-width:0">
+            <div title="{{ d.name }}" style="font-size:13.5px;font-weight:640;color:var(--mx-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.name }}</div>
+            <div style="font-size:11.5px;color:var(--mx-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.kindLabel }} · {{ d.who }}</div>
+          </div>
+          <div onPointerDown="{{ d.drag }}" title="Drag up = louder · down = softer" style="position:relative;width:56px;height:150px;border-radius:20px;background:rgba(var(--mx-rgb),0.08);border:1px solid var(--mx-line2);cursor:ns-resize;touch-action:none;overflow:hidden">
+            <div style="position:absolute;left:0;right:0;bottom:0;height:{{ d.pct }};background:linear-gradient(to top,{{ d.color }},{{ d.glow }});box-shadow:0 0 22px {{ d.color }}"></div>
+            <div title="Normal level" style="position:absolute;left:8px;right:8px;bottom:{{ d.zero }};height:2px;border-radius:1px;background:var(--mx-ink);opacity:0.35"></div>
+            <div style="position:absolute;left:50%;bottom:{{ d.pct }};transform:translate(-50%,50%);width:42px;height:14px;border-radius:7px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.45)"></div>
+          </div>
+          <div style="font-size:12.5px;font-weight:680;letter-spacing:0.04em;color:{{ d.color }}">{{ d.loud }}</div>
+          <div style="display:flex;gap:6px;width:100%">
+            <button onClick="{{ d.mute }}" title="{{ d.muteTip }}" style="flex:1;height:40px;border-radius:13px;border:1px solid {{ d.muteBorder }};background:{{ d.muteBg }};color:var(--mx-ink);font-size:16px;cursor:pointer">{{ d.muteIcon }}</button>
+            <button onClick="{{ d.solo }}" title="Hear only this sound" style="flex:1;height:40px;border-radius:13px;border:1px solid {{ d.soloBorder }};background:{{ d.soloBg }};color:var(--mx-ink);font-size:16px;cursor:pointer">⭐</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:20px;font-size:11px;font-weight:660;letter-spacing:0.14em;color:var(--mx-dim)">SHAPE THE FEEL</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:8px">
+      <sc-for list="{{ kdFeels }}" as="f" hint-placeholder-count="4">
+        <div style="padding:12px 14px 10px;border-radius:18px;background:rgba(var(--mx-rgb),0.04);border:1px solid var(--mx-line2)">
+          <div style="display:flex;justify-content:space-between;gap:8px;font-size:13.5px;font-weight:640;color:var(--mx-ink);margin-bottom:9px"><span>{{ f.emoji }} {{ f.label }}</span><span style="color:{{ f.color }}">{{ f.word }}</span></div>
+          <div onPointerDown="{{ f.drag }}" onDoubleClick="{{ f.reset }}" title="Drag left or right · double-click to reset" style="position:relative;height:32px;border-radius:16px;background:rgba(var(--mx-rgb),0.08);cursor:ew-resize;touch-action:none">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:{{ f.pct }};border-radius:16px;background:linear-gradient(90deg,{{ f.soft }},{{ f.color }})"></div>
+            <div style="position:absolute;top:50%;left:{{ f.pct }};transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 0 14px {{ f.color }}"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mx-dim);margin-top:6px"><span>{{ f.lo }}</span><span>{{ f.hi }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:18px;font-size:11px;font-weight:660;letter-spacing:0.14em;color:var(--mx-dim)">PICK A VIBE</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+      <sc-for list="{{ fxLooks }}" as="l" hint-placeholder-count="6"><button onClick="{{ l.go }}" style="padding:11px 17px;border-radius:999px;border:1px solid {{ l.border }};background:{{ l.bg }};color:{{ l.fg }};font-size:13.5px;font-weight:620;cursor:pointer">{{ l.label }}</button></sc-for>
+    </div>
+  </sc-if>
 </div>
 
 
@@ -4420,6 +4432,47 @@ class Component extends DCLogic {
     const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); if (!moved) this.setState(s => ({ fxSel: s.fxSel === id ? null : id })); else if (ro) this.setCh(pid, id, { fader: 0 }); };
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
   }
+  kdDrag(e, fn, axis) {
+    if (e.button != null && e.button !== 0) return; if (e.preventDefault) e.preventDefault();
+    const el = e.currentTarget; if (!el) return; const r = el.getBoundingClientRect();
+    const val = ev => axis === 'y' ? 1 - (ev.clientY - r.top) / r.height : (ev.clientX - r.left) / r.width;
+    const go = ev => fn(Math.max(0, Math.min(1, val(ev))));
+    go(e);
+    const move = ev => { this._kdPend = () => go(ev); if (!this._kdRaf) this._kdRaf = requestAnimationFrame(() => { this._kdRaf = null; const f = this._kdPend; this._kdPend = null; if (f) f(); }); };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+  }
+  kidVals(p) {
+    const s = this.state, pid = p.id, lanes = this.mxAudio(p, true);
+    const anySolo = lanes.some(x => this.chOf(p, x.id).solo);
+    const ICON = { acapella: '🎤', melody: '🎹', instrumental: '🥁', song: '💿' }, LBL = { acapella: 'Voice', melody: 'Melody', instrumental: 'Beat', song: 'Song' };
+    const COL = { acapella: '#FF5C8A', melody: '#7B9CFF', instrumental: '#00D9A6', song: '#FFC24B' };
+    const colOf = k => (KC[k] && KC[k][0]) || COL[k] || '#00D9A6';
+    const restart = () => { if (this._g && this._gPid === pid) { const pos = this.mxPos(); requestAnimationFrame(() => this.mxStart(this.proj(pid), pos)); } };
+    const zero = (this.dbToPos(0) * 100).toFixed(1) + '%';
+    const pods = lanes.map(x => {
+      const k = this.chOf(p, x.id), col = colOf(x.kind), out = !k.on || k.mute || (anySolo && !k.solo);
+      const loud = !k.on ? 'OFF' : k.mute ? 'MUTED' : k.fader <= -40 ? 'WHISPER' : k.fader < -14 ? 'SOFT' : k.fader < -4 ? 'MEDIUM' : k.fader < 2.5 ? 'LOUD' : 'MAX';
+      return { id: x.id, icon: ICON[x.kind] || '🎵', name: x.title, kindLabel: LBL[x.kind] || 'Sound', who: ((this.U(x.owner) || {}).name || '').split(' ')[0], color: col,
+        glow: col + '2E', border: k.solo ? col : 'var(--mx-line2)', shadow: out ? 'transparent' : col + '24', op: out ? '0.45' : '1',
+        pct: (this.dbToPos(k.fader) * 100).toFixed(1) + '%', zero, loud, mtr: x.id + ':L',
+        drag: e => this.kdDrag(e, v => this.setCh(pid, x.id, { fader: Math.round(this.posToDb(v) * 2) / 2 }), 'y'),
+        mute: () => { if (!k.on) { this.setCh(pid, x.id, { on: true, mute: false }); restart(); return; } this.setCh(pid, x.id, { mute: !k.mute }); },
+        muteIcon: !k.on ? '⏻' : k.mute ? '🔇' : '🔊', muteTip: !k.on ? 'Turn this sound on' : k.mute ? 'Unmute' : 'Mute',
+        muteBg: k.mute || !k.on ? 'rgba(255,107,87,0.18)' : 'rgba(var(--mx-rgb),0.06)', muteBorder: k.mute || !k.on ? 'rgba(255,107,87,0.55)' : 'var(--mx-line2)',
+        solo: () => this.setCh(pid, x.id, { solo: !k.solo }), soloBg: k.solo ? col + '40' : 'rgba(var(--mx-rgb),0.06)', soloBorder: k.solo ? col : 'var(--mx-line2)' };
+    });
+    const V = Object.assign({ energy: 50, space: 50, warmth: 50, width: 50 }, (p.mix || {}).__macro);
+    const FE = [['energy', '⚡', 'Energy', 'Calm', 'Hype', '#FF8A5C'], ['space', '🌌', 'Space', 'Small room', 'Huge hall', '#B07CFF'], ['warmth', '🔥', 'Warmth', 'Bright', 'Warm', '#FFC24B'], ['width', '↔', 'Width', 'Narrow', 'Wide', '#5B8CFF']];
+    const feels = FE.map(([key, emoji, label, lo, hi, color]) => { const v = +V[key] || 0; return { emoji, label, lo, hi, color, soft: color + '40', pct: Math.max(0, Math.min(100, v)).toFixed(1) + '%', word: v < 30 ? lo : v > 70 ? hi : 'Balanced',
+      drag: e => this.kdDrag(e, r => this.fxVibe(pid, { [key]: Math.round(r * 100) }), 'x'), reset: () => this.fxVibe(pid, { [key]: 50 }) }; });
+    const playing = s.mixPid === pid;
+    return { kdHasPods: pods.length > 0, kdNoPods: !pods.length, kdPods: pods, kdFeels: feels,
+      kdPlay: () => this.togglePlay(), kdIcon: playing ? '■' : '▶', kdSpin: playing ? 'kdSpin 2.6s linear infinite' : 'none',
+      kdGlow: playing ? '0 0 48px rgba(0,217,166,0.55)' : '0 0 18px rgba(0,217,166,0.18)', kdStatus: playing ? '● NOW PLAYING' : 'READY TO PLAY',
+      kdTitle: p.title, kdMeta: (p.bpm || 90) + ' BPM · ' + (p.key || 'F min') + ' · ' + pods.length + (pods.length === 1 ? ' sound' : ' sounds'),
+      kdMagic: () => this.mxAutoMix(pid) };
+  }
   fxVals(p) {
     const s = this.state, pid = p.id, w = s.w || 1200, all = this.mxAudio(p, true), anySolo = all.some(x => this.chOf(p, x.id).solo), V = Object.assign({ energy: 50, space: 50, warmth: 50, width: 50 }, p.mix.__macro);
     const KC = { acapella: ['#FF8A5C', '#8C2B1E', '◉', 'Vocal'], instrumental: ['#00D9A6', '#05523F', '▦', 'Beat'], melody: ['#7B9BFF', '#1E2E7A', '〰', 'Melody'], song: ['#C08BFF', '#4A2E8C', '♫', 'Song'] };
@@ -5349,7 +5402,7 @@ class Component extends DCLogic {
     if (mp && !this._prepP && this.matchSig(mp) !== this._matchSig) setTimeout(() => this.mxPrepare(mp.id), 0);
     return {
       ...MOB, phone, signedInWide: !!s.acct && !phone,
-      ...this.inboxVals(s), ...MX, ...this.patVals(s), ...(mp ? this.ezVals(mp) : {}), mxBottom: phone ? 'calc(64px + env(safe-area-inset-bottom))' : '0px', mxLeft: phone ? '0px' : '92px', ...(mp ? this.fxVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
+      ...this.inboxVals(s), ...MX, ...this.patVals(s), ...(mp ? this.ezVals(mp) : {}), mxBottom: phone ? 'calc(64px + env(safe-area-inset-bottom))' : '0px', mxLeft: phone ? '0px' : '92px', ...(mp ? this.fxVals(mp) : {}), ...(mp ? this.kidVals(mp) : {}), ...DESK, ...AUTH, ...acctVals, ...PE, ...SH, ...CR, ...SW,
       askLogout: () => this.setState({ sheet: { type: 'switch' } }), signedIn: !!s.acct,
       askLogoutOld: () => this.setState({ sheet: { type: 'confirm', title: 'Log out of Ellipsis?', body: 'Your work is saved' + (s.acct && s.acct.token ? ' to your account — sign back in on any device to pick up where you left off.' : ' on this device and will be here when you sign back in.'), cta: 'Log out', go: () => { this.setState({ sheet: null }); if (this._api && s.acct && s.acct.token) this.api('logout', { body: {} }).catch(() => {}); this.signOut(); this.flash('Logged out'); } } }),
       inviteNote: s.acct && s.acct.refCode ? 'You both get a month of Premium when they release a song' : 'Share Ellipsis with collaborators',
