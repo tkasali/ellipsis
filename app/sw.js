@@ -1,6 +1,6 @@
 /* Ellipsis offline shell. Bump CACHE on every deploy. */
-var CACHE = 'ellipsis-v81';
-var CORE = ["support.js","manifest.webmanifest","assets/audio/lofi.wav","assets/audio/afrobeats.wav","assets/audio/neosoul.wav","assets/audio/drill.wav","assets/audio/house.wav","assets/audio/ambient.wav"];
+var CACHE = 'ellipsis-v85';
+var CORE = ['hitgen.js?v=1', "support.js","manifest.webmanifest","assets/audio/lofi.wav","assets/audio/afrobeats.wav","assets/audio/neosoul.wav","assets/audio/drill.wav","assets/audio/house.wav","assets/audio/ambient.wav"];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {

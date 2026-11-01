@@ -2182,7 +2182,7 @@ LIB.forEach(x => { ART[x[0]] = ART[LIB_ART[x[2]]]; });
 const HITS = [["hit01","Neon Cathedral","pop","Pop","Dance","Little Dragon",171,"F min"],["hit02","Lagos After Dark","afro","Afrobeats","Summer","Tems",112,"A min"],["hit03","Diamond Fever","hiphop","Hip-hop","Gritty","Central Cee",140,"C# min"],["hit04","Fuego Lento","afro","Latin","Summer","Burna Boy",94,"G min"],["hit05","Salt & Sunlight","house","House","Summer","Kaytranada",120,"D maj"],["hit06","Velvet Hours","rnb","R&B","Late night","Frank Ocean",72,"Eb maj"],["hit07","Afterglow","pop","Pop","Hopeful","Little Dragon",126,"B maj"],["hit08","Dust & Daylight","pop","Pop","Warm","Sampha",100,"G maj"],["hit09","Midnight Signal","pop","Pop","Night drive","The Weeknd",171,"F min"],["hit10","Gold Teeth Summer","afro","Afrobeats","Sunny","Rema",108,"D dor"],["hit11","Lavender Smoke","rnb","R&B","Late night","SZA",72,"Eb maj"],["hit12","Concrete Halo","drill","Drill","Cold","Central Cee",142,"G min"],["hit13","Pulse in Pesos","afro","Reggaeton","Heat","Bad Bunny",96,"A min"],["hit14","Shiver Theory","house","House","Euphoric","Fred again..",124,"C min"],["hit15","Amber Sirens","afro","Amapiano","Groove","Tyla",113,"E dor"],["hit16","Little Wars","pop","Pop","Bittersweet","Olivia Rodrigo",104,"D maj"],["hit17","Velour","house","Disco","Glam","Dua Lipa",118,"B dor"],["hit18","Glass Mile","house","UK Garage","Rainy","PinkPantheress",132,"F# min"],["hit19","Saint of the Afterparty","hiphop","Trap","Dark","Travis Scott",140,"C# phr"],["hit20","Ocean in a Paper Cup","neo","Ballad","Tender","Adele",76,"Ab maj"],["hit21","Heartbeat Hotline","pop","K-pop","Electric","NewJeans",128,"A min"],["hit22","Backroad Neon","lofi","Country","Open road","Morgan Wallen",96,"G maj"],["hit23","Mirror Talk","hiphop","Jersey Club","Playful","Ice Spice",140,"D min"],["hit24","Sunday Fever","neo","Gospel Pop","Uplifting","Jon Batiste",88,"F maj"],["hit25","Drift King","drill","Phonk","Aggressive","Kordhell",130,"E phr"],["hit26","Salt & Static","house","Indie Dance","Hazy","Tame Impala",120,"G dor"],["hit27","Lagos Velvet","rnb","Afro-R&B","Smooth","Wizkid",100,"B min"],["hit28","Higher Than the Skyline","pop","EDM","Anthem","Calvin Harris",126,"C maj"]];
 HITS.forEach(x => { ART[x[0]] = ART[LIB_ART[x[2]]] || ART.pop; });
 const KIND = { instrumental:['Instrumental','Instrumentals','♫'], lyric:['Lyric','Lyrics','✎'], melody:['Melody','Melodies','〰'], acapella:['Acapella','Acapellas','◉'], song:['Song','Songs','▶'] };
-const GENRES = ['Lo-fi','Afrobeats','Neo-soul','Drill','House','Ambient','R&B','Hip-hop','Pop','Jazz','Latin'];
+const GENRES = ['Lo-fi','Afrobeats','Neo-soul','Drill','House','Ambient','R&B','Hip-hop','Pop','Jazz','Latin', 'Trap', 'Rock', 'Country'];
 const MOODS = ['Late night','Warm','Rainy','Summer','Heartbreak','Chill','Dance','Cinematic','Hopeful','Gritty'];
 const LIKES = ['Little Dragon','Sampha','Tems','Cleo Sol','Nujabes','Kaytranada','Burna Boy','Central Cee','Nils Frahm','Ólafur Arnalds','Frank Ocean'];
 const NEEDS = ['Vocals','Lyrics','Melody','Bass','Drums','Keys','Guitar','Cello','Strings','Horns','Mixing','Percussion'];
@@ -2239,6 +2239,40 @@ const STOCK_LYRICS = [
    [file, title, genre, mood, soundsLike, bpm, key, lyrics, downbeatSeconds, artKey] */
 const VOX = [["vox01","Gold in the Rain","Pop","Hopeful","Little Dragon",116,"A min","We were gold in the rain tonight\nDancing slow under city light\nWe were gold in the rain tonight\nHold me close and we will be alright",2.069,"pop"],["vox02","Say My Name Slow","R&B","Late night","Frank Ocean",86,"E♭ maj","Say my name slow like a secret\nOnly you know how to keep it\nSay my name slow like a secret\nBaby please do not ever leave it",2.791,"rnb"],["vox03","Lagos to London","Afrobeats","Summer","Burna Boy",104,"G min","From Lagos to London we dance all night\nYour body moving like the morning light\nFrom Lagos to London we dance all night\nOh my baby you feel so right",2.308,"afrobeats"],["vox04","Neon Heartbeat","Pop","Dance","Kaytranada",122,"F min","Neon heartbeat turn it up\nEvery color fill my cup\nNeon heartbeat turn it up\nI can never get enough",1.967,"pop"],["vox05","Paper Planes and Promises","Lo-fi","Chill","Nujabes",82,"F maj","Paper planes and promises\nFloating where the morning is\nPaper planes and promises\nI will wait for you like this",2.927,"lofi"],["vox06","Crown on My Head","Hip-hop","Gritty","Central Cee",92,"C min","I got a crown on my head\nDoing everything I said\nI got a crown on my head\nNever looking back again",2.609,"hiphop"],["vox07","Slow Burn","Neo-soul","Warm","Cleo Sol",88,"E♭ maj","Slow burn take your time with me\nLove is all I need to be free\nSlow burn take your time with me\nStay a while and let it be",2.727,"neosoul"],["vox08","Midnight in Accra","Afrobeats","Late night","Tems",100,"A min","Midnight in Accra the stars come down\nMoving to the rhythm of the town\nMidnight in Accra the stars come down\nSpin me round and round and round",2.4,"afrobeats"],["vox09","Better Days","Pop","Hopeful","Sampha",96,"G maj","Better days are coming home\nYou will never walk alone\nBetter days are coming home\nLight the way and let it show",2.5,"pop"],["vox10","Run It Back","R&B","Summer","Frank Ocean",94,"D min","Run it back run it back\nTell me where the summer at\nRun it back run it back\nBaby I want all of that",2.553,"rnb"],["vox11","Blue Hour","Ambient","Cinematic","Ólafur Arnalds",70,"D maj","In the blue hour I can hear you\nEvery quiet word is near you\nIn the blue hour I can hear you\nClose your eyes and I am here too",3.429,"ambient"],["vox12","Pull Up","Drill","Gritty","Central Cee",142,"F min","Pull up pull up lights on\nWe do not stop till the night is gone\nPull up pull up lights on\nRun the city with the bass strong",1.69,"drill"],["vox13","Higher Love Again","House","Dance","Kaytranada",124,"A min","Take me higher higher love\nRain it down from up above\nTake me higher higher love\nYou are the one that I am thinking of",1.935,"house"],["vox14","Sugar Water","R&B","Warm","Cleo Sol",90,"B♭ maj","Sugar water on my lips\nEvery time you hold my hips\nSugar water on my lips\nGot me falling falling for this",2.667,"rnb"],["vox15","Wildfire","Pop","Summer","Little Dragon",112,"C maj","We go wild like a fire\nEvery night we are getting higher\nWe go wild like a fire\nYou and me we never tire",2.143,"pop"],["vox16","Home Is You","Neo-soul","Warm","Sampha",84,"G maj","Home is you home is you\nEvery road I walk leads back to you\nHome is you home is you\nNothing else will ever do",2.857,"neosoul"],["vox17","Dance in the Kitchen","Afrobeats","Summer","Burna Boy",108,"D maj","Dance in the kitchen girl come close\nTurn the music up the most\nDance in the kitchen girl come close\nYou are the one I love the most",2.222,"afrobeats"],["vox18","Rainy Day Radio","Lo-fi","Rainy","Nujabes",78,"C maj","Rainy day radio play it low\nWindow open let it go\nRainy day radio play it low\nOnly you and me will know",3.077,"lofi"],["vox19","No Sleep City","House","Late night","Kaytranada",120,"E min","No sleep in the city tonight\nRunning every red light\nNo sleep in the city tonight\nWe just want to feel alive",2,"house"],["vox20","Diamonds in the Dark","Hip-hop","Late night","Frank Ocean",88,"A min","We were diamonds in the dark\nShining from the very start\nWe were diamonds in the dark\nNothing gonna break my heart",2.727,"hiphop"],["vox21","Golden Hour Love","R&B","Hopeful","Tems",98,"F maj","Golden hour love stay with me\nYou are the only one I see\nGolden hour love stay with me\nThis is where I am meant to be",2.449,"rnb"],["vox22","Free","Neo-soul","Hopeful","Cleo Sol",76,"E♭ maj","I am free I am free\nNothing holding on to me\nI am free I am free\nNow the whole world gets to see",3.158,"neosoul"],["vox23","Afterparty","House","Dance","Kaytranada",126,"G min","Meet me at the afterparty\nMove your body move your body\nMeet me at the afterparty\nEvery single somebody",1.905,"house"],["vox24","Sweet Like Mango","Afrobeats","Summer","Burna Boy",102,"B♭ maj","Sweet like mango in the sun\nBaby you are the only one\nSweet like mango in the sun\nTell me that you never run",2.353,"afrobeats"],["vox25","Velvet","R&B","Late night","Frank Ocean",80,"C min","Velvet night velvet sky\nHold me tight do not say goodbye\nVelvet night velvet sky\nStay with me until we fly",3,"rnb"],["vox26","Stars Align","Pop","Cinematic","Little Dragon",110,"D maj","When the stars align for you and me\nWe will be who we are meant to be\nWhen the stars align for you and me\nHold my hand and we will be free",2.182,"pop"],["vox27","Hold On","Neo-soul","Heartbreak","Sampha",72,"A maj","Hold on hold on to me\nEven when the night is cold\nHold on hold on to me\nNever gonna let you go",3.333,"neosoul"],["vox28","Bounce","Hip-hop","Dance","Central Cee",96,"F min","Make it bounce make it bounce\nEvery little bit counts\nMake it bounce make it bounce\nTurn it up it is going down",2.5,"hiphop"],["vox29","Moonlight Mantra","Ambient","Chill","Nils Frahm",68,"F maj","Breathe in breathe out the moon is low\nLet the quiet river flow\nBreathe in breathe out the moon is low\nEvery wave will take you home",3.529,"ambient"],["vox30","Fly Away","Pop","Hopeful","Tems",106,"G maj","We could fly away fly away\nLeave it all behind today\nWe could fly away fly away\nNothing is gonna make me stay",2.264,"pop"]];
 VOX.forEach(v => { ART[v[0]] = ART[v[9]] || ART.lofi; });
+const GEN_GENRES = [
+  ['pop', 'Pop', [100, 124], ['major', 'minor', 'major', 'dorian'], ['Euphoric', 'Bright', 'Bittersweet', 'Dancing'], ['Dua Lipa', 'The Weeknd', 'Taylor Swift', 'Harry Styles', 'Olivia Rodrigo'], 'neon'],
+  ['hiphop', 'Hip-hop', [84, 96], ['minor', 'dorian'], ['Gritty', 'Smooth', 'Nostalgic', 'Confident'], ['Kendrick Lamar', 'J. Cole', 'Mac Miller', 'Little Simz', 'Nas'], 'gold'],
+  ['trap', 'Trap', [130, 150], ['minor', 'phryg', 'harm'], ['Dark', 'Hype', 'Cold', 'Menacing'], ['Travis Scott', 'Metro Boomin', 'Future', '21 Savage', 'Don Toliver'], 'night'],
+  ['rnb', 'R&B', [66, 90], ['major', 'minor', 'dorian'], ['Late night', 'Tender', 'Sultry', 'Dreamy'], ['SZA', 'Frank Ocean', 'Daniel Caesar', 'H.E.R.', 'Brent Faiyaz'], 'velvet'],
+  ['rock', 'Rock', [108, 150], ['mixo', 'minor', 'major'], ['Anthemic', 'Raw', 'Driving', 'Rebel'], ['Arctic Monkeys', 'Foo Fighters', 'Paramore', 'The Killers', 'Royal Blood'], 'fire'],
+  ['afro', 'Afrobeats', [100, 112], ['major', 'dorian', 'minor'], ['Sunny', 'Groove', 'Joyful', 'Smooth'], ['Burna Boy', 'Wizkid', 'Tems', 'Rema', 'Ayra Starr'], 'sun'],
+  ['latin', 'Latin', [88, 100], ['minor', 'harm'], ['Heat', 'Sensual', 'Party', 'Romantic'], ['Bad Bunny', 'Karol G', 'Rosalía', 'J Balvin', 'Peso Pluma'], 'heat'],
+  ['house', 'House', [120, 128], ['minor', 'dorian', 'major'], ['Euphoric', 'Deep', 'Late night', 'Uplifting'], ['Fred again..', 'Disclosure', 'Peggy Gou', 'Calvin Harris', 'Fisher'], 'pulse'],
+  ['lofi', 'Lo-fi', [70, 88], ['major', 'dorian', 'minor'], ['Chill', 'Rainy', 'Study', 'Warm'], ['Nujabes', 'J Dilla', 'Tom Misch', 'Jinsang', 'Kiefer'], 'rain'],
+  ['country', 'Country', [88, 118], ['major', 'mixo'], ['Open road', 'Heartfelt', 'Front porch', 'Hopeful'], ['Morgan Wallen', 'Kacey Musgraves', 'Zach Bryan', 'Chris Stapleton', 'Luke Combs'], 'dust']
+];
+const GEN_KINDS = [['beat', 'instrumental', 'Beat'], ['melody', 'melody', 'Melody'], ['voice', 'acapella', 'Voice']];
+const GEN_A = ['Midnight', 'Golden', 'Velvet', 'Neon', 'Silver', 'Crimson', 'Electric', 'Paper', 'Glass', 'Satellite', 'Honey', 'Concrete', 'Cobalt', 'Wild', 'Quiet', 'Burning', 'Lucid', 'Static', 'Ocean', 'Desert', 'Ivory', 'Royal', 'Lunar', 'Solar', 'Hidden', 'Faded', 'Brave', 'Sugar', 'Thunder', 'Amber', 'Lavender', 'Copper', 'Atlas', 'Rebel', 'Saint', 'Holy', 'Cherry', 'Diamond', 'Smoke', 'Northern', 'Southern', 'Pacific', 'Echo', 'Phantom', 'Polar', 'Tropic', 'Vintage', 'Infinite', 'Broken', 'Stellar'];
+const GEN_N = ['Hearts', 'Highway', 'Signal', 'Dreams', 'Fever', 'Avenue', 'Skyline', 'Garden', 'Engine', 'Mirror', 'Ritual', 'Orbit', 'Tides', 'Lights', 'Motion', 'Riot', 'Bloom', 'Cassette', 'Halo', 'Rodeo', 'Kingdom', 'Voltage', 'Paradise', 'Shadows', 'Waves', 'Fire', 'Rain', 'Static', 'Gravity', 'Horizon', 'Parade', 'Ghosts', 'Satin', 'Marble', 'Arcade', 'Lantern', 'Compass', 'Embers', 'Canyon', 'Velocity', 'Sermon', 'Siren', 'Mosaic', 'Prism', 'Harbor', 'Frontier', 'Anthem', 'Season', 'Pulse', 'Daybreak'];
+function buildGenCatalog() {
+  const out = [], used = new Set(), NAMES = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'], SUF = { major: 'maj', minor: 'min', dorian: 'dor', mixo: 'maj', harm: 'min', phryg: 'phr' };
+  let n = 0;
+  GEN_GENRES.forEach(([g, label, [lo, hi], scales, moods, likes, art], gi) => {
+    GEN_KINDS.forEach(([k, kind, kl], ki) => {
+      for (let i = 0; i < 10; i++) {
+        n++;
+        const seed = 1009 + gi * 1013 + ki * 211 + i * 37, bpm = lo + Math.round((hi - lo) * (((i * 7 + ki * 3 + gi) % 10) / 9));
+        const root = 55 + ((gi * 5 + i * 7 + ki * 3) % 12), scale = scales[(i + ki) % scales.length];
+        let t, j = 0; do { t = GEN_A[(n * 7 + j * 13 + gi) % GEN_A.length] + ' ' + GEN_N[(n * 11 + j * 3 + ki) % GEN_N.length]; j++; } while (used.has(t)); used.add(t);
+        out.push({ id: 'g' + String(n).padStart(3, '0'), kind, title: t + ' · ' + kl, owner: 'lib', stock: true, original: true, url: null, file: art,
+          gen: { g, k, seed, bpm, root, scale, prog: i, v: i }, bpm, key: NAMES[root % 12] + ' ' + SUF[scale],
+          tags: { genre: [label], mood: [moods[(i + ki) % moods.length]], like: [likes[(i + gi) % likes.length]] }, sections: null, published: false, spikes: 0, week: 0, year: 0, created: -2000 - n, rate: 1, uses: 120 + ((n * 37) % 880) });
+      }
+    });
+  });
+  return out;
+}
+
 function buildStock() {
   const out = []; let r = 97; const rnd = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
   const plan = [['instrumental', 220], ['melody', 130], ['acapella', 90], ['lyric', 80]];
@@ -2262,12 +2296,13 @@ function buildStock() {
       if (kind === 'lyric') {
         const a = STOCK_LYRICS[n % STOCK_LYRICS.length], b = STOCK_LYRICS[(n * 3 + 1) % STOCK_LYRICS.length];
         it.title = name + ' — lyric starter'; it.sections = [a, b].map(([type, text], i) => ({ id: 'ls' + n + '_' + i, type, text, by: 'lib' }));
-      } else it.title = name + ' — ' + SUFFIX[kind][(n + k) % 5];
+      } else { it.title = name + ' — ' + SUFFIX[kind][(n + k) % 5]; it.hidden = true; }
       out.push(it);
     }
   });
   /* The 28 Ellipsis originals live in every account's Library → Songs. Stock items always come from the current build. */
   HITS.forEach(([file, title, g, genre, mood, like, bpm, key], k) => out.push({ id: 'hs' + file, kind: 'song', title, owner: 'lib', file, url: null, tags: { genre: [genre], mood: [mood], like: [like] }, sections: null, published: false, spikes: 0, week: 0, year: 0, created: -500 - k, stock: true, rate: 1, bpm, key, original: true, uses: Math.round(900 + (28 - k) * 61) }));
+  buildGenCatalog().forEach(x => out.push(x));
   return out;
 }
 
@@ -2508,6 +2543,7 @@ class Component extends DCLogic {
   users = buildUsers();
   userMap = Object.assign(Object.fromEntries(this.users.map(u => [u.id, u])), { lib: { id: 'lib', name: 'Ellipsis Sounds', city: 'Everywhere', tz: 0, role: 'Royalty-free starter library', initials: 'ES', avatar: '#0C1318', grad: 'linear-gradient(135deg,#00D9A6,#0C1318)', g1: '#00D9A6', g2: '#0C1318', followers: 0, followingN: 0, bio: 'Free parts for every Ellipsis account. Use them in any project and release — no clearance needed, no split owed.', handle: '@ellipsissounds', skills: ['Samples'], exec: false } });
   stock = buildStock();
+  stockVis = this.stock.filter(x => !x.hidden);
   stockMap = Object.fromEntries(this.stock.map(x => [x.id, x]));
   blobs = {};
   scrollRef = React.createRef();
@@ -3361,7 +3397,7 @@ class Component extends DCLogic {
 
   /* audio */
   srcOf(it) {
-    if (it.takeKey) return this.blobs[it.takeKey] || (it.remote ? new URL(it.remote, location.href).href : null);
+    if (it.gen && !it.url) return null; if (it.takeKey) return this.blobs[it.takeKey] || (it.remote ? new URL(it.remote, location.href).href : null);
     if (it.url) return it.url;
     if (it.remote) return new URL(it.remote, location.href).href;
     return 'assets/audio/' + (it.file || 'lofi') + '.wav';
@@ -3429,9 +3465,26 @@ class Component extends DCLogic {
     this.skip(1);
   }
   playNow(id) { this._forcePlay = true; this.play(id); }
+  genLoad() { return this._genP || (this._genP = new Promise((res, rej) => { if (window.GEN) return res(); const sc = document.createElement('script'); sc.src = 'hitgen.js?v=1'; sc.onload = () => res(); sc.onerror = () => { this._genP = null; rej(new Error('load')); }; document.head.appendChild(sc); })); }
+  genReady(it) {
+    if (!it || !it.gen || it.url) return Promise.resolve(true);
+    this._genQ = this._genQ || {}; if (this._genQ[it.id]) return this._genQ[it.id];
+    const key = 'gen1-' + it.id;
+    return (this._genQ[it.id] = (async () => {
+      try {
+        let blob = await this.idb('readonly', st => st.get(key));
+        if (!(blob instanceof Blob)) { await this.genLoad(); blob = await window.GEN.render(it.gen); this.idb('readwrite', st => st.put(blob, key)); }
+        it.url = URL.createObjectURL(blob); const live = this.item(it.id); if (live && live !== it) live.url = it.url;
+        if (!this._unmounted) this.forceUpdate(); return true;
+      } catch (e) { this.flash('Couldn’t compose this sound in this browser — try Chrome, Edge or Safari'); return false; }
+      finally { delete this._genQ[it.id]; }
+    })());
+  }
+  async genEnsure(list) { const todo = (list || []).filter(x => x && x.gen && !x.url); if (!todo.length) return; this.setState({ mxLoading: true }); for (const x of todo) await this.genReady(x); }
   play(id) {
     if (this.state.ad) { this.flash('Your music resumes after this short ad — or go Premium for no ads'); return; }
     const it = this.item(id); if (!it) { this._forcePlay = false; return; }
+    if (it.gen && !it.url) { this.flash('🎼 Composing “' + it.title.split(' · ')[0] + '” — a few seconds the first time, instant after'); this._genPending = id; this.genReady(it).then(ok => { if (ok && this._genPending === id) { this._genPending = null; this.play(id); } }); return; }
     if (!this._forcePlay && it.kind === 'song' && this.state.curId !== id && this.adsOn() && (this.state.adSince || 0) >= AD_EVERY) { this.playAd(this.state.curId, () => this.playNow(id)); return; }
     if (!this._forcePlay && it.kind === 'song' && this.state.curId !== id) this.setState(st => ({ adSince: (st.adSince || 0) + 1 }));
     this._forcePlay = false;
@@ -3850,7 +3903,7 @@ class Component extends DCLogic {
   }
   ensureCtx() { const C = window.AudioContext || window.webkitAudioContext; if (!this._ctx) this._ctx = new C(); if (this._ctx.state === 'suspended') { const r = this._ctx.resume(); if (r && r.catch) r.catch(() => {}); } return this._ctx; }
   async mxLoad(p) {
-    const ctx = this.ensureCtx(); this._bufs = this._bufs || {}; this._peaks = this._peaks || {};
+    const ctx = this.ensureCtx(); this._bufs = this._bufs || {}; this._peaks = this._peaks || {}; await this.genEnsure(this.mxAudio(p, true)); p = this.proj(p.id) || p;
     const need = this.mxAudio(p, true).filter(x => this.srcOf(x) && !(this._bufs[x.id] && this._bufs[x.id].src === this.srcOf(x)));
     if (!need.length) return;
     this.setState({ mxLoading: true });
@@ -4194,7 +4247,7 @@ class Component extends DCLogic {
     }
     if (lanes.length > 1 && lanes.some(x => x.kind === 'acapella') && lanes.some(x => x.kind !== 'acapella') && p.mix.__duck !== false) chips.push(['🎤', 'Beat dips under the vocal']);
     const tab = s.ezTab || 'Voices', q = (s.ezQ || '').trim().toLowerCase(), want = { Voices: 'acapella', Beats: 'instrumental', Melodies: 'melody', Songs: 'song' }[tab];
-    let pool = tab === 'Yours' ? s.items.filter(x => x.owner === 'me' && /instrumental|melody|acapella|song/.test(x.kind)) : s.items.filter(x => x.kind === want && (x.owner === 'me' || x.published)).concat(this.stock.filter(x => x.kind === want));
+    let pool = tab === 'Yours' ? s.items.filter(x => x.owner === 'me' && /instrumental|melody|acapella|song/.test(x.kind)) : s.items.filter(x => x.kind === want && (x.owner === 'me' || x.published)).concat(this.stockVis.filter(x => x.kind === want));
     pool = pool.filter(x => p.items.indexOf(x.id) < 0 && (!q || (x.title + ' ' + x.tags.genre.join(' ') + ' ' + x.tags.mood.join(' ') + ' ' + x.tags.like.join(' ') + ' ' + U(x.owner).name).toLowerCase().indexOf(q) >= 0));
     const LM = this._matchMeta && this._matchMeta.pid === pid && lanes.length ? this._matchMeta : null;
     const relK = k => (k.pc + (k.minor ? 3 : 0)) % 12;
@@ -4808,7 +4861,7 @@ class Component extends DCLogic {
       navCreateW: '72px', navCreatePad: '10px 0 8px', navBtnFlex: 'none', navBtnW: '72px', navBtnPad: '8px 0 7px', navLblFs: '12px', mainCol: '2', footCol: '1 / span 2', footGap: '20px', footPad: '0 24px',
       hdrGap: '12px', hdrPad: w < 1000 ? '12px 18px' : '13px 30px', bodyPad: w < 1000 ? '22px 18px 50px' : '26px 30px 56px', notPhone: true, hdrThemeD: 'flex', showPremiumBtn: !s.premium
     };
-    const cur = I.find(x => x.id === s.curId) || I[0];
+    const cur = this.item(s.curId) || I[0];
     const dur = s.dur || 0, prog = dur ? Math.min(1, s.time / dur) : 0;
     const onNow = id => s.curId === id && s.playing;
     const spk = it => it.spikes + (s.spiked[it.id] ? 1 : 0);
@@ -4955,7 +5008,7 @@ class Component extends DCLogic {
     /* library */
     const libKinds = ['instrumental', 'lyric', 'melody', 'acapella', 'song', 'favs'];
     const stockOn = s.view === 'library' && s.libSrc === 'stock' && s.libTab !== 'favs' && s.libTab !== 'song';
-    const libBase = stockOn ? this.stock.filter(x => x.kind === s.libTab && (s.libGenre === 'All' || x.tags.genre.indexOf(s.libGenre) >= 0)) : s.libTab === 'favs' ? I.concat(this.stock).filter((x, i, arr) => s.favs[x.id] && arr.findIndex(y => y.id === x.id) === i) : I.filter(x => x.kind === s.libTab && (x.owner === 'me' || P.some(p => this.isMember(p) && p.items.indexOf(x.id) >= 0))).concat(s.libTab === 'song' ? this.stock.filter(x => x.kind === 'song' && !I.some(y => y.id === x.id)) : []);
+    const libBase = stockOn ? this.stockVis.filter(x => x.kind === s.libTab && (s.libGenre === 'All' || x.tags.genre.indexOf(s.libGenre) >= 0)) : s.libTab === 'favs' ? I.concat(this.stock).filter((x, i, arr) => s.favs[x.id] && arr.findIndex(y => y.id === x.id) === i) : I.filter(x => x.kind === s.libTab && (x.owner === 'me' || P.some(p => this.isMember(p) && p.items.indexOf(x.id) >= 0))).concat(s.libTab === 'song' ? this.stockVis.filter(x => x.kind === 'song' && !I.some(y => y.id === x.id)) : []);
     const lq = s.libQ.trim().toLowerCase();
     const libAll = libBase.filter(x => !lq || (x.title + ' ' + U(x.owner).name + ' ' + x.tags.genre.join(' ') + ' ' + x.tags.mood.join(' ') + ' ' + x.tags.like.join(' ')).toLowerCase().indexOf(lq) >= 0);
     const libCap = stockOn ? 40 + s.libMore * 40 : 1e9, libList = libAll.slice(0, libCap);
@@ -5073,7 +5126,7 @@ class Component extends DCLogic {
     if (sh && sh.type === 'tags') {
       const target = sh.target === 'item' ? this.item(sh.id) : this.proj(sh.id);
       sheetTitle = 'Tags for ' + target.title; sheetSub = sh.sub || 'Up to 5 in each. Tags decide which rankings it appears in and how people find it.'; sheetW = '600px';
-      const used = key => { const n = {}; s.items.concat(this.stock).forEach(x => { if ((x.published || x.original) && x.tags) (x.tags[key] || []).forEach(v => { n[v] = (n[v] || 0) + 1; }); }); return Object.keys(n).sort((a, b) => n[b] - n[a]); };
+      const used = key => { const n = {}; s.items.concat(this.stockVis).forEach(x => { if ((x.published || x.original) && x.tags) (x.tags[key] || []).forEach(v => { n[v] = (n[v] || 0) + 1; }); }); return Object.keys(n).sort((a, b) => n[b] - n[a]); };
       const grp = (key, label, base, custom) => {
         const sel = sh.tags[key]; const extra = used(key).filter(v => base.indexOf(v) < 0).slice(0, key === 'like' ? 10 : 14);
         const opts = Array.from(new Set(base.concat(extra, sel)));
@@ -5518,9 +5571,9 @@ class Component extends DCLogic {
       libTabs: libKinds.map(k => Object.assign({ label: k === 'favs' ? 'Favorites' : KIND[k][1], go: () => this.setState({ libTab: k }) }, seg(s.libTab, k))),
       libQ: s.libQ, onLibQ: e => this.setState({ libQ: e.target.value, libMore: 0 }), libEmpty: libList.length === 0,
       libShowSrc: s.libTab !== 'favs' && s.libTab !== 'song',
-      libSrcs: [['mine', 'Yours'], ['stock', 'Sample library · ' + (this._stockN || (this._stockN = this.stock.reduce((a, x) => (a[x.kind] = (a[x.kind] || 0) + 1, a), {})))[s.libTab]]].map(([k, l]) => Object.assign({ label: l, go: () => this.setState({ libSrc: k, libMore: 0 }) }, seg(s.libSrc, k))),
-      libIsStock: stockOn, libStockNote: 'Royalty-free · use in any project or release · no split owed · ' + this.stock.length + ' parts across ' + GENRES.length + ' genres',
-      libGenres: ['All'].concat(FILES.map(f => FILE_GENRE[f])).map(g => Object.assign({ label: g, go: () => this.setState({ libGenre: g, libMore: 0 }) }, seg2(s.libGenre, g))),
+      libSrcs: [['mine', 'Yours'], ['stock', 'Sample library · ' + (this._stockN || (this._stockN = this.stockVis.reduce((a, x) => (a[x.kind] = (a[x.kind] || 0) + 1, a), {})))[s.libTab]]].map(([k, l]) => Object.assign({ label: l, go: () => this.setState({ libSrc: k, libMore: 0 }) }, seg(s.libSrc, k))),
+      libIsStock: stockOn, libStockNote: 'Royalty-free · use in any project or release · no split owed · ' + this.stockVis.length + ' parts across ' + GENRES.length + ' genres',
+      libGenres: ['All'].concat(Array.from(new Set(this.stockVis.filter(x => x.kind === s.libTab).flatMap(x => (x.tags && x.tags.genre) || [])))).map(g => Object.assign({ label: g, go: () => this.setState({ libGenre: g, libMore: 0 }) }, seg2(s.libGenre, g))),
       libHasMore: libAll.length > libList.length, libMoreLabel: 'Show more · ' + (libAll.length - libList.length) + ' left', libShowMore: () => this.setState({ libMore: s.libMore + 1 }),
       libEmptyText: stockOn ? 'No ' + KIND[s.libTab][1].toLowerCase() + ' match that yet — try another genre.' : s.libTab === 'favs' ? 'Heart anything in Explore to keep it here.' : lq ? 'Nothing matches “' + s.libQ + '”.' : 'Nothing here yet. Press Create to make your first one.',
       libRows: libList.map(x => ({ isStock: !!x.stock, stockMeta: x.stock ? (x.kind === 'lyric' ? 'Lyric starter' : x.bpm + ' BPM · ' + x.key) + ' · used ' + x.uses + '×' : '', art: x.kind === 'lyric' ? '#5B3E9E' : AOF(x), icon: x.kind === 'lyric' ? '✎' : onNow(x.id) ? '❚❚' : '▶', primary: () => this.play(x.id), open: () => this.play(x.id), title: x.title, sub: x.stock ? (x.tags.genre.join(' · ') + ' · ' + x.tags.mood[0] + ' · sounds like ' + x.tags.like[0]) : KIND[x.kind][0] + ' · ' + (x.owner === 'me' ? 'You' : U(x.owner).name) + ' · ' + tagLine(x.tags),
