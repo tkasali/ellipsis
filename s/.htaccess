@@ -1,0 +1,7 @@
+# Let X (Twitter) play songs inline from the player card.
+<IfModule mod_headers.c>
+  <Files "player.php">
+    Header always unset X-Frame-Options
+    Header always set Content-Security-Policy "frame-ancestors https://x.com https://twitter.com https://*.x.com https://*.twitter.com"
+  </Files>
+</IfModule>

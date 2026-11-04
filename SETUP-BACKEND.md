@@ -65,3 +65,11 @@ For instant (WebSocket) sync across devices:
 3. Reload the app. The mixer's Live badge now syncs instantly; nothing else changes.
 
 Shared projects are stored as small JSON files in your data folder under `shared/`. Invite links contain a secret token; anyone signed in who opens one joins the project.
+
+
+## Creator payouts (Stripe Connect)
+1. Stripe Dashboard → **Connect → Get started** → choose **Platform**, payouts to **Express** accounts. Same secret key you already use.
+2. Creators tap **Profile → Earnings & payouts → Set up payouts**; Stripe collects their bank and tax details.
+3. Each month, post net revenue per song (cents) to `POST /api/v2/admin/payouts/run` as `{"revenue":[{"song":"<id>","cents":12345}]}`. Every contributor is credited by the song's signed split sheet (producer beat splits are locked minimums).
+4. Creators tap **Cash out** (from $10) — a Stripe transfer goes to their connected account, then to their bank.
+Your Stripe balance must hold enough funds for transfers. Platform fees, tax forms (1099-K) and KYC are handled by Stripe Express.

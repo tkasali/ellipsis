@@ -83,6 +83,14 @@ function v2_notify(int $uid, string $kind, string $title, string $body = '', str
     @mail($u['email'], $title, $body . "\n\n" . $site . '/app/' . "\n\nTurn these off in Profile → Notifications.", 'From: ' . cfg('mail_from') . "\r\nContent-Type: text/plain; charset=utf-8");
   }
 }
+function v2_pay_schema(): void {
+  static $done = false; if ($done) return; $done = true;
+  $pk = is_sqlite() ? 'INTEGER PRIMARY KEY AUTOINCREMENT' : 'INT AUTO_INCREMENT PRIMARY KEY';
+  foreach (["CREATE TABLE IF NOT EXISTS payout_accounts (user_id INT PRIMARY KEY, stripe_account VARCHAR(64), enabled INT DEFAULT 0, updated INT)",
+            "CREATE TABLE IF NOT EXISTS payouts (id $pk, user_id INT, cents INT, stripe_transfer VARCHAR(64), status VARCHAR(20), created INT)",
+            "CREATE TABLE IF NOT EXISTS split_sheets (song_id VARCHAR(40) PRIMARY KEY, owner_id INT, splits TEXT, created INT)"] as $sql) { try { q($sql); } catch (Throwable $e) {} }
+  foreach (['audio VARCHAR(300)'] as $col) { try { q('ALTER TABLE public_songs ADD COLUMN ' . $col); } catch (Throwable $e) {} }
+}
 function v2_stripe(string $path, array $fields = [], string $method = 'POST', ?string $idem = null): array {
   $key = (string)cfg('stripe_secret'); if (!$key) fail('Payments are not configured yet', 503);
   $url = 'https://api.stripe.com/v1/' . $path . ($method === 'GET' && $fields ? '?' . http_build_query($fields) : '');
@@ -188,6 +196,43 @@ case 'POST live': {
 
 
 /* ───── config the client needs ───── */
+/* ───── creator payouts (Stripe Connect Express) ───── */
+case 'POST payouts/onboard': {
+  $u = user(); v2_pay_schema();
+  $acc = one('SELECT * FROM payout_accounts WHERE user_id = ?', [$u['id']]);
+  $aid = $acc['stripe_account'] ?? '';
+  if (!$aid) { $a = v2_stripe('accounts', ['type' => 'express', 'email' => $u['email'], 'capabilities[transfers][requested]' => 'true', 'metadata[user_id]' => (string)$u['id']], 'POST', 'acct-' . $u['id']); $aid = (string)$a['id']; q('INSERT INTO payout_accounts (user_id, stripe_account, enabled, updated) VALUES (?,?,0,?)', [$u['id'], $aid, now()]); }
+  $ret = preg_match('#^https://#', str_in('return_url', 300)) ? str_in('return_url', 300) : (cfg('app_url') ?: 'https://ellipsismusic.net/app/');
+  $l = v2_stripe('account_links', ['account' => $aid, 'refresh_url' => $ret, 'return_url' => $ret, 'type' => 'account_onboarding']);
+  out(['ok' => true, 'url' => $l['url']]);
+}
+case 'GET payouts/status': {
+  $u = user(); v2_pay_schema();
+  $acc = one('SELECT * FROM payout_accounts WHERE user_id = ?', [$u['id']]);
+  if (!$acc) out(['ok' => true, 'connected' => false, 'enabled' => false]);
+  $a = v2_stripe('accounts/' . $acc['stripe_account'], [], 'GET'); $en = !empty($a['payouts_enabled']) ? 1 : 0;
+  q('UPDATE payout_accounts SET enabled = ?, updated = ? WHERE user_id = ?', [$en, now(), $u['id']]);
+  out(['ok' => true, 'connected' => true, 'enabled' => (bool)$en, 'paid' => (int)val("SELECT COALESCE(SUM(cents),0) FROM payouts WHERE user_id = ? AND status = 'paid'", [$u['id']])]);
+}
+case 'POST payouts/request': {
+  $u = user(); v2_pay_schema();
+  $acc = one('SELECT * FROM payout_accounts WHERE user_id = ?', [$u['id']]); if (!$acc) fail('Set up payouts first', 400);
+  $owed = (int)val("SELECT COALESCE(SUM(cents),0) FROM payouts WHERE user_id = ? AND status = 'owed'", [$u['id']]);
+  if ($owed < 1000) fail('You can cash out from $10.00 of settled earnings', 400);
+  $t = v2_stripe('transfers', ['amount' => (string)$owed, 'currency' => 'usd', 'destination' => $acc['stripe_account'], 'metadata[user_id]' => (string)$u['id']], 'POST', 'po-' . $u['id'] . '-' . $owed . '-' . date('Ymd'));
+  q("UPDATE payouts SET status = 'paid', stripe_transfer = ? WHERE user_id = ? AND status = 'owed'", [$t['id'], $u['id']]);
+  out(['ok' => true, 'cents' => $owed, 'transfer' => $t['id']]);
+}
+case 'POST admin/payouts/run': {
+  // Monthly: post each song's net revenue (cents) and this credits every contributor by the signed split sheet.
+  v2_need('revenue'); v2_pay_schema();
+  $rows = json_decode((string)(is_string(body()['revenue'] ?? null) ? body()['revenue'] : json_encode(body()['revenue'] ?? [])), true) ?: []; $n = 0;
+  foreach ($rows as $r) { $sh = one('SELECT * FROM split_sheets WHERE song_id = ?', [preg_replace('/[^A-Za-z0-9_-]/', '', (string)($r['song'] ?? ''))]); if (!$sh) continue;
+    foreach (json_decode($sh['splits'], true) ?: [] as $c) { $uid = !empty($c['email']) ? (int)val('SELECT id FROM users WHERE email = ?', [$c['email']]) : ($c['uid'] === 'me' ? (int)$sh['owner_id'] : 0); if (!$uid) continue;
+      $cents = (int)floor(((int)($r['cents'] ?? 0)) * ((int)$c['pct']) / 100); if ($cents < 1) continue;
+      q("INSERT INTO payouts (user_id, cents, stripe_transfer, status, created) VALUES (?,?,'', 'owed', ?)", [$uid, $cents, now()]); $n++; } }
+  out(['ok' => true, 'credits' => $n]);
+}
 case 'GET config':
   out(['ok' => true, 'billing' => (bool)cfg('stripe_secret'), 'mail' => (bool)cfg('mail_from'), 'realtime' => cfg('ably_key') ? 'ably' : null, 'terms' => array_column(all('SELECT term FROM mod_terms'), 'term')]);
 
@@ -352,10 +397,14 @@ case 'POST notify': {
 
 /* ───── releases & sharing ───── */
 case 'POST publish': {
-  $u = user(); $id = preg_replace('/[^A-Za-z0-9_-]/', '', str_in('id', 40, true));
+  $u = user(); v2_pay_schema();
+  $spl = (string)(body()['splits'] ?? '');
+  $aud = preg_replace('/[^A-Za-z0-9_\/.?=&%-]/', '', str_in('audio', 300)); $id = preg_replace('/[^A-Za-z0-9_-]/', '', str_in('id', 40, true));
   q('DELETE FROM public_songs WHERE id = ?', [$id]);
   $isrc = 'QZ' . 'ELP' . date('y') . str_pad((string)(val('SELECT COUNT(*) FROM public_songs') + 1), 5, '0', STR_PAD_LEFT);
   q('INSERT INTO public_songs (id, user_id, title, artist, genre, sounds_like, art, isrc, created) VALUES (?,?,?,?,?,?,?,?,?)', [$id, $u['id'], str_in('title', 160, true), str_in('artist', 160), str_in('genre', 60), str_in('like', 120), str_in('art', 40), $isrc, now()]);
+  try { q('UPDATE public_songs SET audio = ? WHERE id = ?', [$aud, $id]); } catch (Throwable $e) {}
+  $sj = json_decode($spl, true); if (is_array($sj)) { $tot = array_sum(array_map(fn($c) => (int)($c['pct'] ?? 0), $sj)); if ($tot === 100) { q('DELETE FROM split_sheets WHERE song_id = ?', [$id]); q('INSERT INTO split_sheets (song_id, owner_id, splits, created) VALUES (?,?,?,?)', [$id, $u['id'], json_encode($sj), now()]); } }
   v2_event((int)$u['id'], 'release', ['id' => $id]);
   $p = v2_profile((int)$u['id']);
   if ($p['ref_by'] && (int)val("SELECT COUNT(*) FROM events WHERE user_id = ? AND name = 'release'", [$u['id']]) === 1) { v2_notify((int)$p['ref_by'], 'reward', 'Your invite released a song — a month of Premium is yours', ''); }
